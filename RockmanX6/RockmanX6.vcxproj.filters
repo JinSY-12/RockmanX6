@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork">
+      <UniqueIdentifier>{7837b81d-62b3-48b4-affb-88fc721b1d88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Utility">
+      <UniqueIdentifier>{020276e6-9e0e-4c1d-a2f6-a681037e81c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\PCH">
+      <UniqueIdentifier>{d5f2d998-0599-4cae-8afd-3d738470acc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager">
+      <UniqueIdentifier>{469ac421-b4c4-43a9-81ad-6d950c365e62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Image">
+      <UniqueIdentifier>{eb16f154-32dc-4872-b33b-3bf1e0c346cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Key">
+      <UniqueIdentifier>{f5ad88d7-ebe9-4fa9-b568-0c2ece60b4ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Scene">
+      <UniqueIdentifier>{73def829-0542-4f4d-ab54-6e4e51989939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Sound">
+      <UniqueIdentifier>{c7cd86a4-94c4-41fb-8244-4580e1f0d61c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Text">
+      <UniqueIdentifier>{7b021d8b-a3ab-4d06-8d54-2fb999f3f110}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Time">
+      <UniqueIdentifier>{8bbdc335-14d5-4f25-a612-1d61da418b7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\UI">
+      <UniqueIdentifier>{9d8c1e9f-e57b-4a65-96f7-7b71232d3fe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Enemy">
+      <UniqueIdentifier>{d04d7059-ac5f-4c2d-b968-bf15bc716f48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\DeginePattern">
+      <UniqueIdentifier>{3a68bf0c-eb24-423f-bf3f-bbfa20d9b669}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\DeginePattern\Singleton">
+      <UniqueIdentifier>{629f8b24-f036-4d9f-beae-e490ca39b7e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\GameCore">
+      <UniqueIdentifier>{fc8b1a98-995d-473d-a55d-eedbe5743372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\GImage">
+      <UniqueIdentifier>{0c3242c3-9879-4ba3-baf6-3415c4c043bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Enemy">
+      <UniqueIdentifier>{7660ff6a-ff02-40b5-a3b8-1da5506fa3d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Player">
+      <UniqueIdentifier>{dfd6405d-b5e0-44e4-a35d-78cdfa6a8a87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Ui">
+      <UniqueIdentifier>{396f08d3-b781-4564-899e-a11746563c03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene">
+      <UniqueIdentifier>{fde19519-de80-448f-b704-4f802f77fea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Camera">
+      <UniqueIdentifier>{dcf5b297-db01-4335-8d48-866e397958e0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SingletonBase.h">
+      <Filter>소스 파일\FrameWork\DeginePattern\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="GameNode.h">
+      <Filter>소스 파일\FrameWork\GameCore</Filter>
+    </ClInclude>
+    <ClInclude Include="GImage.h">
+      <Filter>소스 파일\FrameWork\GImage</Filter>
+    </ClInclude>
+    <ClInclude Include="Stdafx.h">
+      <Filter>소스 파일\FrameWork\PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>소스 파일\FrameWork\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>소스 파일\FrameWork\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonMacroFunction.h">
+      <Filter>소스 파일\FrameWork\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomFunction.h">
+      <Filter>소스 파일\FrameWork\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGame.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Key</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="TextManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="UiManager.h">
+      <Filter>소스 파일\FrameWork\Manager\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="HunterBaseScene.h">
+      <Filter>소스 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="StageScene.h">
+      <Filter>소스 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>소스 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>소스 파일\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialogue.h">
+      <Filter>소스 파일\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="X.h">
+      <Filter>소스 파일\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Zero.h">
+      <Filter>소스 파일\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MovieScene.h">
+      <Filter>소스 파일\Scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameNode.cpp">
+      <Filter>소스 파일\FrameWork\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="GImage.cpp">
+      <Filter>소스 파일\FrameWork\GImage</Filter>
+    </ClCompile>
+    <ClCompile Include="Stdafx.cpp">
+      <Filter>소스 파일\FrameWork\PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>소스 파일\FrameWork\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>소스 파일\FrameWork\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGame.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Key</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="TextManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="UiManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="HunterBaseScene.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="StageScene.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>소스 파일\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialogue.cpp">
+      <Filter>소스 파일\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="X.cpp">
+      <Filter>소스 파일\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Zero.cpp">
+      <Filter>소스 파일\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MovieScene.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,292 @@
+#include "Stdafx.h"
+#include "TitleScene.h"
+
+HRESULT TitleScene::init(void)
+{
+	// 이미지 사운드 로딩
+	addImage();
+	addSound();
+	settingScene();
+	
+	delayTimer = TIMEMANAGER->getWorldTime();
+	
+	CAMERAMANAGER->init();
+
+	// 타이머 체크
+	mSelectTimer = 0.f;
+	mMoveTimer = 0.f;
+
+	// 타이틀 시작
+	SOUNDMANAGER->play("Title", 0.5f);
+
+	// 화면 입장
+	insert = false;
+
+	// 메뉴 선택
+	buttonSelect = 0;
+
+	return S_OK;
+}
+
+void TitleScene::release(void)
+{
+	_image->release();
+}
+
+void TitleScene::update(void)
+{
+	// 선택키
+	if (KEYMANAGER->isOnceKeyDown(VK_RETURN))
+	{
+		// 첫 타이틀
+		if (insert == false && TIMEMANAGER->getWorldTime() > 1.5)
+		{
+			SCENEMANAGER->changeScene("컷씬", 0);
+
+			insert = true;
+			SOUNDMANAGER->play("ButtonSelect", 0.5f);
+			CAMERAMANAGER->padeIn(2.0f);
+			mSelectTimer = TIMEMANAGER->getWorldTime();
+			mMoveTimer = TIMEMANAGER->getWorldTime();
+		}
+
+		// 게임 메뉴 선택 누르면 씬이 바뀌겠지만 그래도 연속 입력 타이밍 조절
+		else if(insert == true && TIMEMANAGER->getWorldTime() - mSelectTimer > 1.0)
+		{
+			mSelectTimer = TIMEMANAGER->getWorldTime();
+			
+			// 메뉴 선택
+			if (buttonSelect == 0)
+			{
+				SOUNDMANAGER->play("ButtonSelect", 0.5f);
+				// SCENEMANAGER->changeScene("스테이지", 0);
+				// SCENEMANAGER->changeScene("컷씬", 0);
+				// 씬 체인지 -> 인트로 컷씬 or 인트로 스테이지
+			}
+
+			else if (buttonSelect == 1)
+			{
+				SOUNDMANAGER->play("Error", 0.5f);
+				// 미구현 에러 사운드 출력
+			}
+
+			else if (buttonSelect == 2)
+			{
+				SOUNDMANAGER->play("ButtonSelect", 0.5f);
+				// 씬 체인지 혹은 UI 출력
+			}
+		}
+	}
+	
+	// 메뉴 선택 이동 + 이동 딜레이 추가
+	if (KEYMANAGER->isOnceKeyDown(VK_DOWN) && insert == true && TIMEMANAGER->getWorldTime() - mMoveTimer > 0.1)
+	{
+		button[buttonSelect].dark = !button[buttonSelect].dark;
+		
+		if (buttonSelect > 1) buttonSelect = 0;
+		else buttonSelect++;
+
+		button[buttonSelect].dark = !button[buttonSelect].dark;
+		SOUNDMANAGER->play("ButtonMove", 0.5f);
+		mMoveTimer = TIMEMANAGER->getWorldTime();
+	}
+
+	if (KEYMANAGER->isOnceKeyDown(VK_UP) && insert == true && TIMEMANAGER->getWorldTime() - mMoveTimer > 0.1)
+	{
+		button[buttonSelect].dark = !button[buttonSelect].dark;
+
+		if (buttonSelect < 1) buttonSelect = 2;
+		else buttonSelect--;
+
+		button[buttonSelect].dark = !button[buttonSelect].dark;
+		SOUNDMANAGER->play("ButtonMove", 0.5f);
+		mMoveTimer = TIMEMANAGER->getWorldTime();
+	}
+
+	// Press Button 애니메이션
+	_vButton.at(3)->play(0.7f);
+}
+
+void TitleScene::render(void)
+{
+	_image->render(getMemDC(), 0, 0, 0, 0, _image->getWidth(), _image->getHeight());
+
+	int num = 0; 
+
+	if (insert == false)
+		_vButton.at(3)->frameRender(getMemDC(), button[3].x, button[3].y, _vButton.at(3)->getFrameX(), 0);
+
+	else if (insert == true)
+	{
+		for (_viButton = _vButton.begin(); _viButton != _vButton.end() - 1; _viButton++)
+		{
+			(*_viButton)->render(getMemDC(), button[num].x, button[num].y, 0 + (*_viButton)->getWidth() / 2 * button[num].dark, 0, (*_viButton)->getWidth() / 2, (*_viButton)->getHeight());
+			num++;
+		}
+	}
+}
+
+
+void TitleScene::addImage(void)
+{
+
+	//////////////////////////////////
+	// 카메라 관련
+	//////////////////////////////////
+
+	// 페이드 인, 아웃
+	IMAGEMANAGER->addImage("Black", "Resources/Image/HUD/UI_BlackOut.bmp", WINSIZE_X, WINSIZE_Y);
+	IMAGEMANAGER->addImage("White", "Resources/Image/HUD/UI_WhiteOut.bmp", WINSIZE_X, WINSIZE_Y);
+	
+
+	//////////////////////////////////
+	// 타이틀 화면 이미지
+	//////////////////////////////////
+
+	// 배경
+	IMAGEMANAGER->addImage("Title", "Resources/Image/CutScene/Title.bmp", WINSIZE_X, WINSIZE_Y);
+
+	// 아이콘
+	IMAGEMANAGER->addFrameImage("Start", "Resources/Image/Icon/Start.bmp", 288 * 3, 12 * 3, 2, 1, true, MAGENTA);
+	IMAGEMANAGER->addImage("GameStart", "Resources/Image/Icon/GameStart.bmp", 174 * 3, 10 * 3, true, MAGENTA);
+	IMAGEMANAGER->addImage("Continue", "Resources/Image/Icon/Continue.bmp", 132 * 3, 10 * 3, true, MAGENTA);
+	IMAGEMANAGER->addImage("Option", "Resources/Image/Icon/Option.bmp", 102 * 3, 10 * 3, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("Next", "Resources/Image/Icon/Next.bmp", 16 * 2, 16, 2, 1, true, MAGENTA);
+
+	//////////////////////////////////
+	// 컷씬 이미지
+	//////////////////////////////////
+
+	//// 게임 스타트 인트로 ////
+	
+	// 풀 스크린
+	IMAGEMANAGER->addImage("Movie1_1", "Resources/Image/CutScene/Movie_1_1.bmp", 512 * 2, 240 * 2, true, MAGENTA);
+	IMAGEMANAGER->addImage("Movie1_2", "Resources/Image/CutScene/Movie_1_2.bmp", 512 * 2, 240 * 2, true, MAGENTA);
+	IMAGEMANAGER->addImage("Movie1_4", "Resources/Image/CutScene/Movie_1_4.bmp", 512 * 2, 240 * 2, true, MAGENTA);
+	IMAGEMANAGER->addImage("Movie1_6", "Resources/Image/CutScene/Movie_1_6.bmp", 512 * 2, 240 * 2, true, MAGENTA);
+	IMAGEMANAGER->addImage("Movie1_7", "Resources/Image/CutScene/Movie_1_7.bmp", 512 * 2, 240 * 2, true, MAGENTA);
+	IMAGEMANAGER->addImage("Movie1_8", "Resources/Image/CutScene/Movie_1_8.bmp", 512 * 2, 240 * 2, true, MAGENTA);
+
+	// 하프 스크린
+	IMAGEMANAGER->addImage("Movie1_3", "Resources/Image/CutScene/Movie_1_3.bmp", 288 * 2, 240 * 2, true, MAGENTA);
+	IMAGEMANAGER->addImage("Movie1_5", "Resources/Image/CutScene/Movie_1_5.bmp", 288 * 2, 240 * 2, true, MAGENTA);
+
+
+	//////////////////////////////////
+	// 스테이지 이미지
+	//////////////////////////////////
+	
+	//// 배경 스테이지 ////
+	
+	// 인트로 스테이지
+	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * 3, 960 * 3, true, MAGENTA);
+	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Stage_Intro_Pixel.bmp", 6464 * 3, 960 * 3, false, MAGENTA);
+
+
+	//////////////////////////////////
+	// 캐릭터 이미지
+	//////////////////////////////////
+
+	//// 애니메이션////
+	
+	// 엑스
+
+
+	// 제로
+
+
+	//// 머그샷////
+	
+	// 엑스
+	
+
+	// 제로
+	
+
+	// 에어리아
+
+	// 시그너스
+
+	// 더글라스
+}
+
+void TitleScene::addSound(void)
+{
+
+	//////////////////////////////////
+	// 타이틀 화면 사운드
+	//////////////////////////////////
+
+	// 배경
+	SOUNDMANAGER->addSound("Title", "Resources/Sound/Menu/Menu_Title.wav", false, false);
+
+	// 아이콘
+	SOUNDMANAGER->addSound("ButtonMove", "Resources/Sound/Menu/Menu_ButtonMove.wav", false, false);
+	SOUNDMANAGER->addSound("ButtonSelect", "Resources/Sound/Menu/Menu_ButtonSelect.wav", false, false);
+
+	SOUNDMANAGER->addSound("Error", "Resources/Sound/Menu/Menu_Error.wav", false, false);
+
+	//////////////////////////////////
+	// 컷씬 사운드
+	//////////////////////////////////
+
+	// 게임 스타트 인트로
+	SOUNDMANAGER->addSound("Desert", "Resources/Sound/BGM/BGM_Desert.wav", true, true);
+	SOUNDMANAGER->addSound("Laboratory", "Resources/Sound/BGM/BGM_Laboratory.wav", true, true);
+	SOUNDMANAGER->addSound("StageSelect", "Resources/Sound/BGM/BGM_StageSelect.wav", true, true);
+	SOUNDMANAGER->addSound("VS_D1000", "Resources/Sound/BGM/BGM_VS_D1000.wav", true, true);
+	SOUNDMANAGER->addSound("IntroStage", "Resources/Sound/BGM/BGM_IntroStage.wav", true, true);
+
+	SOUNDMANAGER->addSound("Siren", "Resources/Sound/SFX/SFX_Siren.wav", true, false);
+	SOUNDMANAGER->addSound("Siren_Loop","Resources/Sound/SFX/SFX_Siren_Loop.wav", true, true);
+	
+	// 이벤트 넘버와 보이스 갯수를 받아와서 이중 for문 돌려버리자ㅋㅋㅋㅋ
+	for (int i = 1 ; i < 23 ; i++)
+	{
+		string voiceNum;
+		string filePath;
+
+		voiceNum = to_string(i);
+		filePath = "Resources/Sound/Voice/Voice1_" + voiceNum + ".wav";
+
+		SOUNDMANAGER->addSound("Voice1_"+ voiceNum, filePath.c_str(), false, false);
+	}
+	
+}
+
+void TitleScene::settingScene(void)
+{
+	// GameStart, Continue, Option 버튼 위치
+	button[0].dark = false;
+	button[0].x = WINSIZE_X / 5 * 2;
+	button[0].y = WINSIZE_Y / 2 + 80;
+
+	button[1].dark = true;
+	button[1].x = WINSIZE_X / 5 * 2;
+	button[1].y = WINSIZE_Y / 2 + 130;
+
+	button[2].dark = true;
+	button[2].x = WINSIZE_X / 5 * 2;
+	button[2].y = WINSIZE_Y / 2 + 180;
+
+	// Press Button 버튼 위치
+	button[3].dark = false;
+	button[3].x = WINSIZE_X / 10 * 3;
+	button[3].y = WINSIZE_Y / 2 + 120;
+
+	// 이미지 세팅
+
+	// 배경 이미지
+	_image = IMAGEMANAGER->findImage("Title");
+
+	// 버튼 이미지 세팅
+	_vButton.push_back(IMAGEMANAGER->findImage("GameStart"));
+	_vButton.push_back(IMAGEMANAGER->findImage("Continue"));
+	_vButton.push_back(IMAGEMANAGER->findImage("Option"));
+	_vButton.push_back(IMAGEMANAGER->findImage("Start"));
+}
+
+
+void TitleScene::loadStat(void)
+{
+}
