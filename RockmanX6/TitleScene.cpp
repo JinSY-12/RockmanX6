@@ -30,7 +30,6 @@ HRESULT TitleScene::init(void)
 
 void TitleScene::release(void)
 {
-	_image->release();
 }
 
 void TitleScene::update(void)
@@ -41,7 +40,8 @@ void TitleScene::update(void)
 		// Ã¹ Å¸ÀÌÆ²
 		if (insert == false && TIMEMANAGER->getWorldTime() > 1.5)
 		{
-			SCENEMANAGER->changeScene("ÄÆ¾À", 0);
+			SCENEMANAGER->changeScene("½ºÅ×ÀÌÁö", 0);
+			//SCENEMANAGER->changeScene("ÄÆ¾À", 0);
 
 			insert = true;
 			SOUNDMANAGER->play("ButtonSelect", 0.5f);

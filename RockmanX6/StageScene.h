@@ -1,6 +1,8 @@
 #pragma once
 #include "GameNode.h"
 
+#
+
 class StageScene : public GameNode
 {
 private:
@@ -8,6 +10,7 @@ private:
 
 	RECT mZone;
 
+	float gravity;
 
 public:
 	HRESULT init(void);

@@ -3,7 +3,7 @@
 
 HRESULT HunterBaseScene::init(void)
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 void HunterBaseScene::release(void)

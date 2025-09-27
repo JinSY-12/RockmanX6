@@ -31,16 +31,18 @@ void StageScene::render(void)
 
 void StageScene::stageSettting(int stageNum)
 {
-
 	switch(stageNum)
 	{
 		// 인트로
 		case 0:
 			mStage = IMAGEMANAGER->findImage("Stage_Intro");
+			gravity = 1.0f;
 			break;
 
 		// 커맨드 얀마크
 		case 1:
+			mStage = IMAGEMANAGER->findImage("Stage_Yanmark");
+			gravity = 1.0f;
 			break;
 
 	}
