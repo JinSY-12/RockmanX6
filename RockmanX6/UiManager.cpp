@@ -29,7 +29,19 @@ void UiManager::update(void)
 		// 출력 다 안되었지만 다음 출력 대기시간이 다되면 끝으로 슈웅!!
 		else if(TEXTMANAGER->ReadComplete() == false && nextAlbe) TEXTMANAGER->ReadEnd();
 		// 밑에 대기시간 줄이면 더 빠른 스킵 가능
+
+		if (TEXTMANAGER->EventComplete() == true) {
+			cout << "여기 도착" << endl;
+			isUiMode = false;
+		}
+		// 텍스트가 다 출력 된 상태이면?? UI모드 해제
+		
 	}
+	
+	// UI모드가 꺼진 상태면?? FadeOut
+	// FadeOut이 끝나면? 씬 변경
+	if (!isUiMode) CAMERAMANAGER->padeOut(3.0f);
+	if(CAMERAMANAGER->isPadeOutComplete())
 
 	_textIcon->play(0.5f);
 }
@@ -37,7 +49,6 @@ void UiManager::update(void)
 void UiManager::release(void)
 {
 
-	//_textIcon->release();
 }
 
 void UiManager::render(HDC hdc)
@@ -48,7 +59,8 @@ void UiManager::render(HDC hdc)
 		if (TIMEMANAGER->getWorldTime() - mTextDelay > 1.1f)
 		{
 			TEXTMANAGER->drawName(hdc, WINSIZE_X / 24, WINSIZE_Y * 0.65, mEventNum, mCurrentLine, "DNF_M_45");
-			TEXTMANAGER->drawText(hdc, WINSIZE_X / 16, WINSIZE_Y * 0.68, mEventNum, mCurrentLine, "DNF_M_34");			nextAlbe = true;
+			TEXTMANAGER->drawText(hdc, WINSIZE_X / 16, WINSIZE_Y * 0.68, mEventNum, mCurrentLine, "DNF_M_34");
+			nextAlbe = true;
 		}
 		else nextAlbe = false;
 

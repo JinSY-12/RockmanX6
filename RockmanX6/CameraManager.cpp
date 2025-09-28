@@ -80,7 +80,7 @@ void CameraManager::update(void)
     }
 
     // 테스트입니다
-
+    /*
     if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
     {
         CAMERAMANAGER->setPos(4,0);
@@ -107,6 +107,7 @@ void CameraManager::update(void)
          
         }
     }
+    */
 }
 
 void CameraManager::render(HDC hdc)

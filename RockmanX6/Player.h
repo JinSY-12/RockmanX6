@@ -6,48 +6,67 @@ class Player : public GameNode
 private:
 
 public:
+	struct Pos
+	{
+		int x;
+		int y;
+	};
+
 	enum class SholderState
 	{
 		None,
 		Burst
 	};
 
-	enum class BodyState
+	// 캐릭터 상태값
+	enum class CharacterState
 	{
 		Idle,
 		Walk,
 		JumpUp,
+		JumpAtt,
 		FallingDown,
+		FallingAtt,
 		Dash,
 		Crouch,
 		Land,
 		Climb,
 		SpecialAtt,
 		Saber,
-		JumpSaber	
+		JumpSaber,
+		Warp,
+		OverPower,
+		Dead
 	};
 
-	struct Pos
+	// 캐릭터 메인 설정값
+	struct PlayerStatus
 	{
-		int x;
-		int y;
-	}charPos;
-
-	struct Status
-	{
+		GImage* player;
 		RECT hitBox;
 
 		int hp;
+		int maxHp;
 		int mp;
+		int maxMp;
 		bool lookRight;
 		bool isOnGround;
 		bool isAtt;
 
-		
-	}stat;
+	};
 
-	int width;
-	int height;
+	// 구조체 및 enum 선언
+	PlayerStatus pStatus;
+	CharacterState cState;
+	Pos cPos;
+
+	// 캐릭터 서브 상태값
+	int hixWidth;
+	int hixHeight;
+
+
+	// 플레이어 상태값
+	bool inputEnabled;
 
 	struct Progress
 	{

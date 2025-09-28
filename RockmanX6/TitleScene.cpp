@@ -40,8 +40,8 @@ void TitleScene::update(void)
 		// 첫 타이틀
 		if (insert == false && TIMEMANAGER->getWorldTime() > 1.5)
 		{
-			SCENEMANAGER->changeScene("스테이지", 0);
-			//SCENEMANAGER->changeScene("컷씬", 0);
+			//SCENEMANAGER->changeScene("스테이지", 0);
+			SCENEMANAGER->changeScene("컷씬", 0);
 
 			insert = true;
 			SOUNDMANAGER->play("ButtonSelect", 0.5f);
@@ -129,6 +129,26 @@ void TitleScene::render(void)
 
 void TitleScene::addImage(void)
 {
+
+	//////////////////////////////////
+	// 최우선 테스트 용도 -> 잘되면 정리해서 내리세요
+	//////////////////////////////////
+
+
+
+	// IMAGEMANAGER->addImage("ready"
+
+	for (int i = 0; i <= 27; i++)
+	{
+		string voiceNum;
+		string filePath;
+
+		voiceNum = to_string(i);
+		filePath = "Resources/Image/Logo/Ready/Ready" + voiceNum + ".bmp";
+		IMAGEMANAGER->addImage("Ready"+voiceNum, filePath.c_str(), 320 * 3, 38 * 3, true, MAGENTA);
+	}
+
+	// IMAGEMANAGER->addImage("test", "Resources/Image/test.bmp", 320 * 3, 31 * 3);
 
 	//////////////////////////////////
 	// 카메라 관련
@@ -239,6 +259,7 @@ void TitleScene::addSound(void)
 
 	SOUNDMANAGER->addSound("Siren", "Resources/Sound/SFX/SFX_Siren.wav", true, false);
 	SOUNDMANAGER->addSound("Siren_Loop","Resources/Sound/SFX/SFX_Siren_Loop.wav", true, true);
+	SOUNDMANAGER->addSound("Ready", "Resources/Sound/SFX/SFX_Ready.wav", false, false);
 	
 	// 이벤트 넘버와 보이스 갯수를 받아와서 이중 for문 돌려버리자ㅋㅋㅋㅋ
 	for (int i = 1 ; i < 23 ; i++)

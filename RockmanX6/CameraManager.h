@@ -40,7 +40,7 @@ private:
 
 	bool _isBlackPadeIn;					// 카메라 페이드인
 	bool _isBlackPadeOut;				// 카메라 페이드아웃
-
+	
 	bool _isWhitePadeIn;
 	bool _isWhitePadeOut;
 
@@ -68,6 +68,8 @@ public:
 	Pos getPos(void) { return camera; }
 	void setPos(int x, int y) { camera.x += x, camera.y += y; }
 	void fixPos(int x, int y) { camera.x = x, camera.y = y; }
+
+	bool isPadeOutComplete() { return _isPadeResult; }
 
 	// 플레이어 위치 체크
 	PlayerPos getPlayerPos(void) { return playerPos; }

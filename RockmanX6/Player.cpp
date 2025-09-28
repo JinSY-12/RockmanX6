@@ -34,7 +34,7 @@ void Player::move(bool direction)
 	if (direction == false) CAMERAMANAGER->setPos(4, 0);
 
 	// ÁÂ·Î ÀÌµ¿
-	else if(direction == true) CAMERAMANAGER->setPos(-4, 0);
+	else if (direction == true) CAMERAMANAGER->setPos(-4, 0);
 }
 
 void Player::jump(void)
@@ -44,13 +44,12 @@ void Player::jump(void)
 
 void Player::dash(void)
 {
-
+	// Later
 }
 
 void Player::attack(void)
 {
-
-
+	// Do Nothing!!
 }
 
 void Player::spawn(int x, int y)

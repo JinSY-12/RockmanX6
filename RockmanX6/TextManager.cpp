@@ -136,7 +136,17 @@ void TextManager::drawText(HDC hdc, int destX, int destY, string printString, st
 
 void TextManager::drawName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string settingName)
 {
-	
+	if (currentLine >= _mEventDialogue[eventNum].size())
+	{
+		// 나중에 로딩창으로 바꾸시오
+		SOUNDMANAGER->stop(currentVoice);
+		SOUNDMANAGER->stop(currentBGM);
+		SOUNDMANAGER->stop(currentSFX);
+
+		CAMERAMANAGER->padeOut(3.0f);
+		UIMANAGER->changeUiMode();
+	}
+
 	HFONT font = findFont(settingName);
 
 	// 폰트 셋팅
@@ -147,55 +157,59 @@ void TextManager::drawName(HDC hdc, int destX, int destY, int eventNum, int curr
 	_textColor = changeFontColor(mCharterName.c_str());
 	SetTextColor(hdc, _textColor);
 
-	// 텍스트 출력
-	TextOutW(hdc, destX, destY, mCharterName.c_str(), mCharterName.length());
-
-	if (currentLine != prevLine)
+	if (UIMANAGER->getIsUiMode() == true)
 	{
-		charIndex = 0;
+		TextOutW(hdc, destX, destY, mCharterName.c_str(), mCharterName.length());
 
-		// Voice 재생, 정지
-		if (mVoice.compare(L"STOP") == 0)
+		if (currentLine != prevLine)
 		{
-			SOUNDMANAGER->stop(currentVoice);
-		}
+			// 텍스트 출력
 
-		else if (mVoice.compare(L""))
-		{
-			SOUNDMANAGER->stop(currentVoice);
-			SOUNDMANAGER->play(WStringToString(mVoice), 0.5f);
-			currentVoice = WStringToString(mVoice);
-		}
+			charIndex = 0;
 
-		// 글자수 차이 -> 정확히 일치 0, 한글자 차이 1 = SFX는 마지막 글자라서 엔터까지 포함
-		// BGM 재생, 정지
-		if (mBGM.compare(L"STOP") == 0)
-		{
-			SOUNDMANAGER->stop(currentBGM);
-		}
+			// Voice 재생, 정지
+			if (mVoice.compare(L"STOP") == 0)
+			{
+				SOUNDMANAGER->stop(currentVoice);
+			}
 
-		else if (mBGM.compare(L""))
-		{
-			SOUNDMANAGER->stop(currentBGM);
-			SOUNDMANAGER->play(WStringToString(mBGM), 0.5f);
-			currentBGM = WStringToString(mBGM);
-		}
+			else if (mVoice.compare(L""))
+			{
+				SOUNDMANAGER->stop(currentVoice);
+				SOUNDMANAGER->play(WStringToString(mVoice), 0.5f);
+				currentVoice = WStringToString(mVoice);
+			}
 
-		// SFX 재생, 정지
-		if (mSFX.compare(L"STOP") == 0)
-		{
-			SOUNDMANAGER->stop(currentSFX);
-		}
+			// 글자수 차이 -> 정확히 일치 0, 한글자 차이 1 = SFX는 마지막 글자라서 엔터까지 포함
+			// BGM 재생, 정지
+			if (mBGM.compare(L"STOP") == 0)
+			{
+				SOUNDMANAGER->stop(currentBGM);
+			}
 
-		else if (mSFX.compare(L""))
-		{
-			SOUNDMANAGER->stop(currentSFX);
-			SOUNDMANAGER->play(WStringToString(mSFX), 0.5f);
-			currentSFX = WStringToString(mSFX);
+			else if (mBGM.compare(L""))
+			{
+				SOUNDMANAGER->stop(currentBGM);
+				SOUNDMANAGER->play(WStringToString(mBGM), 0.5f);
+				currentBGM = WStringToString(mBGM);
+			}
+
+			// SFX 재생, 정지
+			if (mSFX.compare(L"STOP") == 0)
+			{
+				SOUNDMANAGER->stop(currentSFX);
+			}
+
+			else if (mSFX.compare(L""))
+			{
+				SOUNDMANAGER->stop(currentSFX);
+				SOUNDMANAGER->play(WStringToString(mSFX), 0.5f);
+				currentSFX = WStringToString(mSFX);
+			}
+			prevLine = currentLine;
 		}
-		prevLine = currentLine;
 	}
-		
+
 	// 기본 폰트로 리셋
 	setDefaultFont(hdc);
 }
@@ -305,6 +319,7 @@ void TextManager::ReadDialogue(void)
 {
 	if (dialogueIndex < _vDialogue.size())
 	{
+		writeFinish = false;
 		wstring line = _vDialogue[dialogueIndex++];
 		wstring temp;
 
@@ -346,6 +361,8 @@ void TextManager::ReadDialogue(void)
 		charIndex = 0;
 		showLine = false;
 	}
+
+	if (dialogueIndex >= _vDialogue.size()) writeFinish = true;
 }
 
 

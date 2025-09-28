@@ -54,7 +54,7 @@ public:
 
 	RECT mGameNameArea;
 	RECT mGameTextArea;
-		
+
 	wstring mCharterName;
 	wstring mDialogue;
 	wstring mVoice;
@@ -110,6 +110,8 @@ public:
 
 	inline void ReadEnd(void) { this->showLine = true; }
 	inline bool ReadComplete(void) { return this->showLine; }
+
+	inline bool EventComplete(void) { return writeFinish; }
 
 	wstring Utf8ToWstring(const std::string& str);
 	string TextManager::WStringToString(const std::wstring& wstr);

@@ -35,6 +35,7 @@ public:
 	inline int isCurrentLine() { return mCurrentLine; }
 
 	bool getIsUiMode() { return isUiMode; }
+	void changeUiMode() { isUiMode = !isUiMode; }
 
 	inline void chageIsUiMode(void)
 	{
