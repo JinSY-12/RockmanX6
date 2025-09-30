@@ -20,6 +20,7 @@ private:
 
 	float mTextDelay;
 
+	bool isDebugMode;
 
 public:
 	HRESULT init(void);
@@ -46,6 +47,8 @@ public:
 	{
 		nextAlbe = true;
 	}
+
+	inline bool getIsDebugMode(void) { return isDebugMode; }
 
 	void printEvent(int eventNum);
 };

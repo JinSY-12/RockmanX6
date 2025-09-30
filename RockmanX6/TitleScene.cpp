@@ -40,8 +40,8 @@ void TitleScene::update(void)
 		// Ã¹ Å¸ÀÌÆ²
 		if (insert == false && TIMEMANAGER->getWorldTime() > 1.5)
 		{
-			//SCENEMANAGER->changeScene("½ºÅ×ÀÌÁö", 0);
-			SCENEMANAGER->changeScene("ÄÆ¾À", 0);
+			// SCENEMANAGER->changeScene("½ºÅ×ÀÌÁö", 0);
+			// SCENEMANAGER->changeScene("ÄÆ¾À", 0);
 
 			insert = true;
 			SOUNDMANAGER->play("ButtonSelect", 0.5f);
@@ -59,8 +59,8 @@ void TitleScene::update(void)
 			if (buttonSelect == 0)
 			{
 				SOUNDMANAGER->play("ButtonSelect", 0.5f);
-				// SCENEMANAGER->changeScene("½ºÅ×ÀÌÁö", 0);
-				// SCENEMANAGER->changeScene("ÄÆ¾À", 0);
+				SCENEMANAGER->changeScene("½ºÅ×ÀÌÁö", 0);
+				//SCENEMANAGER->changeScene("ÄÆ¾À", 0);
 				// ¾À Ã¼ÀÎÁö -> ÀÎÆ®·Î ÄÆ¾À or ÀÎÆ®·Î ½ºÅ×ÀÌÁö
 			}
 
@@ -210,7 +210,16 @@ void TitleScene::addImage(void)
 	//// ¾Ö´Ï¸ÞÀÌ¼Ç////
 	
 	// ¿¢½º
+	IMAGEMANAGER->addFrameImage("X_Spawn", "Resources/Image/Player/X/X_Spawn.bmp", 1156 * SCALE_FACTOR, 192 * SCALE_FACTOR, 17, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_Idle", "Resources/Image/Player/X/X_Idle.bmp", 140 * SCALE_FACTOR, 92 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_WalkStart", "Resources/Image/Player/X/X_WalkStart.bmp", 96 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_WalkLoop", "Resources/Image/Player/X/X_WalkLoop.bmp", 672 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("X_WalkBurstStart", "Resources/Image/Player/X/X_WalkBurstStart.bmp", 110 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_WalkBurstLoop", "Resources/Image/Player/X/X_WalkBurstLoop.bmp", 798 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("X_StandBurstLoop", "Resources/Image/Player/X/X_StandBurstLoop.bmp", 164 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_StandBurstEnd", "Resources/Image/Player/X/X_StandBurstEnd.bmp", 82 * SCALE_FACTOR, 88 * SCALE_FACTOR, 2, 2, true, MAGENTA);
 
 	// Á¦·Î
 

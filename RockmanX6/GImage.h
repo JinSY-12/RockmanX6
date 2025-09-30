@@ -64,6 +64,7 @@ private:
     BLENDFUNCTION   _blendFunc;
     LPIMAGE_INFO    _blendImage;
 
+    bool aniPlaying;
 
 public:
 
@@ -79,7 +80,10 @@ public:
 
     void release(void);
 
+
     void play(float frameUpdateSec);
+    inline void resume(void) { aniPlaying = true; }
+    inline void pause(void) { aniPlaying = false; }
 
     // 랜더
     void render(HDC hdc);
@@ -164,6 +168,8 @@ public:
         {
             _imageInfo->currentFrameX = _imageInfo->maxFrameX;
         }
+
+        _imageInfo->elpasedSec = 0.0f;  // <- 추가
     }
 
     // 프레임 Y
@@ -176,6 +182,8 @@ public:
         {
             _imageInfo->currentFrameY = _imageInfo->maxFrameY;
         }
+
+        _imageInfo->elpasedSec = 0.0f;  // <- 추가
     }
 
     // 이미지 1프레임 가로 / 세로 크기

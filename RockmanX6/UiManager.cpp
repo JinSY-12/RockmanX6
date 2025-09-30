@@ -10,6 +10,8 @@ HRESULT UiManager::init(void)
 	nextAlbe = false;
 	_textIcon = IMAGEMANAGER->findImage("Next");
 
+	isDebugMode = false;
+
 	return S_OK;
 }
 
@@ -41,7 +43,10 @@ void UiManager::update(void)
 	// UI모드가 꺼진 상태면?? FadeOut
 	// FadeOut이 끝나면? 씬 변경
 	if (!isUiMode) CAMERAMANAGER->padeOut(3.0f);
-	if(CAMERAMANAGER->isPadeOutComplete())
+	// if (CAMERAMANAGER->isPadeOutComplete());
+
+	if (KEYMANAGER->isOnceKeyDown(VK_TAB)) isDebugMode = !isDebugMode;
+
 
 	_textIcon->play(0.5f);
 }

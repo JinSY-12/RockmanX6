@@ -30,11 +30,13 @@ void Player::render(void)
 
 void Player::move(bool direction)
 {
+	currentState = CharacterState::Walk;
+
 	// 우로 이동
-	if (direction == false) CAMERAMANAGER->setPos(4, 0);
+	if (direction == false) CAMERAMANAGER->setPos(-4, 0);
 
 	// 좌로 이동
-	else if (direction == true) CAMERAMANAGER->setPos(-4, 0);
+	else if (direction == true) CAMERAMANAGER->setPos(4, 0);
 }
 
 void Player::jump(void)
@@ -54,4 +56,9 @@ void Player::attack(void)
 
 void Player::spawn(int x, int y)
 {
+}
+
+void Player::currentAnimChange(void)
+{
+	// Do Nothing!!
 }

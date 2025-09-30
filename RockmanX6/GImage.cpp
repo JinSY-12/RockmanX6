@@ -8,6 +8,8 @@ GImage::GImage() : _imageInfo(nullptr), _fileName(nullptr), _isTrans(false), _tr
 
 HRESULT GImage::init(int width, int height)
 {
+    aniPlaying = true;
+
     if (_imageInfo != nullptr) this->release();
 
     HDC hdc = GetDC(_hWnd);
@@ -41,6 +43,7 @@ HRESULT GImage::init(int width, int height)
 
 HRESULT GImage::init(const DWORD resID, int width, int height, bool isTrans, COLORREF transColor)
 {
+    aniPlaying = true;
 
     if (_imageInfo != nullptr) this->release();
 
@@ -74,6 +77,8 @@ HRESULT GImage::init(const DWORD resID, int width, int height, bool isTrans, COL
 
 HRESULT GImage::init(const char* fileName, int width, int height, bool isTrans, COLORREF transColor)
 {
+    aniPlaying = true;
+
     if (_imageInfo != nullptr) this->release();
 
     HDC hdc = GetDC(_hWnd);
@@ -111,6 +116,8 @@ HRESULT GImage::init(const char* fileName, int width, int height, bool isTrans, 
 
 HRESULT GImage::init(const char* fileName, float x, float y, int width, int height, bool isTrans, COLORREF transColor)
 {
+    aniPlaying = true;
+
     if (_imageInfo != nullptr) this->release();
 
     HDC hdc = GetDC(_hWnd);
@@ -149,6 +156,8 @@ HRESULT GImage::init(const char* fileName, float x, float y, int width, int heig
 
 HRESULT GImage::init(const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor)
 {
+    aniPlaying = true;
+
     if (_imageInfo != nullptr) this->release();
 
     HDC hdc = GetDC(_hWnd);
@@ -192,6 +201,8 @@ HRESULT GImage::init(const char* fileName, int width, int height, int maxFrameX,
 
 HRESULT GImage::init(const char* fileName, float x, float y, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor)
 {
+    aniPlaying = true;
+
     if (_imageInfo != nullptr) this->release();
 
     HDC hdc = GetDC(_hWnd);
@@ -236,6 +247,8 @@ HRESULT GImage::init(const char* fileName, float x, float y, int width, int heig
 
 HRESULT GImage::initForAlphaBlend(void)
 {
+    aniPlaying = true;
+
     HDC hdc = GetDC(_hWnd);
 
     // 알파블랜드 옵션
@@ -292,18 +305,21 @@ void GImage::release(void)
 
 void GImage::play(float frameUpdateSec)
 {
-    _imageInfo->elpasedSec += TIMEMANAGER->getElapsedTime();
-
-    if (_imageInfo->elpasedSec >= frameUpdateSec)
+    if (aniPlaying)
     {
-        _imageInfo->currentFrameX++;
+        _imageInfo->elpasedSec += TIMEMANAGER->getElapsedTime();
 
-        if (_imageInfo->currentFrameX > _imageInfo->maxFrameX)
+        if (_imageInfo->elpasedSec >= frameUpdateSec)
         {
-            _imageInfo->currentFrameX = 0;
-        }
+            _imageInfo->currentFrameX++;
 
-        _imageInfo->elpasedSec -= frameUpdateSec;
+            if (_imageInfo->currentFrameX > _imageInfo->maxFrameX)
+            {
+                _imageInfo->currentFrameX = 0;
+            }
+
+            _imageInfo->elpasedSec -= frameUpdateSec;
+        }
     }
 }
 

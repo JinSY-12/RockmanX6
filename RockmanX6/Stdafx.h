@@ -133,6 +133,8 @@ using namespace MY_UTIL;
 #define PI					3.1415926
 #define MAGENTA				RGB(255, 0, 255)
 
+constexpr int SCALE_FACTOR = 3;
+
 #endif
 
 #define SAFE_DELETE(p)			{if(p) {delete (p); (p) = nullptr;}}
