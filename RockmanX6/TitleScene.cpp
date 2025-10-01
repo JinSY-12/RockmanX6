@@ -134,10 +134,6 @@ void TitleScene::addImage(void)
 	// 최우선 테스트 용도 -> 잘되면 정리해서 내리세요
 	//////////////////////////////////
 
-
-
-	// IMAGEMANAGER->addImage("ready"
-
 	for (int i = 0; i <= 27; i++)
 	{
 		string voiceNum;
@@ -221,6 +217,7 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_StandBurstLoop", "Resources/Image/Player/X/X_StandBurstLoop.bmp", 164 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_StandBurstEnd", "Resources/Image/Player/X/X_StandBurstEnd.bmp", 82 * SCALE_FACTOR, 88 * SCALE_FACTOR, 2, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("X_StandChargeBurst", "Resources/Image/Player/X/X_StandChargeBurst.bmp", 287 * SCALE_FACTOR, 102 * SCALE_FACTOR, 7, 2, true, MAGENTA);
 	// 제로
 
 
@@ -256,7 +253,7 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("Error", "Resources/Sound/Menu/Menu_Error.wav", false, false);
 
 	//////////////////////////////////
-	// 컷씬 사운드
+	// 컷씬 사운드 - 컷씬 보이스는 여기!!
 	//////////////////////////////////
 
 	// 게임 스타트 인트로
@@ -277,11 +274,60 @@ void TitleScene::addSound(void)
 		string filePath;
 
 		voiceNum = to_string(i);
-		filePath = "Resources/Sound/Voice/Voice1_" + voiceNum + ".wav";
+		filePath = "Resources/Sound/Voice/Event/Voice1_" + voiceNum + ".wav";
 
 		SOUNDMANAGER->addSound("Voice1_"+ voiceNum, filePath.c_str(), false, false);
 	}
+
+	//////////////////////////////////
+	// 캐릭터 사운드 - 컷씬 보이스는 없습니다!!
+	//////////////////////////////////
+
+	//////////////////////////////////
+	// 엑스
+	//////////////////////////////////
 	
+	// 보이스
+	// SOUNDMANAGER->addSound("");
+
+	// 효과음
+	SOUNDMANAGER->addSound("SFX_X_WarpIn" , "Resources/Sound/SFX/Charcter/X/SFX_X_WarpIn.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_WarpOut", "Resources/Sound/SFX/Charcter/X/SFX_X_WarpOut.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_BurstCharge", "Resources/Sound/SFX/Charcter/X/SFX_X_BurstCharge.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_BurstChargeLoop", "Resources/Sound/SFX/Charcter/X/SFX_X_BurstChargeLoop.wav", false, true);
+
+	SOUNDMANAGER->addSound("SFX_X_Burster1", "Resources/Sound/SFX/Charcter/X/SFX_X_Burster1.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_Burster2", "Resources/Sound/SFX/Charcter/X/SFX_X_Burster2.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_Burster3", "Resources/Sound/SFX/Charcter/X/SFX_X_Burster3.wav", false, false);
+
+	SOUNDMANAGER->addSound("SFX_X_ArmorRoom", "Resources/Sound/SFX/Charcter/X/SFX_X_ArmorRoom.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_BurstCharge", "Resources/Sound/SFX/Charcter/X/SFX_X_BurstCharge.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_BurstChargeLoop", "Resources/Sound/SFX/Charcter/X/SFX_X_BurstChargeLoop.wav", false, true);
+
+	SOUNDMANAGER->addSound("SFX_X_ArmorRoom", "Resources/Sound/SFX/Charcter/X/SFX_X_ArmorRoom.wav", false, false);
+
+	
+	//////////////////////////////////
+	// 제로
+	//////////////////////////////////
+
+	// 보이스
+	
+
+	// 전용 효과음
+	
+
+
+
+
+
+
+	//////////////////////////////////
+	// 적 사운드
+	//////////////////////////////////
+
+
+
 }
 
 void TitleScene::settingScene(void)

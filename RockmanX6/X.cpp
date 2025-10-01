@@ -29,9 +29,8 @@ void X::release(void)
 
 void X::update(void)
 {
-	currentAnimChange();
-	pStatus.player->play(animSpeed);
-	
+#pragma region WarpIn
+
 	/////////////////////////////////
 	// 첫 등장 연출 파트
 	/////////////////////////////////
@@ -72,6 +71,11 @@ void X::update(void)
 			else delayTimer = TIMEMANAGER->getWorldTime();
 		}
 	}
+
+#pragma endregion
+
+
+#pragma region Character Control
 
 	/////////////////////////////////
 	// 플레이어가 캐릭터 상태 컨트롤 파트 
@@ -128,68 +132,76 @@ void X::update(void)
 			attChange = false;
 		}
 
-
 		/////////////////////////////////
 		// 점프 파트
 		/////////////////////////////////
 
-		if (KEYMANAGER->isStayKeyDown('X'))
+		if (KEYMANAGER->isStayKeyDown('X')) // 'ㅌ' 검색을 위한 주석ㅋㅋㅋ
 		{
 			if (pStatus.isOnGround) Player::jump();
 			else if (!pStatus.isOnGround) jump();
 		}
 
-
 		/////////////////////////////////
 		// 공격 파트
 		/////////////////////////////////
 
-		now = TIMEMANAGER->getWorldTime();;
+		if (now - lastShootTime >= shotCoolDown) normalBurstAble = true;
+		else normalBurstAble = false;
+
+		now = TIMEMANAGER->getWorldTime();
+
+		if (TIMEMANAGER->getWorldTime() - chargeBurstCount >= 0.5f) chargeBurstDelay = false;
+
 		
-		if (KEYMANAGER->isOnceKeyDown('C'))
+		if (KEYMANAGER->isOnceKeyDown('C')) // 'ㅊ' 검색을 위한 주석ㅋㅋㅋ
 		{
-			/*
-			if (now - lastShootTime >= shotCoolDown)
-			{
-				prevAniFrame = pStatus.player->getFrameX();
-				attackTimer = TIMEMANAGER->getWorldTime();
-				attCheckOnce = true;
-				attack();
-			}
-			*/
-
-			if (!attCheckOnce)
-			{
-				prevAniFrame = pStatus.player->getFrameX();
-				attackTimer = TIMEMANAGER->getWorldTime();
-				attCheckOnce = true;
-				pStatus.isAtt = true;
-
-				attack();
-			}
+			prevAniFrame = pStatus.player->getFrameX();
+			attackTimer = TIMEMANAGER->getWorldTime();
+			attCheckOnce = true;
+			pStatus.isAtt = true;
+			
+			if (normalBurstAble == true && chargeBurstDelay == false) attack();
 		}
 
 		if (KEYMANAGER->isStayKeyDown('C'))
 		{
-			// 차지
+			// 시작하기전에 미리 누르고 있으면 차지 안되게
+			if (attCheckOnce)
+			{
+				// 차지
+				chargeCount += chargeSpeed;
+			}
+
+			if (!isCharging && chargeCount >= 0.3f)
+			{
+				isCharging = true;
+				SOUNDMANAGER->play("SFX_X_BurstCharge", 0.5f);
+			}
 		}
 
-		if (KEYMANAGER->isOnceKeyUp('C'))
+		if (KEYMANAGER->isOnceKeyUp('C') && attCheckOnce == true)
 		{
 			// 차지 시간에 따른 버스터 발사
+			chargeBurst();
+			chargeCount = 0.0f;
 			attCheckOnce = false;
+			attCheckOnce = true;
 		}
 	}
 
-	if (UIMANAGER->getIsDebugMode())
-	{
-		// 나중에 왼쪽 위에 이쁘게 텍스트박스로 그릴 것 + 네모나고 이쁘게 히트 박스도 구현
-		cout << "히트박스 X : " << pStatus.hitBox.left << endl;
-		cout << "히트박스 Y : " << pStatus.hitBox.bottom << endl;
+#pragma endregion
 
-		cout << "애니메이션 X : " << animBaseline.x << endl;
-		cout << "애니메이션 Y : " << animBaseline.y << endl;
-	}
+
+#pragma region Animation Change + SFX Sound Play
+
+	sfxPlay();
+	frameCheck();
+	currentAnimChange();
+	pStatus.player->play(animSpeed);
+
+#pragma endregion
+
 }
 
 void X::render(void)
@@ -200,65 +212,93 @@ void X::render(void)
 
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
-		DrawRectMake(getMemDC(), pStatus.hitBox);
+		// 상태값 출력
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0,255,255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "공격 상태", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, printBodyState(), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, printAttState(), "DNF_M_18", RGB(0, 255, 255));
+
+		// 캐릭터 좌표
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(animBaseline.x), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(animBaseline.y), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 300, WINSIZE_Y / 100, "차징 게이지", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 300, WINSIZE_Y / 100 + 20, to_string(chargeCount), "DNF_M_18", RGB(0, 255, 255));
+		
+		string shoot;
+		if (normalBurstAble) shoot = "가능";
+		else shoot = "불가능";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100, "샤격 가능", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 20, shoot, "DNF_M_18", RGB(0, 255, 255));
+		
+		if (chargeBurstDelay) shoot = "있음";
+		else shoot = "없음";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100, "차지샷 후딜레이", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 20, shoot, "DNF_M_18", RGB(0, 255, 255));
+
+		
+		
+
+		// 히트박스 출력
+		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
 	}
 }
 
 void X::jump(void)
 {
-	CAMERAMANAGER->setPos(4, 0);
+	CAMERAMANAGER->setPos(0, -4);
 }
 
 void X::attack(void)
 {
 	attState = SholderState::Burst;
+	SOUNDMANAGER->play("SFX_X_Burster1", 0.5f);
 
-	if (now - lastShootTime >= shotCoolDown)
-	{
-		cout << "버스터 발사" << endl;
-		burstloop = true;
-		lastShootTime = now;
-	}
+	burstloop = true;
+	lastShootTime = now;
 }
 
-void X::spawn(int x, int y)
+void X::chargeBurst(void)
 {
-	// 캐릭터 소환
+	if (chargeCount >= 0.2f && chargeCount < 1.0f)
+	{
+		attState = SholderState::Burst;
+		SOUNDMANAGER->play("SFX_X_Burster2", 0.5f);
+		
+		// 이동 공격을 위한 프레임 저장
+		prevAniFrame = pStatus.player->getFrameX();
+		// 공격 회수 장면을 위한 타이머 저장 -> 안하면 바로 내림ㅋㅋ
+		attackTimer = TIMEMANAGER->getWorldTime();
+		pStatus.isAtt = true;
 
-	// 캐릭터 생성
-	hitBoxCenter.x = x;
-	hitBoxCenter.y = y;
+		attackTimer = TIMEMANAGER->getWorldTime();
+		burstloop = true;
+		chargeBurstCount = TIMEMANAGER->getWorldTime();
+		chargeBurstDelay = true;
+		isCharging = false;
+		
+	}
 
-	pStatus.hitBox = RectMakeCenter(x, y, hixWidth, hixHeight);
-
-	// 캐릭터 세팅
-	pStatus.hp = pStatus.maxHp;
-	pStatus.mp = pStatus.maxMp;
-
-	// 상태 초기화
-	currentState = CharacterState::Warp;
-	attState == SholderState::None;
-	pStatus.lookRight = true;
-	animDir = 1;
-	pStatus.isAtt = false;
-	isMoving = false;
-
-	// 상태 초기화 - 공격 관련
-	attackTimer = 0.0f;
-	lastShootTime = 0.0f;
-	shotCoolDown = 0.02f;
-
-	// 애니메이션 초기화
-	currentAnim = "X_Spawn";
-	previousAnim = currentAnim;
-	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
-	animSpeed = 0.1f;
-	attChange = false;
-	burstloop = false;
-
-	animBaseline.x = x;
-	animBaseline.y = pStatus.hitBox.bottom - animOffset.y;
+	else if (chargeCount >= 1.0f)
+	{
+		attState = SholderState::LargeBurst;
+		SOUNDMANAGER->play("SFX_X_Burster3", 0.5f);
+		
+		attackTimer = TIMEMANAGER->getWorldTime();
+		pStatus.isAtt = true;
+		chargeBurstCount = TIMEMANAGER->getWorldTime();
+		chargeBurstDelay = true;
+		isCharging = false;
+		
+	}
+	SOUNDMANAGER->stop("SFX_X_BurstCharge");
 }
+
 
 void X::currentAnimChange(void)
 {
@@ -266,13 +306,6 @@ void X::currentAnimChange(void)
 	if (pStatus.lookRight == true) animDir = 1;
 	else if (pStatus.lookRight == false) animDir = 0;
 	
-	// 애니메이션 비교용 변수 초기화
-	previousAnim = currentAnim;
-
-	cout << "이전 애니메이션 : " << previousAnim << endl;
-	cout << "현재 애니메이션 : "<< currentAnim << endl;
-	cout << "프레임 : " << pStatus.player->getFrameX() << endl;
-
 	// 상태값에 다른 애니메이션 변경
 	if (currentState == CharacterState::Warp)
 	{
@@ -284,43 +317,32 @@ void X::currentAnimChange(void)
 
 	else if (currentState == CharacterState::Idle)
 	{
-		if (attState == SholderState::Burst)
+		if (attState == SholderState::LargeBurst)
+		{
+			if (previousState == CharacterState::Walk) attState = SholderState::Burst;
+			else
+			{
+				//if (previousAnim != "X_StandChargeBurst")
+					//pStatus.player->setFrameX(0);
+
+				currentAnim = "X_StandChargeBurst";
+
+				animSpeed = 0.07f;
+				animOffset.x = -1;
+				animOffset.y = -1 * SCALE_FACTOR;
+			}
+		}
+
+		else if (attState == SholderState::Burst)
 		{
 			currentAnim = "X_StandBurstLoop";
 			animSpeed = 0.07f;
 			animOffset.x = -1;
 			animOffset.y = -1 * SCALE_FACTOR;
-			
-			if (pStatus.player->getFrameX() >= 1)
-			{
-				pStatus.player->setFrameX(1);
-				pStatus.player->pause();
-			}
 
-			if (burstloop == true)
-			{
-				pStatus.player->setFrameX(0);
-				pStatus.player->resume();
-				burstloop = false;
-			}
-
-			// else pStatus.player->setFrameX(0);
-
-			// if (pStatus.player->getFrameX() >= 1)
-			// {
-			//	pStatus.player->setFrameX(1);
-			// }
-					
-			// if(!burstloop) pStatus.player->setFrameX(1);
-			//else
-			//{
-			//	pStatus.player->setFrameX(0);
-			//	burstloop = false;
-			//}
-			//}
 		}
 
-		else if (attState == SholderState::Hold) // && pStatus.isAtt == false)
+		else if (attState == SholderState::Hold)
 		{
 			if (previousAnim != "X_StandBurstEnd")
 				pStatus.player->setFrameX(0);
@@ -329,9 +351,6 @@ void X::currentAnimChange(void)
 			animSpeed = 0.1f;
 			animOffset.x = 0;
 			animOffset.y = -1 * SCALE_FACTOR;
-			
-			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
-				attState = SholderState::None;
 		}
 
 		else if (attState == SholderState::None)
@@ -341,16 +360,27 @@ void X::currentAnimChange(void)
 			animOffset.x = 0;
 			animOffset.y = -1 * SCALE_FACTOR;
 		}
-
 	}
 
 	else if (currentState == CharacterState::Walk)
 	{
 		if (!isMoving)
 		{
-			if (attState == SholderState::Burst)
+			/*
+			if (attState == SholderState::LargeBurst)
+			{
+				attState = SholderState::Burst;
+				prevAniFrame = pStatus.player->getFrameX();
+			}
+			*/
+
+			if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
 			{
 				currentAnim = "X_WalkBurstStart";
+				animSpeed = 0.1f;
+				animOffset.x = 0;
+				animOffset.y = -1 * SCALE_FACTOR;
+
 				if (pStatus.lookRight) animOffset.x = -7;
 				else if (!pStatus.lookRight) animOffset.x = 14;
 			}
@@ -366,11 +396,12 @@ void X::currentAnimChange(void)
 		animSpeed = 0.04f;
 		animOffset.y = -1 * SCALE_FACTOR;
 
-		if ((currentAnim == "X_WalkStart" || currentAnim == "X_WalkBurstStart") && pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) isMoving = true;
+		if ((currentAnim == "X_WalkStart" || currentAnim == "X_WalkBurstStart")
+&& pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) isMoving = true;
 
 		if (isMoving)
 		{
-			if (attState == SholderState::Burst)
+			if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
 			{
 				if (pStatus.lookRight) animOffset.x = -7;
 				else if (!pStatus.lookRight) animOffset.x = 14;
@@ -389,10 +420,8 @@ void X::currentAnimChange(void)
 		}
 	}
 
-	if (attState == SholderState::Burst)
+	if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
 	{
-		// cout <<"어디로 갈까? : " << static_cast<int>(currentState) << endl;
-
 		if (TIMEMANAGER->getWorldTime() - attackTimer >= attackDuration)
 		{
 			if (currentState == CharacterState::Walk) attState = SholderState::None;
@@ -401,9 +430,13 @@ void X::currentAnimChange(void)
 			pStatus.isAtt = false;
 		}
 	}
+	
+	// 애니메이션 비교용 변수 초기화
+	previousAnim = currentAnim;
+	previousState = currentState;
 
 	// 애니메이션 동작을 초기 상태로 변환
-	// 공격 중 일 떄는 예외 -> 세이버는 빼도 됩니다 그건 서서 쓰는거니까
+	// 공격 중 일 때는 예외 -> 세이버는 빼도 됩니다 그건 서서 쓰는거니까
 	if (previousAnim != currentAnim)
 	{
 		if (currentAnim.find("WalkBurst") != string::npos) pStatus.player->setFrameX(prevAniFrame);
@@ -412,7 +445,96 @@ void X::currentAnimChange(void)
 	}
 
 	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
+}
 
+void X::frameCheck(void)
+{
+	// Burst 끝났으면 Hold로
+	if (currentState == CharacterState::Idle)
+	{
+		if (attState == SholderState::Burst)
+		{
+			if (burstloop == true)
+			{
+				pStatus.player->setFrameX(0);
+				burstloop = false;
+			}
+
+			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+			{
+				attState = SholderState::Hold;
+				pStatus.player->setFrameX(0);
+			}
+		}
+
+		// Hold 끝났으면 None으로
+		else if (attState == SholderState::Hold)
+		{ 
+			if(pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+			{
+				attState = SholderState::None;
+				pStatus.player->setFrameX(0);
+			}
+		}
+
+		else if (attState == SholderState::LargeBurst)
+		{
+			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+			{
+				attState = SholderState::None;
+				pStatus.player->setFrameX(0);
+			}
+		}
+	}
+}
+
+void X::spawn(int x, int y)
+{
+	// 캐릭터 소환
+
+	// 캐릭터 생성
+	hitBoxCenter.x = x;
+	hitBoxCenter.y = y;
+
+	pStatus.hitBox = RectMakeCenter(x, y, hixWidth, hixHeight);
+
+	// 캐릭터 세팅
+	pStatus.hp = pStatus.maxHp;
+	pStatus.mp = pStatus.maxMp;
+	pStatus.charName = "X_";
+
+	// 상태 초기화
+	previousState = CharacterState::Idle;
+	currentState = CharacterState::Warp;
+	attState == SholderState::None;
+	pStatus.lookRight = true;
+	animDir = 1;
+	pStatus.isAtt = false;
+	isMoving = false;
+	normalBurstAble = true;
+	chargeBurstDelay = false;
+	attCheckOnce = false;
+	
+	// 상태 초기화 - 공격 관련
+	attackTimer = 0.0f;
+	lastShootTime = 0.0f;
+	shotCoolDown = 0.05f;
+	burstSound = "SFX_X_Burster1";
+	chargeCount = 0.0f;
+	chargeSpeed = 0.01f;
+	isCharging = false;
+
+	// 애니메이션 초기화
+	currentAnim = "X_Spawn";
+	previousAnim = currentAnim;
+	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
+	animSpeed = 0.1f;
+	attChange = false;
+	burstloop = false;
+	chargeEffect = IMAGEMANAGER->findImage("SFX_X_Charge");
+
+	animBaseline.x = x;
+	animBaseline.y = pStatus.hitBox.bottom - animOffset.y;
 }
 
 void X::returnToIdle(void)

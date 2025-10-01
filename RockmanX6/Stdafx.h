@@ -125,8 +125,8 @@ using namespace MY_UTIL;
 
 #else
 
-#define WINSTART_X			600
-#define WINSTART_Y			50
+#define WINSTART_X			900
+#define WINSTART_Y			100
 #define WINSIZE_X			960
 #define WINSIZE_Y			720
 #define WINSTYLE			WS_CAPTION | WS_SYSMENU

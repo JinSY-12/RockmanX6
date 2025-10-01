@@ -93,9 +93,12 @@ public:
 
 	HFONT findFont(string settingName);
 
-	void drawText(HDC hdc, int destX, int destY, string printString, string settingName);
-	void drawText(HDC hdc, int destX, int destY, int eventNum, int currentLine, string settingName);
-	void drawName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string settingName);
+	void drawText(HDC hdc, int destX, int destY, string printString, string fontName);
+	void drawTextColor(HDC hdc, int destX, int destY, string printString, string fontName, COLORREF color);
+
+	void drawName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
+	void drawDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
+	
 
 	void drawTextInRect(HDC hdc, RECT rect, string printString, string settingName, bool isCenter = true);
 

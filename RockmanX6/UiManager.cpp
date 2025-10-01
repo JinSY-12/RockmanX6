@@ -64,7 +64,7 @@ void UiManager::render(HDC hdc)
 		if (TIMEMANAGER->getWorldTime() - mTextDelay > 1.1f)
 		{
 			TEXTMANAGER->drawName(hdc, WINSIZE_X / 24, WINSIZE_Y * 0.65, mEventNum, mCurrentLine, "DNF_M_45");
-			TEXTMANAGER->drawText(hdc, WINSIZE_X / 16, WINSIZE_Y * 0.68, mEventNum, mCurrentLine, "DNF_M_34");
+			TEXTMANAGER->drawDialogue(hdc, WINSIZE_X / 16, WINSIZE_Y * 0.68, mEventNum, mCurrentLine, "DNF_M_34");
 			nextAlbe = true;
 		}
 		else nextAlbe = false;

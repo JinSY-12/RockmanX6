@@ -117,9 +117,9 @@ HFONT TextManager::findFont(string settingName)
 	}
 }
 
-void TextManager::drawText(HDC hdc, int destX, int destY, string printString, string settingName)
+void TextManager::drawText(HDC hdc, int destX, int destY, string printString, string fontName)
 {
-	HFONT font = findFont(settingName);
+	HFONT font = findFont(fontName);
 
 	// 폰트 셋팅
 	SelectObject(hdc, font);
@@ -134,7 +134,24 @@ void TextManager::drawText(HDC hdc, int destX, int destY, string printString, st
 	setDefaultFont(hdc);
 }
 
-void TextManager::drawName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string settingName)
+void TextManager::drawTextColor(HDC hdc, int destX, int destY, string printString, string fontName, COLORREF color)
+{
+	HFONT font = findFont(fontName);
+
+	// 폰트 셋팅
+	SelectObject(hdc, font);
+	SetBkMode(hdc, TRANSPARENT);
+	SetTextAlign(hdc, _textAlign);
+	SetTextColor(hdc, color);
+
+	// 텍스트 출력
+	TextOut(hdc, destX, destY, printString.c_str(), printString.length());
+
+	// 기본 폰트로 리셋
+	setDefaultFont(hdc);
+}
+
+void TextManager::drawName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
 {
 	if (currentLine >= _mEventDialogue[eventNum].size())
 	{
@@ -147,7 +164,7 @@ void TextManager::drawName(HDC hdc, int destX, int destY, int eventNum, int curr
 		UIMANAGER->changeUiMode();
 	}
 
-	HFONT font = findFont(settingName);
+	HFONT font = findFont(fontName);
 
 	// 폰트 셋팅
 	SelectObject(hdc, font);
@@ -214,10 +231,9 @@ void TextManager::drawName(HDC hdc, int destX, int destY, int eventNum, int curr
 	setDefaultFont(hdc);
 }
 
-
-void TextManager::drawText(HDC hdc, int destX, int destY, int eventNum, int currentLine, string settingName)
+void TextManager::drawDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
 {
-	HFONT font = findFont(settingName);
+	HFONT font = findFont(fontName);
 
 	mEventNum = eventNum;
 	
@@ -284,7 +300,6 @@ void TextManager::setDefaultFont(HDC hdc)
 		SetTextAlign(hdc, _textAlign);
 	}
 }
-
 
 void TextManager::ReadEvent(void)
 {
@@ -364,7 +379,6 @@ void TextManager::ReadDialogue(void)
 
 	if (dialogueIndex >= _vDialogue.size()) writeFinish = true;
 }
-
 
 COLORREF TextManager::changeFontColor(wstring name)
 {

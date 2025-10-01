@@ -42,13 +42,35 @@ inline void EllipseMakeCenter(HDC hdc, int x, int y, int width, int height)
 
 }
 
-inline void DrawRectMakeRed(HDC hdc, RECT rc)
+inline void DrawRectMakeColor(HDC hdc, RECT rc, COLORREF color, int penWidth)
 {
-	// HPEN myPen, oldPen;
-	// myPen = CreatePen();
-	// 
-	// Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
-	// 
-	// SelectObject(hdc, oldBrush);
-	// DeleteObject(myBrush);
+	if (!hdc) return;
+
+	HPEN myPen, oldPen;
+
+	myPen = CreatePen(PS_SOLID, penWidth, color);
+	oldPen = (HPEN)SelectObject(hdc, myPen);
+
+	HBRUSH hBrush = (HBRUSH)GetStockObject(NULL_BRUSH);
+	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+	
+	Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
+	
+	SelectObject(hdc, oldBrush);
+	SelectObject(hdc, oldPen);
+	DeleteObject(myPen);
+}
+
+inline void DrawTextColor(HDC hdc, const std::string& text, int x, int y, COLORREF color)
+{
+	if (!hdc) return;
+
+	// 글자 색상 설정
+	SetTextColor(hdc, color);
+
+	// 배경 투명
+	SetBkMode(hdc, TRANSPARENT);
+
+	// 글자 위치 출력
+	TextOutA(hdc, x, y, text.c_str(), (int)text.length());
 }

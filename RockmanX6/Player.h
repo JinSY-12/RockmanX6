@@ -26,10 +26,17 @@ public:
 		int y;
 	};
 
+	struct BursterPos
+	{
+		int x;
+		int y;
+	};
+
 	enum class SholderState
 	{
 		None,
 		Burst,
+		LargeBurst,
 		Hold
 	};
 
@@ -49,7 +56,8 @@ public:
 		SpecialAtt,
 		Warp,
 		OverPower,
-		Dead
+		Dead,
+		Wall
 	};
 
 	// 캐릭터 메인 설정값
@@ -58,6 +66,7 @@ public:
 		GImage* player;
 		RECT hitBox;
 
+		string charName;
 		int hp;
 		int maxHp;
 		int mp;
@@ -82,9 +91,9 @@ public:
 
 	// 캐릭터 행동 및 스탯
 	PlayerStatus pStatus;
+	CharacterState previousState;
 	CharacterState currentState;
 	SholderState attState;
-	// CharacterState previousState;
 
 	// 캐릭터 판정 및 좌표
 	int hixWidth;
@@ -92,6 +101,7 @@ public:
 
 	HixBoX hitBoxCenter;
 	Anim animBaseline;
+	BursterPos busterPos;
 
 	// 플레이어 상태값
 	bool inputEnabled;
@@ -119,6 +129,9 @@ public:
 
 	bool burstloop;
 
+	// 사운드 관련
+	string soundResult;
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -132,14 +145,21 @@ public:
 	virtual void dash(void);
 	virtual void attack(void);
 
+	void sfxPlay(void);
+
 	// 캐릭터 스폰
 	virtual void spawn(int x, int y);
 
 	virtual void currentAnimChange(void);
 
+	// 상태값
+	string printBodyState(void);
+	string printAttState(void);
 
 	// 간단 함수
 	// 상태값 관련
 	inline void addGravity(float gravityPower) { pro.gravity = gravityPower; }
+
+
 };
 
