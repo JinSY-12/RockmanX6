@@ -66,7 +66,7 @@ void CameraManager::update(void)
         }
     }
 
-    if(_isWhitePadeOut)
+    if (_isWhitePadeOut)
     {
         _blackAlpha = 0;
         _whiteAlpha += 255.0f / (_padeTime * TIMEMANAGER->getFrameRate());
@@ -79,35 +79,7 @@ void CameraManager::update(void)
         }
     }
 
-    // 테스트입니다
-    /*
-    if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
-    {
-        CAMERAMANAGER->setPos(4,0);
-    }
-
-    else if (KEYMANAGER->isStayKeyDown(VK_LEFT))
-    {
-        if (camera.x >= 4 )
-        {
-            CAMERAMANAGER->setPos(-4, 0);
-        }
-    }
-
-    if (KEYMANAGER->isStayKeyDown(VK_UP))
-    {
-        CAMERAMANAGER->setPos(0, -4);
-    }
-
-    else if (KEYMANAGER->isStayKeyDown(VK_DOWN))
-    {
-        if (camera.y <= 2880 - 772)
-        {
-            CAMERAMANAGER->setPos(0, 4);
-         
-        }
-    }
-    */
+    cameraOffset();
 }
 
 void CameraManager::render(HDC hdc)
@@ -148,6 +120,43 @@ void CameraManager::whiteOut(float padeTime)
     _isWhitePadeOut = true;
 }
 
-void CameraManager::cameraShake(float intensity, float duration)
+void CameraManager::cameraOffset(void)
 {
+    camera.x = playerPos.x - WINSIZE_X / 2;
+    camera.y = playerPos.y - WINSIZE_Y / 2;
+
+    // cout << "PlayerPox.y : " << playerPos.y << endl;
+    // cout << "camera.y : " << camera.y << endl;
+
+    // 카메라 x좌표 고정
+    if (camera.x < 0)
+    {
+        camera.x = 0;
+        cameraLockX = true;
+    }
+
+    else if (camera.x > maxSize.x - WINSIZE_X)
+    {
+        camera.x = maxSize.x - WINSIZE_X;
+        cameraLockX = true;
+    }
+
+    else cameraLockX = false;
+
+    // 카메라 y좌표 고정
+    if (camera.y < maxSize.y - 288 * 3)
+    {
+        camera.y = maxSize.y - 288 * 3;
+        cameraLockY = true;
+    }
+    
+    else if (camera.y > maxSize.y - WINSIZE_Y)
+    {
+        camera.y = maxSize.y - WINSIZE_Y;
+        cameraLockY = true;
+    }
+
+    else cameraLockY = false;
 }
+
+

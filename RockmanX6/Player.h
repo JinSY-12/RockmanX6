@@ -1,5 +1,6 @@
 #pragma once
 #include "GameNode.h"
+#include<math.h>
 
 class Player : public GameNode
 {
@@ -8,7 +9,7 @@ private:
 public:
 
 #pragma region PlayerStruct
-	struct HixBoX
+	struct CharcterPos
 	{
 		int x;
 		int y;
@@ -67,10 +68,12 @@ public:
 		RECT hitBox;
 
 		string charName;
-		int hp;
-		int maxHp;
-		int mp;
-		int maxMp;
+		float hp;
+		float maxHp;
+		float mp;
+		float maxMp;
+		float speed;
+		float jumpSpeed;
 		bool lookRight;
 		bool isOnGround;
 		bool isAtt;
@@ -85,7 +88,7 @@ public:
 		// 보스 비트셋 순서는 화면 왼쪽 위에서부터 시계 방향
 		bitset<4> clearBoss;
 		float gravity;
-	}pro;
+	};
 
 #pragma endregion
 
@@ -95,11 +98,14 @@ public:
 	CharacterState currentState;
 	SholderState attState;
 
-	// 캐릭터 판정 및 좌표
-	int hixWidth;
-	int hixHeight;
+	Progress progress;
 
-	HixBoX hitBoxCenter;
+	// 캐릭터 판정 및 좌표
+	int hitBoxWidth;
+	int hitBoxHeight;
+
+	CharcterPos hitBoxCenter;
+	CharcterPos charPos;
 	Anim animBaseline;
 	BursterPos busterPos;
 
@@ -145,6 +151,8 @@ public:
 	virtual void dash(void);
 	virtual void attack(void);
 
+	// 캐릭터 공통 조작
+	virtual void applyGravity(void);
 	void sfxPlay(void);
 
 	// 캐릭터 스폰
@@ -158,7 +166,7 @@ public:
 
 	// 간단 함수
 	// 상태값 관련
-	inline void addGravity(float gravityPower) { pro.gravity = gravityPower; }
+	inline void setStageGravity(float gravityPower) { progress.gravity = gravityPower; }
 
 
 };

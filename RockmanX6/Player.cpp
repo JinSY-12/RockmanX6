@@ -32,16 +32,36 @@ void Player::move(bool direction)
 {
 	currentState = CharacterState::Walk;
 
-	// 우로 이동
-	if (direction == false) CAMERAMANAGER->setPos(-4, 0);
+	// 좌우로 확인
+	float moveSpeed = direction ? pStatus.speed : -pStatus.speed;
 
-	// 좌로 이동
-	else if (direction == true) CAMERAMANAGER->setPos(4, 0);
+	if (CAMERAMANAGER->getLockX() == true)
+	{
+		if (pStatus.hitBox.left + moveSpeed >= 0)
+		{
+			charPos.x += moveSpeed;
+			pStatus.hitBox.left += moveSpeed;
+			pStatus.hitBox.right += moveSpeed;
+		}
+
+		else
+		{
+			charPos.x = pStatus.hitBox.left + hitBoxWidth / 2;
+			currentState = CharacterState::Idle;
+		}
+	}
+
+	else charPos.x += moveSpeed;
 }
 
 void Player::jump(void)
 {
-	CAMERAMANAGER->setPos(0, 4);
+	// CAMERAMANAGER->setCameraPos(0, 4);
+
+	charPos.y -= 30;
+	pStatus.hitBox.top -= 30;
+	pStatus.hitBox.bottom -= 30;
+
 }
 
 void Player::dash(void)
@@ -72,7 +92,6 @@ void Player::sfxPlay(void)
 		// 기능 미구현
 
 		/*
-
 		// 대시 시작
 		else if (currentState == CharacterState::Dash)
 		{
@@ -103,7 +122,6 @@ void Player::sfxPlay(void)
 			soundResult = "Voice_" + pStatus.charName + "WallKick";
 			SOUNDMANAGER->play(soundResult, 0.5f);
 		}
-
 		*/
 
 
@@ -127,6 +145,23 @@ void Player::sfxPlay(void)
 void Player::attack(void)
 {
 	// Do Nothing!!	
+}
+
+void Player::applyGravity(void)
+{
+	if (!pStatus.isOnGround && currentState != CharacterState::Warp)
+	{
+		charPos.y += progress.gravity;
+		pStatus.hitBox.top += progress.gravity;
+		pStatus.hitBox.bottom += progress.gravity;
+	}
+
+	else if (!pStatus.isOnGround && currentState == CharacterState::Warp)
+	{
+		charPos.y += progress.gravity + 12;
+		pStatus.hitBox.top += progress.gravity + 12;
+		pStatus.hitBox.bottom += progress.gravity + 12;
+	}
 }
 
 void Player::spawn(int x, int y)

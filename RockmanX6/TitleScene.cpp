@@ -34,6 +34,12 @@ void TitleScene::release(void)
 
 void TitleScene::update(void)
 {
+	// ³ìÀ½¿ë Å°
+	if (KEYMANAGER->isOnceKeyDown('V'))
+	{
+		SOUNDMANAGER->play("Title", 0.5f);
+	}
+
 	// ¼±ÅÃÅ°
 	if (KEYMANAGER->isOnceKeyDown(VK_RETURN))
 	{
@@ -208,8 +214,9 @@ void TitleScene::addImage(void)
 	// ¿¢½º
 	IMAGEMANAGER->addFrameImage("X_Spawn", "Resources/Image/Player/X/X_Spawn.bmp", 1156 * SCALE_FACTOR, 192 * SCALE_FACTOR, 17, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Idle", "Resources/Image/Player/X/X_Idle.bmp", 140 * SCALE_FACTOR, 92 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WalkStart", "Resources/Image/Player/X/X_WalkStart.bmp", 96 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WalkLoop", "Resources/Image/Player/X/X_WalkLoop.bmp", 672 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_WalkStart", "Resources/Image/Player/X/X_WalkStart2.bmp", 96 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	// IMAGEMANAGER->addFrameImage("X_WalkLoop", "Resources/Image/Player/X/X_WalkLoop.bmp", 672 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_WalkLoop", "Resources/Image/Player/X/X_WalkLoop2.bmp", 686 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
 
 	IMAGEMANAGER->addFrameImage("X_WalkBurstStart", "Resources/Image/Player/X/X_WalkBurstStart.bmp", 110 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_WalkBurstLoop", "Resources/Image/Player/X/X_WalkBurstLoop.bmp", 798 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);

@@ -33,7 +33,6 @@ void UiManager::update(void)
 		// 밑에 대기시간 줄이면 더 빠른 스킵 가능
 
 		if (TEXTMANAGER->EventComplete() == true) {
-			cout << "여기 도착" << endl;
 			isUiMode = false;
 		}
 		// 텍스트가 다 출력 된 상태이면?? UI모드 해제
@@ -46,7 +45,6 @@ void UiManager::update(void)
 	// if (CAMERAMANAGER->isPadeOutComplete());
 
 	if (KEYMANAGER->isOnceKeyDown(VK_TAB)) isDebugMode = !isDebugMode;
-
 
 	_textIcon->play(0.5f);
 }

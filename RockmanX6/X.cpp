@@ -9,11 +9,13 @@ HRESULT X::init(void)
 
 HRESULT X::init(int x, int y)
 {
-	hixWidth = 60;
-	hixHeight = 80;
+	hitBoxWidth = 60;
+	hitBoxHeight = 80;
 
-	pStatus.maxHp = 10;
-	pStatus.maxMp = 10;
+	cout << "Init" << y << endl;
+
+	pStatus.maxHp = 10.0;
+	pStatus.maxMp = 10.0;
 
 	spawn(x, y);
 
@@ -29,31 +31,34 @@ void X::release(void)
 
 void X::update(void)
 {
+	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y);
+	applyGravity();
+	
 #pragma region WarpIn
 
 	/////////////////////////////////
 	// 첫 등장 연출 파트
 	/////////////////////////////////
 
+	
 	// 게임 시작시 스테이지에 소환 되는 상황
 	if (currentState == CharacterState::Warp)
 	{
 		// 하늘에서 내려오고 있을 때 - 스프라이트 보면 애니메이션이 동작 안함
-		if (pStatus.hitBox.bottom < WINSIZE_Y)
+		if (pStatus.hitBox.bottom <= WINSIZE_Y)
 		//if (pStatus.isOnGround == false)
 		{
 			pStatus.player->pause();
-
-			pStatus.hitBox.top += 12;
-			pStatus.hitBox.bottom += 12;
-			animBaseline.y += 12;
-
+			
+			pStatus.isOnGround = false;
 			inputEnabled = false;
 		}
 
 		// 땅에 도착
 		else
 		{
+			pStatus.isOnGround = true;
+
 			pStatus.player->resume();
 			// 등장 애니메이션
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
@@ -75,6 +80,7 @@ void X::update(void)
 #pragma endregion
 
 
+
 #pragma region Character Control
 
 	/////////////////////////////////
@@ -82,8 +88,8 @@ void X::update(void)
 	/////////////////////////////////
 
 	// 플레이어의 컨트롤을 잠시 막아야 하는 상황
-	else if (currentState == CharacterState::OverPower || currentState == CharacterState::Dead) inputEnabled = false;
-	else if (currentState == CharacterState::SpecialAtt) inputEnabled = false;
+	//else if (currentState == CharacterState::OverPower || currentState == CharacterState::Dead) inputEnabled = false;
+	//else if (currentState == CharacterState::SpecialAtt) inputEnabled = false;
 	// else inputEnabled = true;
 	
 
@@ -138,6 +144,8 @@ void X::update(void)
 
 		if (KEYMANAGER->isStayKeyDown('X')) // 'ㅌ' 검색을 위한 주석ㅋㅋㅋ
 		{
+			cout << CAMERAMANAGER->getCameraPos().y << endl;
+
 			if (pStatus.isOnGround) Player::jump();
 			else if (!pStatus.isOnGround) jump();
 		}
@@ -206,10 +214,10 @@ void X::update(void)
 
 void X::render(void)
 {
-	pStatus.player->frameAlphaRender(getMemDC(), animBaseline.x - pStatus.player->getFrameWidth() / 2 - animOffset.x,
-		animBaseline.y - pStatus.player->getFrameHeight() - animOffset.y,
+	pStatus.player->frameAlphaRender(getMemDC(), hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 - animOffset.x,
+		hitBoxCenter.y - pStatus.player->getFrameHeight() - animOffset.y,
 		pStatus.player->getFrameX(), animDir, 255);
-
+	
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
 		// 상태값 출력
@@ -220,11 +228,25 @@ void X::render(void)
 
 		// 캐릭터 좌표
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(animBaseline.x), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(charPos.x), "DNF_M_18", RGB(255, 0, 0));
 
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(animBaseline.y), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(charPos.y), "DNF_M_18", RGB(0, 255, 255));
 
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 40, "카메라 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 60, to_string(CAMERAMANAGER->getCameraPos().x), "DNF_M_18", RGB(255, 0, 0));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 40, "카메라 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 60, to_string(CAMERAMANAGER->getCameraPos().y), "DNF_M_18", RGB(0, 255, 255));
+		
+		string Check;
+		if (CAMERAMANAGER->getLockX()) Check = "O";
+		else Check = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 300, WINSIZE_Y / 100 + 40, "카메라 LOCK X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 300, WINSIZE_Y / 100 + 60, Check, "DNF_M_18", RGB(0, 255, 255));
+		
+		
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 300, WINSIZE_Y / 100, "차징 게이지", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 300, WINSIZE_Y / 100 + 20, to_string(chargeCount), "DNF_M_18", RGB(0, 255, 255));
 		
@@ -240,10 +262,7 @@ void X::render(void)
 
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100, "차지샷 후딜레이", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 20, shoot, "DNF_M_18", RGB(0, 255, 255));
-
 		
-		
-
 		// 히트박스 출력
 		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
 	}
@@ -251,7 +270,6 @@ void X::render(void)
 
 void X::jump(void)
 {
-	CAMERAMANAGER->setPos(0, -4);
 }
 
 void X::attack(void)
@@ -291,6 +309,8 @@ void X::chargeBurst(void)
 		
 		attackTimer = TIMEMANAGER->getWorldTime();
 		pStatus.isAtt = true;
+
+		burstloop = true;
 		chargeBurstCount = TIMEMANAGER->getWorldTime();
 		chargeBurstDelay = true;
 		isCharging = false;
@@ -366,14 +386,6 @@ void X::currentAnimChange(void)
 	{
 		if (!isMoving)
 		{
-			/*
-			if (attState == SholderState::LargeBurst)
-			{
-				attState = SholderState::Burst;
-				prevAniFrame = pStatus.player->getFrameX();
-			}
-			*/
-
 			if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
 			{
 				currentAnim = "X_WalkBurstStart";
@@ -444,6 +456,9 @@ void X::currentAnimChange(void)
 		else pStatus.player->setFrameX(0);
 	}
 
+	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
+	hitBoxCenter.y = pStatus.hitBox.bottom;	
+
 	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
 }
 
@@ -479,6 +494,12 @@ void X::frameCheck(void)
 
 		else if (attState == SholderState::LargeBurst)
 		{
+			if (burstloop == true)
+			{
+				pStatus.player->setFrameX(0);
+				burstloop = false;
+			}
+
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			{
 				attState = SholderState::None;
@@ -491,16 +512,20 @@ void X::frameCheck(void)
 void X::spawn(int x, int y)
 {
 	// 캐릭터 소환
-
 	// 캐릭터 생성
-	hitBoxCenter.x = x;
-	hitBoxCenter.y = y;
+	charPos.x = x;
+	charPos.y = y;
 
-	pStatus.hitBox = RectMakeCenter(x, y, hixWidth, hixHeight);
+	pStatus.hitBox = RectMakeCenter(WINSIZE_X / 2, 0, hitBoxWidth, hitBoxHeight);
+
+	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
+	hitBoxCenter.y = pStatus.hitBox.top;
 
 	// 캐릭터 세팅
 	pStatus.hp = pStatus.maxHp;
 	pStatus.mp = pStatus.maxMp;
+	pStatus.speed = 4.0f;
+	pStatus.jumpSpeed = 4.0f;
 	pStatus.charName = "X_";
 
 	// 상태 초기화
@@ -523,7 +548,7 @@ void X::spawn(int x, int y)
 	chargeCount = 0.0f;
 	chargeSpeed = 0.01f;
 	isCharging = false;
-
+	
 	// 애니메이션 초기화
 	currentAnim = "X_Spawn";
 	previousAnim = currentAnim;
@@ -535,6 +560,8 @@ void X::spawn(int x, int y)
 
 	animBaseline.x = x;
 	animBaseline.y = pStatus.hitBox.bottom - animOffset.y;
+
+	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y);
 }
 
 void X::returnToIdle(void)

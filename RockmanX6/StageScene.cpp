@@ -21,7 +21,7 @@ HRESULT StageScene::init(int num)
 	noticeAniSpeed = 1;
 	noticeStart = false;
 
-
+	
 	playAble = false;
 	soundOnce = false;
 
@@ -53,17 +53,14 @@ void StageScene::update(void)
 
 void StageScene::render(void)
 {
-	// 레디 로고 화면 정중앙에 출력
-	//mReadyLogo->frameAlphaRender(getMemDC(), (WINSIZE_X - mReadyLogo->getFrameWidth()) / 2,
-		//(WINSIZE_Y - mReadyLogo->getFrameHeight()) / 2, mReadyLogo->getFrameX(), mReadyLogo->getFrameY(), readyAlpha);
+	// 일단 스테이지 1은
 
+	mStage->render(getMemDC(), 0, 0, CAMERAMANAGER->getCameraPos().x, CAMERAMANAGER->getCameraPos().y, WINSIZE_X, WINSIZE_Y);
 
-	mStage->render(getMemDC(), 0, 0, CAMERAMANAGER->getPos().x, CAMERAMANAGER->getPos().y, WINSIZE_X, WINSIZE_Y);
+	player->render();
 
 	if(noticeStart)	mReadyLogo->render(getMemDC(), (WINSIZE_X - mReadyLogo->getWidth()) / 2,
 		(WINSIZE_Y - mReadyLogo->getHeight()) / 2);
-
-	player->render();
 }
 
 void StageScene::stageSettting(int stageNum)
@@ -73,19 +70,20 @@ void StageScene::stageSettting(int stageNum)
 		// 인트로
 		case 0:
 			mStage = IMAGEMANAGER->findImage("Stage_Intro");
-			gravity = 1.0f;
-
-			player->init(WINSIZE_X / 2, 10);
+			gravity = 4.0f;
+			player->init(WINSIZE_X / 2, mStage->getHeight() - 288 * 2);
 			break;
 
 		// 커맨드 얀마크
 		case 1:
 			mStage = IMAGEMANAGER->findImage("Stage_Yanmark");
-			gravity = 1.0f;
+			gravity = 4.0f;
 
-			player->spawn(WINSIZE_X / 2, 0);
+			player->spawn(WINSIZE_X / 2, 1000);
 			break;
 	}
+
+	CAMERAMANAGER->settingMapMaxSize(mStage->getWidth(), mStage->getHeight());
 }
 
 bool StageScene::noticeAnim(void)
