@@ -211,11 +211,15 @@ void TitleScene::addImage(void)
 
 	//// 애니메이션////
 	
+	//////////////////////////////////
 	// 엑스
+	//////////////////////////////////
+	
+	// 엑스 이미지
+
 	IMAGEMANAGER->addFrameImage("X_Spawn", "Resources/Image/Player/X/X_Spawn.bmp", 1156 * SCALE_FACTOR, 192 * SCALE_FACTOR, 17, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Idle", "Resources/Image/Player/X/X_Idle.bmp", 140 * SCALE_FACTOR, 92 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_WalkStart", "Resources/Image/Player/X/X_WalkStart2.bmp", 96 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-	// IMAGEMANAGER->addFrameImage("X_WalkLoop", "Resources/Image/Player/X/X_WalkLoop.bmp", 672 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_WalkLoop", "Resources/Image/Player/X/X_WalkLoop2.bmp", 686 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
 
 	IMAGEMANAGER->addFrameImage("X_WalkBurstStart", "Resources/Image/Player/X/X_WalkBurstStart.bmp", 110 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
@@ -225,7 +229,20 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_StandBurstEnd", "Resources/Image/Player/X/X_StandBurstEnd.bmp", 82 * SCALE_FACTOR, 88 * SCALE_FACTOR, 2, 2, true, MAGENTA);
 
 	IMAGEMANAGER->addFrameImage("X_StandChargeBurst", "Resources/Image/Player/X/X_StandChargeBurst.bmp", 287 * SCALE_FACTOR, 102 * SCALE_FACTOR, 7, 2, true, MAGENTA);
+	
+	// 엑스 웨폰
+	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/SFX/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/SFX/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_Burster3", "Resources/Image/Player/SFX/X/SFX_Burster3_Bullet.bmp", 183 * SCALE_FACTOR, 60 * SCALE_FACTOR, 3, 2, true, MAGENTA);
+
+	
+	//////////////////////////////////
 	// 제로
+	//////////////////////////////////
+
+	// 제로 이미지
+	
+	// 제로 웨폰
 
 
 	//// 머그샷////

@@ -194,6 +194,29 @@ public:
     inline int getMaxFrameX(void) { return _imageInfo->maxFrameX; }
     inline int getMaxFrameY(void) { return _imageInfo->maxFrameY; }
 
+    inline char* getFileName() { return _fileName; }
+    inline bool getIsTrans() { return _isTrans; }
+    inline COLORREF getTransColor() { return _transColor; }
+
+    inline GImage* cloneImage()
+    {
+        if (!_imageInfo) return nullptr;
+
+        GImage* clone = new GImage;
+
+        clone->_imageInfo = new IMAGE_INFO(*_imageInfo);
+
+        clone->_fileName = _fileName;
+        clone->_isTrans = _isTrans;
+        clone->_transColor = _transColor;
+
+        clone->_blendFunc = _blendFunc;
+        clone->_blendFunc = _blendFunc;
+        clone->_blendImage = _blendImage;        
+        clone->aniPlaying = aniPlaying;
+
+        return clone;
+    }
 
     GImage();
     ~GImage() {}

@@ -9,10 +9,9 @@ HRESULT X::init(void)
 
 HRESULT X::init(int x, int y)
 {
-	hitBoxWidth = 60;
-	hitBoxHeight = 80;
 
-	cout << "Init" << y << endl;
+	hitBoxWidth = 80;
+	hitBoxHeight = 120;
 
 	pStatus.maxHp = 10.0;
 	pStatus.maxMp = 10.0;
@@ -72,7 +71,6 @@ void X::update(void)
 					inputEnabled = true;
 				}
 			}
-
 			else delayTimer = TIMEMANAGER->getWorldTime();
 		}
 	}
@@ -169,10 +167,10 @@ void X::update(void)
 			attCheckOnce = true;
 			pStatus.isAtt = true;
 			
-			if (normalBurstAble == true && chargeBurstDelay == false) attack();
+			if (normalBurstAble == true && chargeBurstDelay == false && bManager->getMaxBullets() < 3) attack();
 		}
 
-		if (KEYMANAGER->isStayKeyDown('C'))
+		if (KEYMANAGER->isStayKeyDown('C') && attCheckOnce == true)
 		{
 			// 시작하기전에 미리 누르고 있으면 차지 안되게
 			if (attCheckOnce)
@@ -216,7 +214,7 @@ void X::render(void)
 {
 	pStatus.player->frameAlphaRender(getMemDC(), hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 - animOffset.x,
 		hitBoxCenter.y - pStatus.player->getFrameHeight() - animOffset.y,
-		pStatus.player->getFrameX(), animDir, 255);
+		pStatus.player->getFrameX(), pStatus.lookRight, 255);
 	
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
@@ -279,6 +277,9 @@ void X::attack(void)
 
 	burstloop = true;
 	lastShootTime = now;
+
+	if (pStatus.lookRight) bManager->fire(0, pStatus.hitBox.right, pStatus.hitBox.top + pStatus.firePoint, pStatus.lookRight);
+	else bManager->fire(0, pStatus.hitBox.left, pStatus.hitBox.top + pStatus.firePoint, pStatus.lookRight);
 }
 
 void X::chargeBurst(void)
@@ -299,7 +300,9 @@ void X::chargeBurst(void)
 		chargeBurstCount = TIMEMANAGER->getWorldTime();
 		chargeBurstDelay = true;
 		isCharging = false;
-		
+
+		if (pStatus.lookRight) bManager->fire(1, pStatus.hitBox.right, pStatus.hitBox.top + pStatus.firePoint, pStatus.lookRight);
+		else bManager->fire(1, pStatus.hitBox.left, pStatus.hitBox.top + pStatus.firePoint, pStatus.lookRight);
 	}
 
 	else if (chargeCount >= 1.0f)
@@ -314,7 +317,9 @@ void X::chargeBurst(void)
 		chargeBurstCount = TIMEMANAGER->getWorldTime();
 		chargeBurstDelay = true;
 		isCharging = false;
-		
+
+		if (pStatus.lookRight) bManager->fire(2, pStatus.hitBox.right, pStatus.hitBox.top + pStatus.firePoint, pStatus.lookRight);
+		else bManager->fire(2, pStatus.hitBox.left, pStatus.hitBox.top + pStatus.firePoint, pStatus.lookRight);
 	}
 	SOUNDMANAGER->stop("SFX_X_BurstCharge");
 }
@@ -322,10 +327,6 @@ void X::chargeBurst(void)
 
 void X::currentAnimChange(void)
 {
-	// 애니메이션 방향 설정
-	if (pStatus.lookRight == true) animDir = 1;
-	else if (pStatus.lookRight == false) animDir = 0;
-	
 	// 상태값에 다른 애니메이션 변경
 	if (currentState == CharacterState::Warp)
 	{
@@ -333,10 +334,13 @@ void X::currentAnimChange(void)
 		animSpeed = 0.07f;
 		animOffset.x = 0;
 		animOffset.y = - 17 * SCALE_FACTOR;
+		pStatus.firePoint = 10 * SCALE_FACTOR;
 	}
 
 	else if (currentState == CharacterState::Idle)
 	{
+		pStatus.firePoint = 10 * SCALE_FACTOR;
+
 		if (attState == SholderState::LargeBurst)
 		{
 			if (previousState == CharacterState::Walk) attState = SholderState::Burst;
@@ -359,7 +363,7 @@ void X::currentAnimChange(void)
 			animSpeed = 0.07f;
 			animOffset.x = -1;
 			animOffset.y = -1 * SCALE_FACTOR;
-
+			
 		}
 
 		else if (attState == SholderState::Hold)
@@ -371,6 +375,7 @@ void X::currentAnimChange(void)
 			animSpeed = 0.1f;
 			animOffset.x = 0;
 			animOffset.y = -1 * SCALE_FACTOR;
+
 		}
 
 		else if (attState == SholderState::None)
@@ -384,6 +389,8 @@ void X::currentAnimChange(void)
 
 	else if (currentState == CharacterState::Walk)
 	{
+		pStatus.firePoint = 8 * SCALE_FACTOR;
+
 		if (!isMoving)
 		{
 			if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
@@ -533,7 +540,6 @@ void X::spawn(int x, int y)
 	currentState = CharacterState::Warp;
 	attState == SholderState::None;
 	pStatus.lookRight = true;
-	animDir = 1;
 	pStatus.isAtt = false;
 	isMoving = false;
 	normalBurstAble = true;
@@ -543,11 +549,12 @@ void X::spawn(int x, int y)
 	// 상태 초기화 - 공격 관련
 	attackTimer = 0.0f;
 	lastShootTime = 0.0f;
-	shotCoolDown = 0.05f;
+	shotCoolDown = 0.06f;
 	burstSound = "SFX_X_Burster1";
 	chargeCount = 0.0f;
 	chargeSpeed = 0.01f;
 	isCharging = false;
+	pStatus.firePoint = 12 * SCALE_FACTOR;
 	
 	// 애니메이션 초기화
 	currentAnim = "X_Spawn";
@@ -557,9 +564,6 @@ void X::spawn(int x, int y)
 	attChange = false;
 	burstloop = false;
 	chargeEffect = IMAGEMANAGER->findImage("SFX_X_Charge");
-
-	animBaseline.x = x;
-	animBaseline.y = pStatus.hitBox.bottom - animOffset.y;
 
 	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y);
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "GameNode.h"
-#include<math.h>
+#include "BulletManager.h"
+
+class BulletManager;
 
 class Player : public GameNode
 {
@@ -77,6 +79,8 @@ public:
 		bool lookRight;
 		bool isOnGround;
 		bool isAtt;
+
+		int firePoint;
 	};
 
 	struct Progress
@@ -138,6 +142,9 @@ public:
 	// 사운드 관련
 	string soundResult;
 
+
+	BulletManager* bManager;
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -168,6 +175,6 @@ public:
 	// 상태값 관련
 	inline void setStageGravity(float gravityPower) { progress.gravity = gravityPower; }
 
-
+	void setBulletManager(BulletManager* manager) { bManager = manager; };
 };
 

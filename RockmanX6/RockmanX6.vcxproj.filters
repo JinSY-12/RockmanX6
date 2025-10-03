@@ -76,6 +76,18 @@
     <Filter Include="소스 파일\FrameWork\Manager\Camera">
       <UniqueIdentifier>{dcf5b297-db01-4335-8d48-866e397958e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Player\PlayerBase">
+      <UniqueIdentifier>{eeff9b93-6746-4abe-a7dd-7189b9083444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Player\Character">
+      <UniqueIdentifier>{42b11a90-6f98-4a5a-8e6f-6a14e6d4816e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Player\Weapon">
+      <UniqueIdentifier>{24f8793e-3cb1-42f0-a069-ac249adb86c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Bullet">
+      <UniqueIdentifier>{c40c4adc-3189-4124-a7cf-5a1b75ad5e26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SingletonBase.h">
@@ -144,12 +156,6 @@
     <ClInclude Include="Dialogue.h">
       <Filter>소스 파일\Ui</Filter>
     </ClInclude>
-    <ClInclude Include="X.h">
-      <Filter>소스 파일\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Zero.h">
-      <Filter>소스 파일\Player</Filter>
-    </ClInclude>
     <ClInclude Include="CameraManager.h">
       <Filter>소스 파일\FrameWork\Manager\Camera</Filter>
     </ClInclude>
@@ -157,7 +163,19 @@
       <Filter>소스 파일\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>소스 파일\Player</Filter>
+      <Filter>소스 파일\Player\PlayerBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Zero.h">
+      <Filter>소스 파일\Player\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="X.h">
+      <Filter>소스 파일\Player\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>소스 파일\Player\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -221,12 +239,6 @@
     <ClCompile Include="Dialogue.cpp">
       <Filter>소스 파일\Ui</Filter>
     </ClCompile>
-    <ClCompile Include="X.cpp">
-      <Filter>소스 파일\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Zero.cpp">
-      <Filter>소스 파일\Player</Filter>
-    </ClCompile>
     <ClCompile Include="CameraManager.cpp">
       <Filter>소스 파일\FrameWork\Manager\Camera</Filter>
     </ClCompile>
@@ -234,7 +246,19 @@
       <Filter>소스 파일\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>소스 파일\Player</Filter>
+      <Filter>소스 파일\Player\PlayerBase</Filter>
+    </ClCompile>
+    <ClCompile Include="X.cpp">
+      <Filter>소스 파일\Player\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Zero.cpp">
+      <Filter>소스 파일\Player\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>소스 파일\Player\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

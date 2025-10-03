@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletManager.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CommonMacroFunction.h" />
     <ClInclude Include="Dialogue.h" />
@@ -156,6 +158,8 @@
     <ClInclude Include="Zero.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Dialogue.cpp" />
     <ClCompile Include="EnemyManager.cpp" />

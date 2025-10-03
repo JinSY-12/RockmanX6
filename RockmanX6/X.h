@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.h"
+#include "BulletManager.h"
 
 class X : public Player
 {

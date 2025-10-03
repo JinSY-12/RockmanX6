@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "X.h"
 #include "Zero.h"
+#include "BulletManager.h"
 
 class StageScene : public GameNode
 {
@@ -13,6 +14,8 @@ private:
 	Player* player;
 
 	RECT mZone;
+
+	BulletManager bManager;
 
 	float gravity;
 

@@ -9,7 +9,8 @@ HRESULT StageScene::init(void)
 HRESULT StageScene::init(int num)
 {
 	player = new X;
-
+		
+	player->setBulletManager(&bManager);
 	// 스테이지 세팅
 	stageSettting(num);
 
@@ -47,6 +48,8 @@ void StageScene::update(void)
 		// 플레이어는 이미 천장에 소환 되어 있다
 		// 레디 로고 이후에 플레이어의 동작 시작으로 하늘에서 내려오는 연출
 		player->update();
+
+		bManager.update();
 	}
 
 }
@@ -59,8 +62,11 @@ void StageScene::render(void)
 
 	player->render();
 
+	bManager.render();
+
 	if(noticeStart)	mReadyLogo->render(getMemDC(), (WINSIZE_X - mReadyLogo->getWidth()) / 2,
 		(WINSIZE_Y - mReadyLogo->getHeight()) / 2);
+
 }
 
 void StageScene::stageSettting(int stageNum)
