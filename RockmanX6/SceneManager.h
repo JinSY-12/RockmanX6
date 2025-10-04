@@ -7,7 +7,7 @@ class GameNode;
 class SceneManager : public SingletonBase<SceneManager>
 {
 public:
-	typedef map<string, GameNode*>			 mapSceneList;
+	typedef map<string, GameNode*> mapSceneList;
 	typedef map<string, GameNode*>::iterator mapSceneIter;
 
 private:
@@ -17,6 +17,7 @@ private:
 
 	mapSceneList _mSceneList;
 	mapSceneList _mLoadingSceneList;
+
 
 	string _nextSceneName;
 	int _nextSceneType;
@@ -32,6 +33,7 @@ public:
 
 	HRESULT changeScene(string sceneName);
 	HRESULT changeScene(string sceneName, int type);
+	HRESULT changeScene(string sceneName, int type, int charType);
 	void changeScenePadeOut(string sceneName, float padeTime, int nextSceneType = 0);
 
 	HRESULT changeLoadingScene(string nextSceneName, string loadSceneName = "TitleScene");

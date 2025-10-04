@@ -65,9 +65,13 @@ void TitleScene::update(void)
 			if (buttonSelect == 0)
 			{
 				SOUNDMANAGER->play("ButtonSelect", 0.5f);
-				SCENEMANAGER->changeScene("½ºÅ×ÀÌÁö", 0);
-				//SCENEMANAGER->changeScene("ÄÆ¾À", 0);
+
+				// 0 = ÀÎÆ®·Î ½ºÅ×ÀÌÁö, 1 = ¾á¸¶Å© ½ºÅ×ÀÌÁö
+				// 0 = ¿¢½º, 1 = Á¦·Î, 2 = ÆÈÄÜ, 3 = ºí·¹ÀÌµå, 4 = ¼¨µµ¿ì, 5 = ¾óÆ¼¹Ô, 6 = ºí·¢ Á¦·Î
+				SCENEMANAGER->changeScene("½ºÅ×ÀÌÁö", 0, 0);
+
 				// ¾À Ã¼ÀÎÁö -> ÀÎÆ®·Î ÄÆ¾À or ÀÎÆ®·Î ½ºÅ×ÀÌÁö
+				// SCENEMANAGER->changeScene("ÄÆ¾À", 0);
 			}
 
 			else if (buttonSelect == 1)

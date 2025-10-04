@@ -39,14 +39,17 @@ HRESULT Burster::init(int chargeLevel, int x, int y, bool isRight)
 	case 0:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster1")->cloneImage();
+		bStatus.demage = 1;
 		break;
 	case 1:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster2")->cloneImage();
+		bStatus.demage = 2;
 		break;
 	case 2:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster3")->cloneImage();
+		bStatus.demage = 3;
 		break;
 	}
 	
@@ -54,12 +57,13 @@ HRESULT Burster::init(int chargeLevel, int x, int y, bool isRight)
 	bStatus.height = bStatus.shape->getFrameHeight();
 
 	bStatus.rightDirect = isRight;
+	
 
-	if (isRight) bStatus.hitBox = RectMake(x, y - bStatus.shape->getFrameHeight() / 2, bStatus.shape->getFrameWidth() , bStatus.shape->getFrameHeight());
-	else bStatus.hitBox = RectMake(x - bStatus.width, y - bStatus.shape->getFrameHeight() / 2, bStatus.shape->getFrameWidth() , bStatus.shape->getFrameHeight());
+	if (isRight) bStatus.hitBox = RectMake(x - 4 * SCALE_FACTOR, y - bStatus.shape->getFrameHeight() / 2, bStatus.shape->getFrameWidth() , bStatus.shape->getFrameHeight());
+	else bStatus.hitBox = RectMake(x - bStatus.width + 4 * SCALE_FACTOR, y - bStatus.shape->getFrameHeight() / 2, bStatus.shape->getFrameWidth() , bStatus.shape->getFrameHeight());
 
 	int direction = isRight ? 1 : -1;
-	bStatus.speed = direction * 16.0f;
+	bStatus.speed = direction * 20.0f;
 	bStatus.isFire = true;
 
 	return S_OK;

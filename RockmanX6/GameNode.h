@@ -13,6 +13,7 @@ private:
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int num);
+	virtual HRESULT init(int num, int charType);
 	virtual HRESULT init(bool managerInit);
 	virtual void release(void);
 	virtual void update(void);

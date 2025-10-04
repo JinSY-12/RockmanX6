@@ -12,6 +12,16 @@ private:
 	GImage* _dialogue;
 	GImage* _textIcon;
 
+
+	GImage* playerLogo;
+	GImage* enemyLogo;
+
+	GImage* middleHpBar;
+	GImage* topHpBar;
+
+	GImage* middleMpBar;
+	GImage* topMpBar;
+
 	bool isUiMode;
 	bool nextAlbe;
 
@@ -28,25 +38,14 @@ public:
 	void release(void);
 	void render(HDC hdc);
 
-	//void getLife(int hp) { life = hp; }
-	//void getMaxLife(int maxHp) { maxLife = maxHp; }
-
-	//void getnInven(int rupee, int boom, int arrow, int key) { _rupee = rupee, _boom = boom, _arrow = arrow, _key = key; }
-
 	inline int isCurrentLine() { return mCurrentLine; }
 
 	bool getIsUiMode() { return isUiMode; }
 	void changeUiMode() { isUiMode = !isUiMode; }
 
-	inline void chageIsUiMode(void)
-	{
-		isUiMode = (isUiMode) ? false : true;
-	}
+	inline void chageIsUiMode(void) { isUiMode = (isUiMode) ? false : true; }
 
-	inline void changeNextable(void)
-	{
-		nextAlbe = true;
-	}
+	inline void changeNextable(void) { nextAlbe = true; }
 
 	inline bool getIsDebugMode(void) { return isDebugMode; }
 

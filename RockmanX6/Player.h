@@ -8,7 +8,28 @@ class Player : public GameNode
 {
 private:
 
+
+
 public:
+
+#pragma region PlayerType
+
+	enum class CharacterType
+	{
+		X,
+		Zero
+	};
+
+	enum class ArmorType
+	{
+		Normal,
+		Falcon,
+		Shadow,
+		Ultimate,
+		BlakcZero
+	};
+
+#pragma endregion
 
 #pragma region PlayerStruct
 	struct CharcterPos
@@ -78,6 +99,10 @@ public:
 		float jumpSpeed;
 		bool lookRight;
 		bool isOnGround;
+
+		bool touchLeft;
+		bool touchRight;
+
 		bool isAtt;
 
 		int firePoint;
@@ -114,6 +139,9 @@ public:
 	BursterPos busterPos;
 
 	// 플레이어 상태값
+	CharacterType charType;
+	ArmorType armorType;
+
 	bool inputEnabled;
 	bool isMoving;
 
@@ -142,7 +170,6 @@ public:
 	// 사운드 관련
 	string soundResult;
 
-
 	BulletManager* bManager;
 
 public:
@@ -158,9 +185,10 @@ public:
 	virtual void dash(void);
 	virtual void attack(void);
 
-	// 캐릭터 공통 조작
-	virtual void applyGravity(void);
+	// 캐릭터 공통 
+	void applyGravity(void);
 	void sfxPlay(void);
+	void setBulletManager(BulletManager* manager) { bManager = manager; };
 
 	// 캐릭터 스폰
 	virtual void spawn(int x, int y);
@@ -171,10 +199,25 @@ public:
 	string printBodyState(void);
 	string printAttState(void);
 
-	// 간단 함수
+	// 애니메이션 관련
+	virtual void setHitBox(void);
+
 	// 상태값 관련
 	inline void setStageGravity(float gravityPower) { progress.gravity = gravityPower; }
 
-	void setBulletManager(BulletManager* manager) { bManager = manager; };
+	RECT getPlayerRect(void) { return pStatus.hitBox; }
+
+	int getPlayerCenter(void) { return charPos.x; }
+
+	int getPlayerLeft(void) { return charPos.x - hitBoxWidth / 2; }
+	int getPlayerRight(void) { return charPos.x + hitBoxWidth /2; }
+
+	int getPlayerTop(void) { return charPos.y - hitBoxHeight; }
+	int getPlayerBottom(void) { return charPos.y; }
+
+	inline void setLeftCollision(bool left) { pStatus.touchLeft = left; }
+	inline void setRightCollision(bool right) { pStatus.touchRight = right; }
+	inline void setIsOnGround(bool OnGround) { pStatus.isOnGround = OnGround; }
+
 };
 

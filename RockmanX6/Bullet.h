@@ -20,6 +20,8 @@ public:
 
 		bool rightDirect;
 		bool isFire;
+
+		int demage;
 	};
 
 public:

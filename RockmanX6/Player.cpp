@@ -32,8 +32,11 @@ void Player::move(bool direction)
 {
 	currentState = CharacterState::Walk;
 
-	// 좌우로 확인
-	float moveSpeed = direction ? pStatus.speed : -pStatus.speed;
+	float moveSpeed;
+
+	if (direction) moveSpeed = pStatus.speed;
+	else moveSpeed = -pStatus.speed;
+
 
 	if (CAMERAMANAGER->getLockX() == true)
 	{
@@ -51,7 +54,42 @@ void Player::move(bool direction)
 		}
 	}
 
-	else charPos.x += moveSpeed;
+	else
+	{
+		charPos.x += moveSpeed;
+	}
+
+
+	/*
+	// 좌우로 확인
+	float moveSpeed;
+
+	if (pStatus.touchLeft) moveSpeed = direction ? pStatus.speed : 0;
+	else if (pStatus.touchRight) moveSpeed = direction ? 0 : -pStatus.speed;
+	else if (pStatus.touchRight && pStatus.touchRight) moveSpeed = direction ? 0 : 0;
+	else moveSpeed = direction ? pStatus.speed : -pStatus.speed;
+
+	if (CAMERAMANAGER->getLockX() == true)
+	{	
+		if (pStatus.hitBox.left + moveSpeed >= 0)
+		{
+			charPos.x += moveSpeed;
+			pStatus.hitBox.left += moveSpeed;
+			pStatus.hitBox.right += moveSpeed;
+		}
+
+		else
+		{
+			charPos.x = pStatus.hitBox.left + hitBoxWidth / 2;
+			currentState = CharacterState::Idle;
+		}
+	}
+
+	else
+	{
+		charPos.x += moveSpeed;
+	}
+	*/
 }
 
 void Player::jump(void)
@@ -158,9 +196,9 @@ void Player::applyGravity(void)
 
 	else if (!pStatus.isOnGround && currentState == CharacterState::Warp)
 	{
-		charPos.y += progress.gravity + 12;
-		pStatus.hitBox.top += progress.gravity + 12;
-		pStatus.hitBox.bottom += progress.gravity + 12;
+		charPos.y += progress.gravity + 2;
+		pStatus.hitBox.top += progress.gravity + 2;
+		pStatus.hitBox.bottom += progress.gravity + 2;
 	}
 }
 
@@ -203,4 +241,9 @@ string Player::printAttState(void)
 	else if (attState == SholderState::Hold) result = "버스터";
 	
 	return result;
+}
+
+void Player::setHitBox(void)
+{
+	// Do Nothing!
 }

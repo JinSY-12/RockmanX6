@@ -37,7 +37,9 @@ public:
 	// 애니메이션 관련
 	void currentAnimChange(void) override;
 	void frameCheck(void);
-
+	void setHitBox(void) override;
+	
+	// 기능용 함수
 	void returnToIdle(void);
 };
 

@@ -12,6 +12,11 @@ HRESULT GameNode::init(int num)
     return S_OK;
 }
 
+HRESULT GameNode::init(int num, int charType)
+{
+    return S_OK;
+}
+
 HRESULT GameNode::init(bool managerInit)
 {
     _hdc = GetDC(_hWnd);

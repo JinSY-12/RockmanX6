@@ -1,6 +1,7 @@
 #include "Stdafx.h"
 #include "GameNode.h"
 #include "SceneManager.h"
+#include "Player.h"
 
 // 초기화'만' 진행 -> 호출 여부에 관계없이
 GameNode* SceneManager::_currentScene = nullptr;
@@ -149,6 +150,34 @@ HRESULT SceneManager::changeScene(string sceneName, int type)
 
 	return E_FAIL;
 }
+
+HRESULT SceneManager::changeScene(string sceneName, int type, int charType)
+{
+	mapSceneIter find = _mSceneList.find(sceneName);
+
+	// find() 함수로 찾지 못하면 end()값을 반환한다.
+	if (find == _mSceneList.end()) return E_FAIL;
+
+	// 바꾸려는 씬이 현재 씬이랑 같을 때
+	if (find->second == _currentScene) return S_OK;
+
+	// 기존씬이 존재하면 릴리즈 함수를 실행
+	if (_currentScene) _currentScene->release();
+
+	// 카메라 페이드인
+	CAMERAMANAGER->padeIn(0.8f);
+
+	if (SUCCEEDED(find->second->init(type, charType)))
+	{
+		//바꾸려는 씬을 현재씬으로 변경
+		_currentScene = find->second;
+
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
 
 void SceneManager::changeScenePadeOut(string sceneName, float padeTime, int nextSceneType)
 {

@@ -11,9 +11,18 @@ private:
 	GImage* mStage;
 	GImage* mReadyLogo;
 
-	Player* player;
+	unique_ptr<Player> player;
+
+	// Player* player;
 
 	RECT mZone;
+	RECT floor;
+	
+	typedef vector<RECT> vFloor;
+	typedef vector<RECT>::iterator viFloor;
+	
+	vFloor _vFloor;
+	viFloor _viFloor;
 
 	BulletManager bManager;
 
@@ -33,13 +42,17 @@ private:
 public:
 	HRESULT init(void);
 	HRESULT init(int num);
+	HRESULT init(int num, int charType);
 	void release(void);
 	void update(void);
 	void render(void);
 
-	void stageSettting(int stageNum);
-
 	bool noticeAnim(void);
+
+	void stageSettting(int stageNum);
+	
+	void rectSetting(void);
+	void stageCollision(void);
 
 	StageScene() {}
 	~StageScene() {}

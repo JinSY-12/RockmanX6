@@ -10,6 +10,9 @@ HRESULT UiManager::init(void)
 	nextAlbe = false;
 	_textIcon = IMAGEMANAGER->findImage("Next");
 
+
+	// playerLogo = IMAGEMANAGER->findImage();
+
 	isDebugMode = false;
 
 	return S_OK;
