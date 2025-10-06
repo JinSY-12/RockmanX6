@@ -25,6 +25,7 @@ HRESULT MainGame::init(void)
 	SCENEMANAGER->changeScene("Å¸ÀÌÆ²");
 
 	UIMANAGER->init();
+
 	return S_OK;
 }
 

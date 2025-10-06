@@ -42,7 +42,9 @@ HRESULT StageScene::init(int num, int charType)
 	}
 
 	player->setBulletManager(&bManager);
+
 	// 스테이지 세팅
+	UIMANAGER->setCharacter(charType, num);
 	stageSettting(num);
 
 	// 스테이지 시작 준비
@@ -71,7 +73,11 @@ void StageScene::update(void)
 	{
 		noticeStart = true;
 		if (noticeAnim() == false);
-		else playAble = true;
+		else
+		{
+			playAble = true;
+			UIMANAGER->setGameStart();
+		}
 	}
 
 	if (playAble == true)
@@ -121,7 +127,7 @@ void StageScene::stageSettting(int stageNum)
 		// 인트로
 		case 0:
 			mStage = IMAGEMANAGER->findImage("Stage_Intro");
-			gravity = 6.0f;
+			gravity = 0.5f;
 
 			player->init(WINSIZE_X / 2, mStage->getHeight() - WINSIZE_Y);
 			player->setStageGravity(gravity);
@@ -188,6 +194,7 @@ void StageScene::rectSetting(void)
 	floor = RectMake(0, mStage->getHeight() - 45 * SCALE_FACTOR, 320 * SCALE_FACTOR, 45 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
+	/*
 	floor = RectMake(floor.right, mStage->getHeight() - 160 * SCALE_FACTOR, 320 * SCALE_FACTOR, 160 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 	
@@ -202,12 +209,12 @@ void StageScene::rectSetting(void)
 
 	floor = RectMake(floor.right, mStage->getHeight() - 115 * SCALE_FACTOR, 63 * SCALE_FACTOR, 115 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
-	
+	*/
 }
 
 void StageScene::stageCollision(void)
 {
-	player->setIsOnGround(false);
+	player->setIsOnGround(false, 0, 0);
 	player->setRightCollision(false);
 	player->setLeftCollision(false);
 	
@@ -217,14 +224,12 @@ void StageScene::stageCollision(void)
 	{
 		index++;
 
-		// if (player->getPlayerLeft() <= floor.right && player->getPlayerBottom() > floor.top &&
-		//	player->getPlayerTop() < floor.bottom && player->getPlayerRight() >= floor.right)
 		if (player->getPlayerLeft() < floor.right && player->getPlayerRight() > floor.left
-			&& player->getPlayerBottom() + 8 > floor.top && player->getPlayerTop() < floor.top)
+			&& player->getPlayerBottom() + 4 > floor.top && player->getPlayerTop() < floor.top)
 		{
-			cout << "Bottom" << endl;
-			player->setIsOnGround(true);
-
+			int bottom = WINSIZE_Y - (mStage->getHeight() - floor.top);
+			
+			player->setIsOnGround(true, floor.top, bottom);
 		}
 
 		if(player->getPlayerLeft() <= floor.right && player->getPlayerRight() > floor.right
@@ -241,35 +246,5 @@ void StageScene::stageCollision(void)
 			cout << index << "번째 RECT가 우측에서 충돌" << endl;
 			player->setRightCollision(true);
 		}
-		
-
-		
-
-			/*
-
-		if (player->getPlayerBottom() > floor.top && player->getPlayerTop() < floor.top &&
-			player->getPlayerRight() > floor.left && player->getPlayerLeft() < floor.right)
-		{
-
-			player->setIsOnGround(true, floor.top);
-		}
-
-		
-		if (player->getPlayerRight() > floor.left && player->getPlayerLeft() < floor.left &&
-			player->getPlayerBottom() > floor.top && player->getPlayerTop() < floor.bottom)
-		{
-			cout << "우측 충돌" << endl;
-			player->setRightCollision(true);
-		}
-		
-
-		if (player->getPlayerLeft() <= floor.right && player->getPlayerRight() >= floor.right &&
-			player->getPlayerBottom() >= floor.top && player->getPlayerTop() <= floor.bottom)
-		{
-			cout << "좌측 충돌" << endl;
-			player->setLeftCollision(true);
-		}
-
-		*/
 	}
 }

@@ -13,8 +13,6 @@ private:
 
 	unique_ptr<Player> player;
 
-	// Player* player;
-
 	RECT mZone;
 	RECT floor;
 	

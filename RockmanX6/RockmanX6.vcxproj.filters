@@ -177,6 +177,9 @@
     <ClInclude Include="BulletManager.h">
       <Filter>소스 파일\FrameWork\Manager\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="ProgressBar.h">
+      <Filter>소스 파일\Ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameNode.cpp">
@@ -259,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="BulletManager.cpp">
       <Filter>소스 파일\FrameWork\Manager\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressBar.cpp">
+      <Filter>소스 파일\Ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

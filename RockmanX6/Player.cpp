@@ -30,7 +30,7 @@ void Player::render(void)
 
 void Player::move(bool direction)
 {
-	currentState = CharacterState::Walk;
+	if (pStatus.isOnGround) currentState = CharacterState::Walk;
 
 	float moveSpeed;
 
@@ -58,48 +58,17 @@ void Player::move(bool direction)
 	{
 		charPos.x += moveSpeed;
 	}
-
-
-	/*
-	// 좌우로 확인
-	float moveSpeed;
-
-	if (pStatus.touchLeft) moveSpeed = direction ? pStatus.speed : 0;
-	else if (pStatus.touchRight) moveSpeed = direction ? 0 : -pStatus.speed;
-	else if (pStatus.touchRight && pStatus.touchRight) moveSpeed = direction ? 0 : 0;
-	else moveSpeed = direction ? pStatus.speed : -pStatus.speed;
-
-	if (CAMERAMANAGER->getLockX() == true)
-	{	
-		if (pStatus.hitBox.left + moveSpeed >= 0)
-		{
-			charPos.x += moveSpeed;
-			pStatus.hitBox.left += moveSpeed;
-			pStatus.hitBox.right += moveSpeed;
-		}
-
-		else
-		{
-			charPos.x = pStatus.hitBox.left + hitBoxWidth / 2;
-			currentState = CharacterState::Idle;
-		}
-	}
-
-	else
-	{
-		charPos.x += moveSpeed;
-	}
-	*/
 }
 
 void Player::jump(void)
 {
-	// CAMERAMANAGER->setCameraPos(0, 4);
-
-	charPos.y -= 30;
-	pStatus.hitBox.top -= 30;
-	pStatus.hitBox.bottom -= 30;
-
+	if (pStatus.isOnGround)  // 땅에 있을 때만 점프
+	{
+		currentState = CharacterState::JumpUp;
+		pStatus.jumpStack = true;
+		pStatus.velocityY = pStatus.jumpPower;
+		pStatus.jumpTimer = 0.0f;
+	}
 }
 
 void Player::dash(void)
@@ -185,21 +154,39 @@ void Player::attack(void)
 	// Do Nothing!!	
 }
 
+void Player::isJump(void)
+{
+	if (currentState == CharacterState::JumpUp)
+	{
+		pStatus.velocityY = pStatus.jumpPower;
+		pStatus.jumpTimer = 0.0f;
+	}
+}
+
 void Player::applyGravity(void)
 {
-	if (!pStatus.isOnGround && currentState != CharacterState::Warp)
+	if (!pStatus.isOnGround && currentState == CharacterState::Warp)
 	{
-		charPos.y += progress.gravity;
-		pStatus.hitBox.top += progress.gravity;
-		pStatus.hitBox.bottom += progress.gravity;
+		charPos.y += 12;
+		pStatus.hitBox.top += 12;
+		pStatus.hitBox.bottom += + 12;
 	}
 
-	else if (!pStatus.isOnGround && currentState == CharacterState::Warp)
+	else if (!pStatus.isOnGround) // && currentState != CharacterState::Warp)
 	{
-		charPos.y += progress.gravity + 2;
-		pStatus.hitBox.top += progress.gravity + 2;
-		pStatus.hitBox.bottom += progress.gravity + 2;
+		pStatus.velocityY += progress.gravity;
+		if (pStatus.velocityY > pStatus.maxFallSpeed) pStatus.velocityY = pStatus.maxFallSpeed;
+
+		charPos.y += pStatus.velocityY;
+		pStatus.hitBox.top += pStatus.velocityY;
+		pStatus.hitBox.bottom += pStatus.velocityY;
+
+		if (currentState == CharacterState::JumpUp && pStatus.velocityY > 0.0f)
+			currentState = CharacterState::FallingDown;
+
+		if(currentState != CharacterState::JumpUp) currentState = CharacterState::FallingDown;
 	}
+
 }
 
 void Player::spawn(int x, int y)

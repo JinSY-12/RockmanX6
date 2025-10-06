@@ -205,8 +205,8 @@ void TitleScene::addImage(void)
 	//// 배경 스테이지 ////
 	
 	// 인트로 스테이지
-	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * 3, 960 * 3, true, MAGENTA);
-	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Stage_Intro_Pixel.bmp", 6464 * 3, 960 * 3, false, MAGENTA);
+	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, false, MAGENTA);
 
 
 	//////////////////////////////////
@@ -233,6 +233,11 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_StandBurstEnd", "Resources/Image/Player/X/X_StandBurstEnd.bmp", 82 * SCALE_FACTOR, 88 * SCALE_FACTOR, 2, 2, true, MAGENTA);
 
 	IMAGEMANAGER->addFrameImage("X_StandChargeBurst", "Resources/Image/Player/X/X_StandChargeBurst.bmp", 287 * SCALE_FACTOR, 102 * SCALE_FACTOR, 7, 2, true, MAGENTA);
+
+
+	
+	IMAGEMANAGER->addFrameImage("X_JumpUp", "Resources/Image/Player/X/X_JumpUp.bmp", 170 * SCALE_FACTOR, 114 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_FallingDown", "Resources/Image/Player/X/X_FallingDown.bmp", 64 * SCALE_FACTOR, 108 * SCALE_FACTOR, 2, 2, true, MAGENTA);
 	
 	// 엑스 웨폰
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/SFX/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
@@ -262,6 +267,20 @@ void TitleScene::addImage(void)
 	// 시그너스
 
 	// 더글라스
+
+	//////////////////////////////////
+	// HUD
+	//////////////////////////////////
+
+	IMAGEMANAGER->addImage("HUD_ProgressBar_X", "Resources/Image/HUD/HUD_ProgressBar_X.bmp", 30 * SCALE_FACTOR, 31 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("HUD_ProgressBar_Xweapon", "Resources/Image/HUD/HUD_ProgressBar_Xweapon.bmp", 30 * SCALE_FACTOR, 31 * SCALE_FACTOR, true, MAGENTA);
+	
+	IMAGEMANAGER->addImage("HUD_HpBar", "Resources/Image/HUD/HUD_HpBar.bmp", 9 * SCALE_FACTOR, 144 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("HUD_HpBarHead", "Resources/Image/HUD/HUD_HpBarHead.bmp", 9 * SCALE_FACTOR, 4 * SCALE_FACTOR, true, MAGENTA);
+
+	IMAGEMANAGER->addImage("HUD_GreenBar", "Resources/Image/HUD/HUD_GreenBar.bmp", 3 * SCALE_FACTOR, 146 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("HUD_RedBar", "Resources/Image/HUD/HUD_RedBar.bmp", 3 * SCALE_FACTOR, 146 * SCALE_FACTOR, true, MAGENTA);
+	
 }
 
 void TitleScene::addSound(void)

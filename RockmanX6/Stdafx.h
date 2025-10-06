@@ -53,6 +53,7 @@
 #include <cmath>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 

@@ -87,26 +87,39 @@ public:
 	// 캐릭터 메인 설정값
 	struct PlayerStatus
 	{
+		// 판정 및 이미지
 		GImage* player;
 		RECT hitBox;
 
 		string charName;
+		int firePoint;
+
+		// 스탯
 		float hp;
 		float maxHp;
 		float mp;
 		float maxMp;
+
+		// 이동 스탯
 		float speed;
-		float jumpSpeed;
+		float jumpPower;
+		
+		// 상태값
 		bool lookRight;
 		bool isOnGround;
 
 		bool touchLeft;
 		bool touchRight;
 
-		bool isAtt;
+		// 점프 관련
+		float velocityY;
+		float maxFallSpeed;
+		float jumpTimer;
+		float maxJumpHoldTime;
+		bool jumpStack;
 
-		int firePoint;
-	};
+		float deltaTime = 0.016f;
+};
 
 	struct Progress
 	{
@@ -172,6 +185,9 @@ public:
 
 	BulletManager* bManager;
 
+	float deltaTime;
+	
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -184,6 +200,7 @@ public:
 	virtual void jump(void);
 	virtual void dash(void);
 	virtual void attack(void);
+	virtual void isJump(void);
 
 	// 캐릭터 공통 
 	void applyGravity(void);
@@ -202,22 +219,44 @@ public:
 	// 애니메이션 관련
 	virtual void setHitBox(void);
 
-	// 상태값 관련
+	// 상태 관련
 	inline void setStageGravity(float gravityPower) { progress.gravity = gravityPower; }
 
+	// settter/getter
+	// 좌표 및 판정
 	RECT getPlayerRect(void) { return pStatus.hitBox; }
-
-	int getPlayerCenter(void) { return charPos.x; }
-
-	int getPlayerLeft(void) { return charPos.x - hitBoxWidth / 2; }
-	int getPlayerRight(void) { return charPos.x + hitBoxWidth /2; }
-
-	int getPlayerTop(void) { return charPos.y - hitBoxHeight; }
-	int getPlayerBottom(void) { return charPos.y; }
-
+	
+	inline int getPlayerCenter(void) { return charPos.x; }
+	inline int getPlayerTop(void) { return charPos.y - hitBoxHeight; }
+	inline int getPlayerBottom(void) { return charPos.y; }
+	inline int getPlayerLeft(void) { return charPos.x - hitBoxWidth / 2; }
+	inline int getPlayerRight(void) { return charPos.x + hitBoxWidth /2; }
+	
+	// 상태값
 	inline void setLeftCollision(bool left) { pStatus.touchLeft = left; }
 	inline void setRightCollision(bool right) { pStatus.touchRight = right; }
-	inline void setIsOnGround(bool OnGround) { pStatus.isOnGround = OnGround; }
+	inline void setIsOnGround(bool OnGround, int topline, int Bottom)
+	{
+		pStatus.isOnGround = OnGround;
+		
+		if (pStatus.isOnGround == true)
+		{
+			charPos.y = topline + 4;
 
+			pStatus.hitBox.bottom = Bottom + 4;
+			pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
+
+			pStatus.jumpStack = false;
+		}
+	}
+
+	// 스탯 관련
+	inline void reduceHp(int damage) { pStatus.hp -= damage; }
+	inline void reduceMp(int damage) { pStatus.mp -= damage; }
+
+	inline void setOverPower()
+	{
+		cout << "Test" << endl;
+	}
 };
 

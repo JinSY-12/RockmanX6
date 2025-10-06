@@ -9,11 +9,13 @@ HRESULT UiManager::init(void)
 	mTextDelay = 0.f;
 	nextAlbe = false;
 	_textIcon = IMAGEMANAGER->findImage("Next");
-
-
-	// playerLogo = IMAGEMANAGER->findImage();
-
+	charType = -1;
+	bossType - -1;
 	isDebugMode = false;
+
+	progressBar = new ProgressBar;
+
+	progressBar->init(charType);
 
 	return S_OK;
 }
@@ -49,6 +51,10 @@ void UiManager::update(void)
 
 	if (KEYMANAGER->isOnceKeyDown(VK_TAB)) isDebugMode = !isDebugMode;
 
+	
+	progressBar->update();
+	progressBar->setCharacter(charType, bossType);
+
 	_textIcon->play(0.5f);
 }
 
@@ -75,6 +81,14 @@ void UiManager::render(HDC hdc)
 			_textIcon->frameRender(hdc, WINSIZE_X / 2 - IMAGEMANAGER->findImage("Next")->getFrameWidth() / 2, WINSIZE_Y / 20 * 19);
 		}
 	}
+
+	if (charType != -1 || bossType != -1) progressBar->render(hdc);
+}
+
+void UiManager::setGameStart()
+{
+	progressBar->setVisible(true);
+
 }
 
 void UiManager::printEvent(int eventNum)
@@ -85,5 +99,4 @@ void UiManager::printEvent(int eventNum)
 	mCurrentLine = 0;
 	mTextDelay = TIMEMANAGER->getWorldTime();
 }
-
 

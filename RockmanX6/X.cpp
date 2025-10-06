@@ -15,6 +15,15 @@ HRESULT X::init(int x, int y)
 	pStatus.maxHp = 10.0;
 	pStatus.maxMp = 10.0;
 
+	pStatus.velocityY = 0.0f;
+	pStatus.maxFallSpeed = 10.0f;
+
+	pStatus.maxJumpHoldTime = 0.3f;
+	pStatus.jumpPower = -8.0f;
+	pStatus.jumpTimer = 0.0f;
+	deltaTime = 0.016f;
+	pStatus.jumpStack = false;
+
 	spawn(x, y);
 
 	inputEnabled = false;
@@ -115,22 +124,23 @@ void X::update(void)
 		else if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 		{
 			pStatus.lookRight = true;
-			if (!pStatus.touchRight) move(pStatus.lookRight);
-			else currentState = CharacterState::Idle;
+			if(pStatus.touchRight && pStatus.isOnGround) currentState = CharacterState::Idle;
+			else if (pStatus.touchRight && !pStatus.isOnGround); // 벽타기
+			else move(pStatus.lookRight);
 		}
 
 		else if (KEYMANAGER->isStayKeyDown(VK_LEFT))
 		{
 			pStatus.lookRight = false;
-			if (!pStatus.touchLeft) move(pStatus.lookRight);
-			else currentState = CharacterState::Idle;
+			if (pStatus.touchLeft && pStatus.isOnGround) currentState = CharacterState::Idle;
+			else if (pStatus.touchLeft && !pStatus.isOnGround); // 벽타기
+			else move(pStatus.lookRight);
 		}
 
 		// 대기 상태 변환 + 대기 상태 변환 애니메이션
-		else if (!(KEYMANAGER->isStayKeyDown(VK_RIGHT) || KEYMANAGER->isStayKeyDown(VK_LEFT)))
+		else if (!(KEYMANAGER->isStayKeyDown(VK_RIGHT) || KEYMANAGER->isStayKeyDown(VK_LEFT)) && pStatus.isOnGround)
 		{
 			returnToIdle();
-			pStatus.isAtt = false;
 			attChange = false;
 		}
 
@@ -138,12 +148,29 @@ void X::update(void)
 		// 점프 파트
 		/////////////////////////////////
 
+		if (KEYMANAGER->isOnceKeyDown('X'))
+		{
+			jump();
+		}
+
 		if (KEYMANAGER->isStayKeyDown('X')) // 'ㅌ' 검색을 위한 주석ㅋㅋㅋ
 		{
-			cout << CAMERAMANAGER->getCameraPos().y << endl;
+			// 2단 점프 방지
+			if (pStatus.jumpStack == true)
+			{
+				pStatus.jumpTimer += deltaTime;
+				if (pStatus.jumpTimer < pStatus.maxJumpHoldTime)
+				{
+					charPos.y += pStatus.jumpPower;
+					pStatus.hitBox.top += pStatus.jumpPower;
+					pStatus.hitBox.bottom += pStatus.jumpPower;
+				}
+			}
+		}
 
-			if (pStatus.isOnGround) Player::jump();
-			else if (!pStatus.isOnGround) jump();
+		if (KEYMANAGER->isOnceKeyUp('X'))
+		{
+			// pStatus.jumpStack = false;
 		}
 
 		/////////////////////////////////
@@ -163,7 +190,6 @@ void X::update(void)
 			prevAniFrame = pStatus.player->getFrameX();
 			attackTimer = TIMEMANAGER->getWorldTime();
 			attCheckOnce = true;
-			pStatus.isAtt = true;
 			
 			if (normalBurstAble == true && chargeBurstDelay == false && bManager->getMaxBullets() < 3) attack();
 		}
@@ -217,70 +243,23 @@ void X::render(void)
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
 		// 상태값 출력
-		/*
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0,255,255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, printBodyState(), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "현재 아머", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 65, "노말", "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "공격 상태", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, printAttState(), "DNF_M_18", RGB(0, 255, 255));
 		
-		*/
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "히트박스 왼쪽", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, to_string(pStatus.hitBox.left), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "히트박스 오른쪽", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, to_string(pStatus.hitBox.right), "DNF_M_18", RGB(0, 255, 255));
-		
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "충돌범위 왼쪽", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 65, to_string(charPos.x - hitBoxWidth / 2), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 45, "충돌범위 오른쪽", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 65, to_string(charPos.x + hitBoxWidth / 2), "DNF_M_18", RGB(0, 255, 255));
-
 		// 캐릭터 좌표
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(charPos.x), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, to_string(charPos.x), "DNF_M_18", RGB(0, 255, 255));
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(charPos.y), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, to_string(charPos.y), "DNF_M_18", RGB(0, 255, 255));
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 45, "카메라 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().x), "DNF_M_18", RGB(0, 255, 255));
+		string temp;
+		if (pStatus.jumpStack == true) temp = "X";
+		else temp = "O";
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 45, "카메라 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y), "DNF_M_18", RGB(0, 255, 255));
-		
-		string Check;
-		if (CAMERAMANAGER->getLockX()) Check = "O";
-		else Check = "X";
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "점프 스택", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100, "차징 게이지", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 20, to_string(chargeCount), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 45, "카메라 잠금", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 65, Check, "DNF_M_18", RGB(0, 255, 255));
-		
-		string shoot;
-		if (normalBurstAble && bManager->getMaxBullets() <= 3) shoot = "O";
-		else shoot = "X";
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100, "샤격 가능", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 20, shoot, "DNF_M_18", RGB(0, 255, 255));
-		
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 45, "HitBox Bottom", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 65, to_string(pStatus.hitBox.bottom), "DNF_M_18", RGB(0, 255, 255));
-
-
-		if (chargeBurstDelay) shoot = "O";
-		else shoot = "X";
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100, "차지샷 후딜레이", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 20, shoot, "DNF_M_18", RGB(0, 255, 255));
-		
-
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "히트박스 Bottom", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(pStatus.hitBox.bottom), "DNF_M_18", RGB(0, 255, 255));
 
 		// 히트박스 출력
 		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
@@ -289,6 +268,8 @@ void X::render(void)
 
 void X::jump(void)
 {
+	if (pStatus.jumpStack == false) Player::jump();
+	else cout << "호버링" << endl;
 }
 
 void X::attack(void)
@@ -315,7 +296,6 @@ void X::chargeBurst(void)
 		prevAniFrame = pStatus.player->getFrameX();
 		// 공격 회수 장면을 위한 타이머 저장 -> 안하면 바로 내림ㅋㅋ
 		attackTimer = TIMEMANAGER->getWorldTime();
-		pStatus.isAtt = true;
 
 		attackTimer = TIMEMANAGER->getWorldTime();
 		burstloop = true;
@@ -333,7 +313,6 @@ void X::chargeBurst(void)
 		SOUNDMANAGER->play("SFX_X_Burster3", 0.5f);
 		
 		attackTimer = TIMEMANAGER->getWorldTime();
-		pStatus.isAtt = true;
 
 		burstloop = true;
 		chargeBurstCount = TIMEMANAGER->getWorldTime();
@@ -369,9 +348,6 @@ void X::currentAnimChange(void)
 			if (previousState == CharacterState::Walk) attState = SholderState::Burst;
 			else
 			{
-				//if (previousAnim != "X_StandChargeBurst")
-					//pStatus.player->setFrameX(0);
-
 				currentAnim = "X_StandChargeBurst";
 
 				animSpeed = 0.07f;
@@ -461,6 +437,25 @@ void X::currentAnimChange(void)
 			}
 		}
 	}
+	else if (currentState == CharacterState::JumpUp)
+	{
+		currentAnim = "X_JumpUp";
+		animSpeed = 0.08f;
+		animOffset.y = 0 * SCALE_FACTOR;
+
+		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
+	}
+
+
+	else if (currentState == CharacterState::FallingDown)
+	{
+		currentAnim = "X_FallingDown";
+		animSpeed = 0.08f;
+		animOffset.y = 0 * SCALE_FACTOR;
+
+		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
+	}
+
 
 	if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
 	{
@@ -469,24 +464,9 @@ void X::currentAnimChange(void)
 			if (currentState == CharacterState::Walk) attState = SholderState::None;
 			else if (currentState == CharacterState::Idle) attState = SholderState::Hold;
 			prevAniFrame = pStatus.player->getFrameX();
-			pStatus.isAtt = false;
 		}
-	}
+	}	 
 	
-	// 애니메이션 비교용 변수 초기화
-	previousAnim = currentAnim;
-	previousState = currentState;
-
-	// 애니메이션 동작을 초기 상태로 변환
-	// 공격 중 일 때는 예외 -> 세이버는 빼도 됩니다 그건 서서 쓰는거니까
-	if (previousAnim != currentAnim)
-	{
-		if (currentAnim.find("WalkBurst") != string::npos) pStatus.player->setFrameX(prevAniFrame);
-		else if (previousAnim.find("WalkBurst") != string::npos) pStatus.player->setFrameX(prevAniFrame);
-		else pStatus.player->setFrameX(0);
-	}
-
-	setHitBox();
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom;	
@@ -495,6 +475,20 @@ void X::currentAnimChange(void)
 	pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
 	
 	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
+
+	// 애니메이션 동작을 초기 상태로 변환
+		// 공격 중 일 때는 예외 -> 세이버는 빼도 됩니다 그건 서서 쓰는거니까
+	if (previousAnim != currentAnim)
+	{
+		if (currentAnim.find("WalkBurst") != string::npos) pStatus.player->setFrameX(prevAniFrame);
+		else if (previousAnim.find("WalkBurst") != string::npos) pStatus.player->setFrameX(prevAniFrame);
+		else pStatus.player->setFrameX(0);
+	}
+
+	// 애니메이션 비교용 변수 초기화
+	previousAnim = currentAnim;
+	previousState = currentState;
+	setHitBox();
 }
 
 void X::frameCheck(void)
@@ -577,13 +571,13 @@ void X::spawn(int x, int y)
 	pStatus.hitBox = RectMakeCenter(charPos.x, 0, hitBoxWidth, hitBoxHeight);
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
-	hitBoxCenter.y = pStatus.hitBox.top;
+	hitBoxCenter.y = pStatus.hitBox.bottom - hitBoxHeight;
 
 	// 캐릭터 세팅
 	pStatus.hp = pStatus.maxHp;
 	pStatus.mp = pStatus.maxMp;
 	pStatus.speed = 4.0f;
-	pStatus.jumpSpeed = 4.0f;
+	
 	pStatus.charName = "X_";
 	pStatus.touchLeft = false;
 	pStatus.touchRight = false;
@@ -593,7 +587,6 @@ void X::spawn(int x, int y)
 	currentState = CharacterState::Warp;
 	attState == SholderState::None;
 	pStatus.lookRight = true;
-	pStatus.isAtt = false;
 	isMoving = false;
 	normalBurstAble = true;
 	chargeBurstDelay = false;
@@ -630,7 +623,7 @@ void X::returnToIdle(void)
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			currentState = CharacterState::Idle;
 		break;
-
+		/*
 	case CharacterState::JumpUp:
 		// currentAnim = "X_Land";
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
@@ -642,7 +635,7 @@ void X::returnToIdle(void)
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			currentState = CharacterState::Idle;
 		break;
-
+		*/
 	default:
 		currentState = CharacterState::Idle;
 		break;

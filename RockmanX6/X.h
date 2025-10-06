@@ -33,7 +33,7 @@ public:
 	void attack(void) override;
 	void chargeBurst(void);
 	void spawn(int x, int y) override;
-
+	
 	// 애니메이션 관련
 	void currentAnimChange(void) override;
 	void frameCheck(void);

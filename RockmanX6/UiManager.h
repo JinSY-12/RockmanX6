@@ -1,5 +1,6 @@
 #pragma once
 #include "SingletonBase.h"
+#include "ProgressBar.h"
 
 class UiManager : public SingletonBase<UiManager>
 {
@@ -12,15 +13,7 @@ private:
 	GImage* _dialogue;
 	GImage* _textIcon;
 
-
-	GImage* playerLogo;
-	GImage* enemyLogo;
-
-	GImage* middleHpBar;
-	GImage* topHpBar;
-
-	GImage* middleMpBar;
-	GImage* topMpBar;
+	ProgressBar* progressBar;
 
 	bool isUiMode;
 	bool nextAlbe;
@@ -31,6 +24,10 @@ private:
 	float mTextDelay;
 
 	bool isDebugMode;
+
+	int charType;
+	int bossType;
+
 
 public:
 	HRESULT init(void);
@@ -48,6 +45,9 @@ public:
 	inline void changeNextable(void) { nextAlbe = true; }
 
 	inline bool getIsDebugMode(void) { return isDebugMode; }
+
+	inline void setCharacter(int type, int boss) { charType = type; bossType = boss; }
+	void setGameStart();
 
 	void printEvent(int eventNum);
 };

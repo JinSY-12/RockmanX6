@@ -142,6 +142,9 @@
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MovieScene.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ProgressBar.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="RandomFunction.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SingletonBase.h" />
@@ -172,6 +175,9 @@
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MovieScene.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ProgressBar.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StageScene.cpp" />
