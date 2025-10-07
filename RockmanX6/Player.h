@@ -114,7 +114,7 @@ public:
 		// 점프 관련
 		float velocityY;
 		float maxFallSpeed;
-		float jumpTimer;
+		float jumpAccel;
 		float maxJumpHoldTime;
 		bool jumpStack;
 
@@ -129,7 +129,7 @@ public:
 
 		// 보스 비트셋 순서는 화면 왼쪽 위에서부터 시계 방향
 		bitset<4> clearBoss;
-		float gravity;
+		float gravityAccel;
 	};
 
 #pragma endregion
@@ -187,6 +187,13 @@ public:
 
 	float deltaTime;
 	
+	// 점프 및 중력 조절 관련
+	float gravity;
+	float maxFallSpeed;
+	float jumpGauge;
+	float jumptimer;
+
+	bool jumpKeyPressed;
 
 public:
 	virtual HRESULT init(void);
@@ -220,7 +227,7 @@ public:
 	virtual void setHitBox(void);
 
 	// 상태 관련
-	inline void setStageGravity(float gravityPower) { progress.gravity = gravityPower; }
+	inline void setStageGravity(float gravityPower) { progress.gravityAccel = gravityPower; }
 
 	// settter/getter
 	// 좌표 및 판정
@@ -233,7 +240,7 @@ public:
 	inline int getPlayerRight(void) { return charPos.x + hitBoxWidth /2; }
 	
 	// 상태값
-	inline void setLeftCollision(bool left) { pStatus.touchLeft = left; }
+	inline void setLeftCollision(bool left, int leftline) { pStatus.touchLeft = left; }
 	inline void setRightCollision(bool right) { pStatus.touchRight = right; }
 	inline void setIsOnGround(bool OnGround, int topline, int Bottom)
 	{
@@ -241,9 +248,9 @@ public:
 		
 		if (pStatus.isOnGround == true)
 		{
-			charPos.y = topline + 4;
+			charPos.y = topline - 2;
 
-			pStatus.hitBox.bottom = Bottom + 4;
+			pStatus.hitBox.bottom = Bottom - 2;
 			pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
 
 			pStatus.jumpStack = false;

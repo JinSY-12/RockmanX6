@@ -65,7 +65,6 @@ public:
 	void whiteIn(float padeTime);
 	void whiteOut(float padeTime);
 		
-	MapSize getMapSize(void) { return maxSize; }
 
 	// 카메라 위치 조절 - 이동 / 고정
 	
@@ -83,11 +82,13 @@ public:
 	CameraPos getCameraPos(void) { return camera; }
 	void setCameraPos(int x, int y) { camera.x += x, camera.y += y; }
 
+	MapSize getMapSize(void) { return maxSize; }
 	void settingMapMaxSize(int x, int y) { maxSize.x = x, maxSize.y = y; }
 
 	void cameraOffset(void);
 
 	bool getLockX() { return cameraLockX; }
+	bool getLockY() { return cameraLockY; }
 	
 	// 카메라 초기값 -> 나중에 링크 침대에서 시작하는걸로 카메라 좌표 수정
 	// 링크 하우스 입구

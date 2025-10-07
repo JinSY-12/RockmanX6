@@ -9,20 +9,30 @@ HRESULT X::init(void)
 
 HRESULT X::init(int x, int y)
 {
-	hitBoxWidth = 35 * SCALE_FACTOR;
-	hitBoxHeight = 45 * SCALE_FACTOR;
+	hitBoxWidth = 25 * SCALE_FACTOR;
+	hitBoxHeight = 41 * SCALE_FACTOR;
 
 	pStatus.maxHp = 10.0;
 	pStatus.maxMp = 10.0;
 
-	pStatus.velocityY = 0.0f;
 	pStatus.maxFallSpeed = 10.0f;
 
-	pStatus.maxJumpHoldTime = 0.3f;
-	pStatus.jumpPower = -8.0f;
-	pStatus.jumpTimer = 0.0f;
+	jumpGauge = 0.0f;
 	deltaTime = 0.016f;
 	pStatus.jumpStack = false;
+
+	gravity = 0.0f;
+
+	jumpKeyPressed = false;
+
+	// 점프 테스트 -> 나중에 옮기시오
+	pStatus.jumpPower = -15.0;
+	pStatus.jumpAccel = 0.3f;
+	pStatus.maxJumpHoldTime = 0.1f;
+	maxFallSpeed = 10.0f;
+
+	pStatus.velocityY = 0.0f;
+	jumptimer = 0.0f;
 
 	spawn(x, y);
 
@@ -38,7 +48,7 @@ void X::release(void)
 
 void X::update(void)
 {
-	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y);
+	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y - hitBoxHeight / 2);
 	applyGravity();
 	
 #pragma region WarpIn
@@ -155,22 +165,27 @@ void X::update(void)
 
 		if (KEYMANAGER->isStayKeyDown('X')) // 'ㅌ' 검색을 위한 주석ㅋㅋㅋ
 		{
+			jumptimer += 0.016f;
 			// 2단 점프 방지
 			if (pStatus.jumpStack == true)
 			{
-				pStatus.jumpTimer += deltaTime;
-				if (pStatus.jumpTimer < pStatus.maxJumpHoldTime)
+				if (jumptimer < pStatus.maxJumpHoldTime && pStatus.velocityY < 0.0f)
 				{
-					charPos.y += pStatus.jumpPower;
-					pStatus.hitBox.top += pStatus.jumpPower;
-					pStatus.hitBox.bottom += pStatus.jumpPower;
+					pStatus.velocityY += pStatus.jumpAccel;    // 꾹 누를 때 속도 보정
+					
+					if (pStatus.velocityY > 0.0f)
+						pStatus.velocityY = 0.0f;
 				}
 			}
+			
 		}
 
 		if (KEYMANAGER->isOnceKeyUp('X'))
 		{
-			// pStatus.jumpStack = false;
+			// jumpKeyPressed = false;
+			// pStatus.velocityY = 0.0f;
+			jumptimer = 0.0f;
+			pStatus.jumpStack = false;
 		}
 
 		/////////////////////////////////
@@ -245,22 +260,48 @@ void X::render(void)
 		// 상태값 출력
 		
 		// 캐릭터 좌표
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, to_string(charPos.x), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, to_string(charPos.y), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, printBodyState(), "DNF_M_18", RGB(0, 255, 255));
 
 		string temp;
-		if (pStatus.jumpStack == true) temp = "X";
-		else temp = "O";
+		if (pStatus.jumpStack == true) temp = "O";
+		else temp = "X";
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "점프 스택", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "착지 상태", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "히트박스 Bottom", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(pStatus.hitBox.bottom), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "공격 상태", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, printAttState(), "DNF_M_18", RGB(0, 255, 255));
 
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 45, "점프 파워", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityY), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(charPos.x), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(charPos.y), "DNF_M_18", RGB(0, 255, 255));
+		
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 45, "카메라 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().x), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 45, "카메라 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y), "DNF_M_18", RGB(0, 255, 255));
+
+		if (CAMERAMANAGER->getLockX()) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100, "카메라 Lock X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+
+		if (CAMERAMANAGER->getLockY()) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 45, "카메라 Lock Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
+
+
+		
 		// 히트박스 출력
 		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
 	}
@@ -441,7 +482,7 @@ void X::currentAnimChange(void)
 	{
 		currentAnim = "X_JumpUp";
 		animSpeed = 0.08f;
-		animOffset.y = 0 * SCALE_FACTOR;
+		animOffset.y = -6 * SCALE_FACTOR;
 
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
 	}
@@ -451,7 +492,7 @@ void X::currentAnimChange(void)
 	{
 		currentAnim = "X_FallingDown";
 		animSpeed = 0.08f;
-		animOffset.y = 0 * SCALE_FACTOR;
+		animOffset.y = -6 * SCALE_FACTOR;
 
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
 	}
@@ -466,13 +507,12 @@ void X::currentAnimChange(void)
 			prevAniFrame = pStatus.player->getFrameX();
 		}
 	}	 
-	
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom;	
 
-	pStatus.hitBox.right = pStatus.hitBox.left + hitBoxWidth;
-	pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
+	// pStatus.hitBox.right = pStatus.hitBox.left + hitBoxWidth;
+	// pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
 	
 	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
 
@@ -540,24 +580,29 @@ void X::frameCheck(void)
 
 void X::setHitBox(void)
 {
+	
 	if (CAMERAMANAGER->getLockX() == true)
 	{
 		pStatus.hitBox.left = charPos.x - hitBoxWidth / 2;
 		pStatus.hitBox.right = charPos.x + hitBoxWidth / 2;
 	}
-
-
+	
+	// pStatus.hitBox.bottom = WINSIZE_Y - (CAMERAMANAGER->getMapSize().y - charPos.y);
+	// pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
 
 	switch (currentState)
 	{
 	case CharacterState::Warp:
-		hitBoxWidth = 35 * SCALE_FACTOR;
-		hitBoxHeight = 45 * SCALE_FACTOR;
+		hitBoxWidth = 25 * SCALE_FACTOR;
+		hitBoxHeight = 41 * SCALE_FACTOR;
 		break;
 	case CharacterState::Idle:
-		hitBoxWidth = 35 * SCALE_FACTOR;
-		hitBoxHeight = 45 * SCALE_FACTOR;
+		hitBoxWidth = 25 * SCALE_FACTOR;
+		hitBoxHeight = 41 * SCALE_FACTOR;
 		break;
+	case CharacterState::JumpUp:
+		hitBoxWidth = 25 * SCALE_FACTOR;
+		hitBoxHeight = 45 * SCALE_FACTOR;
 	}
 }
 
@@ -566,9 +611,9 @@ void X::spawn(int x, int y)
 	// 캐릭터 소환
 	// 캐릭터 생성
 	charPos.x = x;
-	charPos.y = y + hitBoxHeight / 2;
+	charPos.y = y;
 
-	pStatus.hitBox = RectMakeCenter(charPos.x, 0, hitBoxWidth, hitBoxHeight);
+	pStatus.hitBox = RectMakeCenter(charPos.x, 0 - hitBoxHeight / 2, hitBoxWidth, hitBoxHeight);
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom - hitBoxHeight;
@@ -611,7 +656,7 @@ void X::spawn(int x, int y)
 	burstloop = false;
 	chargeEffect = IMAGEMANAGER->findImage("SFX_X_Charge");
 
-	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y);
+	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y - hitBoxHeight / 2);
 }
 
 void X::returnToIdle(void)

@@ -65,9 +65,9 @@ void Player::jump(void)
 	if (pStatus.isOnGround)  // 땅에 있을 때만 점프
 	{
 		currentState = CharacterState::JumpUp;
-		pStatus.jumpStack = true;
 		pStatus.velocityY = pStatus.jumpPower;
-		pStatus.jumpTimer = 0.0f;
+		pStatus.jumpStack = true;
+		jumptimer = 0.0f;
 	}
 }
 
@@ -159,7 +159,7 @@ void Player::isJump(void)
 	if (currentState == CharacterState::JumpUp)
 	{
 		pStatus.velocityY = pStatus.jumpPower;
-		pStatus.jumpTimer = 0.0f;
+		pStatus.jumpAccel = 0.0f;
 	}
 }
 
@@ -167,24 +167,72 @@ void Player::applyGravity(void)
 {
 	if (!pStatus.isOnGround && currentState == CharacterState::Warp)
 	{
-		charPos.y += 12;
-		pStatus.hitBox.top += 12;
-		pStatus.hitBox.bottom += + 12;
+		if (CAMERAMANAGER->getLockY() == true)
+		{
+			charPos.y += 12;
+			pStatus.hitBox.top += 12;
+			pStatus.hitBox.bottom += 12;
+		}
+
+		else
+		{
+			charPos.y += 12;
+		}
 	}
 
-	else if (!pStatus.isOnGround) // && currentState != CharacterState::Warp)
+	else if (!pStatus.isOnGround)
 	{
-		pStatus.velocityY += progress.gravity;
-		if (pStatus.velocityY > pStatus.maxFallSpeed) pStatus.velocityY = pStatus.maxFallSpeed;
+		pStatus.velocityY += progress.gravityAccel;
+		if (pStatus.velocityY > pStatus.maxFallSpeed)
+			pStatus.velocityY = pStatus.maxFallSpeed;
 
-		charPos.y += pStatus.velocityY;
-		pStatus.hitBox.top += pStatus.velocityY;
-		pStatus.hitBox.bottom += pStatus.velocityY;
+		if (CAMERAMANAGER->getLockY() == true)
+		{
+			charPos.y += pStatus.velocityY;
+			pStatus.hitBox.top += pStatus.velocityY;
+			pStatus.hitBox.bottom += pStatus.velocityY;
+		}
+
+		else charPos.y += pStatus.velocityY;
 
 		if (currentState == CharacterState::JumpUp && pStatus.velocityY > 0.0f)
 			currentState = CharacterState::FallingDown;
 
-		if(currentState != CharacterState::JumpUp) currentState = CharacterState::FallingDown;
+		if (currentState != CharacterState::JumpUp) currentState = CharacterState::FallingDown;
+	}
+
+	else if (pStatus.isOnGround)
+	{
+		if (CAMERAMANAGER->getLockY() == true)
+		{
+			charPos.y += pStatus.velocityY;
+			pStatus.hitBox.top += pStatus.velocityY;
+			pStatus.hitBox.bottom += pStatus.velocityY;
+		}
+
+		else charPos.y += pStatus.velocityY;
+
+		// pStatus.velocityY = 0.0f;
+	}
+	
+
+	else
+	{
+		/*
+		if (CAMERAMANAGER->getLockY() == true)
+		{
+			charPos.y += pStatus.velocityY;
+			pStatus.hitBox.top += pStatus.velocityY;
+			pStatus.hitBox.bottom += pStatus.velocityY;
+		}
+
+		else charPos.y += pStatus.velocityY;
+
+		if (currentState == CharacterState::JumpUp && pStatus.velocityY > 0.0f)
+			currentState = CharacterState::FallingDown;
+
+		if (currentState != CharacterState::JumpUp) currentState = CharacterState::FallingDown;
+		*/
 	}
 
 }

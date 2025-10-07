@@ -234,10 +234,11 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addFrameImage("X_StandChargeBurst", "Resources/Image/Player/X/X_StandChargeBurst.bmp", 287 * SCALE_FACTOR, 102 * SCALE_FACTOR, 7, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("X_JumpUp", "Resources/Image/Player/X/X_JumpUp.bmp", 136 * SCALE_FACTOR, 116 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_FallingDown", "Resources/Image/Player/X/X_FallingDown.bmp", 136 * SCALE_FACTOR, 116 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 
-	
-	IMAGEMANAGER->addFrameImage("X_JumpUp", "Resources/Image/Player/X/X_JumpUp.bmp", 170 * SCALE_FACTOR, 114 * SCALE_FACTOR, 5, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_FallingDown", "Resources/Image/Player/X/X_FallingDown.bmp", 64 * SCALE_FACTOR, 108 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_JumpUpBurster", "Resources/Image/Player/X/X_JumpUpBurster.bmp", 168 * SCALE_FACTOR, 116 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_FallingDownBurster", "Resources/Image/Player/X/X_FallingDownBurster.bmp", 168 * SCALE_FACTOR, 116 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	
 	// ¿¢½º ¿þÆù
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/SFX/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);

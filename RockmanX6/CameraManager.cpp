@@ -124,11 +124,11 @@ void CameraManager::cameraOffset(void)
 {
     camera.x = playerPos.x - WINSIZE_X / 2;
     camera.y = playerPos.y - WINSIZE_Y / 2;
-
-    // cout << "PlayerPox.y : " << playerPos.y << endl;
-    // cout << "camera.y : " << camera.y << endl;
-
+    
+    /////////////////////////
     // 카메라 x좌표 고정
+    /////////////////////////
+
     if (camera.x < 0)
     {
         camera.x = 0;
@@ -142,15 +142,19 @@ void CameraManager::cameraOffset(void)
     }
 
     else cameraLockX = false;
-
+    
+    /////////////////////////
     // 카메라 y좌표 고정
+    /////////////////////////
+
+
     if (camera.y < maxSize.y - 288 * 3)
     {
         camera.y = maxSize.y - 288 * 3;
         cameraLockY = true;
     }
     
-    else if (camera.y > maxSize.y - WINSIZE_Y)
+    else if (camera.y > maxSize.y- WINSIZE_Y)
     {
         camera.y = maxSize.y - WINSIZE_Y;
         cameraLockY = true;
