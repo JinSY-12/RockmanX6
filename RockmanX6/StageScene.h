@@ -13,6 +13,7 @@ private:
 
 	unique_ptr<Player> player;
 
+	string stagBGM;
 	RECT mZone;
 	RECT floor;
 	

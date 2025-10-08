@@ -47,9 +47,11 @@ HRESULT StageScene::init(int num, int charType)
 	UIMANAGER->setCharacter(charType, num);
 	stageSettting(num);
 
+
 	// 스테이지 시작 준비
 	mReadyLogo = IMAGEMANAGER->findImage("Ready0");
 
+	SOUNDMANAGER->play(stagBGM, 0.5f);
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
 	noticeAniSpeed = 1;
@@ -80,6 +82,8 @@ void StageScene::update(void)
 		}
 	}
 
+	stageCollision();
+
 	if (playAble == true)
 	{
 		// 플레이어는 이미 천장에 소환 되어 있다
@@ -89,7 +93,6 @@ void StageScene::update(void)
 		bManager.update();
 	}
 
-	stageCollision();
 }
 
 void StageScene::render(void)
@@ -129,18 +132,18 @@ void StageScene::stageSettting(int stageNum)
 		case 0:
 			mStage = IMAGEMANAGER->findImage("Stage_Intro");
 			gravity = 0.6f;
-
+			stagBGM = "BGM_Stage_Intro";
 			player->init(WINSIZE_X / 2, mStage->getHeight() - 288 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();
-		
+			
 			break;
 
 		// 커맨드 얀마크
 		case 1:
 			mStage = IMAGEMANAGER->findImage("Stage_Yanmark");
 			gravity = 6.0f;
-
+			stagBGM = "BGM_Stage_CommandYanmark";
 			player->init(WINSIZE_X / 2, mStage->getHeight() - WINSIZE_Y);
 			player->spawn(WINSIZE_X / 2, 1000);
 			player->setStageGravity(gravity);
@@ -170,7 +173,7 @@ bool StageScene::noticeAnim(void)
 	{
 		if (TIMEMANAGER->getWorldTime() - readyTimer >= 1.2f && soundOnce == false)
 		{
-			SOUNDMANAGER->play("Ready", 0.5f);
+			SOUNDMANAGER->play("SFX_Ready", 0.5f);
 			soundOnce = true;
 		}
 		
@@ -192,7 +195,7 @@ bool StageScene::noticeAnim(void)
 void StageScene::rectSetting(void)
 {
 	// 렉트 충돌 테스트 
-	floor = RectMake(0, mStage->getHeight() - 120 * SCALE_FACTOR, 320 * SCALE_FACTOR, 120 * SCALE_FACTOR);
+	floor = RectMake(0, mStage->getHeight() - 45 * SCALE_FACTOR, 320 * SCALE_FACTOR, 45 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
 	floor = RectMake(floor.right, mStage->getHeight() - 80 * SCALE_FACTOR, 320 * SCALE_FACTOR, 80 * SCALE_FACTOR);
@@ -243,14 +246,14 @@ void StageScene::stageCollision(void)
 		if(player->getPlayerLeft() -4 < floor.right && player->getPlayerRight() > floor.right
 			&& player->getPlayerBottom() > floor.top) // && player->getPlayerTop() < floor.bottom)
 		{
-			// cout << index << "번째 RECT가 좌측에서 충돌" << endl;
+			cout << index << "번째 RECT가 좌측에서 충돌" << endl;
 			player->setLeftCollision(true, floor.right);
 		}
 
 		if (player->getPlayerRight() + 4 > floor.left && player->getPlayerLeft() < floor.left
 			&& player->getPlayerBottom() > floor.top) // && player->getPlayerTop() < floor.bottom)
 		{
-			// cout << index << "번째 RECT가 우측에서 충돌" << endl;
+			cout << index << "번째 RECT가 우측에서 충돌" << endl;
 			player->setRightCollision(true);
 		}
 

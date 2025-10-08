@@ -65,9 +65,22 @@ void Player::jump(void)
 	if (pStatus.isOnGround)  // 땅에 있을 때만 점프
 	{
 		currentState = CharacterState::JumpUp;
+
 		pStatus.velocityY = pStatus.jumpPower;
+		
+		int random = RND->getInt(4);
+		if (random == 0);
+		else SOUNDMANAGER->play("Voice_" + pStatus.charName + "Jump" + to_string(random), 0.5f);
+		
+		// 엑스도 3가지 + 벽차기
+		// 제로도 3가지 + 벽차기
+		// 둘다 벽차기는 점프 소리 중 하나를 쓰고 있음 + 찰 때마다 소리남
+
+		pStatus.hitBox.bottom -= 4;
+		pStatus.hitBox.top -= 4;
+		charPos.y -= 4;
+
 		pStatus.jumpStack = true;
-		jumptimer = 0.0f;
 	}
 }
 
@@ -148,6 +161,16 @@ void Player::sfxPlay(void)
 	}
 }
 
+void Player::wallSlide(void)
+{
+	currentState = CharacterState::WallSlide;
+	pStatus.velocityY = 0.0f;
+
+	if (pressRight) pStatus.lookRight = false;
+	else if(pressLeft) pStatus.lookRight = true;
+
+}
+
 
 void Player::attack(void)
 {
@@ -160,6 +183,26 @@ void Player::isJump(void)
 	{
 		pStatus.velocityY = pStatus.jumpPower;
 		pStatus.jumpAccel = 0.0f;
+	}
+}
+
+void Player::wallDrop(void)
+{
+	if (currentState == CharacterState::WallSlide)
+	{
+		currentState = CharacterState::FallingDown;
+
+		int fall; 
+		if (!pStatus.lookRight) fall = -4;
+		else fall = 4;
+		
+		if (CAMERAMANAGER->getLockX() == true)
+		{
+			pStatus.hitBox.left += fall;
+			pStatus.hitBox.right += fall;
+			charPos.x += fall;
+		}
+		else charPos.x += fall;
 	}
 }
 
@@ -198,43 +241,12 @@ void Player::applyGravity(void)
 		if (currentState == CharacterState::JumpUp && pStatus.velocityY > 0.0f)
 			currentState = CharacterState::FallingDown;
 
-		if (currentState != CharacterState::JumpUp) currentState = CharacterState::FallingDown;
-	}
+		else if (currentState != CharacterState::JumpUp && currentState != CharacterState::WallSlide) currentState = CharacterState::FallingDown;
 
-	else if (pStatus.isOnGround)
-	{
-		if (CAMERAMANAGER->getLockY() == true)
-		{
-			charPos.y += pStatus.velocityY;
-			pStatus.hitBox.top += pStatus.velocityY;
-			pStatus.hitBox.bottom += pStatus.velocityY;
-		}
+		else if (currentState == CharacterState::WallSlide && (!pStatus.touchLeft && !pStatus.touchRight)) currentState = CharacterState::FallingDown;
 
-		else charPos.y += pStatus.velocityY;
-
-		// pStatus.velocityY = 0.0f;
-	}
-	
-
-	else
-	{
-		/*
-		if (CAMERAMANAGER->getLockY() == true)
-		{
-			charPos.y += pStatus.velocityY;
-			pStatus.hitBox.top += pStatus.velocityY;
-			pStatus.hitBox.bottom += pStatus.velocityY;
-		}
-
-		else charPos.y += pStatus.velocityY;
-
-		if (currentState == CharacterState::JumpUp && pStatus.velocityY > 0.0f)
-			currentState = CharacterState::FallingDown;
-
-		if (currentState != CharacterState::JumpUp) currentState = CharacterState::FallingDown;
-		*/
-	}
-
+		else;
+	}	
 }
 
 void Player::spawn(int x, int y)
@@ -253,16 +265,17 @@ string Player::printBodyState(void)
 
 	if (currentState == CharacterState::Idle) result = "대기";
 	else if (currentState == CharacterState::Walk) result = "걷기";
-	else if (currentState == CharacterState::Dash) result = "대시";
 	else if (currentState == CharacterState::JumpUp) result = "점프";
 	else if (currentState == CharacterState::FallingDown) result = "낙하";
-	else if (currentState == CharacterState::Crouch) result = "앉기";
+	else if (currentState == CharacterState::Dash) result = "대시";
+	else if (currentState == CharacterState::Land) result = "착지";
 	else if (currentState == CharacterState::Climb) result = "사다리 타기";
+	else if (currentState == CharacterState::Crouch) result = "앉기";
 	else if (currentState == CharacterState::Warp) result = "워프";
-	else if (currentState == CharacterState::SpecialAtt) result = "기가 어택";
+	else if (currentState == CharacterState::WallSlide) result = "벽타기";
+	else if (currentState == CharacterState::WallKick) result = "벽차기";
 	else if (currentState == CharacterState::Dead) result = "사망";
-	else if (currentState == CharacterState::Wall) result = "벽타기";
-
+	
 	return result;
 }
 

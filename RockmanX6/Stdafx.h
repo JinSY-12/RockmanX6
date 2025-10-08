@@ -126,7 +126,7 @@ using namespace MY_UTIL;
 
 #else
 
-#define WINSTART_X			1200
+#define WINSTART_X			1000
 #define WINSTART_Y			180
 #define WINSIZE_X			960
 #define WINSIZE_Y			720

@@ -18,7 +18,6 @@ void BulletManager::update(void)
 
 		if ((*_viBullet)->bStatus.isFire == false)
 		{
-			cout << "µ¿ÀÛ" << endl;
 			_viBullet = _vBullet.erase(_viBullet);
 		}
 			

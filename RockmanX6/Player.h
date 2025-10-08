@@ -75,13 +75,11 @@ public:
 		Crouch,
 		Land,
 		Climb,
-		Att,
-		Saber,
-		SpecialAtt,
 		Warp,
-		OverPower,
+		WallSlide,
+		WallKick,
 		Dead,
-		Wall
+		OverPower
 	};
 
 	// 캐릭터 메인 설정값
@@ -185,15 +183,11 @@ public:
 
 	BulletManager* bManager;
 
-	float deltaTime;
-	
-	// 점프 및 중력 조절 관련
-	float gravity;
-	float maxFallSpeed;
-	float jumpGauge;
-	float jumptimer;
-
-	bool jumpKeyPressed;
+	// 키 입력 관련
+	bool multiInput;
+	bool pressLeft;
+	bool pressRight;
+	bool lastKeyIsRight;
 
 public:
 	virtual HRESULT init(void);
@@ -208,8 +202,10 @@ public:
 	virtual void dash(void);
 	virtual void attack(void);
 	virtual void isJump(void);
+	void wallSlide(void);
+	void wallDrop(void);
 
-	// 캐릭터 공통 
+	// 캐릭터 공통 상태값 조작
 	void applyGravity(void);
 	void sfxPlay(void);
 	void setBulletManager(BulletManager* manager) { bManager = manager; };
@@ -254,6 +250,7 @@ public:
 			pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
 
 			pStatus.jumpStack = false;
+			pStatus.velocityY = 0.0f;
 		}
 	}
 

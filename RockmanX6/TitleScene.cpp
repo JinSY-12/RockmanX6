@@ -17,7 +17,7 @@ HRESULT TitleScene::init(void)
 	mMoveTimer = 0.f;
 
 	// 타이틀 시작
-	SOUNDMANAGER->play("Title", 0.5f);
+	SOUNDMANAGER->play("Menu_Title", 0.5f);
 
 	// 화면 입장
 	insert = false;
@@ -37,7 +37,7 @@ void TitleScene::update(void)
 	// 녹음용 키
 	if (KEYMANAGER->isOnceKeyDown('V'))
 	{
-		SOUNDMANAGER->play("Title", 0.5f);
+		SOUNDMANAGER->play("Menu_Title", 0.5f);
 	}
 
 	// 선택키
@@ -50,7 +50,7 @@ void TitleScene::update(void)
 			// SCENEMANAGER->changeScene("컷씬", 0);
 
 			insert = true;
-			SOUNDMANAGER->play("ButtonSelect", 0.5f);
+			SOUNDMANAGER->play("Menu_ButtonSelect", 0.5f);
 			CAMERAMANAGER->padeIn(2.0f);
 			mSelectTimer = TIMEMANAGER->getWorldTime();
 			mMoveTimer = TIMEMANAGER->getWorldTime();
@@ -64,7 +64,7 @@ void TitleScene::update(void)
 			// 메뉴 선택
 			if (buttonSelect == 0)
 			{
-				SOUNDMANAGER->play("ButtonSelect", 0.5f);
+				SOUNDMANAGER->play("Menu_ButtonSelect", 0.5f);
 
 				// 0 = 인트로 스테이지, 1 = 얀마크 스테이지
 				// 0 = 엑스, 1 = 제로, 2 = 팔콘, 3 = 블레이드, 4 = 섀도우, 5 = 얼티밋, 6 = 블랙 제로
@@ -76,13 +76,13 @@ void TitleScene::update(void)
 
 			else if (buttonSelect == 1)
 			{
-				SOUNDMANAGER->play("Error", 0.5f);
+				SOUNDMANAGER->play("Menu_Error", 0.5f);
 				// 미구현 에러 사운드 출력
 			}
 
 			else if (buttonSelect == 2)
 			{
-				SOUNDMANAGER->play("ButtonSelect", 0.5f);
+				SOUNDMANAGER->play("Menu_ButtonSelect", 0.5f);
 				// 씬 체인지 혹은 UI 출력
 			}
 		}
@@ -97,7 +97,7 @@ void TitleScene::update(void)
 		else buttonSelect++;
 
 		button[buttonSelect].dark = !button[buttonSelect].dark;
-		SOUNDMANAGER->play("ButtonMove", 0.5f);
+		SOUNDMANAGER->play("Menu_ButtonMove", 0.5f);
 		mMoveTimer = TIMEMANAGER->getWorldTime();
 	}
 
@@ -109,7 +109,7 @@ void TitleScene::update(void)
 		else buttonSelect--;
 
 		button[buttonSelect].dark = !button[buttonSelect].dark;
-		SOUNDMANAGER->play("ButtonMove", 0.5f);
+		SOUNDMANAGER->play("Menu_ButtonMove", 0.5f);
 		mMoveTimer = TIMEMANAGER->getWorldTime();
 	}
 
@@ -223,8 +223,8 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addFrameImage("X_Spawn", "Resources/Image/Player/X/X_Spawn.bmp", 1156 * SCALE_FACTOR, 192 * SCALE_FACTOR, 17, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Idle", "Resources/Image/Player/X/X_Idle.bmp", 140 * SCALE_FACTOR, 92 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WalkStart", "Resources/Image/Player/X/X_WalkStart2.bmp", 96 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WalkLoop", "Resources/Image/Player/X/X_WalkLoop2.bmp", 686 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_WalkStart", "Resources/Image/Player/X/X_WalkStart.bmp", 96 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_WalkLoop", "Resources/Image/Player/X/X_WalkLoop.bmp", 686 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
 
 	IMAGEMANAGER->addFrameImage("X_WalkBurstStart", "Resources/Image/Player/X/X_WalkBurstStart.bmp", 110 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_WalkBurstLoop", "Resources/Image/Player/X/X_WalkBurstLoop.bmp", 798 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
@@ -240,6 +240,9 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_JumpUpBurster", "Resources/Image/Player/X/X_JumpUpBurster.bmp", 168 * SCALE_FACTOR, 116 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_FallingDownBurster", "Resources/Image/Player/X/X_FallingDownBurster.bmp", 168 * SCALE_FACTOR, 116 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	
+	IMAGEMANAGER->addFrameImage("X_WallSlide", "Resources/Image/Player/X/X_WallSlide.bmp", 140 * SCALE_FACTOR, 128 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	
+
 	// 엑스 웨폰
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/SFX/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/SFX/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);
@@ -288,32 +291,48 @@ void TitleScene::addSound(void)
 {
 
 	//////////////////////////////////
-	// 타이틀 화면 사운드
+	// 배경 음악
 	//////////////////////////////////
 
-	// 배경
-	SOUNDMANAGER->addSound("Title", "Resources/Sound/Menu/Menu_Title.wav", false, false);
+	// 게임 컷씬 1 - 인트로
+	SOUNDMANAGER->addSound("BGM_Desert", "Resources/Sound/BGM/BGM_Desert.wav", true, true);
+	SOUNDMANAGER->addSound("BGM_Laboratory", "Resources/Sound/BGM/BGM_Laboratory.wav", true, true);
 
-	// 아이콘
-	SOUNDMANAGER->addSound("ButtonMove", "Resources/Sound/Menu/Menu_ButtonMove.wav", false, false);
-	SOUNDMANAGER->addSound("ButtonSelect", "Resources/Sound/Menu/Menu_ButtonSelect.wav", false, false);
+	// 헌터 베이스
+	SOUNDMANAGER->addSound("BGM_Stage_Select", "Resources/Sound/BGM/BGM_Stage_Select.wav", true, true);
+	SOUNDMANAGER->addSound("BGM_Stage_Start", "Resources/Sound/BGM/BGM_Stage_Start.wav", true, true);
+	
 
-	SOUNDMANAGER->addSound("Error", "Resources/Sound/Menu/Menu_Error.wav", false, false);
+	// 인트로 스테이지
+	SOUNDMANAGER->addSound("BGM_Stage_Intro", "Resources/Sound/BGM/BGM_Stage_Intro.wav", true, true);
+	SOUNDMANAGER->addSound("BGM_VS_Intro", "Resources/Sound/BGM/BGM_VS_Intro.wav", true, true);
+
+	// 커맨드 얀마크
+	
+	SOUNDMANAGER->addSound("BGM_Stage_CommandYanmark", "Resources/Sound/BGM/BGM_Stage_CommandYanmark.wav", true, true);
+	SOUNDMANAGER->addSound("BGM_VS_Boss", "Resources/Sound/BGM/BGM_VS_Boss.wav", true, true);
+	
 
 	//////////////////////////////////
-	// 컷씬 사운드 - 컷씬 보이스는 여기!!
+	// 효과음
 	//////////////////////////////////
 
-	// 게임 스타트 인트로
-	SOUNDMANAGER->addSound("Desert", "Resources/Sound/BGM/BGM_Desert.wav", true, true);
-	SOUNDMANAGER->addSound("Laboratory", "Resources/Sound/BGM/BGM_Laboratory.wav", true, true);
-	SOUNDMANAGER->addSound("StageSelect", "Resources/Sound/BGM/BGM_StageSelect.wav", true, true);
-	SOUNDMANAGER->addSound("VS_D1000", "Resources/Sound/BGM/BGM_VS_D1000.wav", true, true);
-	SOUNDMANAGER->addSound("IntroStage", "Resources/Sound/BGM/BGM_IntroStage.wav", true, true);
+	// 타이틀 
+	SOUNDMANAGER->addSound("Menu_Title", "Resources/Sound/Menu/Menu_Title.wav", false, false);
+	SOUNDMANAGER->addSound("Menu_ButtonMove", "Resources/Sound/Menu/Menu_ButtonMove.wav", false, false);
+	SOUNDMANAGER->addSound("Menu_ButtonSelect", "Resources/Sound/Menu/Menu_ButtonSelect.wav", false, false);
+	SOUNDMANAGER->addSound("Menu_Error", "Resources/Sound/Menu/Menu_Error.wav", false, false);
+	
+	// 게임 컷씬 1 - 인트로
+	SOUNDMANAGER->addSound("SFX_Siren", "Resources/Sound/SFX/SFX_Siren.wav", true, false);
+	SOUNDMANAGER->addSound("SFX_Siren_Loop", "Resources/Sound/SFX/SFX_Siren_Loop.wav", true, true);
+	
+	// 인게임 효과음
+	SOUNDMANAGER->addSound("SFX_Ready", "Resources/Sound/SFX/SFX_Ready.wav", false, false);
 
-	SOUNDMANAGER->addSound("Siren", "Resources/Sound/SFX/SFX_Siren.wav", true, false);
-	SOUNDMANAGER->addSound("Siren_Loop","Resources/Sound/SFX/SFX_Siren_Loop.wav", true, true);
-	SOUNDMANAGER->addSound("Ready", "Resources/Sound/SFX/SFX_Ready.wav", false, false);
+	//////////////////////////////////
+	// 컷씬 보이스
+	//////////////////////////////////
 	
 	// 이벤트 넘버와 보이스 갯수를 받아와서 이중 for문 돌려버리자ㅋㅋㅋㅋ
 	for (int i = 1 ; i < 23 ; i++)
@@ -327,6 +346,7 @@ void TitleScene::addSound(void)
 		SOUNDMANAGER->addSound("Voice1_"+ voiceNum, filePath.c_str(), false, false);
 	}
 
+
 	//////////////////////////////////
 	// 캐릭터 사운드 - 컷씬 보이스는 없습니다!!
 	//////////////////////////////////
@@ -336,23 +356,32 @@ void TitleScene::addSound(void)
 	//////////////////////////////////
 	
 	// 보이스
-	// SOUNDMANAGER->addSound("");
+	SOUNDMANAGER->addSound("Voice_X_Burster", "Resources/Sound/Voice/Character/X/Voice_X_Burster.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_Jump1", "Resources/Sound/Voice/Character/X/Voice_X_Jump1.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_Jump2", "Resources/Sound/Voice/Character/X/Voice_X_Jump2.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_Jump3", "Resources/Sound/Voice/Character/X/Voice_X_Jump3.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_WallKick", "Resources/Sound/Voice/Character/X/Voice_X_WallKick.wav", false, false);
 
+	SOUNDMANAGER->addSound("Voice_X_Dead", "Resources/Sound/Voice/Character/X/Voice_X_Dead.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_HighDamaged", "Resources/Sound/Voice/Character/X/Voice_X_HighDamaged.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_LowHp", "Resources/Sound/Voice/Character/X/Voice_X_LowHp.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_LowDamaged", "Resources/Sound/Voice/Character/X/Voice_X_LowDamaged.wav", false, false);
+	
 	// 효과음
-	SOUNDMANAGER->addSound("SFX_X_WarpIn" , "Resources/Sound/SFX/Charcter/X/SFX_X_WarpIn.wav", false, false);
-	SOUNDMANAGER->addSound("SFX_X_WarpOut", "Resources/Sound/SFX/Charcter/X/SFX_X_WarpOut.wav", false, false);
-	SOUNDMANAGER->addSound("SFX_X_BurstCharge", "Resources/Sound/SFX/Charcter/X/SFX_X_BurstCharge.wav", false, false);
-	SOUNDMANAGER->addSound("SFX_X_BurstChargeLoop", "Resources/Sound/SFX/Charcter/X/SFX_X_BurstChargeLoop.wav", false, true);
+	SOUNDMANAGER->addSound("SFX_X_WarpIn" , "Resources/Sound/SFX/Character/X/SFX_X_WarpIn.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_WarpOut", "Resources/Sound/SFX/Character/X/SFX_X_WarpOut.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_BurstCharge", "Resources/Sound/SFX/Character/X/SFX_X_BurstCharge.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_BurstChargeLoop", "Resources/Sound/SFX/Character/X/SFX_X_BurstChargeLoop.wav", false, true);
 
-	SOUNDMANAGER->addSound("SFX_X_Burster1", "Resources/Sound/SFX/Charcter/X/SFX_X_Burster1.wav", false, false);
-	SOUNDMANAGER->addSound("SFX_X_Burster2", "Resources/Sound/SFX/Charcter/X/SFX_X_Burster2.wav", false, false);
-	SOUNDMANAGER->addSound("SFX_X_Burster3", "Resources/Sound/SFX/Charcter/X/SFX_X_Burster3.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_Burster1", "Resources/Sound/SFX/Character/X/SFX_X_Burster1.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_Burster2", "Resources/Sound/SFX/Character/X/SFX_X_Burster2.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_Burster3", "Resources/Sound/SFX/Character/X/SFX_X_Burster3.wav", false, false);
 
-	SOUNDMANAGER->addSound("SFX_X_ArmorRoom", "Resources/Sound/SFX/Charcter/X/SFX_X_ArmorRoom.wav", false, false);
-	SOUNDMANAGER->addSound("SFX_X_BurstCharge", "Resources/Sound/SFX/Charcter/X/SFX_X_BurstCharge.wav", false, false);
-	SOUNDMANAGER->addSound("SFX_X_BurstChargeLoop", "Resources/Sound/SFX/Charcter/X/SFX_X_BurstChargeLoop.wav", false, true);
+	SOUNDMANAGER->addSound("SFX_X_ArmorRoom", "Resources/Sound/SFX/Character/X/SFX_X_ArmorRoom.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_BurstCharge", "Resources/Sound/SFX/Character/X/SFX_X_BurstCharge.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_BurstChargeLoop", "Resources/Sound/SFX/Character/X/SFX_X_BurstChargeLoop.wav", false, true);
 
-	SOUNDMANAGER->addSound("SFX_X_ArmorRoom", "Resources/Sound/SFX/Charcter/X/SFX_X_ArmorRoom.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_X_ArmorRoom", "Resources/Sound/SFX/Character/X/SFX_X_ArmorRoom.wav", false, false);
 
 	
 	//////////////////////////////////
