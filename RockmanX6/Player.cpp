@@ -33,54 +33,31 @@ void Player::move(bool direction)
 	if (pStatus.isOnGround) currentState = CharacterState::Walk;
 
 	float moveSpeed;
-
 	if (direction) moveSpeed = pStatus.speed;
 	else moveSpeed = -pStatus.speed;
 
-
-	if (CAMERAMANAGER->getLockX() == true)
-	{
-		if (pStatus.hitBox.left + moveSpeed >= 0)
-		{
-			charPos.x += moveSpeed;
-			pStatus.hitBox.left += moveSpeed;
-			pStatus.hitBox.right += moveSpeed;
-		}
-
-		else
-		{
-			charPos.x = pStatus.hitBox.left + hitBoxWidth / 2;
-			currentState = CharacterState::Idle;
-		}
-	}
-
-	else
-	{
-		charPos.x += moveSpeed;
-	}
+	pStatus.velocityX = moveSpeed;
 }
 
 void Player::jump(void)
 {
+	// 일반 점프
 	if (pStatus.isOnGround)  // 땅에 있을 때만 점프
 	{
+		isJumpUp = true;
 		currentState = CharacterState::JumpUp;
 
 		pStatus.velocityY = pStatus.jumpPower;
 		
-		int random = RND->getInt(4);
-		if (random == 0);
-		else SOUNDMANAGER->play("Voice_" + pStatus.charName + "Jump" + to_string(random), 0.5f);
-		
-		// 엑스도 3가지 + 벽차기
-		// 제로도 3가지 + 벽차기
-		// 둘다 벽차기는 점프 소리 중 하나를 쓰고 있음 + 찰 때마다 소리남
-
 		pStatus.hitBox.bottom -= 4;
 		pStatus.hitBox.top -= 4;
 		charPos.y -= 4;
+	}
 
-		pStatus.jumpStack = true;
+	// 벽차기
+	else
+	{
+		if (pStatus.touchLeft || pStatus.touchRight) wallKick();
 	}
 }
 
@@ -109,8 +86,27 @@ void Player::sfxPlay(void)
 			SOUNDMANAGER->play(soundResult, 0.5f);
 		}
 
-		// 기능 미구현
+		else if (currentState == CharacterState::JumpUp)
+		{
+			int random = RND->getInt(4);
+			if (random == 0);
+			else SOUNDMANAGER->play("Voice_" + pStatus.charName + "Jump" + to_string(random), 0.5f);
 
+			// 엑스도 3가지 + 벽차기
+			// 제로도 3가지 + 벽차기
+			// 둘다 벽차기는 점프 소리 중 하나를 쓰고 있음 + 찰 때마다 소리남
+		}
+
+		
+		else if (currentState == CharacterState::WallKick)
+		{
+			// 엑스도 3가지 + 벽차기
+			// 제로도 3가지 + 벽차기
+			// 둘다 벽차기는 점프 소리 중 하나를 쓰고 있음 + 찰 때마다 소리남
+		}
+		
+
+		// 기능 미구현
 		/*
 		// 대시 시작
 		else if (currentState == CharacterState::Dash)
@@ -164,26 +160,7 @@ void Player::sfxPlay(void)
 void Player::wallSlide(void)
 {
 	currentState = CharacterState::WallSlide;
-	pStatus.velocityY = 0.0f;
-
-	if (pressRight) pStatus.lookRight = false;
-	else if(pressLeft) pStatus.lookRight = true;
-
-}
-
-
-void Player::attack(void)
-{
-	// Do Nothing!!	
-}
-
-void Player::isJump(void)
-{
-	if (currentState == CharacterState::JumpUp)
-	{
-		pStatus.velocityY = pStatus.jumpPower;
-		pStatus.jumpAccel = 0.0f;
-	}
+	pStatus.velocityY = 1.9f;
 }
 
 void Player::wallDrop(void)
@@ -192,10 +169,10 @@ void Player::wallDrop(void)
 	{
 		currentState = CharacterState::FallingDown;
 
-		int fall; 
-		if (!pStatus.lookRight) fall = -4;
+		int fall;
+		if (pStatus.lookRight) fall = -4;
 		else fall = 4;
-		
+
 		if (CAMERAMANAGER->getLockX() == true)
 		{
 			pStatus.hitBox.left += fall;
@@ -206,8 +183,26 @@ void Player::wallDrop(void)
 	}
 }
 
-void Player::applyGravity(void)
+void Player::wallKick(void)
 {
+	currentState == CharacterState::WallKick;
+
+	pStatus.velocityY = -12.0f;
+
+	SOUNDMANAGER->play("Voice_" + pStatus.charName + "Jump1", 0.5f);
+
+	if (pStatus.lookRight) pStatus.velocityX = -8.0f;
+	else pStatus.velocityX = 8.0f;
+}
+
+void Player::attack(void)
+{
+	// Do Nothing!!	
+}
+
+void Player::applyForces(void)
+{
+	// 워프
 	if (!pStatus.isOnGround && currentState == CharacterState::Warp)
 	{
 		if (CAMERAMANAGER->getLockY() == true)
@@ -217,15 +212,14 @@ void Player::applyGravity(void)
 			pStatus.hitBox.bottom += 12;
 		}
 
-		else
-		{
-			charPos.y += 12;
-		}
+		else charPos.y += 12;
 	}
 
+	// 공중 상태 - 점프 + 벽 슬라이딩
 	else if (!pStatus.isOnGround)
 	{
 		pStatus.velocityY += progress.gravityAccel;
+
 		if (pStatus.velocityY > pStatus.maxFallSpeed)
 			pStatus.velocityY = pStatus.maxFallSpeed;
 
@@ -238,15 +232,49 @@ void Player::applyGravity(void)
 
 		else charPos.y += pStatus.velocityY;
 
-		if (currentState == CharacterState::JumpUp && pStatus.velocityY > 0.0f)
-			currentState = CharacterState::FallingDown;
+		if (currentState == CharacterState::JumpUp)
+		{
+			if (pStatus.velocityY > -7.0f) isJumpUp = false;
+			if (pStatus.velocityY > 0.0f) currentState = CharacterState::FallingDown;
+		}
 
 		else if (currentState != CharacterState::JumpUp && currentState != CharacterState::WallSlide) currentState = CharacterState::FallingDown;
-
 		else if (currentState == CharacterState::WallSlide && (!pStatus.touchLeft && !pStatus.touchRight)) currentState = CharacterState::FallingDown;
-
 		else;
-	}	
+	}
+
+	// 벽차기
+	if (CAMERAMANAGER->getLockX() == true)
+	{
+		if (pStatus.hitBox.left + pStatus.velocityX >= 0)
+		{
+			pStatus.hitBox.left += pStatus.velocityX;
+			pStatus.hitBox.right += pStatus.velocityX;
+			charPos.x += pStatus.velocityX;
+		}
+
+		else
+		{
+			charPos.x = pStatus.hitBox.left + hitBoxWidth / 2;
+			currentState = CharacterState::Idle;
+		}
+	}
+
+	else charPos.x += pStatus.velocityX;
+	
+	if (!pStatus.lookRight)
+	{	
+		if (pStatus.velocityX > 0.0f) pStatus.velocityX -= 0.8f;
+		else pStatus.velocityX = 0.0f;
+	}
+
+	else
+	{
+		if (pStatus.velocityX < 0.0f) pStatus.velocityX += 0.8f;
+		else pStatus.velocityX = 0.0f;
+	}
+	
+	
 }
 
 void Player::spawn(int x, int y)

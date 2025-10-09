@@ -117,7 +117,7 @@ public:
 	inline bool EventComplete(void) { return writeFinish; }
 
 	wstring Utf8ToWstring(const std::string& str);
-	string TextManager::WStringToString(const std::wstring& wstr);
+	string WStringToString(const std::wstring& wstr);
 
 	TextManager() {}
 	~TextManager() {}

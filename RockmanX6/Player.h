@@ -110,13 +110,9 @@ public:
 		bool touchRight;
 
 		// 점프 관련
+		float velocityX;
 		float velocityY;
 		float maxFallSpeed;
-		float jumpAccel;
-		float maxJumpHoldTime;
-		bool jumpStack;
-
-		float deltaTime = 0.016f;
 };
 
 	struct Progress
@@ -189,6 +185,8 @@ public:
 	bool pressRight;
 	bool lastKeyIsRight;
 
+	bool isJumpUp;
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -201,12 +199,13 @@ public:
 	virtual void jump(void);
 	virtual void dash(void);
 	virtual void attack(void);
-	virtual void isJump(void);
+
 	void wallSlide(void);
 	void wallDrop(void);
-
+	void wallKick(void);
+	
 	// 캐릭터 공통 상태값 조작
-	void applyGravity(void);
+	void applyForces(void);
 	void sfxPlay(void);
 	void setBulletManager(BulletManager* manager) { bManager = manager; };
 
@@ -249,7 +248,6 @@ public:
 			pStatus.hitBox.bottom = Bottom - 2;
 			pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
 
-			pStatus.jumpStack = false;
 			pStatus.velocityY = 0.0f;
 		}
 	}
