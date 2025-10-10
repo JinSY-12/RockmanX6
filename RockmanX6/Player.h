@@ -90,7 +90,8 @@ public:
 		RECT hitBox;
 
 		string charName;
-		int firePoint;
+		int firePointX;
+		int firePointY;
 
 		// 스탯
 		float hp;
@@ -99,7 +100,8 @@ public:
 		float maxMp;
 
 		// 이동 스탯
-		float speed;
+		float moveSpeed;
+		float dashSpeed;
 		float jumpPower;
 		
 		// 상태값
@@ -113,6 +115,9 @@ public:
 		float velocityX;
 		float velocityY;
 		float maxFallSpeed;
+
+		// 대시 관련
+		bool isDash;
 };
 
 	struct Progress
@@ -186,6 +191,9 @@ public:
 	bool lastKeyIsRight;
 
 	bool isJumpUp;
+	// 대시 관련
+	float dashTimer;
+	float maxDashTime;
 
 public:
 	virtual HRESULT init(void);
@@ -197,7 +205,7 @@ public:
 	// 캐릭터 공통 조작
 	virtual void move(bool direction);
 	virtual void jump(void);
-	virtual void dash(void);
+	virtual void dash(bool direction);
 	virtual void attack(void);
 
 	void wallSlide(void);
@@ -205,7 +213,7 @@ public:
 	void wallKick(void);
 	
 	// 캐릭터 공통 상태값 조작
-	void applyForces(void);
+	void applyForce(void);
 	void sfxPlay(void);
 	void setBulletManager(BulletManager* manager) { bManager = manager; };
 
@@ -255,6 +263,11 @@ public:
 	// 스탯 관련
 	inline void reduceHp(int damage) { pStatus.hp -= damage; }
 	inline void reduceMp(int damage) { pStatus.mp -= damage; }
+	inline float lerp(float start, float end, float time)
+	{
+		return start + (end - start) * time;
+	}
+
 
 	inline void setOverPower()
 	{

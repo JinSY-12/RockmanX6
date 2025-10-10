@@ -30,11 +30,12 @@ void Player::render(void)
 
 void Player::move(bool direction)
 {
+	if (pStatus.isDash) return;
 	if (pStatus.isOnGround) currentState = CharacterState::Walk;
 
 	float moveSpeed;
-	if (direction) moveSpeed = pStatus.speed;
-	else moveSpeed = -pStatus.speed;
+	if (direction) moveSpeed = pStatus.moveSpeed;
+	else moveSpeed = -pStatus.moveSpeed;
 
 	pStatus.velocityX = moveSpeed;
 }
@@ -61,9 +62,18 @@ void Player::jump(void)
 	}
 }
 
-void Player::dash(void)
+void Player::dash(bool direction)
 {
-	// Later
+	currentState = CharacterState::Dash;
+	pStatus.isDash = true;
+
+
+
+	float dashSpeed;
+	if (direction) dashSpeed = pStatus.dashSpeed;
+	else dashSpeed = -pStatus.dashSpeed;
+
+	pStatus.velocityX = lerp(pStatus.velocityX, dashSpeed, 0.3f);
 }
 
 void Player::sfxPlay(void)
@@ -160,13 +170,15 @@ void Player::sfxPlay(void)
 void Player::wallSlide(void)
 {
 	currentState = CharacterState::WallSlide;
-	pStatus.velocityY = 1.9f;
+	pStatus.velocityY = 0.0f;
+	// pStatus.velocityY = 1.9f;
 }
 
 void Player::wallDrop(void)
 {
 	if (currentState == CharacterState::WallSlide)
 	{
+		cout << "강력 의심 후보 1" << endl;
 		currentState = CharacterState::FallingDown;
 
 		int fall;
@@ -185,7 +197,7 @@ void Player::wallDrop(void)
 
 void Player::wallKick(void)
 {
-	currentState == CharacterState::WallKick;
+	currentState = CharacterState::WallKick;
 
 	pStatus.velocityY = -12.0f;
 
@@ -200,7 +212,7 @@ void Player::attack(void)
 	// Do Nothing!!	
 }
 
-void Player::applyForces(void)
+void Player::applyForce(void)
 {
 	// 워프
 	if (!pStatus.isOnGround && currentState == CharacterState::Warp)
@@ -238,8 +250,14 @@ void Player::applyForces(void)
 			if (pStatus.velocityY > 0.0f) currentState = CharacterState::FallingDown;
 		}
 
-		else if (currentState != CharacterState::JumpUp && currentState != CharacterState::WallSlide) currentState = CharacterState::FallingDown;
+		// 공중에서 점프하거나 벽타기 하는거 아니면 낙하 이미지로 변경 -> 벽차기와 에어대시, 2단 점프도 넣을 예정
+		else if (currentState != CharacterState::JumpUp && currentState != CharacterState::WallSlide && currentState != CharacterState::WallKick) currentState = CharacterState::FallingDown;
+
+		// 벽타기 중 버튼을 놓으면 낙하
 		else if (currentState == CharacterState::WallSlide && (!pStatus.touchLeft && !pStatus.touchRight)) currentState = CharacterState::FallingDown;
+
+		else if (currentState == CharacterState::WallKick && pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) currentState = CharacterState::FallingDown;
+
 		else;
 	}
 

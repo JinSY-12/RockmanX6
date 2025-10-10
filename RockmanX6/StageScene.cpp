@@ -49,9 +49,9 @@ HRESULT StageScene::init(int num, int charType)
 
 
 	// 스테이지 시작 준비
-	mReadyLogo = IMAGEMANAGER->findImage("Ready0");
+	// mReadyLogo = IMAGEMANAGER->findImage("Ready");
 
-	SOUNDMANAGER->play(stagBGM, 0.5f);
+	// SOUNDMANAGER->play(stagBGM, 0.5f);
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
 	noticeAniSpeed = 1;
@@ -198,7 +198,7 @@ void StageScene::rectSetting(void)
 	floor = RectMake(0, mStage->getHeight() - 45 * SCALE_FACTOR, 320 * SCALE_FACTOR, 45 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
-	floor = RectMake(floor.right, mStage->getHeight() - 80 * SCALE_FACTOR, 320 * SCALE_FACTOR, 80 * SCALE_FACTOR);
+	floor = RectMake(floor.right, mStage->getHeight() - 160 * SCALE_FACTOR, 320 * SCALE_FACTOR, 160 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 	
 	floor = RectMake(floor.right, mStage->getHeight() - 160 * SCALE_FACTOR, 130 * SCALE_FACTOR, 160 * SCALE_FACTOR);
@@ -246,14 +246,12 @@ void StageScene::stageCollision(void)
 		if(player->getPlayerLeft() -4 < floor.right && player->getPlayerRight() > floor.right
 			&& player->getPlayerBottom() > floor.top) // && player->getPlayerTop() < floor.bottom)
 		{
-			cout << index << "번째 RECT가 좌측에서 충돌" << endl;
 			player->setLeftCollision(true, floor.right);
 		}
 
 		if (player->getPlayerRight() + 4 > floor.left && player->getPlayerLeft() < floor.left
 			&& player->getPlayerBottom() > floor.top) // && player->getPlayerTop() < floor.bottom)
 		{
-			cout << index << "번째 RECT가 우측에서 충돌" << endl;
 			player->setRightCollision(true);
 		}
 

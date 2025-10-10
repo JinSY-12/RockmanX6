@@ -30,6 +30,7 @@ public:
 
 	// 행동 관련
 	void jump(void) override;
+	void dash(bool direction) override;
 	void attack(void) override;
 	void chargeBurst(void);
 	void spawn(int x, int y) override;
