@@ -14,9 +14,9 @@ HRESULT X::init(int x, int y)
 
 	pStatus.maxHp = 10.0;
 	pStatus.maxMp = 10.0;
-
 	
-
+	maxDashTime = 3.0f;
+	
 	// 캐릭터 소환 - 게임 시작
 	spawn(x, y);
 
@@ -31,7 +31,7 @@ void X::release(void)
 void X::update(void)
 {
 	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y - hitBoxHeight / 2);
-	
+
 #pragma region WarpIn
 
 	/////////////////////////////////
@@ -97,11 +97,9 @@ void X::update(void)
 		// 이동
 		/////////////////////////////////
 
-		if (KEYMANAGER->isOnceKeyDown(VK_LEFT)) lastKeyIsRight = false;
 		if (KEYMANAGER->isOnceKeyDown(VK_RIGHT)) lastKeyIsRight = true;
+		if (KEYMANAGER->isOnceKeyDown(VK_LEFT)) lastKeyIsRight = false;
 		
-		
-
 		if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && KEYMANAGER->isStayKeyDown(VK_LEFT))
 		{
 			multiInput = true;
@@ -110,9 +108,14 @@ void X::update(void)
 			{
 				// 왼쪽 유지
 				pStatus.lookRight = false;
-				if (pStatus.touchLeft && pStatus.isOnGround) currentState = CharacterState::Idle;
-				else if (pStatus.touchLeft && !pStatus.isOnGround && !pStatus.lookRight && !isJumpUp) wallSlide();// 벽타기
-				else if (pStatus.touchLeft && !pStatus.isOnGround && !pStatus.lookRight && isJumpUp);
+
+				if (pStatus.touchLeft)
+				{
+					if(pStatus.isOnGround) currentState = CharacterState::Idle;
+					else if (!pStatus.isOnGround && !pStatus.lookRight && !isJumpUp) wallSlide();// 벽타기
+					else if (!pStatus.isOnGround && !pStatus.lookRight && isJumpUp);
+				}
+
 				else move(pStatus.lookRight);
 			}
 
@@ -120,39 +123,59 @@ void X::update(void)
 			{
 				// 오른쪽 유지
 				pStatus.lookRight = true;
-				if (pStatus.touchRight && pStatus.isOnGround) currentState = CharacterState::Idle;
-				else if (pStatus.touchRight && !pStatus.isOnGround && pStatus.lookRight && !isJumpUp) wallSlide();
-				else if (pStatus.touchRight && !pStatus.isOnGround && pStatus.lookRight && isJumpUp);
+
+				if (pStatus.touchRight)
+				{
+					if(pStatus.isOnGround) currentState = CharacterState::Idle;
+					else if (!pStatus.isOnGround && pStatus.lookRight && !isJumpUp) wallSlide();
+					else if (!pStatus.isOnGround && pStatus.lookRight && isJumpUp);
+				}
+				
 				else move(pStatus.lookRight);
 			}
 		}
 
-		else if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && !(pStatus.velocityX < 0.0f))
+		else if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && !(pStatus.isWallKick && pStatus.wallKickRight)) // !(pStatus.velocityX < 0.0f) 
 		{
 			multiInput = false;
 			pStatus.lookRight = true;
 			pressRight = true;
-			if (pStatus.touchRight && pStatus.isOnGround) currentState = CharacterState::Idle;
-			else if (pStatus.touchRight && !pStatus.isOnGround && pStatus.lookRight && !isJumpUp) wallSlide(); // 벽타기
-			else if (pStatus.touchRight && !pStatus.isOnGround && pStatus.lookRight && isJumpUp);
+
+			if (pStatus.touchRight)
+			{
+				if (pStatus.isOnGround)	currentState = CharacterState::Idle;
+				else  if (!pStatus.isOnGround && pStatus.lookRight && !isJumpUp) wallSlide(); // 벽타기
+				else if (!pStatus.isOnGround && pStatus.lookRight && isJumpUp);
+			}
+			
 			else move(pStatus.lookRight);
 		}
 
-		else if (KEYMANAGER->isStayKeyDown(VK_LEFT) && !(pStatus.velocityX > 0.0f))
+		else if (KEYMANAGER->isStayKeyDown(VK_LEFT) && !(pStatus.isWallKick && !pStatus.wallKickRight))  // !(pStatus.velocityX > 0.0f) 
 		{
 			multiInput = false;
 			pStatus.lookRight = false;
 			pressLeft = true;
-			if (pStatus.touchLeft && pStatus.isOnGround) currentState = CharacterState::Idle;
-			else if (pStatus.touchLeft && !pStatus.isOnGround && !pStatus.lookRight && !isJumpUp) wallSlide(); // 벽타기
-			else if (pStatus.touchLeft && !pStatus.isOnGround && !pStatus.lookRight && isJumpUp);
+			if (pStatus.touchLeft)
+			{
+				if(pStatus.isOnGround) currentState = CharacterState::Idle;
+				else if (!pStatus.isOnGround && !pStatus.lookRight && !isJumpUp) wallSlide(); // 벽타기
+				else if (!pStatus.isOnGround && !pStatus.lookRight && isJumpUp);
+			}
+
 			else move(pStatus.lookRight);
 		}
 
 		// 대기 상태 변환 + 대기 상태 변환 애니메이션
-		else if (!(KEYMANAGER->isStayKeyDown(VK_RIGHT) || KEYMANAGER->isStayKeyDown(VK_LEFT)) && pStatus.isOnGround)
+		else if (!(KEYMANAGER->isStayKeyDown(VK_RIGHT) || KEYMANAGER->isStayKeyDown(VK_LEFT)))
 		{
-			returnToIdle();
+			pStatus.velocityX = 0.0f;
+
+			if (pStatus.isOnGround)
+			{
+				returnToIdle();
+			}
+
 			attChange = false;
 			multiInput = false;
 		}
@@ -236,17 +259,48 @@ void X::update(void)
 			attCheckOnce = true;
 		}
 
-		if (KEYMANAGER->isStayKeyDown('Z'))
+		if (KEYMANAGER->isOnceKeyDown('Z'))						// 'ㅋ' 문자 찾기 용
 		{
 			dash(pStatus.lookRight);
 		}
 
-		if (KEYMANAGER->isOnceKeyUp('Z'))
+		if (KEYMANAGER->isStayKeyDown('Z'))
 		{
-			pStatus.isDash = false;
-			dashTimer = 0.0f;
+			dashTimer += 0.1f;
+
+			pressDash = true;
+
+			if (dashTimer <= maxDashTime)
+			{
+				if (pStatus.isDash && !pStatus.isJumpDash)
+				{
+					pStatus.isDash = true;
+					currentState = CharacterState::Dash;
+
+					move(pStatus.lookRight);
+				}
+			}
+
+			else
+			{
+				if (!pStatus.isJumpDash)
+				{
+					pStatus.isDash = false;
+					aniDash = false;
+					currentState = CharacterState::Idle;
+				}
+			}
 		}
 
+		if (KEYMANAGER->isOnceKeyUp('Z'))
+		{
+			SOUNDMANAGER->stop("SFX_DashStart");
+
+			pressDash = false;
+			if (!pStatus.isJumpDash) pStatus.isDash = false;
+			aniDash = false;
+			dashTimer = 0.0f;
+		}
 	}
 
 #pragma endregion
@@ -275,11 +329,12 @@ void X::render(void)
 	{
 		// 상태값 출력
 		
+
 		// 캐릭터 좌표
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, printBodyState(), "DNF_M_18", RGB(0, 255, 255));
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "벽차기 파워", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "스피드", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityX), "DNF_M_18", RGB(0, 255, 255));
 
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "공격 상태", "DNF_M_18", RGB(0, 255, 255));
@@ -318,7 +373,19 @@ void X::render(void)
 		
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100, "시야 방향", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
-		
+
+		if (pStatus.isDash) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100, "대시 중", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+
+		if (pStatus.isJumpDash) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 45, "대시 점프 중", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
+
 		// 히트박스 출력
 		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
 	}
@@ -327,7 +394,7 @@ void X::render(void)
 void X::jump(void)
 {
 	if (pStatus.isOnGround || pStatus.touchLeft || pStatus.touchRight) Player::jump();
-	else cout << "호버링" << endl;
+	else; // 호버링
 }
 
 void X::dash(bool direction)
@@ -370,7 +437,6 @@ void X::chargeBurst(void)
 		// 공격 회수 장면을 위한 타이머 저장 -> 안하면 바로 내림ㅋㅋ
 		attackTimer = TIMEMANAGER->getWorldTime();
 
-		attackTimer = TIMEMANAGER->getWorldTime();
 		burstloop = true;
 		chargeBurstCount = TIMEMANAGER->getWorldTime();
 		chargeBurstDelay = true;
@@ -502,13 +568,15 @@ void X::currentAnimChange(void)
 
 			else if (attState == SholderState::None || attState == SholderState::Hold)
 			{
+				cout << "?" << endl;
 				currentAnim = "X_WalkStart";
+				animSpeed = 0.1f;
 				if (pStatus.lookRight) animOffset.x = 0;
 				else if (!pStatus.lookRight) animOffset.x = 0;
 			}
 		}
 
-		animSpeed = 0.04f;
+		// animSpeed = 0.04f;
 		animOffset.y = -1 * SCALE_FACTOR;
 
 		if ((currentAnim == "X_WalkStart" || currentAnim == "X_WalkBurstStart")
@@ -520,6 +588,7 @@ void X::currentAnimChange(void)
 			{
 				if (pStatus.lookRight) animOffset.x = -7;
 				else if (!pStatus.lookRight) animOffset.x = 14;
+
 				currentAnim = "X_WalkBurstLoop";
 				isMoving = true;
 			}
@@ -531,6 +600,65 @@ void X::currentAnimChange(void)
 				currentAnim = "X_WalkLoop";
 				attState = SholderState::None;
 				isMoving = true;
+			}
+		}
+	}
+
+	else if (currentState == CharacterState::Dash && pStatus.isDash)
+	{
+		if (pStatus.lookRight) pStatus.firePointX = +14 * SCALE_FACTOR;
+		else pStatus.firePointX = -14 * SCALE_FACTOR;
+
+		pStatus.firePointY = 8 * SCALE_FACTOR;
+
+		
+
+		if (!aniDash)
+		{
+			cout << "여기 오긴 함?" << endl;
+
+			if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
+			{
+				currentAnim = "X_DashBurstStart";
+				animSpeed = 0.1f;
+				animOffset.x = 0;
+				animOffset.y = -1 * SCALE_FACTOR;
+
+				if (pStatus.lookRight) animOffset.x = -7;
+				else if (!pStatus.lookRight) animOffset.x = 14;
+			}
+
+			else if (attState == SholderState::None || attState == SholderState::Hold)
+			{
+				currentAnim = "X_DashStart";
+				if (pStatus.lookRight) animOffset.x = 0;
+				else if (!pStatus.lookRight) animOffset.x = 0;
+			}
+		}
+
+		animSpeed = 0.04f;
+		animOffset.y = -1 * SCALE_FACTOR;
+
+		if ((currentAnim == "X_DashStart" || currentAnim == "X_DashBurstStart")
+			&& pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) aniDash = true;
+
+		if (aniDash)
+		{
+			if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
+			{
+				if (pStatus.lookRight) animOffset.x = -7;
+				else if (!pStatus.lookRight) animOffset.x = 14;
+				currentAnim = "X_DashBurstLoop";
+				aniDash = true;
+			}
+
+			else if (attState == SholderState::None || attState == SholderState::Hold)
+			{
+				if (pStatus.lookRight) animOffset.x = 0;
+				else if (!pStatus.lookRight) animOffset.x = 0;
+				currentAnim = "X_DashLoop";
+				attState = SholderState::None;
+				aniDash = true;
 			}
 		}
 	}
@@ -772,11 +900,12 @@ void X::spawn(int x, int y)
 	pStatus.hp = pStatus.maxHp;
 	pStatus.mp = pStatus.maxMp;
 	pStatus.moveSpeed = 4.5f;
-	pStatus.dashSpeed = 6.5f;
+	pStatus.dashSpeed = 8.5f;
 	
 	pStatus.charName = "X_";
 	pStatus.touchLeft = false;
 	pStatus.touchRight = false;
+	pStatus.wallKickRight = true;
 
 	////////////////////
 	// 상태 초기화
@@ -789,6 +918,7 @@ void X::spawn(int x, int y)
 	pStatus.lookRight = true;
 	isMoving = false;
 	pStatus.isDash = false;
+	pStatus.isWallKick = false;
 
 	// 입력 초기화
 	inputEnabled = false;
@@ -804,6 +934,12 @@ void X::spawn(int x, int y)
 	pressRight = false;
 	pressLeft = false;
 	
+	// 대시 초기화
+	dashTimer = 0.0f;
+	pStatus.isDash = false;
+	pStatus.isJumpDash = false;
+	pressDash = false;
+
 	// 상태 초기화 - 공격 관련
 	normalBurstAble = true;
 	chargeBurstDelay = false;
@@ -824,6 +960,7 @@ void X::spawn(int x, int y)
 	animSpeed = 0.1f;
 	attChange = false;
 	burstloop = false;
+	aniDash = false;
 	chargeEffect = IMAGEMANAGER->findImage("SFX_X_Charge");
 
 	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y - hitBoxHeight / 2);
@@ -860,5 +997,6 @@ void X::returnToIdle(void)
 	}
 
 	isMoving = false;
+	// aniDash = false;
 }
 

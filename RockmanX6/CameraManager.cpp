@@ -147,7 +147,6 @@ void CameraManager::cameraOffset(void)
     // 카메라 y좌표 고정
     /////////////////////////
 
-
     if (camera.y < maxSize.y - 288 * 3)
     {
         camera.y = maxSize.y - 288 * 3;

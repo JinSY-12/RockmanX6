@@ -30,14 +30,28 @@ void Player::render(void)
 
 void Player::move(bool direction)
 {
-	if (pStatus.isDash) return;
-	if (pStatus.isOnGround) currentState = CharacterState::Walk;
+	if (pStatus.isJumpDash)
+	{
+		if(pStatus.lookRight) pStatus.velocityX = dashSpeed;
+		else pStatus.velocityX = -dashSpeed;
+	}
 
-	float moveSpeed;
-	if (direction) moveSpeed = pStatus.moveSpeed;
-	else moveSpeed = -pStatus.moveSpeed;
+	else if (pStatus.isDash)
+	{
+		if (pStatus.lookRight && !pStatus.touchRight) pStatus.velocityX = lerp(pStatus.velocityX, dashSpeed, 1.0f);
+		else if (!pStatus.lookRight && !pStatus.touchLeft) pStatus.velocityX = -lerp(pStatus.velocityX, dashSpeed, 1.0f);
+	}
 
-	pStatus.velocityX = moveSpeed;
+	else if (!pStatus.isDash)
+	{
+		if (pStatus.isOnGround) currentState = CharacterState::Walk;
+
+		float moveSpeed;
+		if (direction) moveSpeed = pStatus.moveSpeed;
+		else moveSpeed = -pStatus.moveSpeed;
+
+		pStatus.velocityX = moveSpeed;
+	}
 }
 
 void Player::jump(void)
@@ -53,6 +67,8 @@ void Player::jump(void)
 		pStatus.hitBox.bottom -= 4;
 		pStatus.hitBox.top -= 4;
 		charPos.y -= 4;
+
+		if (pStatus.isDash) pStatus.isJumpDash = true;
 	}
 
 	// 벽차기
@@ -64,16 +80,23 @@ void Player::jump(void)
 
 void Player::dash(bool direction)
 {
-	currentState = CharacterState::Dash;
-	pStatus.isDash = true;
+	pStatus.velocityX = 0.0f;
 
+	if (direction == true && !pStatus.touchRight)
+	{
+		currentState = CharacterState::Dash;
+		pStatus.isDash = true;
+		dashSpeed = pStatus.dashSpeed;
+	}
 
+	else if (direction == false && !pStatus.touchLeft)
+	{
+		currentState = CharacterState::Dash;
+		pStatus.isDash = true;
+		dashSpeed = pStatus.dashSpeed;
+	}
 
-	float dashSpeed;
-	if (direction) dashSpeed = pStatus.dashSpeed;
-	else dashSpeed = -pStatus.dashSpeed;
-
-	pStatus.velocityX = lerp(pStatus.velocityX, dashSpeed, 0.3f);
+	else dashSpeed = 0.0f;
 }
 
 void Player::sfxPlay(void)
@@ -115,22 +138,23 @@ void Player::sfxPlay(void)
 			// 둘다 벽차기는 점프 소리 중 하나를 쓰고 있음 + 찰 때마다 소리남
 		}
 		
+		else if (currentState == CharacterState::Dash)
+		{
+			soundResult = "SFX_DashStart";
+			SOUNDMANAGER->play(soundResult, 0.5f);
+		}
+
+		else if (currentState == CharacterState::Idle && previousState == CharacterState::Dash)
+		{
+			soundResult = "SFX_DashEnd";
+			SOUNDMANAGER->play(soundResult, 0.5f);
+		}
 
 		// 기능 미구현
 		/*
 		// 대시 시작
-		else if (currentState == CharacterState::Dash)
-		{
-			soundResult = "SFX_" + pStatus.charName + "DashStart";
-			SOUNDMANAGER->play(soundResult, 0.5f);
-		}
 
 		// 대시 끝
-		else if (currentState == CharacterState::Idle && previousState == CharacterState::Dash)
-		{
-			soundResult = "SFX_" + pStatus.charName + "DashEnd";
-			SOUNDMANAGER->play(soundResult, 0.5f);
-		}
 
 		// 착지
 		else if (currentState == CharacterState::Land)
@@ -170,8 +194,7 @@ void Player::sfxPlay(void)
 void Player::wallSlide(void)
 {
 	currentState = CharacterState::WallSlide;
-	pStatus.velocityY = 0.0f;
-	// pStatus.velocityY = 1.9f;
+	pStatus.velocityY = 1.9f;
 }
 
 void Player::wallDrop(void)
@@ -200,11 +223,33 @@ void Player::wallKick(void)
 	currentState = CharacterState::WallKick;
 
 	pStatus.velocityY = -12.0f;
-
+	pStatus.isWallKick = true;
+	
 	SOUNDMANAGER->play("Voice_" + pStatus.charName + "Jump1", 0.5f);
 
-	if (pStatus.lookRight) pStatus.velocityX = -8.0f;
-	else pStatus.velocityX = 8.0f;
+	if (pStatus.lookRight)
+	{
+		pStatus.wallKickRight = true;
+		
+		if (pressDash == true)
+		{
+			cout << "작동" << endl;
+			pStatus.velocityX = -12.0f;
+		}
+
+		else pStatus.velocityX = -8.0f;
+	}
+
+	else
+	{
+		pStatus.wallKickRight = false;
+
+		if (pressDash == true)
+		{
+			pStatus.velocityX = 12.0f;
+		}
+		else pStatus.velocityX = 8.0f;
+	}
 }
 
 void Player::attack(void)
@@ -219,9 +264,9 @@ void Player::applyForce(void)
 	{
 		if (CAMERAMANAGER->getLockY() == true)
 		{
-			charPos.y += 12;
-			pStatus.hitBox.top += 12;
-			pStatus.hitBox.bottom += 12;
+			charPos.y += 16;
+			pStatus.hitBox.top += 16;
+			pStatus.hitBox.bottom += 16;
 		}
 
 		else charPos.y += 12;
@@ -230,6 +275,8 @@ void Player::applyForce(void)
 	// 공중 상태 - 점프 + 벽 슬라이딩
 	else if (!pStatus.isOnGround)
 	{
+		pStatus.isDash = false;
+
 		pStatus.velocityY += progress.gravityAccel;
 
 		if (pStatus.velocityY > pStatus.maxFallSpeed)
@@ -279,20 +326,27 @@ void Player::applyForce(void)
 	}
 
 	else charPos.x += pStatus.velocityX;
+
 	
-	if (!pStatus.lookRight)
+	if (!pStatus.lookRight && pStatus.isWallKick)
 	{	
 		if (pStatus.velocityX > 0.0f) pStatus.velocityX -= 0.8f;
-		else pStatus.velocityX = 0.0f;
+		else
+		{
+			pStatus.isWallKick = false;
+			pStatus.velocityX = 0.0f;
+		}
 	}
 
-	else
+	else if (pStatus.lookRight && pStatus.isWallKick)
 	{
 		if (pStatus.velocityX < 0.0f) pStatus.velocityX += 0.8f;
-		else pStatus.velocityX = 0.0f;
+		else
+		{
+			pStatus.isWallKick = false;
+			pStatus.velocityX = 0.0f;
+		}
 	}
-	
-	
 }
 
 void Player::spawn(int x, int y)

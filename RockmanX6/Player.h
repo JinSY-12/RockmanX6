@@ -103,6 +103,7 @@ public:
 		float moveSpeed;
 		float dashSpeed;
 		float jumpPower;
+		float velocityX;
 		
 		// 상태값
 		bool lookRight;
@@ -112,12 +113,14 @@ public:
 		bool touchRight;
 
 		// 점프 관련
-		float velocityX;
 		float velocityY;
 		float maxFallSpeed;
+		bool isWallKick;
+		bool wallKickRight;
 
 		// 대시 관련
 		bool isDash;
+		bool isJumpDash;
 };
 
 	struct Progress
@@ -190,10 +193,15 @@ public:
 	bool pressRight;
 	bool lastKeyIsRight;
 
+	// 점프 관련
 	bool isJumpUp;
+
 	// 대시 관련
 	float dashTimer;
 	float maxDashTime;
+	float dashSpeed;
+	bool pressDash;
+	bool aniDash;
 
 public:
 	virtual HRESULT init(void);
@@ -212,7 +220,7 @@ public:
 	void wallDrop(void);
 	void wallKick(void);
 	
-	// 캐릭터 공통 상태값 조작
+	// 캐릭터 공통 상태값
 	void applyForce(void);
 	void sfxPlay(void);
 	void setBulletManager(BulletManager* manager) { bManager = manager; };
@@ -220,14 +228,13 @@ public:
 	// 캐릭터 스폰
 	virtual void spawn(int x, int y);
 
-	virtual void currentAnimChange(void);
-
 	// 상태값
 	string printBodyState(void);
 	string printAttState(void);
 
 	// 애니메이션 관련
 	virtual void setHitBox(void);
+	virtual void currentAnimChange(void);
 
 	// 상태 관련
 	inline void setStageGravity(float gravityPower) { progress.gravityAccel = gravityPower; }
@@ -244,8 +251,25 @@ public:
 	
 	// 상태값
 	inline void setLeftCollision(bool left, int leftline) { pStatus.touchLeft = left; }
-	inline void setRightCollision(bool right) { pStatus.touchRight = right; }
-	inline void setIsOnGround(bool OnGround, int topline, int Bottom)
+	inline void setRightCollision(bool right, int rightline)
+	{
+		pStatus.touchRight = right;
+
+		if (pStatus.touchRight == true)
+		{
+			charPos.x = rightline - 2 - hitBoxWidth / 2;
+
+			int right = rightline - CAMERAMANAGER->getCameraPos().x;
+			pStatus.hitBox.right = right - 2;
+			pStatus.hitBox.left = pStatus.hitBox.right - hitBoxWidth;
+			
+			pStatus.velocityX = 0.0f;
+
+			pStatus.isJumpDash = false;
+		}
+	}
+
+	inline void setIsOnGround(bool OnGround, int topline)
 	{
 		pStatus.isOnGround = OnGround;
 		
@@ -253,10 +277,17 @@ public:
 		{
 			charPos.y = topline - 2;
 
-			pStatus.hitBox.bottom = Bottom - 2;
+			int bottom = topline - CAMERAMANAGER->getCameraPos().y;
+			pStatus.hitBox.bottom = bottom - 2;
 			pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
 
 			pStatus.velocityY = 0.0f;
+
+			if (pStatus.isJumpDash)
+			{
+				pStatus.isDash = false;
+				pStatus.isJumpDash = false;
+			}
 		}
 	}
 

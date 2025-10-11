@@ -242,6 +242,12 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_WallKick", "Resources/Image/Player/X/X_WallKick.bmp", 114 * SCALE_FACTOR, 108 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_WallKickBurst", "Resources/Image/Player/X/X_WallKickBurst.bmp", 114 * SCALE_FACTOR, 108 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("X_DashStart", "Resources/Image/Player/X/X_DashStart.bmp", 132 * SCALE_FACTOR, 86 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_DashLoop", "Resources/Image/Player/X/X_DashLoop.bmp", 198 * SCALE_FACTOR, 86 * SCALE_FACTOR, 3, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("X_DashBurstStart", "Resources/Image/Player/X/X_DashBurstStart.bmp", 132 * SCALE_FACTOR, 86 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_DashBurstLoop", "Resources/Image/Player/X/X_DashBurstLoop.bmp", 198 * SCALE_FACTOR, 86 * SCALE_FACTOR, 3, 2, true, MAGENTA);
+
 	// ¿¢½º ¿þÆù
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/SFX/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/SFX/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);
@@ -381,6 +387,9 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_X_BurstChargeLoop", "Resources/Sound/SFX/Character/X/SFX_X_BurstChargeLoop.wav", false, true);
 
 	SOUNDMANAGER->addSound("SFX_X_ArmorRoom", "Resources/Sound/SFX/Character/X/SFX_X_ArmorRoom.wav", false, false);
+
+	SOUNDMANAGER->addSound("SFX_DashStart", "Resources/Sound/SFX/Character/SFX_DashStart.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_DashEnd", "Resources/Sound/SFX/Character/SFX_DashEnd.wav", false, false);
 
 	
 	//////////////////////////////////
