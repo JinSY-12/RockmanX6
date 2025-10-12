@@ -203,6 +203,8 @@ public:
 	bool pressDash;
 	bool aniDash;
 
+	GImage* afterImage;
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -250,17 +252,33 @@ public:
 	inline int getPlayerRight(void) { return charPos.x + hitBoxWidth /2; }
 	
 	// »óÅÂ°ª
-	inline void setLeftCollision(bool left, int leftline) { pStatus.touchLeft = left; }
+	inline void setLeftCollision(bool left, int leftline)
+	{
+		pStatus.touchLeft = left;
+
+		if (pStatus.touchLeft == true)
+		{
+			charPos.x = leftline + hitBoxWidth / 2;
+
+			int left = leftline - CAMERAMANAGER->getCameraPos().x;
+			pStatus.hitBox.left = left;
+			pStatus.hitBox.right = pStatus.hitBox.left + hitBoxWidth;
+
+			pStatus.velocityX = 0.0f;
+
+			pStatus.isJumpDash = false;
+		}
+	}
 	inline void setRightCollision(bool right, int rightline)
 	{
 		pStatus.touchRight = right;
 
 		if (pStatus.touchRight == true)
 		{
-			charPos.x = rightline - 2 - hitBoxWidth / 2;
+			charPos.x = rightline - hitBoxWidth / 2;
 
 			int right = rightline - CAMERAMANAGER->getCameraPos().x;
-			pStatus.hitBox.right = right - 2;
+			pStatus.hitBox.right = right;
 			pStatus.hitBox.left = pStatus.hitBox.right - hitBoxWidth;
 			
 			pStatus.velocityX = 0.0f;

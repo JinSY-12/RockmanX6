@@ -248,6 +248,9 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_DashBurstStart", "Resources/Image/Player/X/X_DashBurstStart.bmp", 132 * SCALE_FACTOR, 86 * SCALE_FACTOR, 2, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_DashBurstLoop", "Resources/Image/Player/X/X_DashBurstLoop.bmp", 198 * SCALE_FACTOR, 86 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("X_Dash", "Resources/Image/Player/X/X_Dash.bmp", 330 * SCALE_FACTOR, 86 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_DashBurst", "Resources/Image/Player/X/X_DashBurst.bmp", 330 * SCALE_FACTOR, 86 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+
 	// ¿¢½º ¿þÆù
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/SFX/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/SFX/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);

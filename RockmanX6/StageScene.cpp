@@ -242,22 +242,24 @@ void StageScene::stageCollision(void)
 	{
 		index++;
 
+		if (player->getPlayerLeft() < floor.right && player->getPlayerRight() > floor.left
+			&& player->getPlayerBottom() + 4 > floor.top && player->getPlayerTop() < floor.top)
+		{
+			player->setIsOnGround(true, floor.top);
+		}
+
 		if(player->getPlayerLeft() - 4 < floor.right && player->getPlayerRight() > floor.right
 			&& player->getPlayerBottom() > floor.top) // && player->getPlayerTop() < floor.bottom)
 		{
 			player->setLeftCollision(true, floor.right);
+			break;
 		}
 
 		if (player->getPlayerRight() + 4 > floor.left && player->getPlayerLeft() < floor.left
 			&& player->getPlayerBottom() > floor.top) // && player->getPlayerTop() < floor.bottom)
 		{
 			player->setRightCollision(true, floor.left);
-		}
-
-		if (player->getPlayerLeft() < floor.right && player->getPlayerRight() > floor.left
-			&& player->getPlayerBottom() + 4 > floor.top && player->getPlayerTop() < floor.top)
-		{
-			player->setIsOnGround(true, floor.top);
+			break;
 		}
 	}
 }
