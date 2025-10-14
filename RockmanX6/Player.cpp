@@ -40,6 +40,7 @@ void Player::move(bool direction)
 	{
 		if (pStatus.lookRight && !pStatus.touchRight) pStatus.velocityX = lerp(pStatus.velocityX, dashSpeed, 1.0f);
 		else if (!pStatus.lookRight && !pStatus.touchLeft) pStatus.velocityX = -lerp(pStatus.velocityX, dashSpeed, 1.0f);
+		else currentState = CharacterState::Idle;
 	}
 
 	else if (!pStatus.isDash)
@@ -64,9 +65,9 @@ void Player::jump(void)
 
 		pStatus.velocityY = pStatus.jumpPower;
 		
-		pStatus.hitBox.bottom -= 4;
-		pStatus.hitBox.top -= 4;
-		charPos.y -= 4;
+		pStatus.hitBox.bottom -= 8;
+		pStatus.hitBox.top -= 8;
+		charPos.y -= 8;
 
 		if (pStatus.isDash) pStatus.isJumpDash = true;
 	}
@@ -201,7 +202,6 @@ void Player::wallDrop(void)
 {
 	if (currentState == CharacterState::WallSlide)
 	{
-		cout << "강력 의심 후보 1" << endl;
 		currentState = CharacterState::FallingDown;
 
 		int fall;
@@ -355,6 +355,16 @@ void Player::spawn(int x, int y)
 }
 
 void Player::currentAnimChange(void)
+{
+	// Do Nothing!!
+}
+
+void Player::colorSetting(void)
+{
+	// Do Nothing!!
+}
+
+void Player::colorChange(void)
 {
 	// Do Nothing!!
 }

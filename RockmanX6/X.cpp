@@ -331,12 +331,9 @@ void X::render(void)
 		hitBoxCenter.y - pStatus.player->getFrameHeight() - animOffset.y,
 		pStatus.player->getFrameX(), pStatus.lookRight, 255);
 	
-
-
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
 		// 상태값 출력
-		
 
 		// 캐릭터 좌표
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
@@ -396,6 +393,7 @@ void X::render(void)
 
 		// 히트박스 출력
 		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
+		DrawRectMakeColor(getMemDC(), pStatus.floorCheck, RGB(0, 0, 255), 2);
 	}
 }
 
@@ -589,7 +587,6 @@ void X::currentAnimChange(void)
 
 			else if (attState == SholderState::None || attState == SholderState::Hold)
 			{
-				cout << "?" << endl;
 				currentAnim = "X_WalkStart";
 				animSpeed = 0.1f;
 				if (pStatus.lookRight) animOffset.x = 0;
@@ -636,10 +633,19 @@ void X::currentAnimChange(void)
 		else if (pStatus.player->getFrameX() == 1) pStatus.firePointY = 21 * SCALE_FACTOR;
 		else pStatus.firePointY = 30 * SCALE_FACTOR;
 
-		if (pStatus.lookRight) pStatus.firePointX = +14 * SCALE_FACTOR;
-		else pStatus.firePointX = -14 * SCALE_FACTOR;
+		if (pStatus.lookRight)
+		{
+			pStatus.firePointX = +14 * SCALE_FACTOR;
+			animOffset.x = -14 * SCALE_FACTOR;
+		}
 
-		pStatus.firePointY = 8 * SCALE_FACTOR;
+		else
+		{
+			pStatus.firePointX = -14 * SCALE_FACTOR;
+			animOffset.x = 14 * SCALE_FACTOR;
+		}
+
+		pStatus.firePointY = 10 * SCALE_FACTOR;
 		
 		currentAnim = "X_Dash";
 		animSpeed = 0.04f;
@@ -737,6 +743,8 @@ void X::currentAnimChange(void)
 		if (pStatus.lookRight) animOffset.x = 2 * SCALE_FACTOR;
 		else animOffset.x = -2 * SCALE_FACTOR;
 		animOffset.y = -12 * SCALE_FACTOR;
+
+		pStatus.firePointY = 9 * SCALE_FACTOR;
 
 		if (attState == SholderState::Burst || attState == SholderState::LargeBurst) currentAnim = "X_WallSlideBurst";
 		else currentAnim = "X_WallSlide";
@@ -872,14 +880,14 @@ void X::setHitBox(void)
 {
 	if (CAMERAMANAGER->getLockX() == true)
 	{
-		pStatus.hitBox.left = charPos.x - hitBoxWidth / 2;
-		pStatus.hitBox.right = charPos.x + hitBoxWidth / 2;
+		pStatus.hitBox.left = charPos.x - hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
+		pStatus.hitBox.right = charPos.x + hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
 	}
 
 	else
 	{
-		pStatus.hitBox.left = hitBoxCenter.x - hitBoxWidth / 2;
-		pStatus.hitBox.right = hitBoxCenter.x + hitBoxWidth / 2;
+		pStatus.hitBox.left = hitBoxCenter.x - (hitBoxWidth / 2);
+		pStatus.hitBox.right = hitBoxCenter.x + (hitBoxWidth / 2);
 	}
 
 	if (CAMERAMANAGER->getLockY() == true)
@@ -911,15 +919,240 @@ void X::setHitBox(void)
 	case CharacterState::JumpUp:
 		hitBoxWidth = 25 * SCALE_FACTOR;
 		hitBoxHeight = 45 * SCALE_FACTOR;
+		break;
 	case CharacterState::FallingDown:
 		hitBoxWidth = 25 * SCALE_FACTOR;
 		hitBoxHeight = 45 * SCALE_FACTOR;
 		break;
 	case CharacterState::Dash:
-		hitBoxWidth = 43 * SCALE_FACTOR;
+		hitBoxWidth = 25 * SCALE_FACTOR;
 		hitBoxHeight = 28 * SCALE_FACTOR;
 		break;
+	case CharacterState::WallSlide:
+		hitBoxWidth = 25 * SCALE_FACTOR;
+		hitBoxHeight = 45 * SCALE_FACTOR;
+		break;
 	}
+
+	pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - 5 * SCALE_FACTOR, pStatus.hitBox.bottom, 10 * SCALE_FACTOR, 5);
+}
+
+void X::colorSetting(void)
+{
+	playerColor[0] =
+	{
+		RGB(232, 48, 40), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(40, 232, 48), // Charged1
+		RGB(40, 232, 48), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(112, 160, 248), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[1] =
+	{
+		RGB(96, 40, 24), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(24, 112, 64), // Charged1
+		RGB(24, 112, 64), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(176, 200, 232), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[2] =
+	{
+		RGB(208, 120, 88), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(88, 208, 120), // Charged1
+		RGB(88, 208, 120), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(128, 160, 240), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[3] =
+	{
+		RGB(232, 184, 152), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(152, 232, 184), // Charged1
+		RGB(152, 232, 184), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(128, 160, 240), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[4] =
+	{
+		RGB(72, 248, 216), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(64, 240, 208), // Charged1
+		RGB(64, 240, 208), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(128, 160, 240), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[5] =
+	{
+		RGB(24, 160, 128), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(16, 152, 120), // Charged1
+		RGB(16, 152, 120), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(128, 160, 240), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[6] =
+	{
+		RGB(24, 64, 88), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(24, 128, 80), // Charged1
+		RGB(24, 128, 80), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(176, 200, 232), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[7] =
+	{
+		RGB(216, 224, 240), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(184, 248, 232), // Charged1
+		RGB(184, 248, 232), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(128, 160, 240), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[8] =
+	{
+		RGB(168, 176, 192), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(128, 184, 168), // Charged1
+		RGB(128, 184, 168), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(128, 160, 240), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[9] =
+	{
+		RGB(72, 88, 112), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(40, 112, 88), // Charged1
+		RGB(40, 112, 88), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(104, 144, 208), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[10] =
+	{
+		RGB(24, 32, 40), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(32, 144, 64), // Charged1
+		RGB(32, 144, 64), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(176, 200, 232), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[11] =
+	{
+		RGB(72, 152, 232), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(72, 248, 168), // Charged1
+		RGB(72, 248, 168), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(128, 160, 240), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[12] =
+	{
+		RGB(56, 120, 216), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(56, 232, 136), // Charged1
+		RGB(56, 232, 136), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(128, 160, 240), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[13] =
+	{
+		RGB(32, 72, 176), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(24, 160, 64), // Charged1
+		RGB(32, 200, 96), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(128, 160, 240), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+
+	playerColor[14] =
+	{
+		RGB(24, 40, 136), // Base
+		RGB(0, 16, 96), // After Shadow1
+		RGB(0, 40, 120), // After Shadow2
+		RGB(24, 64, 160), // After Shadow3
+		RGB(24, 160, 64), // Charged1
+		RGB(24, 160, 64), // Charged2
+		RGB(0, 0, 0), // Burst
+		RGB(176, 200, 232), // Low Damaged
+		RGB(0, 0, 0), // High Damaged
+	};
+}
+
+void X::colorChange(void)
+{
+	switch (colorType)
+	{
+
+	}
+	colorTimer++;
+
+	for (int j = 0; j < pStatus.player->getFrameHeight(); j++)
+	{
+		for (int i = 0; i < pStatus.player->getFrameWidth(); i++)
+		{
+			COLORREF color = GetPixel(pStatus.player->getMemDC() , i, j);
+
+			if (color == playerColor[i + j].base);
+		}
+	}
+		
 }
 
 void X::spawn(int x, int y)
@@ -933,6 +1166,7 @@ void X::spawn(int x, int y)
 	charPos.y = y;
 
 	pStatus.hitBox = RectMakeCenter(charPos.x, 0 - hitBoxHeight / 2, hitBoxWidth, hitBoxHeight);
+	pStatus.floorCheck = RectMakeCenter(charPos.x, charPos.y, 10, 4);
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom - hitBoxHeight;
@@ -941,7 +1175,7 @@ void X::spawn(int x, int y)
 	pStatus.hp = pStatus.maxHp;
 	pStatus.mp = pStatus.maxMp;
 	pStatus.moveSpeed = 4.5f;
-	pStatus.dashSpeed = 10.0f;
+	pStatus.dashSpeed = 12.0f;
 	
 	pStatus.charName = "X_";
 	pStatus.touchLeft = false;
@@ -960,6 +1194,7 @@ void X::spawn(int x, int y)
 	isMoving = false;
 	pStatus.isDash = false;
 	pStatus.isWallKick = false;
+	colorType = 0;
 
 	// 입력 초기화
 	inputEnabled = false;
@@ -1041,4 +1276,5 @@ void X::returnToIdle(void)
 	isMoving = false;
 	// aniDash = false;
 }
+
 

@@ -9,6 +9,7 @@ class StageScene : public GameNode
 {
 private:
 	GImage* mStage;
+	GImage* mPixelStage;
 	GImage* mReadyLogo;
 
 	unique_ptr<Player> player;

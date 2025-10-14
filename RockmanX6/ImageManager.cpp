@@ -35,13 +35,11 @@ GImage* ImageManager::addImage(string strKey, int width, int height)
 
 GImage* ImageManager::addImage(string strKey, const char* fileName, int width, int height, bool isTrans, COLORREF transColor)
 {
-
 	GImage* img = findImage(strKey);
 
 	if (img) return img;
 
 	img = new GImage;
-
 
 	if (FAILED(img->init(fileName, width, height, isTrans, transColor)))
 	{

@@ -82,12 +82,26 @@ public:
 		OverPower
 	};
 
+	struct PlayerPalette
+	{
+		COLORREF base;
+		COLORREF afterShadow1;
+		COLORREF afterShadow2;
+		COLORREF afterShadow3;
+		COLORREF charged1;
+		COLORREF charged2;
+		COLORREF burst;
+		COLORREF lowDamaged;
+		COLORREF highDamaged;
+	};
+
 	// 캐릭터 메인 설정값
 	struct PlayerStatus
 	{
 		// 판정 및 이미지
 		GImage* player;
 		RECT hitBox;
+		RECT floorCheck;
 
 		string charName;
 		int firePointX;
@@ -143,6 +157,8 @@ public:
 	SholderState attState;
 
 	Progress progress;
+
+	PlayerPalette playerColor[15];
 
 	// 캐릭터 판정 및 좌표
 	int hitBoxWidth;
@@ -205,6 +221,9 @@ public:
 
 	GImage* afterImage;
 
+	int colorType;
+	int colorTimer;
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -251,7 +270,12 @@ public:
 	inline int getPlayerLeft(void) { return charPos.x - hitBoxWidth / 2; }
 	inline int getPlayerRight(void) { return charPos.x + hitBoxWidth /2; }
 	
+	inline bool getPlayerSight(void) { return pStatus.lookRight; }
+
 	// 상태값
+
+	
+
 	inline void setLeftCollision(bool left, int leftline)
 	{
 		pStatus.touchLeft = left;
@@ -286,7 +310,6 @@ public:
 			pStatus.isJumpDash = false;
 		}
 	}
-
 	inline void setIsOnGround(bool OnGround, int topline)
 	{
 		pStatus.isOnGround = OnGround;
@@ -309,6 +332,22 @@ public:
 		}
 	}
 
+	inline void setTopCollision(bool top, int bottomline)
+	{
+		if (top == true)
+		{
+			charPos.y = bottomline + 3  + hitBoxHeight;
+
+			int top = bottomline - CAMERAMANAGER->getCameraPos().y;
+			pStatus.hitBox.top = top + 3 ;
+			pStatus.hitBox.bottom = pStatus.hitBox.top + hitBoxHeight;
+
+			pStatus.velocityY = 0.0f;
+			
+			currentState = CharacterState::FallingDown;
+		}
+	}
+
 	// 스탯 관련
 	inline void reduceHp(int damage) { pStatus.hp -= damage; }
 	inline void reduceMp(int damage) { pStatus.mp -= damage; }
@@ -317,10 +356,7 @@ public:
 		return start + (end - start) * time;
 	}
 
-
-	inline void setOverPower()
-	{
-		cout << "Test" << endl;
-	}
+	virtual void colorSetting(void);
+	virtual void colorChange(void);
 };
 

@@ -25,10 +25,8 @@ private:
 	typedef vector<GImage*>::iterator viButton;
 
 private:
-
 	vButton _vButton;
 	viButton _viButton;
-
 
 public:
 	HRESULT init(void);

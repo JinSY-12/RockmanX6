@@ -88,6 +88,9 @@
     <Filter Include="소스 파일\FrameWork\Manager\Bullet">
       <UniqueIdentifier>{c40c4adc-3189-4124-a7cf-5a1b75ad5e26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Palette">
+      <UniqueIdentifier>{f9be3c8d-2a99-4417-9cfb-af37c01c9ff7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SingletonBase.h">
@@ -180,6 +183,9 @@
     <ClInclude Include="ProgressBar.h">
       <Filter>소스 파일\Ui</Filter>
     </ClInclude>
+    <ClInclude Include="PaletteManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Palette</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameNode.cpp">
@@ -265,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="ProgressBar.cpp">
       <Filter>소스 파일\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="PaletteManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Palette</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

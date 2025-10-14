@@ -39,6 +39,10 @@ public:
 	void frameCheck(void);
 	void setHitBox(void) override;
 	
+	// 이미지 컬러 변경
+	void colorSetting(void) override;
+	void colorChange(void) override;
+
 	// 기능용 함수
 	void returnToIdle(void);
 };

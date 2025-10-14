@@ -25,15 +25,23 @@ private:
 		int y;
 	};
 
+	struct CameraRange
+	{
+		int top;
+		int bottom;
+		int left;
+		int right;
+	};
+
 #pragma endregion
 	
 	// 카메라 좌표
 	CameraPos camera;
-	MapSize maxSize;
+	MapSize mapSize;
 	PlayerPos playerPos;
+	CameraRange cameraRange;
 
 	// 페이드 인/아웃 세팅
-
 	GImage* _blackImage;
 	GImage* _whiteImage;
 
@@ -54,6 +62,10 @@ private:
 	bool cameraLockX;
 	bool cameraLockY;
 
+	int stageType;
+
+
+
 public:
 	HRESULT init(void);
 	void release(void);
@@ -65,7 +77,6 @@ public:
 	void whiteIn(float padeTime);
 	void whiteOut(float padeTime);
 		
-
 	// 카메라 위치 조절 - 이동 / 고정
 	
 	void fixPos(int x, int y) { camera.x = x, camera.y = y; }
@@ -82,19 +93,25 @@ public:
 	CameraPos getCameraPos(void) { return camera; }
 	void setCameraPos(int x, int y) { camera.x += x, camera.y += y; }
 
-	MapSize getMapSize(void) { return maxSize; }
-	void settingMapMaxSize(int x, int y) { maxSize.x = x, maxSize.y = y; }
+	MapSize getMapSize(void) { return mapSize; }
+	void settingMapMaxSize(int x, int y) { mapSize.x = x, mapSize.y = y; }
 
 	void cameraOffset(void);
 
 	bool getLockX() { return cameraLockX; }
 	bool getLockY() { return cameraLockY; }
 	
+	void setMaxCameraRange();
+	void setStage(int stageNum) { stageType = stageNum; }
+	void cameraTest(void);
+
+
 	// 카메라 초기값 -> 나중에 링크 침대에서 시작하는걸로 카메라 좌표 수정
 	// 링크 하우스 입구
 	// CameraManager() { camera.x = -255, camera.y = -480; }
 	// 링크네 집
 	//CameraManager() { camera.x = 100, camera.y = 100; }
+
 	CameraManager() {}
 	~CameraManager() {}
 };

@@ -69,6 +69,7 @@ void TitleScene::update(void)
 				// 0 = 인트로 스테이지, 1 = 얀마크 스테이지
 				// 0 = 엑스, 1 = 제로, 2 = 팔콘, 3 = 블레이드, 4 = 섀도우, 5 = 얼티밋, 6 = 블랙 제로
 				SCENEMANAGER->changeScene("스테이지", 0, 0);
+				CAMERAMANAGER->setStage(0);
 
 				// 씬 체인지 -> 인트로 컷씬 or 인트로 스테이지
 				// SCENEMANAGER->changeScene("컷씬", 0);
@@ -206,7 +207,7 @@ void TitleScene::addImage(void)
 	
 	// 인트로 스테이지
 	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
-	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, false, MAGENTA);
+	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
 
 
 	//////////////////////////////////
@@ -231,8 +232,8 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addFrameImage("X_StandBurstLoop", "Resources/Image/Player/X/X_StandBurstLoop.bmp", 164 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_StandBurstEnd", "Resources/Image/Player/X/X_StandBurstEnd.bmp", 82 * SCALE_FACTOR, 88 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-
 	IMAGEMANAGER->addFrameImage("X_StandChargeBurst", "Resources/Image/Player/X/X_StandChargeBurst.bmp", 287 * SCALE_FACTOR, 102 * SCALE_FACTOR, 7, 2, true, MAGENTA);
+
 	IMAGEMANAGER->addFrameImage("X_Jump", "Resources/Image/Player/X/X_Jump.bmp", 272 * SCALE_FACTOR, 116 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_JumpBurst", "Resources/Image/Player/X/X_JumpBurst.bmp", 336 * SCALE_FACTOR, 116 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 

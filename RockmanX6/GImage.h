@@ -66,6 +66,10 @@ private:
 
     bool aniPlaying;
 
+    COLORREF* mPixels;
+
+
+
 public:
 
     HRESULT init(int width, int height);

@@ -17,6 +17,8 @@ HRESULT CameraManager::init(void)
     _isWhitePadeOut = false;
     _isPadeResult = false;
 
+    stageType = -1;
+
     return S_OK;
 }
 
@@ -80,6 +82,8 @@ void CameraManager::update(void)
     }
 
     cameraOffset();
+    setMaxCameraRange();
+    cameraTest();
 }
 
 void CameraManager::render(HDC hdc)
@@ -129,15 +133,15 @@ void CameraManager::cameraOffset(void)
     // 카메라 x좌표 고정
     /////////////////////////
 
-    if (camera.x < 0)
+    if (camera.x <= cameraRange.left)
     {
-        camera.x = 0;
+        camera.x = cameraRange.left;
         cameraLockX = true;
     }
 
-    else if (camera.x > maxSize.x - WINSIZE_X)
+    else if (camera.x >= cameraRange.right)
     {
-        camera.x = maxSize.x - WINSIZE_X;
+        camera.x = cameraRange.right;
         cameraLockX = true;
     }
 
@@ -147,19 +151,111 @@ void CameraManager::cameraOffset(void)
     // 카메라 y좌표 고정
     /////////////////////////
 
-    if (camera.y < maxSize.y - 288 * 3)
+    if (camera.y <= mapSize.y - cameraRange.top)
     {
-        camera.y = maxSize.y - 288 * 3;
+        camera.y = mapSize.y - cameraRange.top;
         cameraLockY = true;
     }
-    
-    else if (camera.y > maxSize.y- WINSIZE_Y)
+
+    else if (camera.y >= mapSize.y - cameraRange.bottom)
     {
-        camera.y = maxSize.y - WINSIZE_Y;
+        camera.y = mapSize.y - cameraRange.bottom;
         cameraLockY = true;
     }
 
     else cameraLockY = false;
+}
+
+void CameraManager::setMaxCameraRange()
+{
+    switch (stageType)
+    {
+        case 0:            
+            if (camera.x >= 0 * SCALE_FACTOR && camera.x < 3530 * SCALE_FACTOR)
+            {
+                cameraRange.top = 288 * SCALE_FACTOR;
+                cameraRange.bottom = WINSIZE_Y;
+                cameraRange.left = 0 * SCALE_FACTOR;
+                cameraRange.right = mapSize.x;
+
+                cout << "Zone1" << endl;
+            }
+            
+            else if (camera.x >= 3530 * SCALE_FACTOR && camera.x < 4060 * SCALE_FACTOR - WINSIZE_X)
+            {
+                cameraRange.top = 480 * SCALE_FACTOR;
+                cameraRange.bottom = WINSIZE_Y;
+            
+                cameraRange.left = 0 * SCALE_FACTOR;
+                cameraRange.right = mapSize.x;
+
+                cout << "Zone2" << endl;
+            }
+
+            else if (playerPos.x >= 4060 * SCALE_FACTOR - WINSIZE_X && playerPos.x < 5000 * SCALE_FACTOR)
+            {
+                if (playerPos.y < 1400)
+                {
+                    cameraRange.top = mapSize.y * SCALE_FACTOR;
+                    cameraRange.left = 5024 * SCALE_FACTOR;
+                    cout << "Zone4" << endl;
+                }
+
+                else
+                {
+                    cameraRange.top = 480 * SCALE_FACTOR;
+                    cout << "Zone3" << endl;
+                }
+
+                cameraRange.left = 0 * SCALE_FACTOR;
+                cameraRange.right = 5400 * SCALE_FACTOR;
+                cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
+            }
+
+            else if (playerPos.x >= 5200 * SCALE_FACTOR && playerPos.x < 5400 * SCALE_FACTOR)
+            {
+                cameraRange.top = mapSize.y * SCALE_FACTOR;
+                cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
+
+                cameraRange.left = 5024 * SCALE_FACTOR;
+                cameraRange.right = 5400 * SCALE_FACTOR;
+
+                cout << "Zone5" << endl;
+            }
+
+            else if (playerPos.x >= 5400 * SCALE_FACTOR && playerPos.x < mapSize.x * SCALE_FACTOR)
+            {
+                cameraRange.top = mapSize.y * SCALE_FACTOR;
+
+                cameraRange.bottom = WINSIZE_Y + (688 * SCALE_FACTOR);
+
+                cameraRange.left = 5024 * SCALE_FACTOR;
+                cameraRange.right = mapSize.x;
+                cout << "Zone6" << endl;
+            }
+
+            break;
+    }
+}
+
+void CameraManager::cameraTest(void)
+{
+    if (KEYMANAGER->isStayKeyDown('J'))
+    {
+        camera.x -= 2;
+    }
+    if (KEYMANAGER->isStayKeyDown('L'))
+    {
+        camera.x += 2;
+    }
+    if (KEYMANAGER->isStayKeyDown('I'))
+    {
+        camera.y -= 2;
+    }
+    if (KEYMANAGER->isStayKeyDown('K'))
+    {
+        camera.y += 2;
+    }
 }
 
 

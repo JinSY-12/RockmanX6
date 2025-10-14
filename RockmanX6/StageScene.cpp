@@ -51,7 +51,7 @@ HRESULT StageScene::init(int num, int charType)
 	// 스테이지 시작 준비
 	// mReadyLogo = IMAGEMANAGER->findImage("Ready");
 
-	// SOUNDMANAGER->play(stagBGM, 0.5f);
+	SOUNDMANAGER->play(stagBGM, 0.5f);
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
 	noticeAniSpeed = 1;
@@ -119,9 +119,11 @@ void StageScene::render(void)
 			temp.top -= CAMERAMANAGER->getCameraPos().y;
 			temp.bottom -= CAMERAMANAGER->getCameraPos().y;
 			
-			DrawRectMakeColor(getMemDC(), temp, RGB(255,255,0), 2);
+			DrawRectMakeColor(getMemDC(), temp, RGB(255,255,0), 1);
 		}
+		mPixelStage->render(getMemDC(), 0,0, CAMERAMANAGER->getCameraPos().x, CAMERAMANAGER->getCameraPos().y, WINSIZE_X, WINSIZE_Y);
 	}
+
 }
 
 void StageScene::stageSettting(int stageNum)
@@ -131,8 +133,10 @@ void StageScene::stageSettting(int stageNum)
 		// 인트로
 		case 0:
 			mStage = IMAGEMANAGER->findImage("Stage_Intro");
+			mPixelStage = IMAGEMANAGER->findImage("Pixel_Intro");
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
+			//player->init(3000, mStage->getHeight() - 288 * SCALE_FACTOR);
 			player->init(WINSIZE_X / 2, mStage->getHeight() - 288 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();
@@ -194,41 +198,151 @@ bool StageScene::noticeAnim(void)
 
 void StageScene::rectSetting(void)
 {
+
+#pragma region Stage_Intro
 	// 렉트 충돌 테스트 
-	floor = RectMake(0, mStage->getHeight() - 45 * SCALE_FACTOR, 320 * SCALE_FACTOR, 45 * SCALE_FACTOR);
+	floor = RectMake(0, mStage->getHeight() - 40 * SCALE_FACTOR, 320 * SCALE_FACTOR, 40 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
-	floor = RectMake(floor.right, mStage->getHeight() - 80 * SCALE_FACTOR, 320 * SCALE_FACTOR, 80 * SCALE_FACTOR);
+	floor = RectMake(floor.right, mStage->getHeight() - 75 * SCALE_FACTOR, 319 * SCALE_FACTOR, 75 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 	
-	floor = RectMake(floor.right, mStage->getHeight() - 160 * SCALE_FACTOR, 130 * SCALE_FACTOR, 160 * SCALE_FACTOR);
+	floor = RectMake(floor.right, mStage->getHeight() - 155 * SCALE_FACTOR, 130 * SCALE_FACTOR, 155 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
-	floor = RectMake(floor.right, mStage->getHeight() - 115 * SCALE_FACTOR, 63 * SCALE_FACTOR, 115 * SCALE_FACTOR);
+	floor = RectMake(floor.right, mStage->getHeight() - 110 * SCALE_FACTOR, 63 * SCALE_FACTOR, 110 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
-	floor = RectMake(floor.right, mStage->getHeight() - 145 * SCALE_FACTOR, 128 * SCALE_FACTOR, 145 * SCALE_FACTOR);
+	floor = RectMake(floor.right, mStage->getHeight() - 140 * SCALE_FACTOR, 128 * SCALE_FACTOR, 140 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
-	floor = RectMake(floor.right, mStage->getHeight() - 115 * SCALE_FACTOR, 96 * SCALE_FACTOR, 115 * SCALE_FACTOR);
+	floor = RectMake(floor.right, mStage->getHeight() - 110 * SCALE_FACTOR, 96 * SCALE_FACTOR, 110 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
-	floor = RectMake(floor.right, mStage->getHeight() - 160 * SCALE_FACTOR, 10 * SCALE_FACTOR, 160 * SCALE_FACTOR);
+	floor = RectMake(floor.right, mStage->getHeight() - 155 * SCALE_FACTOR, 10 * SCALE_FACTOR, 155 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
-	// floor = RectMake(floor.right, mStage->getHeight() - 160 * SCALE_FACTOR, 130 * SCALE_FACTOR, 160 * SCALE_FACTOR);
-	//_vFloor.push_back(floor);
-
-	//floor = RectMake(0, mStage->getHeight() - 100 * SCALE_FACTOR, 30 * SCALE_FACTOR, 100 * SCALE_FACTOR);
-	//_vFloor.push_back(floor);
-
-	/*
-	floor = RectMake(floor.right, mStage->getHeight() - 80 * SCALE_FACTOR, 320 * SCALE_FACTOR, 80 * SCALE_FACTOR);
+	floor = RectMake(floor.right, mStage->getHeight() - 77 * SCALE_FACTOR, 438 * SCALE_FACTOR, 77 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
-	floor = RectMake(floor.right, mStage->getHeight() - 115 * SCALE_FACTOR, 63 * SCALE_FACTOR, 115 * SCALE_FACTOR);
+	int temp = floor.right;
+
+	floor = RectMake(temp + 96 * SCALE_FACTOR, mStage->getHeight() - 171 * SCALE_FACTOR, 384 * SCALE_FACTOR, 171 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
-	*/
+
+	floor = RectMake(temp + 96 * SCALE_FACTOR, mStage->getHeight() - 288 * SCALE_FACTOR, 64 * SCALE_FACTOR, 43 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+	
+	floor = RectMake(floor.right + 256 * SCALE_FACTOR, mStage->getHeight() - 288 * SCALE_FACTOR, 64 * SCALE_FACTOR, 43 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right + 46 * SCALE_FACTOR, mStage->getHeight() - 171 * SCALE_FACTOR, 82 * SCALE_FACTOR, 27 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right, mStage->getHeight() - 288 * SCALE_FACTOR, 192 * SCALE_FACTOR, 139 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	temp = floor.right;
+
+	floor = RectMake(temp + 512 * SCALE_FACTOR, mStage->getHeight() - 72 * SCALE_FACTOR, 64 * SCALE_FACTOR, 72 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(temp + 400 * SCALE_FACTOR, mStage->getHeight() - 288 * SCALE_FACTOR, 240 * SCALE_FACTOR, 139 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right + 64 * SCALE_FACTOR, mStage->getHeight() - 288 * SCALE_FACTOR, 64 * SCALE_FACTOR, 139 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right, mStage->getHeight() - 288 * SCALE_FACTOR, 64 * SCALE_FACTOR, 170 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+
+	floor = RectMake(floor.right, mStage->getHeight() - 480 * SCALE_FACTOR, 512 * SCALE_FACTOR, 331 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right, mStage->getHeight() - 480 * SCALE_FACTOR, 32 * SCALE_FACTOR, 267 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right, mStage->getHeight() - 480 * SCALE_FACTOR, 32 * SCALE_FACTOR, 203 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	temp = floor.right;
+
+	floor = RectMake(temp, mStage->getHeight() - 480 * SCALE_FACTOR, 640 * SCALE_FACTOR, 43 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(temp + 128 * SCALE_FACTOR, mStage->getHeight() - 360 * SCALE_FACTOR, 224 * SCALE_FACTOR, 360 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right, mStage->getHeight() - 360 * SCALE_FACTOR, 32 * SCALE_FACTOR, 120 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right, mStage->getHeight() - 285 * SCALE_FACTOR, 256 * SCALE_FACTOR, 45 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	temp = floor.right;
+
+	// 위
+	floor = RectMake(temp + 64 * SCALE_FACTOR, mStage->getHeight() - 480 * SCALE_FACTOR, 160 * SCALE_FACTOR, 75 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+	floor = RectMake(floor.right, mStage->getHeight() - 480 * SCALE_FACTOR, 64 * SCALE_FACTOR, 43 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	// 아래
+	floor = RectMake(temp + 64 * SCALE_FACTOR, mStage->getHeight() - 285 * SCALE_FACTOR, 224 * SCALE_FACTOR, 45 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	temp = floor.right;
+
+	// 위
+	floor = RectMake(temp + 64 * SCALE_FACTOR, mStage->getHeight() - 480 * SCALE_FACTOR, 48 * SCALE_FACTOR, 43 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+	floor = RectMake(floor.right, mStage->getHeight() - 480 * SCALE_FACTOR, 64 * SCALE_FACTOR, 75 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+	floor = RectMake(floor.right, mStage->getHeight() - 480 * SCALE_FACTOR, 48 * SCALE_FACTOR, 43 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	// 아래
+	floor = RectMake(temp + 64 * SCALE_FACTOR, mStage->getHeight() - 311 * SCALE_FACTOR, 96 * SCALE_FACTOR, 71 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+	floor = RectMake(floor.right, mStage->getHeight() - 278 * SCALE_FACTOR, 64 * SCALE_FACTOR, 38 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	
+	temp = floor.right;
+	
+	//위
+	floor = RectMake(temp + 128 * SCALE_FACTOR, mStage->getHeight() - 494 * SCALE_FACTOR, 304 * SCALE_FACTOR, 52 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	//위 다음으로 넘어가는 곳
+	
+	floor = RectMake(temp + 144 * SCALE_FACTOR, mStage->getHeight() - (960 * SCALE_FACTOR), 46 * SCALE_FACTOR, 467 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+	
+	floor = RectMake(floor.right + 80 * SCALE_FACTOR, mStage->getHeight() - 681 * SCALE_FACTOR, 240 * SCALE_FACTOR, 52 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+	
+	//너비 240 높이 62 시작 646
+	
+	//아래
+	floor = RectMake(temp + 128 * SCALE_FACTOR, mStage->getHeight() - 278 * SCALE_FACTOR, 384 * SCALE_FACTOR, 38 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right, mStage->getHeight() - 729 * SCALE_FACTOR, 64 * SCALE_FACTOR, 489 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	
+
+	// -5 끝부분 다듬기 여기까지
+
+
+#pragma endregion
+
+#pragma region Stage_Yanmark
+
+#pragma endregion
+
 }
 
 void StageScene::stageCollision(void)
@@ -237,29 +351,91 @@ void StageScene::stageCollision(void)
 	player->setRightCollision(false, 0);
 	player->setLeftCollision(false, 0);
 
-	int index = 0;
-	for (auto& floor : _vFloor)
+	// 바닥 체크
+	for (int row = player->getPlayerBottom() + 5; row >= player->getPlayerBottom(); row--)
 	{
-		index++;
-
-		if (player->getPlayerLeft() < floor.right && player->getPlayerRight() > floor.left
-			&& player->getPlayerBottom() + 4 > floor.top && player->getPlayerTop() < floor.top)
+		if (player->getPlayerSight() == true)
 		{
-			player->setIsOnGround(true, floor.top);
+			for (int line = player->getPlayerCenter() - 5 * SCALE_FACTOR; line <= player->getPlayerCenter() + 5 * SCALE_FACTOR; line++)
+			{
+				// 컬러 비교
+				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
+
+				if (color == RGB(255, 0, 0))
+				{
+					player->setIsOnGround(true, row);
+					break;
+				}
+			}
 		}
 
+		else
+		{
+			for (int line = player->getPlayerCenter() + 5 * SCALE_FACTOR; line >= player->getPlayerCenter() - 5 * SCALE_FACTOR; line--)
+			{
+				// 컬러 비교
+				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
+
+				if (color == RGB(255, 0, 0))
+				{
+					player->setIsOnGround(true, row);
+					break;
+				}
+			}
+		}
+	}
+
+	// 천장 체크
+
+	for (int row = player->getPlayerTop() - 2; row <= player->getPlayerTop(); row++)
+	{
+		if (player->getPlayerSight() == true)
+		{
+			for (int line = player->getPlayerCenter() - 5 * SCALE_FACTOR; line <= player->getPlayerCenter() + 5 * SCALE_FACTOR; line++)
+			{
+				// 컬러 비교
+				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
+
+				if (color == RGB(255, 0, 0))
+				{
+					player->setTopCollision(true, row);
+					break;
+				}
+			}
+		}
+
+		else
+		{
+			for (int line = player->getPlayerCenter() + 2 * SCALE_FACTOR; line >= player->getPlayerCenter() - 5 * SCALE_FACTOR; line--)
+			{
+				// 컬러 비교
+				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
+
+				if (color == RGB(255, 0, 0))
+				{
+					player->setTopCollision(true, row);
+					break;
+				}
+			}
+		}
+	}
+
+	for (auto& floor : _vFloor)
+	{
 		if(player->getPlayerLeft() - 4 < floor.right && player->getPlayerRight() > floor.right
-			&& player->getPlayerBottom() > floor.top) // && player->getPlayerTop() < floor.bottom)
+			&& player->getPlayerBottom() > floor.top && player->getPlayerTop() < floor.bottom)
 		{
 			player->setLeftCollision(true, floor.right);
 			break;
 		}
 
 		if (player->getPlayerRight() + 4 > floor.left && player->getPlayerLeft() < floor.left
-			&& player->getPlayerBottom() > floor.top) // && player->getPlayerTop() < floor.bottom)
+			&& player->getPlayerBottom() > floor.top && player->getPlayerTop() < floor.bottom)
 		{
 			player->setRightCollision(true, floor.left);
 			break;
 		}
 	}
+
+	
 }

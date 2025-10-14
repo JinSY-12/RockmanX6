@@ -2,6 +2,8 @@
 #include "GImage.h"
 
 
+
+
 GImage::GImage() : _imageInfo(nullptr), _fileName(nullptr), _isTrans(false), _transColor(RGB(0, 0, 0)), _blendImage(NULL)
 {
 }
@@ -983,3 +985,4 @@ void GImage::setTransImage(const char* fileName)
 
     strcpy_s(_fileName, len + 1, fileName);
 }
+
