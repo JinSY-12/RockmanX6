@@ -1,5 +1,7 @@
 #pragma once
 #include"Gimage.h"
+#include "PlayerType.h"
+#include "BossType.h"
 #include <Windows.h>
 
 static GImage* _backBuffer = IMAGEMANAGER->addImage("backBueffer", WINSIZE_X, WINSIZE_Y);
@@ -13,7 +15,8 @@ private:
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int num);
-	virtual HRESULT init(int num, int charType);
+	virtual HRESULT init(int x, int y);
+	virtual HRESULT init(PlayerType pType, BossType bType);
 	virtual HRESULT init(bool managerInit);
 	virtual void release(void);
 	virtual void update(void);

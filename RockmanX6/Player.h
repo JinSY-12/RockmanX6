@@ -1,13 +1,14 @@
 #pragma once
 #include "GameNode.h"
 #include "BulletManager.h"
+#include "EffectType.h"
+#include "BulletType.h"
 
 class BulletManager;
 
 class Player : public GameNode
 {
 private:
-
 
 
 public:
@@ -273,9 +274,6 @@ public:
 	inline bool getPlayerSight(void) { return pStatus.lookRight; }
 
 	// »óÅÂ°ª
-
-	
-
 	inline void setLeftCollision(bool left, int leftline)
 	{
 		pStatus.touchLeft = left;
@@ -343,8 +341,7 @@ public:
 			pStatus.hitBox.bottom = pStatus.hitBox.top + hitBoxHeight;
 
 			pStatus.velocityY = 0.0f;
-			
-			currentState = CharacterState::FallingDown;
+			pStatus.velocityX = 0.0f;
 		}
 	}
 

@@ -151,7 +151,7 @@ HRESULT SceneManager::changeScene(string sceneName, int type)
 	return E_FAIL;
 }
 
-HRESULT SceneManager::changeScene(string sceneName, int type, int charType)
+HRESULT SceneManager::changeScene(string sceneName, PlayerType pType, BossType bType)
 {
 	mapSceneIter find = _mSceneList.find(sceneName);
 
@@ -167,7 +167,7 @@ HRESULT SceneManager::changeScene(string sceneName, int type, int charType)
 	// 카메라 페이드인
 	CAMERAMANAGER->padeIn(0.8f);
 
-	if (SUCCEEDED(find->second->init(type, charType)))
+	if (SUCCEEDED(find->second->init(pType, bType)))
 	{
 		//바꾸려는 씬을 현재씬으로 변경
 		_currentScene = find->second;

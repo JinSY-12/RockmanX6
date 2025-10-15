@@ -8,9 +8,31 @@ HRESULT ProgressBar::init(void)
     return S_OK;
 }
 
-HRESULT ProgressBar::init(int num)
+HRESULT ProgressBar::init(PlayerType pType, BossType bType)
 {
-    charType = num;
+    // 체력바 기본 세팅
+    progressBar = IMAGEMANAGER->findImage("HUD_HpBar");
+    progressHead = IMAGEMANAGER->findImage("HUD_HpBarHead");
+    mainGaugeBar = IMAGEMANAGER->findImage("HUD_GreenBar");
+    subGaugeBar = IMAGEMANAGER->findImage("HUD_RedBar");
+
+    // 캐릭터에 맞는 캐릭터 아이콘 세팅
+    switch (pType)
+    {
+    case PlayerType::X:
+        playerLogo = IMAGEMANAGER->findImage("HUD_ProgressBar_X");
+        break;
+    }
+
+    // 보스에 맞는 보스 아이콘 세팅
+    switch (bType)
+    {
+    case BossType::Intro:
+        break;
+    case BossType::CommanYanmark:
+        break;
+    }
+    
     gameStart = false;
 
     currentMaxHp = 30.f;
@@ -59,8 +81,8 @@ void ProgressBar::render(HDC hdc)
     if (charType != -1 && gameStart == true)
     {
         playerLogo->render(hdc, WINSIZE_X / 30, WINSIZE_Y / 50 * 17);
-        ProgressBar->render(hdc, WINSIZE_X / 30 + 7 * SCALE_FACTOR , WINSIZE_Y / 50 * 7 - ((int)currentMaxHp - 49) * SCALE_FACTOR,  0, 0, ProgressBar->getWidth(), ((int)currentMaxHp -2) * SCALE_FACTOR);
-        ProgressHead->render(hdc, WINSIZE_X / 30 + 7 * SCALE_FACTOR, WINSIZE_Y / 50 * 7 - ((int)currentMaxHp - 45) * SCALE_FACTOR);
+        progressBar->render(hdc, WINSIZE_X / 30 + 7 * SCALE_FACTOR , WINSIZE_Y / 50 * 7 - ((int)currentMaxHp - 49) * SCALE_FACTOR,  0, 0, progressBar->getWidth(), ((int)currentMaxHp -2) * SCALE_FACTOR);
+        progressHead->render(hdc, WINSIZE_X / 30 + 7 * SCALE_FACTOR, WINSIZE_Y / 50 * 7 - ((int)currentMaxHp - 45) * SCALE_FACTOR);
 
         subGaugeBar->render(hdc, WINSIZE_X / 30 + 10 * SCALE_FACTOR, WINSIZE_Y / 50 * 7 - ((int)prevHp - 47) * SCALE_FACTOR, 0, 0, mainGaugeBar->getWidth(), (int)prevHp * SCALE_FACTOR);
         mainGaugeBar->render(hdc, WINSIZE_X / 30 + 10 * SCALE_FACTOR, WINSIZE_Y / 50 * 7 - ((int)currentHp - 47) * SCALE_FACTOR, 0, 0, mainGaugeBar->getWidth(), (int)currentHp * SCALE_FACTOR);
@@ -69,41 +91,6 @@ void ProgressBar::render(HDC hdc)
 
 void ProgressBar::setCharacter(int character, int boss)
 {
-    charType = character;
-    bossType = boss;
-
-    ProgressBar = IMAGEMANAGER->findImage("HUD_HpBar");
-    ProgressHead = IMAGEMANAGER->findImage("HUD_HpBarHead");
-    mainGaugeBar = IMAGEMANAGER->findImage("HUD_GreenBar");
-    subGaugeBar = IMAGEMANAGER->findImage("HUD_RedBar");
-
-    switch (charType)
-    {
-    // 엑스
-    case 0:
-        playerLogo = IMAGEMANAGER->findImage("HUD_ProgressBar_X");
-        break;
-    // 엑스 웨폰
-    case 1:
-        playerLogo = IMAGEMANAGER->findImage("HUD_ProgressBar_Xweapon");
-        break;
-    // 제로
-    case 2:
-        break;
-    // 제로 웨폰
-    case 3:
-        break;
-    }
-
-    switch (bossType)
-    {
-        // 인트로 보스
-    case 0:
-        // 대충 보석 모양 보스 로고
-        break;
-        // 커맨드 얀마크
-    case 1:
-        break;
-    }
-
+    // 대충 플레이어의 스텟을 들고 올것
+    // 최대 체력, 목숩 갯수 등등
 }

@@ -91,6 +91,33 @@
     <Filter Include="소스 파일\FrameWork\Manager\Palette">
       <UniqueIdentifier>{f9be3c8d-2a99-4417-9cfb-af37c01c9ff7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Enemy\EnemyBase">
+      <UniqueIdentifier>{ee721d08-1523-42be-973c-827da88dd621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Enemy\Minion">
+      <UniqueIdentifier>{560fc10b-7048-4e58-b212-bc18914e72d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Enemy\Boss">
+      <UniqueIdentifier>{6bfa6b0c-720f-4f97-805d-a0da734c61c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Effect">
+      <UniqueIdentifier>{1298a8aa-de2e-4367-b18b-80810b0cae6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Effect">
+      <UniqueIdentifier>{78971dbb-210b-4a91-abb3-1b8d61bf589a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Effect\Effect">
+      <UniqueIdentifier>{983bae95-5359-4001-8f61-794064940380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Effect\EffectType">
+      <UniqueIdentifier>{f0dab2ff-055a-448f-b778-6cc2075d8fb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Player\PlayerBase\Player">
+      <UniqueIdentifier>{4ab94611-fd8a-4da8-9be7-8d143ada8fdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Player\PlayerBase\PlayerType">
+      <UniqueIdentifier>{f2fa74f8-77b9-46e6-8732-82877f8b08cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SingletonBase.h">
@@ -165,9 +192,6 @@
     <ClInclude Include="MovieScene.h">
       <Filter>소스 파일\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>소스 파일\Player\PlayerBase</Filter>
-    </ClInclude>
     <ClInclude Include="Zero.h">
       <Filter>소스 파일\Player\Character</Filter>
     </ClInclude>
@@ -185,6 +209,33 @@
     </ClInclude>
     <ClInclude Include="PaletteManager.h">
       <Filter>소스 파일\FrameWork\Manager\Palette</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBase.h">
+      <Filter>소스 파일\Enemy\EnemyBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Junkroid.h">
+      <Filter>소스 파일\Enemy\Minion</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectType.h">
+      <Filter>소스 파일\Effect\EffectType</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\Player\PlayerBase\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerType.h">
+      <Filter>소스 파일\Player\PlayerBase\PlayerType</Filter>
+    </ClInclude>
+    <ClInclude Include="BossType.h">
+      <Filter>소스 파일\Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>소스 파일\Effect\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletType.h">
+      <Filter>소스 파일\Player\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -254,9 +305,6 @@
     <ClCompile Include="MovieScene.cpp">
       <Filter>소스 파일\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>소스 파일\Player\PlayerBase</Filter>
-    </ClCompile>
     <ClCompile Include="X.cpp">
       <Filter>소스 파일\Player\Character</Filter>
     </ClCompile>
@@ -274,6 +322,21 @@
     </ClCompile>
     <ClCompile Include="PaletteManager.cpp">
       <Filter>소스 파일\FrameWork\Manager\Palette</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBase.cpp">
+      <Filter>소스 파일\Enemy\EnemyBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Junkroid.cpp">
+      <Filter>소스 파일\Enemy\Minion</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\Player\PlayerBase\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>소스 파일\Effect\Effect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

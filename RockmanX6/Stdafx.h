@@ -87,6 +87,7 @@ ID2D1HwndRenderTarget*			_ID2DRenderTarget = nullptr;
 #include "SoundManager.h"
 #include "CameraManager.h"
 #include "UiManager.h"
+#include "EffectManager.h"
 //#include "ObjectManager.h"
 #include "SceneManager.h"
 #include "Utils.h"
@@ -106,6 +107,7 @@ using namespace MY_UTIL;
 #define SCENEMANAGER SceneManager::getSingleton()
 #define TIMEMANAGER TimeManager::getSingleton()
 #define TEXTMANAGER TextManager::getSingleton()
+#define EFFECTMANAGER EffectManager::getSingleton()
 
 
 //! ≈∏¿Ã∆≤

@@ -1,41 +1,13 @@
 #include "Stdafx.h"
 #include "StageScene.h"
 
-HRESULT StageScene::init(void)
+HRESULT StageScene::init(PlayerType pType, BossType bType)
 {
-	return S_OK;
-}
-
-HRESULT StageScene::init(int num)
-{
-	return S_OK;
-}
-
-HRESULT StageScene::init(int num, int charType)
-{
-	switch (charType)
+	switch (pType)
 	{
 	// 엑스
-	case 0:
+	case PlayerType::X:
 		player = std::make_unique<X>();
-		break;
-	// 제로
-	case 1:
-		break;
-	// 팔콘
-	case 2:
-		break;
-	// 블레이드
-	case 3:
-		break;
-	// 섀도우
-	case 4:
-		break;
-	// 얼티밋
-	case 5:
-		break;
-	// 블랙 제로
-	case 6:
 		break;
 	default:
 		break;
@@ -44,13 +16,10 @@ HRESULT StageScene::init(int num, int charType)
 	player->setBulletManager(&bManager);
 
 	// 스테이지 세팅
-	UIMANAGER->setCharacter(charType, num);
-	stageSettting(num);
-
+	UIMANAGER->SettingProgressBar(pType, bType);
+	stageSettting(bType);
 
 	// 스테이지 시작 준비
-	// mReadyLogo = IMAGEMANAGER->findImage("Ready");
-
 	SOUNDMANAGER->play(stagBGM, 0.5f);
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
@@ -78,7 +47,7 @@ void StageScene::update(void)
 		else
 		{
 			playAble = true;
-			UIMANAGER->setGameStart();
+			UIMANAGER->playStart();
 		}
 	}
 
@@ -123,15 +92,14 @@ void StageScene::render(void)
 		}
 		mPixelStage->render(getMemDC(), 0,0, CAMERAMANAGER->getCameraPos().x, CAMERAMANAGER->getCameraPos().y, WINSIZE_X, WINSIZE_Y);
 	}
-
 }
 
-void StageScene::stageSettting(int stageNum)
+void StageScene::stageSettting(BossType bType)
 {
-	switch(stageNum)
+	switch(bType)
 	{
 		// 인트로
-		case 0:
+		case BossType::Intro:
 			mStage = IMAGEMANAGER->findImage("Stage_Intro");
 			mPixelStage = IMAGEMANAGER->findImage("Pixel_Intro");
 			gravity = 0.6f;
@@ -140,17 +108,19 @@ void StageScene::stageSettting(int stageNum)
 			player->init(WINSIZE_X / 2, mStage->getHeight() - 288 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();
-			
 			break;
 
 		// 커맨드 얀마크
-		case 1:
+		case BossType::CommanYanmark:
 			mStage = IMAGEMANAGER->findImage("Stage_Yanmark");
 			gravity = 6.0f;
 			stagBGM = "BGM_Stage_CommandYanmark";
 			player->init(WINSIZE_X / 2, mStage->getHeight() - WINSIZE_Y);
 			player->spawn(WINSIZE_X / 2, 1000);
 			player->setStageGravity(gravity);
+			break;
+
+		defalut:
 			break;
 	}
 
@@ -386,7 +356,6 @@ void StageScene::stageCollision(void)
 	}
 
 	// 천장 체크
-
 	for (int row = player->getPlayerTop() - 2; row <= player->getPlayerTop(); row++)
 	{
 		if (player->getPlayerSight() == true)

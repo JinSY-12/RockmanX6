@@ -40,16 +40,14 @@ private:
 	int noticeAniSpeed;
 
 public:
-	HRESULT init(void);
-	HRESULT init(int num);
-	HRESULT init(int num, int charType);
+	HRESULT init(PlayerType pType, BossType bType);
 	void release(void);
 	void update(void);
 	void render(void);
 
 	bool noticeAnim(void);
 
-	void stageSettting(int stageNum);
+	void stageSettting(BossType bType);
 	
 	void rectSetting(void);
 	void stageCollision(void);

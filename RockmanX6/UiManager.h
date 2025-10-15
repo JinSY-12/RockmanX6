@@ -1,11 +1,12 @@
 #pragma once
 #include "SingletonBase.h"
 #include "ProgressBar.h"
+#include "PlayerType.h"
+#include "BossType.h"
 
 class UiManager : public SingletonBase<UiManager>
 {
 private:
-
 	GImage* _hud;
 	GImage* _number;
 	GImage* _heart;
@@ -35,6 +36,8 @@ public:
 	void release(void);
 	void render(HDC hdc);
 
+	void SettingProgressBar(PlayerType pType, BossType bType);
+
 	inline int isCurrentLine() { return mCurrentLine; }
 
 	bool getIsUiMode() { return isUiMode; }
@@ -46,8 +49,7 @@ public:
 
 	inline bool getIsDebugMode(void) { return isDebugMode; }
 
-	inline void setCharacter(int type, int boss) { charType = type; bossType = boss; }
-	void setGameStart();
+	inline void playStart() { progressBar->setVisible(true); }
 
 	void printEvent(int eventNum);
 };

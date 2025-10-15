@@ -1,5 +1,7 @@
 #pragma once
 #include "SingletonBase.h"
+#include "PlayerType.h"
+#include "BossType.h"
 
 // 전방 선언
 class GameNode;
@@ -33,7 +35,7 @@ public:
 
 	HRESULT changeScene(string sceneName);
 	HRESULT changeScene(string sceneName, int type);
-	HRESULT changeScene(string sceneName, int type, int charType);
+	HRESULT changeScene(string sceneName, PlayerType pType, BossType bType);
 	void changeScenePadeOut(string sceneName, float padeTime, int nextSceneType = 0);
 
 	HRESULT changeLoadingScene(string nextSceneName, string loadSceneName = "TitleScene");

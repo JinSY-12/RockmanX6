@@ -68,7 +68,7 @@ void TitleScene::update(void)
 
 				// 0 = 인트로 스테이지, 1 = 얀마크 스테이지
 				// 0 = 엑스, 1 = 제로, 2 = 팔콘, 3 = 블레이드, 4 = 섀도우, 5 = 얼티밋, 6 = 블랙 제로
-				SCENEMANAGER->changeScene("스테이지", 0, 0);
+				SCENEMANAGER->changeScene("스테이지", PlayerType::X, BossType::Intro);
 				CAMERAMANAGER->setStage(0);
 
 				// 씬 체인지 -> 인트로 컷씬 or 인트로 스테이지

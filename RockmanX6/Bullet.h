@@ -1,7 +1,6 @@
 #pragma once
 #include "GameNode.h"
-
-
+#include "BulletType.h"
 
 class Bullet : public GameNode
 {
@@ -30,7 +29,7 @@ public:
 public:
 
 	virtual HRESULT init(void);
-	virtual HRESULT init(int chargeLevel, int x, int y, bool isRight);
+	virtual HRESULT init(BulletType type, int x, int y, bool isRight);
 	virtual void release(void);
 	virtual void update(void);
 	virtual void render(void);
@@ -48,7 +47,7 @@ private:
 public:
 
 	HRESULT init(void);
-	HRESULT init(int chargeLevel, int x, int y, bool isRight);
+	HRESULT init(BulletType type, int x, int y, bool isRight);
 	void release(void);
 	void update(void);
 	void render(void) override;

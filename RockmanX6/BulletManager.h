@@ -1,6 +1,7 @@
 #pragma once
 #include "GameNode.h"
 #include "Bullet.h"
+#include "BulletType.h"
 
 class X;
 class Zero;
@@ -32,7 +33,7 @@ public:
 	void update(void);
 	void render(void);
 
-	void fire(int type, int x, int y, bool direct);
+	void fire(BulletType type, int x, int y, bool direct);
 
 	inline int getMaxBullets() { return _vBullet.size(); }
 

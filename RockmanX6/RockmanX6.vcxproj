@@ -127,22 +127,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BossType.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="BulletType.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CommonMacroFunction.h" />
     <ClInclude Include="Dialogue.h" />
+    <ClInclude Include="Effect.h" />
+    <ClInclude Include="EffectManager.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="EffectType.h" />
+    <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="GameNode.h" />
     <ClInclude Include="GImage.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="HunterBaseScene.h" />
     <ClInclude Include="ImageManager.h" />
+    <ClInclude Include="Junkroid.h" />
     <ClInclude Include="KeyManager.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MovieScene.h" />
     <ClInclude Include="PaletteManager.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerType.h" />
     <ClInclude Include="ProgressBar.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -166,12 +176,18 @@
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Dialogue.cpp" />
+    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="EffectManager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameNode.cpp" />
     <ClCompile Include="GImage.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="HunterBaseScene.cpp" />
     <ClCompile Include="ImageManager.cpp" />
+    <ClCompile Include="Junkroid.cpp" />
     <ClCompile Include="KeyManager.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MovieScene.cpp" />

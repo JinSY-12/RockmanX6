@@ -13,10 +13,6 @@ HRESULT UiManager::init(void)
 	bossType - -1;
 	isDebugMode = false;
 
-	progressBar = new ProgressBar;
-
-	progressBar->init(charType);
-
 	return S_OK;
 }
 
@@ -50,10 +46,8 @@ void UiManager::update(void)
 	// if (CAMERAMANAGER->isPadeOutComplete());
 
 	if (KEYMANAGER->isOnceKeyDown(VK_TAB)) isDebugMode = !isDebugMode;
-
 	
-	progressBar->update();
-	progressBar->setCharacter(charType, bossType);
+	if (progressBar != nullptr) progressBar->update();
 
 	_textIcon->play(0.5f);
 }
@@ -82,14 +76,15 @@ void UiManager::render(HDC hdc)
 		}
 	}
 
-	if (charType != -1 || bossType != -1) progressBar->render(hdc);
+	if (progressBar != nullptr) progressBar->render(hdc);
 }
 
-void UiManager::setGameStart()
+void UiManager::SettingProgressBar(PlayerType pType, BossType bType)
 {
-	progressBar->setVisible(true);
-
+	progressBar = new ProgressBar;
+	progressBar->init(pType, bType);
 }
+
 
 void UiManager::printEvent(int eventNum)
 {

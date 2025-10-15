@@ -2,6 +2,7 @@
 #include "GameNode.h"
 
 
+
 HRESULT GameNode::init(void)
 {
     return S_OK;
@@ -12,7 +13,12 @@ HRESULT GameNode::init(int num)
     return S_OK;
 }
 
-HRESULT GameNode::init(int num, int charType)
+HRESULT GameNode::init(int x, int y)
+{
+    return S_OK;
+}
+
+HRESULT GameNode::init(PlayerType pType, BossType bType)
 {
     return S_OK;
 }

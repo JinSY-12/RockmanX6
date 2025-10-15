@@ -222,7 +222,7 @@ void Player::wallKick(void)
 {
 	currentState = CharacterState::WallKick;
 
-	pStatus.velocityY = -12.0f;
+	pStatus.velocityY = -13.0f;
 	pStatus.isWallKick = true;
 	
 	SOUNDMANAGER->play("Voice_" + pStatus.charName + "Jump1", 0.5f);
@@ -233,11 +233,11 @@ void Player::wallKick(void)
 		
 		if (pressDash == true)
 		{
-			cout << "ÀÛµ¿" << endl;
-			pStatus.velocityX = -12.0f;
+			pStatus.isJumpDash = true;
+			pStatus.velocityX = -16.0f;
 		}
 
-		else pStatus.velocityX = -8.0f;
+		else pStatus.velocityX = -10.0f;
 	}
 
 	else
@@ -246,9 +246,10 @@ void Player::wallKick(void)
 
 		if (pressDash == true)
 		{
-			pStatus.velocityX = 12.0f;
+			pStatus.isJumpDash = true;
+			pStatus.velocityX = 16.0f;
 		}
-		else pStatus.velocityX = 8.0f;
+		else pStatus.velocityX = 10.0f;
 	}
 }
 

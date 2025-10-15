@@ -33,31 +33,28 @@ void BulletManager::render(void)
 	}
 }
 	
-void BulletManager::fire(int type, int x, int y, bool direct)
+void BulletManager::fire(BulletType type, int x, int y, bool direct)
 {
 	switch (type)
 	{
 		//버스터
-		case 0:
+		case BulletType::Buster:
 			bullet = new Burster;
-			bullet->init(0, x, y, direct);
+			bullet->init(type, x, y, direct);
 			_vBullet.push_back(bullet);
 			break;
-		case 1:
+		case BulletType::ChargeBurst1:
 			bullet = new Burster;
-			bullet->init(1, x, y, direct);
+			bullet->init(type, x, y, direct);
 			_vBullet.push_back(bullet);
 			break;
-		case 2:
+		case BulletType::ChargeBurst2:
 			bullet = new Burster;
-			bullet->init(2, x, y, direct);
+			bullet->init(type, x, y, direct);
 			_vBullet.push_back(bullet);
 			break;
-		// 제로 버스터
-		case 3:
-			// bullet = new ZeroBurster;
-			break;
-		case 4:
+		// 제로 버스터 추가 예정
+		defalut:
 			break;
 	}
 }

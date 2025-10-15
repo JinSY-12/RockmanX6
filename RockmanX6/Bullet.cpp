@@ -7,7 +7,7 @@ HRESULT Bullet::init(void)
 	return S_OK;
 }
 
-HRESULT Bullet::init(int chargeLevel, int x, int y, bool isRight)
+HRESULT Bullet::init(BulletType type, int x, int y, bool isRight)
 {
 	return S_OK;
 }
@@ -32,21 +32,21 @@ HRESULT Burster::init(void)
 	return S_OK;
 }
 
-HRESULT Burster::init(int chargeLevel, int x, int y, bool isRight)
+HRESULT Burster::init(BulletType type, int x, int y, bool isRight)
 {
-	switch (chargeLevel)
+	switch (type)
 	{
-	case 0:
+	case BulletType::Buster:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster1")->cloneImage();
 		bStatus.demage = 1;
 		break;
-	case 1:
+	case BulletType::ChargeBurst1:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster2")->cloneImage();
 		bStatus.demage = 2;
 		break;
-	case 2:
+	case BulletType::ChargeBurst2:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster3")->cloneImage();
 		bStatus.demage = 3;
