@@ -6,3 +6,9 @@ enum class BossType
 	CommanYanmark,
 	None
 };
+
+enum class EnemyType
+{
+	Junkroid,
+	RollingStone
+};

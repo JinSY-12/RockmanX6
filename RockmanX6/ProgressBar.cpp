@@ -35,7 +35,6 @@ HRESULT ProgressBar::init(PlayerType pType, BossType bType)
     
     gameStart = false;
 
-    currentMaxHp = 30.f;
     prevHp = currentMaxHp;
     currentHp = currentMaxHp;
 

@@ -51,6 +51,9 @@ public:
 
 	inline void playStart() { progressBar->setVisible(true); }
 
+	void setMaxHp(int maxHp);
+	void setCurrentPlayerStatus(int hp);
+
 	void printEvent(int eventNum);
 };
 

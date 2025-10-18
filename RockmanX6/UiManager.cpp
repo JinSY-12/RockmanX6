@@ -86,6 +86,16 @@ void UiManager::SettingProgressBar(PlayerType pType, BossType bType)
 }
 
 
+void UiManager::setMaxHp(int maxHp)
+{
+	progressBar->setMaxHP(maxHp);
+}
+
+void UiManager::setCurrentPlayerStatus(int hp)
+{
+	progressBar->setCurrentHp(hp);
+}
+
 void UiManager::printEvent(int eventNum)
 {
 	chageIsUiMode();

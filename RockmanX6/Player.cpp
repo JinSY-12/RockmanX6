@@ -1,6 +1,6 @@
 #include "Stdafx.h"
 #include "Player.h"
-
+#include "BulletManager.h"
 
 HRESULT Player::init(void)
 {

@@ -17,7 +17,7 @@ HRESULT CameraManager::init(void)
     _isWhitePadeOut = false;
     _isPadeResult = false;
 
-    stageType = -1;
+    mBtype = BossType::None;
 
     return S_OK;
 }
@@ -168,17 +168,15 @@ void CameraManager::cameraOffset(void)
 
 void CameraManager::setMaxCameraRange()
 {
-    switch (stageType)
+    switch (mBtype)
     {
-        case 0:            
+        case BossType::Intro:            
             if (camera.x >= 0 * SCALE_FACTOR && camera.x < 3530 * SCALE_FACTOR)
             {
                 cameraRange.top = 288 * SCALE_FACTOR;
                 cameraRange.bottom = WINSIZE_Y;
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
-
-                cout << "Zone1" << endl;
             }
             
             else if (camera.x >= 3530 * SCALE_FACTOR && camera.x < 4060 * SCALE_FACTOR - WINSIZE_X)
@@ -188,8 +186,6 @@ void CameraManager::setMaxCameraRange()
             
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
-
-                cout << "Zone2" << endl;
             }
 
             else if (playerPos.x >= 4060 * SCALE_FACTOR - WINSIZE_X && playerPos.x < 5000 * SCALE_FACTOR)
@@ -198,13 +194,11 @@ void CameraManager::setMaxCameraRange()
                 {
                     cameraRange.top = mapSize.y * SCALE_FACTOR;
                     cameraRange.left = 5024 * SCALE_FACTOR;
-                    cout << "Zone4" << endl;
                 }
 
                 else
                 {
                     cameraRange.top = 480 * SCALE_FACTOR;
-                    cout << "Zone3" << endl;
                 }
 
                 cameraRange.left = 0 * SCALE_FACTOR;
@@ -219,8 +213,6 @@ void CameraManager::setMaxCameraRange()
 
                 cameraRange.left = 5024 * SCALE_FACTOR;
                 cameraRange.right = 5400 * SCALE_FACTOR;
-
-                cout << "Zone5" << endl;
             }
 
             else if (playerPos.x >= 5400 * SCALE_FACTOR && playerPos.x < mapSize.x * SCALE_FACTOR)
@@ -231,9 +223,7 @@ void CameraManager::setMaxCameraRange()
 
                 cameraRange.left = 5024 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
-                cout << "Zone6" << endl;
             }
-
             break;
     }
 }

@@ -7,13 +7,18 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	{
 	// 엑스
 	case PlayerType::X:
-		player = std::make_unique<X>();
+		player = make_unique<X>();
 		break;
 	default:
 		break;
 	}
 
 	player->setBulletManager(&bManager);
+
+	eManager.setttingPlayer(player.get());
+	eManager.setttingBulletManager(&bManager);
+	
+	bManager.settingPlayer(player.get());
 
 	// 스테이지 세팅
 	UIMANAGER->SettingProgressBar(pType, bType);
@@ -59,7 +64,10 @@ void StageScene::update(void)
 		// 레디 로고 이후에 플레이어의 동작 시작으로 하늘에서 내려오는 연출
 		player->update();
 
+		eManager.update();
+
 		bManager.update();
+
 	}
 
 }
@@ -72,6 +80,8 @@ void StageScene::render(void)
 	
 	player->render();
 
+	eManager.render();
+
 	bManager.render();
 
 	if(noticeStart)	mReadyLogo->render(getMemDC(), (WINSIZE_X - mReadyLogo->getWidth()) / 2,
@@ -81,7 +91,6 @@ void StageScene::render(void)
 	{
 		for (auto& floor : _vFloor)
 		{
-			
 			RECT temp = floor;
 			temp.left -= CAMERAMANAGER->getCameraPos().x;
 			temp.right -= CAMERAMANAGER->getCameraPos().x;
@@ -108,6 +117,7 @@ void StageScene::stageSettting(BossType bType)
 			player->init(WINSIZE_X / 2, mStage->getHeight() - 288 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();
+			enemySettting(bType);
 			break;
 
 		// 커맨드 얀마크
@@ -125,6 +135,25 @@ void StageScene::stageSettting(BossType bType)
 	}
 
 	CAMERAMANAGER->settingMapMaxSize(mStage->getWidth(), mStage->getHeight());
+}
+
+void StageScene::enemySettting(BossType bType)
+{
+	switch (bType)
+	{
+		// 인트로
+	case BossType::Intro:
+		eManager.spawnEnemy(EnemyType::Junkroid, 1300, 2660);
+		break;
+
+		// 커맨드 얀마크
+	case BossType::CommanYanmark:
+	
+		break;
+
+	defalut:
+		break;
+	}
 }
 
 bool StageScene::noticeAnim(void)

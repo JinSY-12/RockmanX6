@@ -4,6 +4,7 @@
 #include "X.h"
 #include "Zero.h"
 #include "BulletManager.h"
+#include "EnemyManager.h"
 
 class StageScene : public GameNode
 {
@@ -25,6 +26,7 @@ private:
 	viFloor _viFloor;
 
 	BulletManager bManager;
+	EnemyManager eManager;
 
 	float gravity;
 
@@ -48,6 +50,7 @@ public:
 	bool noticeAnim(void);
 
 	void stageSettting(BossType bType);
+	void enemySettting(BossType bType);
 	
 	void rectSetting(void);
 	void stageCollision(void);

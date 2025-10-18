@@ -1,5 +1,6 @@
 #include "Stdafx.h"
 #include "X.h"
+#include "BulletManager.h"
 
 HRESULT X::init(void)
 {
@@ -12,9 +13,10 @@ HRESULT X::init(int x, int y)
 	hitBoxWidth = 25 * SCALE_FACTOR;
 	hitBoxHeight = 41 * SCALE_FACTOR;
 
-	pStatus.maxHp = 10.0;
+	pStatus.maxHp = 30.0;
 	pStatus.maxMp = 10.0;
 	
+	UIMANAGER->setMaxHp(static_cast<int>(pStatus.maxHp));
 	maxDashTime = 3.5f;
 	
 	// 캐릭터 소환 - 게임 시작
@@ -318,6 +320,8 @@ void X::update(void)
 	frameCheck();
 	currentAnimChange();
 	pStatus.player->play(animSpeed);
+	isDead();
+	UIMANAGER->setCurrentPlayerStatus(pStatus.hp);
 
 #pragma endregion
 
@@ -331,8 +335,6 @@ void X::render(void)
 	
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
-		// 상태값 출력
-
 		// 캐릭터 좌표
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, printBodyState(), "DNF_M_18", RGB(0, 255, 255));
@@ -418,14 +420,15 @@ void X::attack(void)
 
 	if (pStatus.lookRight)
 	{
-		if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::Buster, pStatus.hitBox.left + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, !pStatus.lookRight);
-		else bManager->fire(BulletType::Buster, pStatus.hitBox.right + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, pStatus.lookRight);
+		
+		if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::Buster, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
+		else bManager->fire(BulletType::Buster, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
 	}
 
 	else
 	{
-		if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::Buster, pStatus.hitBox.right + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, !pStatus.lookRight);
-		else bManager->fire(BulletType::Buster, pStatus.hitBox.left + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, pStatus.lookRight);
+		if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::Buster, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
+		else bManager->fire(BulletType::Buster, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
 	}
 }
 
@@ -448,13 +451,14 @@ void X::chargeBurst(void)
 
 		if (pStatus.lookRight)
 		{
-			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst1, pStatus.hitBox.left + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, !pStatus.lookRight);
-			else bManager->fire(BulletType::ChargeBurst1, pStatus.hitBox.right + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, pStatus.lookRight);
+			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst1, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
+			else bManager->fire(BulletType::ChargeBurst1, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
 		}
+
 		else
 		{
-			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst1, pStatus.hitBox.right + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, !pStatus.lookRight);
-			else bManager->fire(BulletType::ChargeBurst1, pStatus.hitBox.left + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, pStatus.lookRight);
+			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst1, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
+			else bManager->fire(BulletType::ChargeBurst1, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
 		}
 	}
 
@@ -474,13 +478,14 @@ void X::chargeBurst(void)
 
 		if (pStatus.lookRight)
 		{
-			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst2, pStatus.hitBox.left + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, !pStatus.lookRight);
-			else bManager->fire(BulletType::ChargeBurst2, pStatus.hitBox.right + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, pStatus.lookRight);
+			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst2, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
+			else bManager->fire(BulletType::ChargeBurst2, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
 		}
+
 		else
 		{
-			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst2, pStatus.hitBox.right + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, !pStatus.lookRight);
-			else bManager->fire(BulletType::ChargeBurst2, pStatus.hitBox.left + pStatus.firePointX, pStatus.hitBox.top + pStatus.firePointY, pStatus.lookRight);
+			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst2, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
+			else bManager->fire(BulletType::ChargeBurst2, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
 		}
 	}
 
@@ -1193,6 +1198,7 @@ void X::spawn(int x, int y)
 	pStatus.isDash = false;
 	pStatus.isWallKick = false;
 	colorType = 0;
+	pStatus.Dead = false;
 
 	// 입력 초기화
 	inputEnabled = false;

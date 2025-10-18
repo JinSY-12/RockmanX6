@@ -11,7 +11,15 @@ public:
 	{
 		GImage* shape;
 
+		BulletSize type;
 		RECT hitBox;
+
+		struct Pos
+		{
+			int x;
+			int y;
+		}pos;
+		
 		int width;
 		int height;
 
@@ -30,19 +38,20 @@ public:
 
 	virtual HRESULT init(void);
 	virtual HRESULT init(BulletType type, int x, int y, bool isRight);
+	virtual HRESULT init(EnemyBulletType type, int x, int y, bool isRight);
 	virtual void release(void);
 	virtual void update(void);
 	virtual void render(void);
 
+	RECT getBulletRect(void) { return bStatus.hitBox; }
+	int getBulletDamage(void) { return bStatus.demage; }
+	BulletSize getBulletSize(void) { return bStatus.type; }
 };
 
 
 class Burster : public Bullet
 {
 private:
-
-
-
 
 public:
 
@@ -54,4 +63,21 @@ public:
 
 	Burster() { bStatus.isFire = false; }
 	~Burster() { }
+};
+
+
+class JunkBullet : public Bullet
+{
+private:
+
+public:
+
+	HRESULT init(void);
+	HRESULT init(EnemyBulletType type, int x, int y, bool isRight);
+	void release(void);
+	void update(void);
+	void render(void) override;
+
+	JunkBullet() { bStatus.isFire = false; }
+	~JunkBullet() { }
 };

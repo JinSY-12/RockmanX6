@@ -1,30 +1,34 @@
 #pragma once
 #include "GameNode.h"
-//#include "EnemyBase.h"
-//#include "BossBase.h"
+#include "BossType.h"
+#include "EnemyBase.h"
+#include "Junkroid.h"
 
-//class Link;
-//class Knight;
+class Player;
+class Bullet;
+class BulletManager;
 
 class EnemyManager : public GameNode
 {
 private:
-	/*
+	
 	typedef vector<EnemyBase*> vEnemyBase;
 	typedef vector<EnemyBase*>::iterator viEnemyBase;
 
-	typedef vector<BossBase*> vBossBase;
-	typedef vector<BossBase*>::iterator viBossBase;
-	*/
+	// typedef vector<BossBase*> vBossBase;
+	// typedef vector<BossBase*>::iterator viBossBase;
+
 private:
-	/*
+	
 	vEnemyBase _vEnemy;
 	viEnemyBase _viEnemy;
 
-	vBossBase _vBoss;
-	viBossBase _viBoss;
-	*/
-	//Link* _eLink;
+	// vBossBase _vBoss;
+	// viBossBase _viBoss;
+	
+	Player* _player;
+	EnemyBase* enemy;
+	BulletManager* _bManager;
 
 	string Map;
 
@@ -36,29 +40,17 @@ public:
 	void release(void);
 	void update(void);
 	void render(void);
+	
+	void checkAttackCollision(void);
+	void checkHitBoxCollision(void);
+	void checkSightCollision(void);
 
-	void damageCollision();
-	void attackCollision();
-	void chaseCollision();
-	void randomItemDrop();
+	void spawnEnemy(EnemyType eType, int x, int y);
+	void spawnBoss(BossType bType, int x, int y);
 
-	void bossAttCollision();
-	void bossaDamageCollision();
-
-	void efindPixel(void);
-	void getMapname(string mapname) { Map = mapname; }
-
-	//void setLinkMemoryAddress(Link* link) { _eLink = link; }
-
-	void spawnBoss(int type, int x, int y);
-	void spawnEnemy(int type, int x, int y);
-	void setWorldStop(bool stop) { worldStop = stop; }
-
+	void setttingPlayer(Player* player) { _player = player; }
+	void setttingBulletManager(BulletManager* bManager) { _bManager = bManager; }
+	
 	EnemyManager() {}
 	~EnemyManager() {}
 };
-
-
-/*
-
-*/

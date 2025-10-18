@@ -1,13 +1,33 @@
 #pragma once
 #include "GameNode.h"
 #include "BulletType.h"
-#include "BulletManager.h"
+
+class BulletManager;
 
 class EnemyBase : public GameNode
 {
 private:
 
 public:
+
+	enum class EnemyState
+	{
+		Idle,
+		Attack
+	};
+
+	struct EnemyPos
+	{
+		int x;
+		int y;
+	};
+
+	struct FirePointOffset
+	{
+		int x;
+		int y;
+	};
+
 	struct EnemyStatus
 	{
 		GImage* eImage;
@@ -21,10 +41,19 @@ public:
 		int width;
 		int height;
 
+		int sightWidth;
+		int sightHeight;
+
+		bool lookRight;
 		bool isAtt;
+		bool overpower;
+		bool dead;
 	};
 
 	EnemyStatus eStatus;
+	EnemyState eState;
+	EnemyPos ePos;
+	FirePointOffset fPos;
 
 	BulletManager* bManager;
 
@@ -41,6 +70,7 @@ public:
 
 	virtual void attack(void);
 
+	virtual void setEnemyHitbox(void);
 	virtual void pattern(void);
 
 	RECT getEnemySight() { return eStatus.attSight; }
@@ -48,6 +78,19 @@ public:
 
 	inline void reduceEnemyHp(int damage) { eStatus.hp -= damage; }
 
+	inline void settingBulletManager(BulletManager* bullet) { bManager = bullet; }
+	inline bool getOverPower() { return eStatus.overpower; }
+	inline void reduceHp(int damage)
+	{
+		eStatus.hp -= damage;
+		eStatus.overpower = true;
+	}
+
+	int getCurrentHp(void) { return eStatus.hp; }
+
 	bool getAttAble(void) { return attackAble; }
+	bool getIsDead(void) { return eStatus.dead; }
+
+	void isDead(void);
 };
 

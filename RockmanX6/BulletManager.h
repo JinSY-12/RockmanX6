@@ -3,8 +3,7 @@
 #include "Bullet.h"
 #include "BulletType.h"
 
-class X;
-class Zero;
+class Player;
 class EnemeyManager;
 
 class BulletManager : public GameNode
@@ -14,18 +13,19 @@ private:
 
 	typedef vector<Bullet*> vBullet;
 	typedef vector<Bullet*>::iterator viBullet;
-	/*
+	
 	typedef vector<Bullet*> vEnemyBullet;
 	typedef vector<Bullet*>::iterator viEnemyBullet;
-	*/
+	
 
 private:
 	vBullet _vBullet;
 	viBullet _viBullet;
-	/*
+	
 	vEnemyBullet _vEnemyBullet;
 	viEnemyBullet _viEnemyBullet;
-	*/
+	
+	Player* _player;
 
 public:
 	HRESULT init(void);
@@ -33,9 +33,15 @@ public:
 	void update(void);
 	void render(void);
 
-	void fire(BulletType type, int x, int y, bool direct);
+	void fire(BulletType pType, int x, int y, bool direct);
+	void fire(EnemyBulletType eType, int x, int y, bool direct);
+
+	vector<Bullet*>& getBullet() { return _vBullet; }
+
+	void checkPlayerCollision(void);
 
 	inline int getMaxBullets() { return _vBullet.size(); }
+	inline void settingPlayer(Player* player) { _player = player; }
 
 	BulletManager() {}
 	~BulletManager() {}

@@ -1,6 +1,5 @@
 #pragma once
 #include "GameNode.h"
-#include "BulletManager.h"
 #include "EffectType.h"
 #include "BulletType.h"
 
@@ -121,8 +120,10 @@ public:
 		float velocityX;
 		
 		// 상태값
+		bool overpower;
 		bool lookRight;
 		bool isOnGround;
+		bool Dead;
 
 		bool touchLeft;
 		bool touchRight;
@@ -272,6 +273,7 @@ public:
 	inline int getPlayerRight(void) { return charPos.x + hitBoxWidth /2; }
 	
 	inline bool getPlayerSight(void) { return pStatus.lookRight; }
+	inline bool getOverPower(void) { return pStatus.overpower; }
 
 	// 상태값
 	inline void setLeftCollision(bool left, int leftline)
@@ -329,7 +331,6 @@ public:
 			}
 		}
 	}
-
 	inline void setTopCollision(bool top, int bottomline)
 	{
 		if (top == true)
@@ -346,11 +347,44 @@ public:
 	}
 
 	// 스탯 관련
-	inline void reduceHp(int damage) { pStatus.hp -= damage; }
+	inline void reduceHp(int damage, BulletSize size) {
+
+		pStatus.hp -= damage;
+
+		if (pStatus.hp > 0)
+		{
+			int random = RND->getInt(2);
+			if (random == 0) SOUNDMANAGER->play("Voice_X_Damaged1");
+			else SOUNDMANAGER->play("Voice_X_Damaged2");
+		}
+
+		switch (size)
+		{
+		case BulletSize::Small:
+			// 소경직
+			pStatus.overpower = true;
+			break;
+		case BulletSize::Large:
+			// 대경직
+			pStatus.overpower = true;
+			break;
+		}
+	}
+
 	inline void reduceMp(int damage) { pStatus.mp -= damage; }
 	inline float lerp(float start, float end, float time)
 	{
 		return start + (end - start) * time;
+	}
+
+	inline void isDead(void)
+	{
+		if (pStatus.hp <= 0)
+		{
+			pStatus.hp = 0;
+			pStatus.overpower = true;
+			pStatus.Dead = false;
+		}
 	}
 
 	virtual void colorSetting(void);

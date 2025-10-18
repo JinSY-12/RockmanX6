@@ -32,7 +32,14 @@ public:
 	void setCharacter(int character, int boss);
 	void setVisible(bool isStart) { gameStart = isStart; }
 	bool getVisible(void) { return gameStart; }
-	void setMaxHP(int maxHp) { currentMaxHp = maxHp;}
+
+	void setMaxHP(int maxHp)
+	{
+		currentMaxHp = maxHp;
+		currentHp = currentMaxHp;
+		prevHp = currentMaxHp;
+	}
+	void setCurrentHp(int hp) { currentHp = hp; }
 	void reduecHp(int damage) { currentHp -= damage; }
 
 	ProgressBar() { gameStart = false; }

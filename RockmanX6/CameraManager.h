@@ -1,5 +1,6 @@
 #pragma once
 #include "SingletonBase.h"
+#include "BossType.h"
 
 class CameraManager : public SingletonBase<CameraManager>
 {
@@ -64,7 +65,7 @@ private:
 
 	int stageType;
 
-
+	BossType mBtype;
 
 public:
 	HRESULT init(void);
@@ -101,8 +102,8 @@ public:
 	bool getLockX() { return cameraLockX; }
 	bool getLockY() { return cameraLockY; }
 	
-	void setMaxCameraRange();
-	void setStage(int stageNum) { stageType = stageNum; }
+	void setMaxCameraRange(void);
+	void setStage(BossType stage) { mBtype = stage; }
 	void cameraTest(void);
 
 

@@ -46,9 +46,6 @@ void TitleScene::update(void)
 		// 첫 타이틀
 		if (insert == false && TIMEMANAGER->getWorldTime() > 1.5)
 		{
-			// SCENEMANAGER->changeScene("스테이지", 0);
-			// SCENEMANAGER->changeScene("컷씬", 0);
-
 			insert = true;
 			SOUNDMANAGER->play("Menu_ButtonSelect", 0.5f);
 			CAMERAMANAGER->padeIn(2.0f);
@@ -66,12 +63,9 @@ void TitleScene::update(void)
 			{
 				SOUNDMANAGER->play("Menu_ButtonSelect", 0.5f);
 
-				// 0 = 인트로 스테이지, 1 = 얀마크 스테이지
-				// 0 = 엑스, 1 = 제로, 2 = 팔콘, 3 = 블레이드, 4 = 섀도우, 5 = 얼티밋, 6 = 블랙 제로
 				SCENEMANAGER->changeScene("스테이지", PlayerType::X, BossType::Intro);
-				CAMERAMANAGER->setStage(0);
+				CAMERAMANAGER->setStage(BossType::Intro);
 
-				// 씬 체인지 -> 인트로 컷씬 or 인트로 스테이지
 				// SCENEMANAGER->changeScene("컷씬", 0);
 			}
 
@@ -140,7 +134,6 @@ void TitleScene::render(void)
 
 void TitleScene::addImage(void)
 {
-
 	//////////////////////////////////
 	// 최우선 테스트 용도 -> 잘되면 정리해서 내리세요
 	//////////////////////////////////
@@ -152,10 +145,8 @@ void TitleScene::addImage(void)
 
 		voiceNum = to_string(i);
 		filePath = "Resources/Image/Logo/Ready/Ready" + voiceNum + ".bmp";
-		IMAGEMANAGER->addImage("Ready"+voiceNum, filePath.c_str(), 320 * 3, 38 * 3, true, MAGENTA);
+		IMAGEMANAGER->addImage("Ready" + voiceNum, filePath.c_str(), 320 * 3, 38 * 3, true, MAGENTA);
 	}
-
-	// IMAGEMANAGER->addImage("test", "Resources/Image/test.bmp", 320 * 3, 31 * 3);
 
 	//////////////////////////////////
 	// 카메라 관련
@@ -164,7 +155,7 @@ void TitleScene::addImage(void)
 	// 페이드 인, 아웃
 	IMAGEMANAGER->addImage("Black", "Resources/Image/HUD/UI_BlackOut.bmp", WINSIZE_X, WINSIZE_Y);
 	IMAGEMANAGER->addImage("White", "Resources/Image/HUD/UI_WhiteOut.bmp", WINSIZE_X, WINSIZE_Y);
-	
+
 
 	//////////////////////////////////
 	// 타이틀 화면 이미지
@@ -185,7 +176,7 @@ void TitleScene::addImage(void)
 	//////////////////////////////////
 
 	//// 게임 스타트 인트로 ////
-	
+
 	// 풀 스크린
 	IMAGEMANAGER->addImage("Movie1_1", "Resources/Image/CutScene/Movie_1_1.bmp", 512 * 2, 240 * 2, true, MAGENTA);
 	IMAGEMANAGER->addImage("Movie1_2", "Resources/Image/CutScene/Movie_1_2.bmp", 512 * 2, 240 * 2, true, MAGENTA);
@@ -202,9 +193,9 @@ void TitleScene::addImage(void)
 	//////////////////////////////////
 	// 스테이지 이미지
 	//////////////////////////////////
-	
+
 	//// 배경 스테이지 ////
-	
+
 	// 인트로 스테이지
 	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
@@ -215,11 +206,11 @@ void TitleScene::addImage(void)
 	//////////////////////////////////
 
 	//// 애니메이션////
-	
+
 	//////////////////////////////////
 	// 엑스
 	//////////////////////////////////
-	
+
 	// 엑스 이미지
 
 	IMAGEMANAGER->addFrameImage("X_Spawn", "Resources/Image/Player/X/X_Spawn.bmp", 1156 * SCALE_FACTOR, 192 * SCALE_FACTOR, 17, 2, true, MAGENTA);
@@ -239,7 +230,7 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addFrameImage("X_WallSlide", "Resources/Image/Player/X/X_WallSlide.bmp", 188 * SCALE_FACTOR, 128 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_WallSlideBurst", "Resources/Image/Player/X/X_WallSlideBurst.bmp", 188 * SCALE_FACTOR, 128 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	
+
 	IMAGEMANAGER->addFrameImage("X_WallKick", "Resources/Image/Player/X/X_WallKick.bmp", 114 * SCALE_FACTOR, 108 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_WallKickBurst", "Resources/Image/Player/X/X_WallKickBurst.bmp", 114 * SCALE_FACTOR, 108 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 
@@ -257,23 +248,23 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/SFX/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Burster3", "Resources/Image/Player/SFX/X/SFX_Burster3_Bullet.bmp", 183 * SCALE_FACTOR, 60 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 
-	
+
 	//////////////////////////////////
 	// 제로
 	//////////////////////////////////
 
 	// 제로 이미지
-	
+
 	// 제로 웨폰
 
 
 	//// 머그샷////
-	
+
 	// 엑스
-	
+
 
 	// 제로
-	
+
 
 	// 에어리아
 
@@ -282,23 +273,36 @@ void TitleScene::addImage(void)
 	// 더글라스
 
 	//////////////////////////////////
+	// 적
+	//////////////////////////////////
+
+	IMAGEMANAGER->addFrameImage("Enemy_Junkroid", "Resources/Image/Enemy/Minion/Enemy_Junkroid.bmp", 396 * SCALE_FACTOR, 122 * SCALE_FACTOR, 6, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("SFX_JunkBullet", "Resources/Image/Enemy/SFX/Minion/SFX_JunkBullet.bmp", 16 * SCALE_FACTOR, 32 * SCALE_FACTOR, 1 , 2, true, MAGENTA);
+
+	//////////////////////////////////
+	// 보스
+	//////////////////////////////////
+
+	//////////////////////////////////
 	// HUD
 	//////////////////////////////////
 
 	IMAGEMANAGER->addImage("HUD_ProgressBar_X", "Resources/Image/HUD/HUD_ProgressBar_X.bmp", 30 * SCALE_FACTOR, 31 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("HUD_ProgressBar_Xweapon", "Resources/Image/HUD/HUD_ProgressBar_Xweapon.bmp", 30 * SCALE_FACTOR, 31 * SCALE_FACTOR, true, MAGENTA);
-	
+
 	IMAGEMANAGER->addImage("HUD_HpBar", "Resources/Image/HUD/HUD_HpBar.bmp", 9 * SCALE_FACTOR, 144 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("HUD_HpBarHead", "Resources/Image/HUD/HUD_HpBarHead.bmp", 9 * SCALE_FACTOR, 4 * SCALE_FACTOR, true, MAGENTA);
 
 	IMAGEMANAGER->addImage("HUD_GreenBar", "Resources/Image/HUD/HUD_GreenBar.bmp", 3 * SCALE_FACTOR, 146 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("HUD_RedBar", "Resources/Image/HUD/HUD_RedBar.bmp", 3 * SCALE_FACTOR, 146 * SCALE_FACTOR, true, MAGENTA);
-	
+
+
+
 }
 
 void TitleScene::addSound(void)
 {
-
 	//////////////////////////////////
 	// 배경 음악
 	//////////////////////////////////
@@ -376,6 +380,9 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("Voice_X_LowHp", "Resources/Sound/Voice/Character/X/Voice_X_LowHp.wav", false, false);
 	SOUNDMANAGER->addSound("Voice_X_LowDamaged", "Resources/Sound/Voice/Character/X/Voice_X_LowDamaged.wav", false, false);
 	
+	SOUNDMANAGER->addSound("Voice_X_Damaged1", "Resources/Sound/Voice/Character/X/Voice_X_Damaged1.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_Damaged2", "Resources/Sound/Voice/Character/X/Voice_X_Damaged2.wav", false, false);
+
 	// 효과음
 	SOUNDMANAGER->addSound("SFX_X_WarpIn" , "Resources/Sound/SFX/Character/X/SFX_X_WarpIn.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_X_WarpOut", "Resources/Sound/SFX/Character/X/SFX_X_WarpOut.wav", false, false);
