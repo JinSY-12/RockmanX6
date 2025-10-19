@@ -9,6 +9,8 @@ HRESULT Junkroid::init(void)
 
 HRESULT Junkroid::init(int x, int y)
 {
+    eType = EnemyType::Junkroid;
+
     eStatus.maxHp = 4;
     eStatus.hp = eStatus.maxHp;
 
@@ -18,8 +20,8 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.width = eStatus.eImage->getFrameWidth() - 10 * SCALE_FACTOR;
     eStatus.height = eStatus.eImage->getFrameHeight() - 5 * SCALE_FACTOR;
 
-    eStatus.sightWidth = eStatus.width * 2;
-    eStatus.sightHeight = eStatus.height * 2;
+    eStatus.sightWidth = eStatus.width * 2.5;
+    eStatus.sightHeight = eStatus.height;
 
     ePos.x = x;
     ePos.y = y;
@@ -37,7 +39,7 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.lookRight = false;
 
     patternTimer = 0.0f;
-    maxPatternTime = 10.0f;
+    maxPatternTime = 15.0f;
 
     eStatus.isAtt = false;
 
@@ -50,7 +52,7 @@ void Junkroid::release(void)
 
 void Junkroid::update(void)
 {
-    eStatus.eImage->play(0.07f);
+    eStatus.eImage->play(0.05f);
 
     if (patternTimer >= maxPatternTime) attackAble = true;
     else

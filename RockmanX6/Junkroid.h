@@ -5,6 +5,7 @@ class Junkroid : public EnemyBase
 {
 private:
 
+
 public:
 
 	HRESULT init(void) override;

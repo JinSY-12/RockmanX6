@@ -53,6 +53,10 @@ void EnemyManager::checkHitBoxCollision(void)
 			if (IntersectRect(&temp, &(*it)->getBulletRect(), &(*_viEnemy)->getEnemyHitBox()) && !(*_viEnemy)->getOverPower())
 			{
 				(*_viEnemy)->reduceHp((*it)->getBulletDamage());
+
+				playHitEffect((*it)->getBulletType(), (*_viEnemy)->getEnemyPos().x, (*_viEnemy)->getEnemyPos().y, (*_viEnemy)->getEnemyLook());
+				playHitSound((*it)->getBulletType());
+
 				it = bullets.erase(it);
 			}
 			else ++it;
@@ -60,6 +64,9 @@ void EnemyManager::checkHitBoxCollision(void)
 		
 		if ((*_viEnemy)->getIsDead())
 		{
+			playExplodeEffect((*_viEnemy)->getEnemyType(), (*_viEnemy)->getEnemyPos().x, (*_viEnemy)->getEnemyPos().y, (*_viEnemy)->getEnemyLook());
+			playExplodeSound((*_viEnemy)->getEnemyType());
+
 			_viEnemy = _vEnemy.erase(_viEnemy);
 		}
 
@@ -95,5 +102,46 @@ void EnemyManager::spawnEnemy(EnemyType eType, int x, int y)
 void EnemyManager::spawnBoss(BossType bType, int x, int y)
 {
 
+}
+
+void EnemyManager::playExplodeEffect(EnemyType eType, int x, int y, int look)
+{
+	switch (eType)
+	{
+	case EnemyType::Junkroid:
+		EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, x, y, look);
+		EFFECTMANAGER->SpawnFragments(eType, x, y);
+		break;
+	}
+}
+
+void EnemyManager::playExplodeSound(EnemyType eType)
+{
+	switch(eType)
+	{
+	case EnemyType::Junkroid:
+		SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
+		break;
+	}
+}
+
+void EnemyManager::playHitEffect(BulletType bType, int x, int y, int look)
+{
+	switch (bType)
+	{
+	case BulletType::Buster:
+		// SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
+		break;
+	}
+}
+
+void EnemyManager::playHitSound(BulletType bType)
+{
+	switch (bType)
+	{
+	case BulletType::Buster:
+		SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.5f);
+		break;
+	}
 }
 

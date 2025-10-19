@@ -134,7 +134,6 @@
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CommonMacroFunction.h" />
     <ClInclude Include="Dialogue.h" />
-    <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectManager.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -176,7 +175,6 @@
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Dialogue.cpp" />
-    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EffectManager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>

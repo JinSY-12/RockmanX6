@@ -3,6 +3,7 @@
 #include "BossType.h"
 #include "EnemyBase.h"
 #include "Junkroid.h"
+#include "EffectType.h"
 
 class Player;
 class Bullet;
@@ -51,6 +52,12 @@ public:
 	void setttingPlayer(Player* player) { _player = player; }
 	void setttingBulletManager(BulletManager* bManager) { _bManager = bManager; }
 	
+	void playExplodeEffect(EnemyType eType, int x, int y, int look);
+	void playExplodeSound(EnemyType eType);
+
+	void playHitEffect(BulletType bType, int x, int y, int look);
+	void playHitSound(BulletType bType);
+
 	EnemyManager() {}
 	~EnemyManager() {}
 };

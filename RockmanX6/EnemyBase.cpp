@@ -55,8 +55,6 @@ void EnemyBase::setEnemyHitbox(void)
 	
 	eStatus.attSight.top = ePos.y - (eStatus.height + eStatus.sightHeight)/2 - CAMERAMANAGER->getCameraPos().y;
 	eStatus.attSight.bottom = ePos.y - (eStatus.height - eStatus.sightHeight)/2 - CAMERAMANAGER->getCameraPos().y;
-
-	// eStatus.eHitBox = RectMakeCenter(x - CAMERAMANAGER->getCameraPos().x , y - eStatus.height / 2 - CAMERAMANAGER->getCameraPos().y, eStatus.width, eStatus.height);
 }
 
 void EnemyBase::pattern(void)

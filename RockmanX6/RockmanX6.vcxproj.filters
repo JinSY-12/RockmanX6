@@ -103,15 +103,6 @@
     <Filter Include="소스 파일\FrameWork\Manager\Effect">
       <UniqueIdentifier>{1298a8aa-de2e-4367-b18b-80810b0cae6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Effect">
-      <UniqueIdentifier>{78971dbb-210b-4a91-abb3-1b8d61bf589a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Effect\Effect">
-      <UniqueIdentifier>{983bae95-5359-4001-8f61-794064940380}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Effect\EffectType">
-      <UniqueIdentifier>{f0dab2ff-055a-448f-b778-6cc2075d8fb3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Player\PlayerBase\Player">
       <UniqueIdentifier>{4ab94611-fd8a-4da8-9be7-8d143ada8fdc}</UniqueIdentifier>
     </Filter>
@@ -222,9 +213,6 @@
     <ClInclude Include="EffectManager.h">
       <Filter>소스 파일\FrameWork\Manager\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="EffectType.h">
-      <Filter>소스 파일\Effect\EffectType</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>소스 파일\Player\PlayerBase\Player</Filter>
     </ClInclude>
@@ -234,14 +222,14 @@
     <ClInclude Include="BossType.h">
       <Filter>소스 파일\Enemy\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="Effect.h">
-      <Filter>소스 파일\Effect\Effect</Filter>
-    </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>소스 파일\Player\Weapon\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="BulletType.h">
       <Filter>소스 파일\Player\Weapon\BulletType</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectType.h">
+      <Filter>소스 파일\FrameWork\Manager\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -337,9 +325,6 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>소스 파일\Player\PlayerBase\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Effect.cpp">
-      <Filter>소스 파일\Effect\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>소스 파일\Player\Weapon\Bullet</Filter>

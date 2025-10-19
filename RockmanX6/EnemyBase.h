@@ -9,7 +9,6 @@ class EnemyBase : public GameNode
 private:
 
 public:
-
 	enum class EnemyState
 	{
 		Idle,
@@ -55,6 +54,8 @@ public:
 	EnemyPos ePos;
 	FirePointOffset fPos;
 
+	EnemyType eType;
+
 	BulletManager* bManager;
 
 	float patternTimer;
@@ -92,5 +93,12 @@ public:
 	bool getIsDead(void) { return eStatus.dead; }
 
 	void isDead(void);
+
+	void breakEffectTest();
+
+	EnemyPos getEnemyPos() { return ePos; }
+	bool getEnemyLook() { return eStatus.lookRight; }
+
+	EnemyType getEnemyType() { return eType; }
 };
 

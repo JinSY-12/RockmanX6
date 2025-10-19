@@ -31,7 +31,6 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	noticeAniSpeed = 1;
 	noticeStart = false;
 
-
 	playAble = false;
 	soundOnce = false;
 
@@ -66,21 +65,22 @@ void StageScene::update(void)
 
 		eManager.update();
 
-		bManager.update();
+		EFFECTMANAGER->update();
 
+		bManager.update();
 	}
 
 }
 
 void StageScene::render(void)
 {
-	// 일단 스테이지 1은
-
 	mStage->render(getMemDC(), 0, 0, CAMERAMANAGER->getCameraPos().x, CAMERAMANAGER->getCameraPos().y, WINSIZE_X, WINSIZE_Y);
 	
 	player->render();
 
 	eManager.render();
+
+	EFFECTMANAGER->render(getMemDC());
 
 	bManager.render();
 

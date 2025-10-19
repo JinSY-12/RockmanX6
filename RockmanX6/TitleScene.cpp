@@ -244,9 +244,9 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_DashBurst", "Resources/Image/Player/X/X_DashBurst.bmp", 330 * SCALE_FACTOR, 86 * SCALE_FACTOR, 5, 2, true, MAGENTA);
 
 	// 엑스 웨폰
-	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/SFX/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/SFX/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_Burster3", "Resources/Image/Player/SFX/X/SFX_Burster3_Bullet.bmp", 183 * SCALE_FACTOR, 60 * SCALE_FACTOR, 3, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/Bullet/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/Bullet/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_Burster3", "Resources/Image/Player/Bullet/X/SFX_Burster3_Bullet.bmp", 183 * SCALE_FACTOR, 60 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 
 
 	//////////////////////////////////
@@ -278,11 +278,26 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addFrameImage("Enemy_Junkroid", "Resources/Image/Enemy/Minion/Enemy_Junkroid.bmp", 396 * SCALE_FACTOR, 122 * SCALE_FACTOR, 6, 2, true, MAGENTA);
 
-	IMAGEMANAGER->addFrameImage("SFX_JunkBullet", "Resources/Image/Enemy/SFX/Minion/SFX_JunkBullet.bmp", 16 * SCALE_FACTOR, 32 * SCALE_FACTOR, 1 , 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_JunkBullet", "Resources/Image/Enemy/Bullet/Minion/SFX_JunkBullet.bmp", 16 * SCALE_FACTOR, 32 * SCALE_FACTOR, 1 , 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("SFX_Explosion", "Resources/Image/SFX/SFX_Explosion.bmp", 610 * SCALE_FACTOR, 86 * SCALE_FACTOR, 10, 2, true, MAGENTA);
+	
+	// IMAGEMANAGER->addFrameImage("SFX_Explosion", "Resources/Image/Enemy/SFX/SFX_Explosion.bmp", 610 * SCALE_FACTOR, 86 * SCALE_FACTOR, 10, 2, true, MAGENTA);
 
 	//////////////////////////////////
 	// 보스
 	//////////////////////////////////
+
+
+	//////////////////////////////////
+	// 미니언 파편
+	//////////////////////////////////
+
+	IMAGEMANAGER->addImage("Enemy_JunkroidFragment1", "Resources/Image/Enemy/Fragment/Enemy_JunkroidFragrment1.bmp", 39 * SCALE_FACTOR, 20 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Enemy_JunkroidFragment2", "Resources/Image/Enemy/Fragment/Enemy_JunkroidFragrment2.bmp", 21 * SCALE_FACTOR, 22 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Enemy_JunkroidFragment3", "Resources/Image/Enemy/Fragment/Enemy_JunkroidFragrment3.bmp", 26 * SCALE_FACTOR, 23 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Enemy_JunkroidFragment4", "Resources/Image/Enemy/Fragment/Enemy_JunkroidFragrment4.bmp", 41 * SCALE_FACTOR, 21 * SCALE_FACTOR, true, MAGENTA);
+		
 
 	//////////////////////////////////
 	// HUD
@@ -321,7 +336,6 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("BGM_VS_Intro", "Resources/Sound/BGM/BGM_VS_Intro.wav", true, true);
 
 	// 커맨드 얀마크
-	
 	SOUNDMANAGER->addSound("BGM_Stage_CommandYanmark", "Resources/Sound/BGM/BGM_Stage_CommandYanmark.wav", true, true);
 	SOUNDMANAGER->addSound("BGM_VS_Boss", "Resources/Sound/BGM/BGM_VS_Boss.wav", true, true);
 	
@@ -342,6 +356,9 @@ void TitleScene::addSound(void)
 	
 	// 인게임 효과음
 	SOUNDMANAGER->addSound("SFX_Ready", "Resources/Sound/SFX/SFX_Ready.wav", false, false);
+	
+	// 전투 효과음
+	SOUNDMANAGER->addSound("SFX_SmallExplosion", "Resources/Sound/SFX/Effect/SFX_SmallExplosion.wav", false, false);
 
 	//////////////////////////////////
 	// 컷씬 보이스
@@ -402,6 +419,7 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_DashStart", "Resources/Sound/SFX/Character/SFX_DashStart.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_DashEnd", "Resources/Sound/SFX/Character/SFX_DashEnd.wav", false, false);
 
+	SOUNDMANAGER->addSound("SFX_X_Burster1Hit", "Resources/Sound/SFX/Character/X/SFX_X_Burster1Hit.wav", false, false);
 	
 	//////////////////////////////////
 	// 제로

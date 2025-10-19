@@ -13,6 +13,7 @@ public:
 
 		BulletSize type;
 		RECT hitBox;
+		BulletType bType;
 
 		struct Pos
 		{
@@ -46,6 +47,8 @@ public:
 	RECT getBulletRect(void) { return bStatus.hitBox; }
 	int getBulletDamage(void) { return bStatus.demage; }
 	BulletSize getBulletSize(void) { return bStatus.type; }
+
+	BulletType getBulletType(void) { return bStatus.bType; }
 };
 
 
