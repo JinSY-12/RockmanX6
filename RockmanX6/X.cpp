@@ -321,7 +321,7 @@ void X::update(void)
 	currentAnimChange();
 	pStatus.player->play(animSpeed);
 	isDead();
-	UIMANAGER->setCurrentPlayerStatus(pStatus.hp);
+	UIMANAGER->setCurrentPlayerStatus(pStatus.hp, pStatus.mp, pStatus.maxHp, progress.life);
 
 #pragma endregion
 
@@ -1155,7 +1155,6 @@ void X::colorChange(void)
 			if (color == playerColor[i + j].base);
 		}
 	}
-		
 }
 
 void X::spawn(int x, int y)
@@ -1184,6 +1183,8 @@ void X::spawn(int x, int y)
 	pStatus.touchLeft = false;
 	pStatus.touchRight = false;
 	pStatus.wallKickRight = true;
+	progress.life = 2;
+	UIMANAGER->setMaxHp(pStatus.maxHp);
 
 	////////////////////
 	// 상태 초기화

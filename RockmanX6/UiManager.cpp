@@ -88,12 +88,20 @@ void UiManager::SettingProgressBar(PlayerType pType, BossType bType)
 
 void UiManager::setMaxHp(int maxHp)
 {
-	progressBar->setMaxHP(maxHp);
+	progressBar->setFirstMaxHP(maxHp);
 }
 
-void UiManager::setCurrentPlayerStatus(int hp)
+void UiManager::setCurrentPlayerStatus(int hp, int weapon, int maxHp, int life)
 {
 	progressBar->setCurrentHp(hp);
+	progressBar->setMaxHP(maxHp);
+	progressBar->setCurrentWeaponGauge(weapon);
+	progressBar->setCurrentLife(life);
+}
+
+void UiManager::setLife(int currentlife)
+{
+	progressBar->setCurrentHp(currentlife);
 }
 
 void UiManager::printEvent(int eventNum)

@@ -170,82 +170,98 @@ void CameraManager::setMaxCameraRange()
 {
     switch (mBtype)
     {
+        // Zone 범위는 화면의 맨 왼쪽 기준입니다.
+        // 그래서 Zone을 정하고 싶은 위치 - 160을 해주시면 Zone 설정을 할 수 있습니다.
+        // 카메라 고정 값 top은 윗 쪽으로 정하고 이미지 밑에서부터의 높이를 넣으면 좌표를 고정이 됩니다.
+        // 카메라 고정 값 bottom은 오른쪽 끝으로 이미지 밑에서부터의 높이를 WINSIZE_Y에 더하면 고정이 됩니다.
+        // 카메라 고정 값 left는 왼쪽 끝으로 정하고 싶은 좌표에서 - 160을 하면 고정이 됩니다.
+        // 카메라 고정 값 right는 오른쪽 끝으로 정하고 좌표에서 - 320을 하면 고정이 됩니다.
+
         case BossType::Intro:            
-            if (camera.x >= 0 * SCALE_FACTOR && camera.x < 3530 * SCALE_FACTOR)
+            if (camera.x >= 0 * SCALE_FACTOR && camera.x < (3530 - 160) * SCALE_FACTOR)
             {
                 cameraRange.top = 288 * SCALE_FACTOR;
                 cameraRange.bottom = WINSIZE_Y;
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
+                
+                cout << "Zone1" << endl;
             }
             
-            else if (camera.x >= 3530 * SCALE_FACTOR && camera.x < 4060 * SCALE_FACTOR - WINSIZE_X)
+            else if (camera.x >= (3530 - 160) * SCALE_FACTOR && camera.x < (4064 - 160) * SCALE_FACTOR)
             {
                 cameraRange.top = 480 * SCALE_FACTOR;
-                cameraRange.bottom = WINSIZE_Y;
+                cameraRange.bottom = WINSIZE_Y;  
             
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
+
+                cout << "Zone2" << endl;
             }
 
-            else if (playerPos.x >= 4060 * SCALE_FACTOR - WINSIZE_X && playerPos.x < 5000 * SCALE_FACTOR)
+            else if (camera.x >= (4064 - 160) * SCALE_FACTOR && camera.x < (5168 - 160) * SCALE_FACTOR && camera.y >= 490 * SCALE_FACTOR)
             {
-                if (playerPos.y < 1400)
-                {
-                    cameraRange.top = mapSize.y * SCALE_FACTOR;
-                    cameraRange.left = 5024 * SCALE_FACTOR;
-                }
-
-                else
-                {
-                    cameraRange.top = 480 * SCALE_FACTOR;
-                }
-
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = 5400 * SCALE_FACTOR;
-                cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
-            }
-
-            else if (playerPos.x >= 5200 * SCALE_FACTOR && playerPos.x < 5400 * SCALE_FACTOR)
-            {
-                cameraRange.top = mapSize.y * SCALE_FACTOR;
+                cameraRange.top = 480 * SCALE_FACTOR;
                 cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
 
-                cameraRange.left = 5024 * SCALE_FACTOR;
-                cameraRange.right = 5400 * SCALE_FACTOR;
+                cout << "Zone3" << endl;
             }
 
-            else if (playerPos.x >= 5400 * SCALE_FACTOR && playerPos.x < mapSize.x * SCALE_FACTOR)
+            // 여기 위까지 확인 완료
+            else if (camera.x >= (5168 - 160) * SCALE_FACTOR && camera.x < (5376 - 160) * SCALE_FACTOR)
             {
-                cameraRange.top = mapSize.y * SCALE_FACTOR;
+                // 기본 top 고정
+                cameraRange.top = 960 * SCALE_FACTOR;
 
-                cameraRange.bottom = WINSIZE_Y + (688 * SCALE_FACTOR);
+                // Zone6 오르막 구간 정의
+                float slopeStartX = (5184 - 160) * SCALE_FACTOR;
+                float slopeEndX = (5376 - 160) * SCALE_FACTOR;
+                float bottomStart = WINSIZE_Y + 533 * SCALE_FACTOR;; // 오르막 시작 bottom
+                float bottomEnd = WINSIZE_Y + 688 * SCALE_FACTOR;  // 오르막 끝 bottom
 
-                cameraRange.left = 5024 * SCALE_FACTOR;
-                cameraRange.right = mapSize.x;
+                // 카메라 좌우 범위
+                cameraRange.left = 5008 * SCALE_FACTOR;
+                if (camera.y <= 150 * SCALE_FACTOR)
+                {
+                    cameraRange.right = mapSize.x;
+                    cout << "Zone6" << endl;
+                }
+                
+                else
+                {
+                    cameraRange.right = (5440 - 320) * SCALE_FACTOR;
+                    cout << "Zone4" << endl;
+                }
+                
+                float t = (camera.x - slopeStartX) / (slopeEndX - slopeStartX);
+                t *= 1.5f;
+                if (t > 1.0f) t = 1.0f;
+
+                // bottom 보간
+
+                if (camera.y <= 150 * SCALE_FACTOR) cameraRange.bottom = bottomStart + (bottomEnd - bottomStart) * t;
+                else cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
             }
+
+            else if (camera.x >= (5376 - 160) * SCALE_FACTOR)
+            {
+                cameraRange.left = 0 * SCALE_FACTOR;
+                cameraRange.right = mapSize.x - 320 * SCALE_FACTOR;
+                cameraRange.top = 960 * SCALE_FACTOR;
+                cameraRange.bottom = WINSIZE_Y + 688 * SCALE_FACTOR;
+
+                cout << "Zone Boss" << endl;
+            }
+
             break;
     }
 }
 
 void CameraManager::cameraTest(void)
 {
-    if (KEYMANAGER->isStayKeyDown('J'))
-    {
-        camera.x -= 2;
-    }
-    if (KEYMANAGER->isStayKeyDown('L'))
-    {
-        camera.x += 2;
-    }
-    if (KEYMANAGER->isStayKeyDown('I'))
-    {
-        camera.y -= 2;
-    }
-    if (KEYMANAGER->isStayKeyDown('K'))
-    {
-        camera.y += 2;
-    }
+
 }
 
 

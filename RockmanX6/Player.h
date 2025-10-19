@@ -142,6 +142,7 @@ public:
 	struct Progress
 	{
 		int life;
+		int limitLife = 9;
 		// 아머 비트셋의 순서는 헤드, 보디, 암, 풋
 		bitset<4> isArmd[2]; // 아머는 하나만 구현할거지만 배열 크기 2로 둬서 두개 만드는 척!
 
@@ -346,6 +347,8 @@ public:
 		}
 	}
 
+	Progress getProgress(void) { return progress; }
+
 	// 스탯 관련
 	inline void reduceHp(int damage, BulletSize size) {
 
@@ -389,5 +392,7 @@ public:
 
 	virtual void colorSetting(void);
 	virtual void colorChange(void);
+
+	
 };
 

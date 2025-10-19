@@ -13,14 +13,20 @@ private:
 	GImage* mainGaugeBar;
 	GImage* subGaugeBar;
 
+	GImage* weaponNumber;
+
 	int charType;
 	int bossType;
 
 	float currentHp;
+	float currentWeaponGauge;
 	float prevHp;
 	float currentMaxHp;
 
 	bool gameStart;
+
+	int currentLife;
+	
 
 public:
 	HRESULT init(void);
@@ -33,13 +39,18 @@ public:
 	void setVisible(bool isStart) { gameStart = isStart; }
 	bool getVisible(void) { return gameStart; }
 
-	void setMaxHP(int maxHp)
+	void setFirstMaxHP(int maxHp)
 	{
 		currentMaxHp = maxHp;
 		currentHp = currentMaxHp;
 		prevHp = currentMaxHp;
 	}
+
+	void setMaxHP(int maxHp) { currentMaxHp = maxHp; }
+	void setCurrentWeaponGauge(int weapon) { currentWeaponGauge = weapon; }
 	void setCurrentHp(int hp) { currentHp = hp; }
+	void setCurrentLife(int life) { currentLife = life; }
+	
 	void reduecHp(int damage) { currentHp -= damage; }
 
 	ProgressBar() { gameStart = false; }

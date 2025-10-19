@@ -197,8 +197,8 @@ void TitleScene::addImage(void)
 	//// 배경 스테이지 ////
 
 	// 인트로 스테이지
-	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
-	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 974 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 974 * SCALE_FACTOR, true, MAGENTA);
 
 
 	//////////////////////////////////
@@ -312,8 +312,7 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addImage("HUD_GreenBar", "Resources/Image/HUD/HUD_GreenBar.bmp", 3 * SCALE_FACTOR, 146 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("HUD_RedBar", "Resources/Image/HUD/HUD_RedBar.bmp", 3 * SCALE_FACTOR, 146 * SCALE_FACTOR, true, MAGENTA);
 
-
-
+	IMAGEMANAGER->addImage("HUD_Number", "Resources/Image/HUD/HUD_Number.bmp", 30 * SCALE_FACTOR, 5 * SCALE_FACTOR, true, MAGENTA);
 }
 
 void TitleScene::addSound(void)
@@ -420,6 +419,8 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_DashEnd", "Resources/Sound/SFX/Character/SFX_DashEnd.wav", false, false);
 
 	SOUNDMANAGER->addSound("SFX_X_Burster1Hit", "Resources/Sound/SFX/Character/X/SFX_X_Burster1Hit.wav", false, false);
+	
+	SOUNDMANAGER->addSound("SFX_Jump", "Resources/Sound/SFX/Character/SFX_Jump.wav", false, false);
 	
 	//////////////////////////////////
 	// 제로

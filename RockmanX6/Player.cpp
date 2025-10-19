@@ -126,6 +126,7 @@ void Player::sfxPlay(void)
 			if (random == 0);
 			else SOUNDMANAGER->play("Voice_" + pStatus.charName + "Jump" + to_string(random), 0.5f);
 
+			SOUNDMANAGER->play("SFX_Jump", 0.5f);
 			// 엑스도 3가지 + 벽차기
 			// 제로도 3가지 + 벽차기
 			// 둘다 벽차기는 점프 소리 중 하나를 쓰고 있음 + 찰 때마다 소리남

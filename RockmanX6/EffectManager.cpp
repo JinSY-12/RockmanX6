@@ -14,7 +14,7 @@ void EffectManager::update(void)
 {
 	for (_viEffect = _vEffect.begin(); _viEffect != _vEffect.end(); )
 	{
-		(*_viEffect).image->play(0.05f);
+		(*_viEffect).image->play(0.06f);
 		
 		if ((*_viEffect).image->getFrameX() >= (*_viEffect).image->getMaxFrameX())
 		{
@@ -32,7 +32,7 @@ void EffectManager::render(HDC hdc)
 	for (_viEffect = _vEffect.begin(); _viEffect != _vEffect.end(); _viEffect++)
 	{
 		(*_viEffect).image->frameRender(hdc, (*_viEffect).x - (*_viEffect).image->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x,
-			(*_viEffect).y - (*_viEffect).image->getFrameHeight() - 10 * SCALE_FACTOR - CAMERAMANAGER->getCameraPos().y, (*_viEffect).image->getFrameX(), (*_viEffect).direct);
+			(*_viEffect).y - (*_viEffect).image->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, (*_viEffect).image->getFrameX(), (*_viEffect).direct);
 	}
 
 	for (_viFragments = _vFragments.begin(); _viFragments != _vFragments.end(); _viFragments++)
@@ -46,7 +46,7 @@ void EffectManager::render(HDC hdc)
 void EffectManager::spawnEffect(EffectType eType, int x, int y, bool direct)
 {
 	effect.x = x;
-	effect.y = y;
+	effect.y = y - 20 * SCALE_FACTOR;
 	effect.direct = direct;
 
 	switch (eType)

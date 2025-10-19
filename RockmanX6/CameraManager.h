@@ -106,13 +106,6 @@ public:
 	void setStage(BossType stage) { mBtype = stage; }
 	void cameraTest(void);
 
-
-	// 카메라 초기값 -> 나중에 링크 침대에서 시작하는걸로 카메라 좌표 수정
-	// 링크 하우스 입구
-	// CameraManager() { camera.x = -255, camera.y = -480; }
-	// 링크네 집
-	//CameraManager() { camera.x = 100, camera.y = 100; }
-
 	CameraManager() {}
 	~CameraManager() {}
 };
