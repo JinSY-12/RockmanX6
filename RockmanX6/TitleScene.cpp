@@ -197,6 +197,7 @@ void TitleScene::addImage(void)
 	//// 배경 스테이지 ////
 
 	// 인트로 스테이지
+	// IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 974 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 974 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 974 * SCALE_FACTOR, true, MAGENTA);
 
@@ -242,6 +243,12 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addFrameImage("X_Dash", "Resources/Image/Player/X/X_Dash.bmp", 330 * SCALE_FACTOR, 86 * SCALE_FACTOR, 5, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_DashBurst", "Resources/Image/Player/X/X_DashBurst.bmp", 330 * SCALE_FACTOR, 86 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("X_DashEnd", "Resources/Image/Player/X/X_DashEnd.bmp", 264 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_DashEndBurst", "Resources/Image/Player/X/X_DashEndBurst.bmp", 264 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("X_SmallDamaged", "Resources/Image/Player/X/X_SmallDamaged.bmp", 324 * SCALE_FACTOR, 116 * SCALE_FACTOR, 9, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_LargeDamaged", "Resources/Image/Player/X/X_LargeDamaged.bmp", 644 * SCALE_FACTOR, 116 * SCALE_FACTOR, 14, 2, true, MAGENTA);
 
 	// 엑스 웨폰
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/Bullet/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);

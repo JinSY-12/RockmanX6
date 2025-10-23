@@ -126,7 +126,7 @@ HRESULT JunkBullet::init(EnemyBulletType type, int x, int y, bool isRight)
 	case EnemyBulletType::JunkBullet:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("SFX_JunkBullet")->cloneImage();
-		bStatus.demage = 10;
+		bStatus.demage = 2;
 		break;
 	}
 

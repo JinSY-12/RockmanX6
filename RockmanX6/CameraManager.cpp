@@ -81,8 +81,8 @@ void CameraManager::update(void)
         }
     }
 
-    cameraOffset();
     setMaxCameraRange();
+    cameraOffset();
     cameraTest();
 }
 
@@ -185,7 +185,7 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
                 
-                cout << "Zone1" << endl;
+                // cout << "Zone 1" << endl;
             }
             
             else if (camera.x >= (3530 - 160) * SCALE_FACTOR && camera.x < (4064 - 160) * SCALE_FACTOR)
@@ -196,7 +196,7 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
 
-                cout << "Zone2" << endl;
+                // cout << "Zone 2" << endl;
             }
 
             else if (camera.x >= (4064 - 160) * SCALE_FACTOR && camera.x < (5168 - 160) * SCALE_FACTOR && camera.y >= 490 * SCALE_FACTOR)
@@ -206,55 +206,61 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.top = 480 * SCALE_FACTOR;
                 cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
 
-                cout << "Zone3" << endl;
+                // cout << "Zone 3" << endl;
             }
 
             // 여기 위까지 확인 완료
             else if (camera.x >= (5168 - 160) * SCALE_FACTOR && camera.x < (5376 - 160) * SCALE_FACTOR)
             {
-                // 기본 top 고정
-                cameraRange.top = 960 * SCALE_FACTOR;
+                cameraRange.top = mapSize.y;
 
                 // Zone6 오르막 구간 정의
                 float slopeStartX = (5184 - 160) * SCALE_FACTOR;
                 float slopeEndX = (5376 - 160) * SCALE_FACTOR;
                 float bottomStart = WINSIZE_Y + 533 * SCALE_FACTOR;; // 오르막 시작 bottom
-                float bottomEnd = WINSIZE_Y + 688 * SCALE_FACTOR;  // 오르막 끝 bottom
+                float bottomEnd = WINSIZE_Y + 700 * SCALE_FACTOR;  // 오르막 끝 bottom
 
-                // 카메라 좌우 범위
-                cameraRange.left = 5008 * SCALE_FACTOR;
-                if (camera.y <= 150 * SCALE_FACTOR)
-                {
-                    cameraRange.right = mapSize.x;
-                    cout << "Zone6" << endl;
-                }
-                
-                else
-                {
-                    cameraRange.right = (5440 - 320) * SCALE_FACTOR;
-                    cout << "Zone4" << endl;
-                }
-                
                 float t = (camera.x - slopeStartX) / (slopeEndX - slopeStartX);
                 t *= 1.5f;
                 if (t > 1.0f) t = 1.0f;
 
-                // bottom 보간
+                // 카메라 좌우 범위
+                if (camera.y <= (280 - 120) * SCALE_FACTOR)
+                {
+                    cameraRange.left = 5008 * SCALE_FACTOR;
+                    cameraRange.right = mapSize.x;
+                    cameraRange.bottom = bottomStart + (bottomEnd - bottomStart) * t;
 
-                if (camera.y <= 150 * SCALE_FACTOR) cameraRange.bottom = bottomStart + (bottomEnd - bottomStart) * t;
-                else cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
+                    // cout << "Zone 6" << endl;
+                }
+                
+                else if (camera.y <= (480 - 120) * SCALE_FACTOR)
+                {
+                    cameraRange.left = 5008 * SCALE_FACTOR;
+                    cameraRange.right = (5440 - 320) * SCALE_FACTOR;
+                    cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
+
+                    // cout << "Zone 5" << endl;
+                }
+
+                else
+                {
+                    cameraRange.left = 0 * SCALE_FACTOR;
+                    cameraRange.right = (5440 - 320) * SCALE_FACTOR;
+                    cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
+
+                    // cout << "Zone 4" << endl;
+                }
             }
 
             else if (camera.x >= (5376 - 160) * SCALE_FACTOR)
             {
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x - 320 * SCALE_FACTOR;
-                cameraRange.top = 960 * SCALE_FACTOR;
-                cameraRange.bottom = WINSIZE_Y + 688 * SCALE_FACTOR;
+                cameraRange.bottom = WINSIZE_Y + 700 * SCALE_FACTOR;
 
-                cout << "Zone Boss" << endl;
+                // cout << "Zone Boss" << endl;
             }
-
             break;
     }
 }

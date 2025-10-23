@@ -72,6 +72,7 @@ public:
 		JumpUp,
 		FallingDown,
 		Dash,
+		DashEnd,
 		Crouch,
 		Land,
 		Climb,
@@ -120,14 +121,15 @@ public:
 		float velocityX;
 		
 		// 상태값
-		bool overpower;
+		bool invincible;
 		bool lookRight;
 		bool isOnGround;
+		bool isOnTop;
 		bool Dead;
 
 		bool touchLeft;
 		bool touchRight;
-
+		
 		// 점프 관련
 		float velocityY;
 		float maxFallSpeed;
@@ -137,6 +139,11 @@ public:
 		// 대시 관련
 		bool isDash;
 		bool isJumpDash;
+
+		// 무적 관련
+		bool movable;
+		float invincibleTimer;
+		float invincibleMaxTime;
 };
 
 	struct Progress
@@ -214,6 +221,8 @@ public:
 
 	// 점프 관련
 	bool isJumpUp;
+	float wallkickTimer;
+	float wallkickMaxTime;
 
 	// 대시 관련
 	float dashTimer;
@@ -274,7 +283,7 @@ public:
 	inline int getPlayerRight(void) { return charPos.x + hitBoxWidth /2; }
 	
 	inline bool getPlayerSight(void) { return pStatus.lookRight; }
-	inline bool getOverPower(void) { return pStatus.overpower; }
+	inline bool getOverPower(void) { return pStatus.invincible; }
 
 	// 상태값
 	inline void setLeftCollision(bool left, int leftline)
@@ -283,6 +292,8 @@ public:
 
 		if (pStatus.touchLeft == true)
 		{
+			wallkickTimer = 0.0f;
+
 			charPos.x = leftline + hitBoxWidth / 2;
 
 			int left = leftline - CAMERAMANAGER->getCameraPos().x;
@@ -300,6 +311,8 @@ public:
 
 		if (pStatus.touchRight == true)
 		{
+			wallkickTimer = 0.0f;
+
 			charPos.x = rightline - hitBoxWidth / 2;
 
 			int right = rightline - CAMERAMANAGER->getCameraPos().x;
@@ -334,6 +347,8 @@ public:
 	}
 	inline void setTopCollision(bool top, int bottomline)
 	{
+		pStatus.isOnTop = top;
+
 		if (top == true)
 		{
 			charPos.y = bottomline + 3  + hitBoxHeight;
@@ -344,8 +359,11 @@ public:
 
 			pStatus.velocityY = 0.0f;
 			pStatus.velocityX = 0.0f;
+
+			wallkickTimer = wallkickMaxTime;
 		}
 	}
+	void setOverPower(bool op, BulletSize bullet);
 
 	Progress getProgress(void) { return progress; }
 
@@ -359,18 +377,31 @@ public:
 			int random = RND->getInt(2);
 			if (random == 0) SOUNDMANAGER->play("Voice_X_Damaged1");
 			else SOUNDMANAGER->play("Voice_X_Damaged2");
-		}
 
-		switch (size)
+			currentState = CharacterState::OverPower;
+			pStatus.movable = false;
+			pStatus.invincible = true;
+
+			switch (size)
+			{
+			case BulletSize::Small:
+				// 소경직
+				currentAnim = pStatus.charName + "SmallDamaged";
+				break;
+			case BulletSize::Large:
+				// 대경직
+				currentAnim = pStatus.charName + "LargeDamaged";
+				break;
+			}
+		}	
+
+		else 
 		{
-		case BulletSize::Small:
-			// 소경직
-			pStatus.overpower = true;
-			break;
-		case BulletSize::Large:
-			// 대경직
-			pStatus.overpower = true;
-			break;
+			currentState = CharacterState::Dead;
+			SOUNDMANAGER->play("Voice_" + pStatus.charName + "Dead");
+			pStatus.Dead = true;
+			pStatus.invincible = true;
+			pStatus.movable = false;
 		}
 	}
 
@@ -385,14 +416,25 @@ public:
 		if (pStatus.hp <= 0)
 		{
 			pStatus.hp = 0;
-			pStatus.overpower = true;
+			pStatus.invincible = true;
 			pStatus.Dead = false;
+		}
+	}
+
+	inline void invincibleTimerUpdate()
+	{
+		if (pStatus.invincible && !pStatus.Dead)
+		{
+			pStatus.invincibleTimer += 0.1f;
+			if (pStatus.invincibleTimer >= pStatus.invincibleMaxTime)
+			{
+				pStatus.invincible = false;
+				pStatus.invincibleTimer = 0.0f;
+			}
 		}
 	}
 
 	virtual void colorSetting(void);
 	virtual void colorChange(void);
-
-	
 };
 
