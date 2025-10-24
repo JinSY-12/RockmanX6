@@ -87,7 +87,7 @@ void Player::jump(void)
 void Player::dash(bool direction)
 {
 	pStatus.velocityX = 0.0f;
-
+	
 	if (direction == true && !pStatus.touchRight)
 	{
 		currentState = CharacterState::Dash;
@@ -262,6 +262,7 @@ void Player::applyForce(void)
 {
 
 #pragma region 특수 상황
+
 	// 벽차기
 	if (pStatus.isWallKick)
 	{
@@ -273,11 +274,6 @@ void Player::applyForce(void)
 			wallkickTimer = 0.0f;
 			pStatus.velocityX = 0.0f;
 		}
-	}
-
-	if (pStatus.invincible)
-	{
-		pStatus.velocityX = 0.0f;
 	}
 
 #pragma endregion
@@ -338,18 +334,9 @@ void Player::applyForce(void)
 		// 벽차기 때 중력 적용 안함
 		if(!pStatus.isWallKick)	pStatus.velocityY += progress.gravityAccel;
 
-		// 점프시 중력
-		if (currentState == CharacterState::JumpUp)
-		{
-			if (pStatus.velocityY > -7.0f) isJumpUp = false;
-			if (pStatus.velocityY > 0.0f) currentState = CharacterState::FallingDown;
-		}
-
-		// 공중에서 점프하거나 벽타기 하는거 아니면 낙하 이미지로 변경 -> 벽차기와 에어대시, 2단 점프도 넣을 예정
-		else if (currentState != CharacterState::JumpUp && currentState != CharacterState::WallSlide && currentState != CharacterState::WallKick) currentState = CharacterState::FallingDown;
-		// 벽타기 중 버튼을 놓으면 낙하
-		else if (currentState == CharacterState::WallSlide && (!pStatus.touchLeft && !pStatus.touchRight)) currentState = CharacterState::FallingDown;
-		else if (currentState == CharacterState::WallKick && pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) currentState = CharacterState::FallingDown;
+		// 공중에서 상태 변경
+		if (currentState == CharacterState::JumpUp)	if (pStatus.velocityY > -7.0f) isJumpUp = false;
+		if (pStatus.velocityY > 0.0f && currentState != CharacterState::WallSlide && currentState != CharacterState::OverPower) currentState = CharacterState::FallingDown;
 	}
 
 #pragma endregion
@@ -393,6 +380,16 @@ void Player::colorSetting(void)
 void Player::colorChange(void)
 {
 	// Do Nothing!!
+}
+
+void Player::changeAnimation(const string& animName, int frame)
+{
+	if (currentAnim != animName)
+	{
+		currentAnim = animName;
+		pStatus.player = IMAGEMANAGER->findImage(currentAnim);
+		pStatus.player->setFrameX(frame);
+	}
 }
 
 string Player::printBodyState(void)

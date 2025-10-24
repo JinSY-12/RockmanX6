@@ -61,13 +61,14 @@ void StageScene::update(void)
 	{
 		// 플레이어는 이미 천장에 소환 되어 있다
 		// 레디 로고 이후에 플레이어의 동작 시작으로 하늘에서 내려오는 연출
+		bManager.update();
+
 		player->update();
 
 		eManager.update();
 
 		EFFECTMANAGER->update();
 
-		bManager.update();
 	}
 
 }
@@ -148,7 +149,7 @@ void StageScene::enemySettting(BossType bType)
 		// 인트로
 	case BossType::Intro:
 		eManager.spawnEnemy(EnemyType::Junkroid, 1300, 2680);
-		eManager.spawnEnemy(EnemyType::Junkroid, 1800, 2680);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1800, 2680);
 		break;
 
 		// 커맨드 얀마크
@@ -212,6 +213,11 @@ void StageScene::rectSetting(void)
 	// 2
 	floor = RectMake(floor.right, mStage->getHeight() - 75 * SCALE_FACTOR, 319 * SCALE_FACTOR, 75 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
+
+	// 2 테스트 전용
+	//floor = RectMake(floor.right, mStage->getHeight() - 155 * SCALE_FACTOR, 319 * SCALE_FACTOR, 155 * SCALE_FACTOR);
+	//_vFloor.push_back(floor);
+	
 	// 3
 	floor = RectMake(floor.right, mStage->getHeight() - 155 * SCALE_FACTOR, 130 * SCALE_FACTOR, 155 * SCALE_FACTOR);
 	_vFloor.push_back(floor);

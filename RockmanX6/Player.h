@@ -95,7 +95,7 @@ public:
 		COLORREF lowDamaged;
 		COLORREF highDamaged;
 	};
-
+	
 	// 캐릭터 메인 설정값
 	struct PlayerStatus
 	{
@@ -144,7 +144,7 @@ public:
 		bool movable;
 		float invincibleTimer;
 		float invincibleMaxTime;
-};
+	};
 
 	struct Progress
 	{
@@ -195,7 +195,6 @@ public:
 	int animDir;
 	float animSpeed;
 	float delayTimer;
-	int prevAniFrame;
 	bool attChange;
 
 	float attackTimer;
@@ -235,6 +234,8 @@ public:
 
 	int colorType;
 	int colorTimer;
+
+	BulletType bulletType;
 
 public:
 	virtual HRESULT init(void);
@@ -377,20 +378,33 @@ public:
 			int random = RND->getInt(2);
 			if (random == 0) SOUNDMANAGER->play("Voice_X_Damaged1");
 			else SOUNDMANAGER->play("Voice_X_Damaged2");
-
+			
 			currentState = CharacterState::OverPower;
 			pStatus.movable = false;
 			pStatus.invincible = true;
+			animSpeed = 0.06f;
 
 			switch (size)
 			{
 			case BulletSize::Small:
 				// 소경직
-				currentAnim = pStatus.charName + "SmallDamaged";
+				changeAnimation(pStatus.charName + "SmallDamaged", 0);
+
+				if(pStatus.lookRight) pStatus.velocityX = -3.0f;
+				else pStatus.velocityX = 3.0f;
+
+				pStatus.velocityY = 0.0f;
+
 				break;
 			case BulletSize::Large:
 				// 대경직
-				currentAnim = pStatus.charName + "LargeDamaged";
+				changeAnimation(pStatus.charName + "LargeDamaged", 0);
+
+				if (pStatus.lookRight) pStatus.velocityX = -2.0f;
+				else pStatus.velocityX = 2.0f;
+
+				pStatus.velocityY = 0.0f;
+
 				break;
 			}
 		}	
@@ -436,5 +450,7 @@ public:
 
 	virtual void colorSetting(void);
 	virtual void colorChange(void);
+
+	void changeAnimation(const string& animName, int frame);
 };
 

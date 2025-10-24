@@ -44,21 +44,21 @@ HRESULT Burster::init(BulletType type, int x, int y, bool isRight)
 	case BulletType::Buster:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster1")->cloneImage();
-		bStatus.demage = 5;
+		bStatus.demage = 0;
 		bStatus.bType = BulletType::Buster;
 		break;
 
 	case BulletType::ChargeBurst1:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster2")->cloneImage();
-		bStatus.demage = 2;
+		bStatus.demage = 0;
 		bStatus.bType = BulletType::ChargeBurst1;
 		break;
 
 	case BulletType::ChargeBurst2:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster3")->cloneImage();
-		bStatus.demage = 3;
+		bStatus.demage = 0;
 		bStatus.bType = BulletType::ChargeBurst2;
 		break;
 	}
@@ -126,7 +126,7 @@ HRESULT JunkBullet::init(EnemyBulletType type, int x, int y, bool isRight)
 	case EnemyBulletType::JunkBullet:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("SFX_JunkBullet")->cloneImage();
-		bStatus.demage = 2;
+		bStatus.demage = 0;
 		break;
 	}
 
