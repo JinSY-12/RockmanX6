@@ -1,6 +1,7 @@
 #include "Stdafx.h"
 #include "EnemyBase.h"
 #include "BulletManager.h"
+#include "Player.h"
 
 HRESULT EnemyBase::init(void)
 {
@@ -67,6 +68,11 @@ void EnemyBase::pattern(void)
 	}
 }
 
+void EnemyBase::chasePlayer(float angle)
+{
+
+}
+
 void EnemyBase::isDead(void)
 {
 	if (eStatus.hp <= 0)
@@ -74,4 +80,13 @@ void EnemyBase::isDead(void)
 		eStatus.hp = 0;
 		eStatus.dead = true;
 	}
+}
+
+void EnemyBase::changeDirection(void)
+{
+	float angle = atan2f((float)(player->getCharPos().y - ePos.y), (float)(player->getCharPos().x - ePos.x)) * 180 / PI;
+
+	if (angle > -70.0f && angle < 70.0f) eStatus.lookRight = true;
+
+	else if(angle > 110.0f || angle < -110.0f ) eStatus.lookRight = false;
 }

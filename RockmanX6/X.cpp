@@ -114,9 +114,9 @@ void X::update(void)
 
 					if (pStatus.touchLeft)
 					{
-						if (pStatus.isOnGround) currentState = CharacterState::Idle;
-						else if (!pStatus.isOnGround && !pStatus.lookRight && !isJumpUp) wallSlide();// 벽타기
-						else if (!pStatus.isOnGround && !pStatus.lookRight && isJumpUp);
+						if (pStatus.isOnGround)	currentState = CharacterState::Idle;
+						else if (!pStatus.isOnGround && !pStatus.lookRight && !pStatus.isJumpUp) wallSlide();// 벽타기
+						else if (!pStatus.isOnGround && !pStatus.lookRight && pStatus.isJumpUp);
 					}
 
 					else move(pStatus.lookRight);
@@ -130,8 +130,8 @@ void X::update(void)
 					if (pStatus.touchRight)
 					{
 						if (pStatus.isOnGround) currentState = CharacterState::Idle;
-						else if (!pStatus.isOnGround && pStatus.lookRight && !isJumpUp) wallSlide();
-						else if (!pStatus.isOnGround && pStatus.lookRight && isJumpUp);
+						else if (!pStatus.isOnGround && pStatus.lookRight && !pStatus.isJumpUp) wallSlide();
+						else if (!pStatus.isOnGround && pStatus.lookRight && pStatus.isJumpUp);
 					}
 
 					else move(pStatus.lookRight);
@@ -147,8 +147,8 @@ void X::update(void)
 				if (pStatus.touchRight)
 				{
 					if (pStatus.isOnGround)	currentState = CharacterState::Idle;
-					else  if (!pStatus.isOnGround && pStatus.lookRight && !isJumpUp) wallSlide(); // 벽타기
-					else if (!pStatus.isOnGround && pStatus.lookRight && isJumpUp);
+					else  if (!pStatus.isOnGround && pStatus.lookRight && !pStatus.isJumpUp) wallSlide(); // 벽타기
+					else if (!pStatus.isOnGround && pStatus.lookRight && pStatus.isJumpUp);
 				}
 
 				else move(pStatus.lookRight);
@@ -162,8 +162,8 @@ void X::update(void)
 				if (pStatus.touchLeft)
 				{
 					if (pStatus.isOnGround) currentState = CharacterState::Idle;
-					else if (!pStatus.isOnGround && !pStatus.lookRight && !isJumpUp) wallSlide(); // 벽타기
-					else if (!pStatus.isOnGround && !pStatus.lookRight && isJumpUp);
+					else if (!pStatus.isOnGround && !pStatus.lookRight && !pStatus.isJumpUp) wallSlide(); // 벽타기
+					else if (!pStatus.isOnGround && !pStatus.lookRight && pStatus.isJumpUp);
 				}
 
 				else move(pStatus.lookRight);
@@ -211,8 +211,9 @@ void X::update(void)
 			if (KEYMANAGER->isOnceKeyUp('X') && !pStatus.isWallKick)
 			{
 				if (pStatus.velocityY < 0.0f) pStatus.velocityY = 0.0f;
-				isJumpUp = false;
+				pStatus.isJumpUp = false;
 			}
+
 #pragma endregion
 
 #pragma region Dash
@@ -354,7 +355,7 @@ void X::render(void)
 	{
 		// 캐릭터 좌표
 		string temp1;
-		if(pStatus.movable) temp1 = "O";
+		if(pStatus.isWallKick) temp1 = "O";
 		else temp1 = "X";
 
 		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
@@ -512,699 +513,10 @@ void X::chargeBurst(void)
 				else bManager->fire(BulletType::ChargeBurst2, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
 			}
 		}
-
-		
 	}
 
 	else;
 }
-
-
-void X::currentAnimChange(void)
-{
-	////////////////////////
-	// 워프
-	////////////////////////
-
-	if (currentState == CharacterState::Warp)
-	{
-		animSpeed = 0.07f;
-		changeAnimation("X_Spawn", 0);
-	}
-
-	////////////////////////
-	// 대기
-	////////////////////////
-
-	else if (currentState == CharacterState::Idle)
-	{
-		switch (attState)
-		{
-		case SholderState::LargeBurst:
-			animSpeed = 0.07f;
-			changeAnimation("X_StandChargeBurst",0);
-			break;
-
-		case SholderState::Burst:
-			animSpeed = 0.07f;
-			changeAnimation("X_StandBurstLoop", 0);
-			break;
-
-		case SholderState::Hold:
-			animSpeed = 0.1f;
-			changeAnimation("X_StandBurstEnd", 0);
-			break;
-
-		case SholderState::None:
-			animSpeed = 0.17f;
-			changeAnimation("X_Idle", 0);
-			break;
-		}
-	}
-
-	////////////////////////
-	// 걷기
-	////////////////////////
-
-	else if (currentState == CharacterState::Walk)
-	{
-		if (!isMoving)
-		{
-			animSpeed = 0.1f;
-
-			switch (attState)
-			{
-			case SholderState::Burst:
-			case SholderState::LargeBurst:
-				changeAnimation("X_WalkBurstStart", 0);
-				break;
-			case SholderState::Hold:
-			case SholderState::None:
-				changeAnimation("X_WalkStart", 0);
-				break;
-			}
-
-			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) isMoving = true;
-		}
-
-		else if (isMoving)
-		{
-			animSpeed = 0.04f;
-
-			switch (attState)
-			{
-			case SholderState::Burst:
-			case SholderState::LargeBurst:
-				if(previousAnim == "X_WalkBurstStart") changeAnimation("X_WalkBurstLoop", 0);
-				else changeAnimation("X_WalkBurstLoop", pStatus.player->getFrameX());
-				break;
-			case SholderState::Hold:
-			case SholderState::None:
-				if (previousAnim == "X_WalkStart") changeAnimation("X_WalkLoop", 0);
-				else changeAnimation("X_WalkLoop", pStatus.player->getFrameX());
-				break;
-			}
-		}
-	}
-
-	////////////////////////
-	// 대시
-	////////////////////////
-
-	else if (currentState == CharacterState::Dash && pStatus.isDash)
-	{
-		if (!isMoving)
-		{
-			animSpeed = 0.12f;
-
-			switch (attState)
-			{
-			case SholderState::Burst:
-			case SholderState::LargeBurst:
-				changeAnimation("X_DashBurstStart", 0);
-				break;
-			case SholderState::Hold:
-			case SholderState::None:
-				changeAnimation("X_DashStart", 0);
-				break;
-			}
-
-			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) isMoving = true;
-		}
-
-		else if (isMoving)
-		{
-			animSpeed = 0.05f;
-
-			switch (attState)
-			{
-			case SholderState::Burst:
-			case SholderState::LargeBurst:
-				if (previousAnim == "X_DashBurstStart") changeAnimation("X_DashBurstLoop", 0);
-				else changeAnimation("X_DashBurstLoop", pStatus.player->getFrameX());
-				break;
-			case SholderState::Hold:
-			case SholderState::None:
-				if (previousAnim == "X_DashStart") changeAnimation("X_DashLoop", 0);
-				else changeAnimation("X_DashLoop", pStatus.player->getFrameX());
-				break;
-			}
-		}
-	}
-
-	////////////////////////
-	// 대시 종료
-	////////////////////////
-
-	else if (currentState == CharacterState::DashEnd)
-	{
-		animSpeed = 0.1f;
-		
-		switch (attState)
-		{
-		case SholderState::Burst:
-		case SholderState::LargeBurst:
-			if (previousAnim == "X_DashEnd") changeAnimation("X_DashEndBurst", pStatus.player->getFrameX());
-			else changeAnimation("X_DashEndBurst", 0);
-			
-			break;
-		case SholderState::Hold:
-		case SholderState::None:
-			if (previousAnim == "X_DashEndBurst") changeAnimation("X_DashEnd", pStatus.player->getFrameX());
-			else changeAnimation("X_DashEnd", 0);
-			break;
-		}
-	}
-
-	////////////////////////
-	// 점프
-	////////////////////////
-
-	else if (currentState == CharacterState::JumpUp)
-	{
-		animSpeed = 0.06f;
-
-		switch (attState)
-		{
-		case SholderState::Burst:
-		case SholderState::LargeBurst:
-			if (previousAnim == "X_Jump") changeAnimation("X_JumpBurst", pStatus.player->getFrameX());
-			else changeAnimation("X_JumpBurst", 0);
-
-			break;
-		case SholderState::Hold:
-		case SholderState::None:
-			if (previousAnim == "X_JumpBurst") changeAnimation("X_Jump", pStatus.player->getFrameX());
-			else changeAnimation("X_Jump", 0);
-			break;
-		}
-
-		if (pStatus.player->getFrameX() >= 4) pStatus.player->setFrameX(4);
-	}
-
-	////////////////////////
-	// 낙하
-	////////////////////////
-
-	else if (currentState == CharacterState::FallingDown)
-	{
-		animSpeed = 0.06f;
-
-		switch (attState)
-		{
-		case SholderState::Burst:
-		case SholderState::LargeBurst:
-			if (previousAnim == "X_Jump") changeAnimation("X_JumpBurst", pStatus.player->getFrameX());
-			else changeAnimation("X_JumpBurst", 5);
-
-			break;
-		case SholderState::Hold:
-		case SholderState::None:
-			if (previousAnim == "X_JumpBurst") changeAnimation("X_Jump", pStatus.player->getFrameX());
-			else changeAnimation("X_Jump", 5);
-			break;
-		}
-
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
-	}
-
-	////////////////////////
-	// 벽 타기
-	////////////////////////
-
-	else if (currentState == CharacterState::WallSlide)
-	{
-		animSpeed = 0.06f;
-
-		switch (attState)
-		{
-		case SholderState::Burst:
-		case SholderState::LargeBurst:
-			if (previousAnim == "X_WallSlide") changeAnimation("X_WallSlideBurst", pStatus.player->getFrameX());
-			else changeAnimation("X_WallSlideBurst", 0);
-
-			break;
-		case SholderState::Hold:
-		case SholderState::None:
-			if (previousAnim == "X_WallSlideBurst") changeAnimation("X_WallSlide", pStatus.player->getFrameX());
-			else changeAnimation("X_WallSlide", 0);
-			break;
-		}
-
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
-	}
-
-	////////////////////////
-	// 벽 차기
-	////////////////////////
-
-	else if (currentState == CharacterState::WallKick)
-	{
-		animSpeed = 0.06f;
-
-		switch (attState)
-		{
-		case SholderState::Burst:
-		case SholderState::LargeBurst:
-			if (previousAnim == "X_WallKick") changeAnimation("X_WallKickBurst", pStatus.player->getFrameX());
-			else changeAnimation("X_WallKickBurst", 0);
-
-			break;
-		case SholderState::Hold:
-		case SholderState::None:
-			if (previousAnim == "X_WallKickBurst") changeAnimation("X_WallKick", pStatus.player->getFrameX());
-			else changeAnimation("X_WallKick", 0);
-			break;
-		}
-
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) currentState = CharacterState::FallingDown;
-	}
-
-	////////////////////////
-	// 데미지
-	////////////////////////
-
-	else if (currentState == CharacterState::OverPower)
-	{
-		animSpeed = 0.1f;
-		
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.movable = true;
-	}
-
-	
-	////////////////////////
-	// 공격 애니메이션 타이밍 체크
-	////////////////////////
-
-	if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
-	{
-		if (TIMEMANAGER->getWorldTime() - attackTimer >= attackDuration)
-		{
-			if (currentState == CharacterState::Walk) attState = SholderState::None;
-			else if (currentState == CharacterState::JumpUp) attState = SholderState::None;
-			else if (currentState == CharacterState::FallingDown) attState = SholderState::None;
-			else if (currentState == CharacterState::WallSlide) attState = SholderState::None;
-			else if (currentState == CharacterState::WallKick) attState = SholderState::None;
-			else if (currentState == CharacterState::Dash) attState = SholderState::None;
-			else if (currentState == CharacterState::DashEnd) attState = SholderState::None;
-			else if (currentState == CharacterState::Idle) attState = SholderState::Hold;
-		}
-	}	 
-
-	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
-	hitBoxCenter.y = pStatus.hitBox.bottom;	
-
-	// pStatus.hitBox.right = pStatus.hitBox.left + hitBoxWidth;
-	// pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
-	setHitBox();
-	
-	// pStatus.player = IMAGEMANAGER->findImage(currentAnim);
-
-	/*
-	// 애니메이션 사이의 프레임 연결
-	if (previousAnim != currentAnim)
-	{
-		// 이동 + 공격 애니메이션은 전부 추가
-		if (currentAnim.find("Burst") != string::npos)
-		{
-			// 이전 동작과 현재 동작이 일치해야할 때 -> 대기동작 안빼면 이상해짐
-			if (currentState == previousState && currentState != CharacterState::Idle) pStatus.player->setFrameX(prevAniFrame);
-			// 건들 필요 없음 -> 언제나 공격이 0으로 시작해야 하는 상황 -> + 세이버...?
-			else if (currentState == CharacterState::Idle || currentState == CharacterState::WallSlide) pStatus.player->setFrameX(0);
-			// 특수 동작들 -> 동작이 추가되면 조건 추가해줘야함
-			else if (currentState == CharacterState::FallingDown && previousState == CharacterState::Walk) pStatus.player->setFrameX(5);
-			else if (currentState == CharacterState::FallingDown && previousState == CharacterState::JumpUp) pStatus.player->setFrameX(prevAniFrame);
-			else if (currentState == CharacterState::DashEnd && previousState == CharacterState::Dash) pStatus.player->setFrameX(0);
-		}
-
-		else if (previousAnim.find("Burst") != string::npos && !(currentAnim.find("Burst") != string::npos))
-		{
-			if (currentState != CharacterState::Idle) pStatus.player->setFrameX(prevAniFrame);
-			else pStatus.player->setFrameX(0);
-		}
-
-		else if (previousAnim.find("Kick") && currentState == CharacterState::FallingDown) pStatus.player->setFrameX(5);
-		
-		else pStatus.player->setFrameX(0);
-	}
-	*/
-
-	// 애니메이션 비교용 변수 초기화
-	previousAnim = currentAnim;
-	previousState = currentState;
-}
-/*
-void X::currentAnimChange(void)
-{
-	////////////////////////
-	// 워프
-	////////////////////////
-
-	if (currentState == CharacterState::Warp)
-	{
-		currentAnim = "X_Spawn";
-		animSpeed = 0.07f;
-		animOffset.x = 0;
-		animOffset.y = -17 * SCALE_FACTOR;
-		pStatus.firePointX = 0 * SCALE_FACTOR;
-		pStatus.firePointY = 10 * SCALE_FACTOR;
-	}
-
-	////////////////////////
-	// 대기
-	////////////////////////
-
-	else if (currentState == CharacterState::Idle)
-	{
-		if (pStatus.lookRight) pStatus.firePointX = 0 * SCALE_FACTOR;
-		else pStatus.firePointX = 0 * SCALE_FACTOR;
-
-		pStatus.firePointY = 11 * SCALE_FACTOR;
-
-		if (attState == SholderState::LargeBurst)
-		{
-			if (previousState == CharacterState::Walk) attState = SholderState::Burst;
-			else
-			{
-				currentAnim = "X_StandChargeBurst";
-
-				animSpeed = 0.07f;
-				animOffset.x = -1;
-				animOffset.y = -1 * SCALE_FACTOR;
-			}
-		}
-
-		else if (attState == SholderState::Burst)
-		{
-			currentAnim = "X_StandBurstLoop";
-			animSpeed = 0.07f;
-			animOffset.x = -1;
-			animOffset.y = -1 * SCALE_FACTOR;
-
-		}
-
-		else if (attState == SholderState::Hold)
-		{
-			if (previousAnim != "X_StandBurstEnd") pStatus.player->setFrameX(0);
-
-			currentAnim = "X_StandBurstEnd";
-			animSpeed = 0.1f;
-			animOffset.x = 0;
-			animOffset.y = -1 * SCALE_FACTOR;
-
-		}
-
-		else if (attState == SholderState::None)
-		{
-			currentAnim = "X_Idle";
-			animSpeed = 0.17f;
-			animOffset.x = 0;
-			animOffset.y = -1 * SCALE_FACTOR;
-		}
-	}
-
-	////////////////////////
-	// 걷기
-	////////////////////////
-
-	else if (currentState == CharacterState::Walk)
-	{
-		if (pStatus.lookRight) pStatus.firePointX = +14 * SCALE_FACTOR;
-		else pStatus.firePointX = -14 * SCALE_FACTOR;
-
-		pStatus.firePointY = 8 * SCALE_FACTOR;
-
-		if (!isMoving)
-		{
-			if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
-			{
-				currentAnim = "X_WalkBurstStart";
-				animSpeed = 0.1f;
-				animOffset.x = 0;
-				animOffset.y = -1 * SCALE_FACTOR;
-
-				if (pStatus.lookRight) animOffset.x = -7;
-				else if (!pStatus.lookRight) animOffset.x = 14;
-			}
-
-			else if (attState == SholderState::None || attState == SholderState::Hold)
-			{
-				currentAnim = "X_WalkStart";
-				animSpeed = 0.1f;
-				if (pStatus.lookRight) animOffset.x = 0;
-				else if (!pStatus.lookRight) animOffset.x = 0;
-			}
-		}
-
-		animSpeed = 0.04f;
-		animOffset.y = -1 * SCALE_FACTOR;
-
-		if ((currentAnim == "X_WalkStart" || currentAnim == "X_WalkBurstStart")
-			&& pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) isMoving = true;
-
-		if (isMoving)
-		{
-			if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
-			{
-				if (pStatus.lookRight) animOffset.x = -7;
-				else if (!pStatus.lookRight) animOffset.x = 14;
-
-				currentAnim = "X_WalkBurstLoop";
-				isMoving = true;
-			}
-
-			else if (attState == SholderState::None || attState == SholderState::Hold)
-			{
-				if (pStatus.lookRight) animOffset.x = 0;
-				else if (!pStatus.lookRight) animOffset.x = 0;
-				currentAnim = "X_WalkLoop";
-				attState = SholderState::None;
-				isMoving = true;
-			}
-		}
-	}
-
-	////////////////////////
-	// 대시
-	////////////////////////
-
-	else if (currentState == CharacterState::Dash && pStatus.isDash)
-	{
-		if (pStatus.player->getFrameX() == 0) pStatus.firePointY = 15 * SCALE_FACTOR;
-		else if (pStatus.player->getFrameX() == 1) pStatus.firePointY = 21 * SCALE_FACTOR;
-		else pStatus.firePointY = 30 * SCALE_FACTOR;
-
-		if (pStatus.lookRight)
-		{
-			pStatus.firePointX = +14 * SCALE_FACTOR;
-			animOffset.x = -14 * SCALE_FACTOR;
-		}
-
-		else
-		{
-			pStatus.firePointX = -14 * SCALE_FACTOR;
-			animOffset.x = 14 * SCALE_FACTOR;
-		}
-
-		animSpeed = 0.05f;
-
-		if (attState == SholderState::Burst || attState == SholderState::LargeBurst) currentAnim = "X_DashBurst";
-		else currentAnim = "X_Dash";
-
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX() && aniDash) pStatus.player->setFrameX(2);
-		else if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX() && !aniDash) pStatus.player->setFrameX(0);
-		else if (pStatus.player->getFrameX() >= 2) aniDash = true;
-	}
-
-	////////////////////////
-	// 대시 종료
-	////////////////////////
-
-	else if (currentState == CharacterState::DashEnd)
-	{
-		animSpeed = 0.08f;
-
-		if (attState == SholderState::Burst || attState == SholderState::LargeBurst) currentAnim = "X_DashEndBurst";
-		else currentAnim = "X_DashEnd";
-	}
-
-	////////////////////////
-	// 점프
-	////////////////////////
-
-	else if (currentState == CharacterState::JumpUp)
-	{
-		if (pStatus.lookRight)
-		{
-			animOffset.x = 1 * SCALE_FACTOR;
-			pStatus.firePointX = 0 * SCALE_FACTOR;
-		}
-		else
-		{
-			animOffset.x = -4 * SCALE_FACTOR;
-			pStatus.firePointX = 0 * SCALE_FACTOR;
-		}
-
-		pStatus.firePointY = 8 * SCALE_FACTOR;
-
-		animSpeed = 0.06f;
-		animOffset.y = -6 * SCALE_FACTOR;
-
-		if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
-		{
-			currentAnim = "X_JumpBurst";
-			if (pStatus.lookRight) animOffset.x = -6 * SCALE_FACTOR;
-			else animOffset.x = 3 * SCALE_FACTOR;
-		}
-		else currentAnim = "X_Jump";
-
-		if (pStatus.player->getFrameX() >= 4) pStatus.player->setFrameX(4);
-	}
-
-	////////////////////////
-	// 낙하
-	////////////////////////
-
-	else if (currentState == CharacterState::FallingDown)
-	{
-		if (pStatus.lookRight)
-		{
-			animOffset.x = 1 * SCALE_FACTOR;
-			pStatus.firePointX = 0 * SCALE_FACTOR;
-		}
-		else
-		{
-			animOffset.x = -4 * SCALE_FACTOR;
-			pStatus.firePointX = 8 * SCALE_FACTOR;
-		}
-
-		pStatus.firePointY = 8 * SCALE_FACTOR;
-
-		animSpeed = 0.06f;
-		animOffset.y = -6 * SCALE_FACTOR;
-
-		if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
-		{
-			currentAnim = "X_JumpBurst";
-			if (pStatus.lookRight) animOffset.x = -6 * SCALE_FACTOR;
-			else animOffset.x = 3 * SCALE_FACTOR;
-		}
-		else currentAnim = "X_Jump";
-
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
-	}
-
-	////////////////////////
-	// 벽 타기
-	////////////////////////
-
-	else if (currentState == CharacterState::WallSlide)
-	{
-		animSpeed = 0.06f;
-		if (pStatus.lookRight) animOffset.x = 2 * SCALE_FACTOR;
-		else animOffset.x = -2 * SCALE_FACTOR;
-		animOffset.y = -12 * SCALE_FACTOR;
-
-		pStatus.firePointY = 9 * SCALE_FACTOR;
-
-		if (attState == SholderState::Burst || attState == SholderState::LargeBurst) currentAnim = "X_WallSlideBurst";
-		else currentAnim = "X_WallSlide";
-
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
-	}
-
-	////////////////////////
-	// 벽 차기
-	////////////////////////
-
-	else if (currentState == CharacterState::WallKick)
-	{
-		animSpeed = 0.06f;
-		if (pStatus.lookRight) animOffset.x = -4 * SCALE_FACTOR;
-		else animOffset.x = 4 * SCALE_FACTOR;
-		animOffset.y = -8 * SCALE_FACTOR;
-
-		if (attState == SholderState::Burst || attState == SholderState::LargeBurst) currentAnim = "X_WallKickBurst";
-		else currentAnim = "X_WallKick";
-	}
-
-	////////////////////////
-	// 데미지
-	////////////////////////
-
-	else if (currentState == CharacterState::OverPower)
-	{
-		animSpeed = 0.06f;
-
-		if (currentAnim.find("Damaged") != string::npos && pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
-		{
-			cout << "여기 나옴??" << endl;
-			pStatus.movable = true;
-		}
-	}
-
-
-	////////////////////////
-	// 공격 애니메이션
-	////////////////////////
-
-	if (attState == SholderState::Burst || attState == SholderState::LargeBurst)
-	{
-		if (TIMEMANAGER->getWorldTime() - attackTimer >= attackDuration)
-		{
-			if (currentState == CharacterState::Walk) attState = SholderState::None;
-			else if (currentState == CharacterState::JumpUp) attState = SholderState::None;
-			else if (currentState == CharacterState::FallingDown) attState = SholderState::None;
-			else if (currentState == CharacterState::WallSlide) attState = SholderState::None;
-			else if (currentState == CharacterState::WallKick) attState = SholderState::None;
-			else if (currentState == CharacterState::Dash) attState = SholderState::None;
-			else if (currentState == CharacterState::DashEnd) attState = SholderState::None;
-			else if (currentState == CharacterState::Idle) attState = SholderState::Hold;
-			prevAniFrame = pStatus.player->getFrameX();
-		}
-	}
-
-	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
-	hitBoxCenter.y = pStatus.hitBox.bottom;
-
-	// pStatus.hitBox.right = pStatus.hitBox.left + hitBoxWidth;
-	// pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
-	setHitBox();
-
-	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
-
-	// 애니메이션 사이의 프레임 연결
-	if (previousAnim != currentAnim)
-	{
-		// 이동 + 공격 애니메이션은 전부 추가
-		if (currentAnim.find("Burst") != string::npos)
-		{
-			// 이전 동작과 현재 동작이 일치해야할 때 -> 대기동작 안빼면 이상해짐
-			if (currentState == previousState && currentState != CharacterState::Idle) pStatus.player->setFrameX(prevAniFrame);
-			// 건들 필요 없음 -> 언제나 공격이 0으로 시작해야 하는 상황 -> + 세이버...?
-			else if (currentState == CharacterState::Idle || currentState == CharacterState::WallSlide) pStatus.player->setFrameX(0);
-			// 특수 동작들 -> 동작이 추가되면 조건 추가해줘야함
-			else if (currentState == CharacterState::FallingDown && previousState == CharacterState::Walk) pStatus.player->setFrameX(5);
-			else if (currentState == CharacterState::FallingDown && previousState == CharacterState::JumpUp) pStatus.player->setFrameX(prevAniFrame);
-			else if (currentState == CharacterState::DashEnd && previousState == CharacterState::Dash) pStatus.player->setFrameX(0);
-		}
-
-		else if (previousAnim.find("Burst") != string::npos && !(currentAnim.find("Burst") != string::npos))
-		{
-			if (currentState != CharacterState::Idle) pStatus.player->setFrameX(prevAniFrame);
-			else pStatus.player->setFrameX(0);
-		}
-
-		else if (previousAnim.find("Kick") && currentState == CharacterState::FallingDown) pStatus.player->setFrameX(5);
-
-		else pStatus.player->setFrameX(0);
-	}
-
-	// 애니메이션 비교용 변수 초기화
-	previousAnim = currentAnim;
-	previousState = currentState;
-}
-*/
 
 void X::frameCheck(void)
 {
@@ -1572,6 +884,7 @@ void X::spawn(int x, int y)
 	isMoving = false;
 	pStatus.isDash = false;
 	pStatus.isWallKick = false;
+	pStatus.isWallSlide = false;
 	colorType = 0;
 	pStatus.Dead = false;
 	pStatus.movable = true;
@@ -1589,7 +902,7 @@ void X::spawn(int x, int y)
 	wallkickTimer = 0.0f;
 
 	// 벽타기 초기화
-	isJumpUp = false;
+	pStatus.isJumpUp = false;
 	pressRight = false;
 	pressLeft = false;
 	

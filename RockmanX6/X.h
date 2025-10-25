@@ -34,7 +34,7 @@ public:
 	void spawn(int x, int y) override;
 	
 	// 애니메이션 관련
-	void currentAnimChange(void) override;
+	// void currentAnimChange(void) override;
 	void frameCheck(void);
 	void setHitBox(void) override;
 	

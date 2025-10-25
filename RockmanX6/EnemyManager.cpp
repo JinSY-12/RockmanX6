@@ -94,6 +94,7 @@ void EnemyManager::spawnEnemy(EnemyType eType, int x, int y)
 		enemy = new Junkroid;
 		enemy->init(x, y);
 		enemy->settingBulletManager(_bManager);
+		enemy->settingPlayer(_player);
 		_vEnemy.push_back(enemy);
 		break;
 	}
@@ -130,7 +131,6 @@ void EnemyManager::playHitEffect(BulletType bType, int x, int y, int look)
 	switch (bType)
 	{
 	case BulletType::Buster:
-		// SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
 		break;
 	}
 }

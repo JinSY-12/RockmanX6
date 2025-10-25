@@ -104,6 +104,8 @@ void BulletManager::checkPlayerCollision()
 		if (IntersectRect(&temp, &(*_viEnemyBullet)->getBulletRect(), &_player->getPlayerRect()) && _player->getOverPower() == false)
 		{
 			_player->reduceHp((*_viEnemyBullet)->getBulletDamage(), (*_viEnemyBullet)->getBulletSize());
+			playExplodeEffect((*_viEnemyBullet)->getEnemyBulletType(), (*_viEnemyBullet)->getBulletPosX(), (*_viEnemyBullet)->getBulletPosY(), 0);
+			playExplodeSound((*_viEnemyBullet)->getEnemyBulletType());
 			_viEnemyBullet = _vEnemyBullet.erase(_viEnemyBullet);
 		}
 

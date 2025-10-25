@@ -133,7 +133,9 @@ public:
 		// 점프 관련
 		float velocityY;
 		float maxFallSpeed;
+		bool isJumpUp;
 		bool isWallKick;
+		bool isWallSlide;
 		bool wallKickRight;
 
 		// 대시 관련
@@ -219,7 +221,6 @@ public:
 	bool lastKeyIsRight;
 
 	// 점프 관련
-	bool isJumpUp;
 	float wallkickTimer;
 	float wallkickMaxTime;
 
@@ -276,7 +277,6 @@ public:
 	// settter/getter
 	// 좌표 및 판정
 	RECT getPlayerRect(void) { return pStatus.hitBox; }
-	
 	inline int getPlayerCenter(void) { return charPos.x; }
 	inline int getPlayerTop(void) { return charPos.y - hitBoxHeight; }
 	inline int getPlayerBottom(void) { return charPos.y; }
@@ -294,7 +294,6 @@ public:
 		if (pStatus.touchLeft == true)
 		{
 			wallkickTimer = 0.0f;
-
 			charPos.x = leftline + hitBoxWidth / 2;
 
 			int left = leftline - CAMERAMANAGER->getCameraPos().x;
@@ -303,6 +302,7 @@ public:
 
 			pStatus.velocityX = 0.0f;
 
+			pStatus.isWallKick = false;
 			pStatus.isJumpDash = false;
 		}
 	}
@@ -322,6 +322,7 @@ public:
 			
 			pStatus.velocityX = 0.0f;
 
+			pStatus.isWallKick = false;
 			pStatus.isJumpDash = false;
 		}
 	}
@@ -367,6 +368,8 @@ public:
 	void setOverPower(bool op, BulletSize bullet);
 
 	Progress getProgress(void) { return progress; }
+
+	CharcterPos& getCharPos(void) { return charPos; }
 
 	// 스탯 관련
 	inline void reduceHp(int damage, BulletSize size) {

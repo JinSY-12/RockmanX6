@@ -1,6 +1,7 @@
 #include "Stdafx.h"
 #include "Junkroid.h"
 #include "BulletManager.h"
+#include "Player.h"
 
 HRESULT Junkroid::init(void)
 {
@@ -48,6 +49,7 @@ HRESULT Junkroid::init(int x, int y)
 
 void Junkroid::release(void)
 {
+
 }
 
 void Junkroid::update(void)
@@ -55,12 +57,14 @@ void Junkroid::update(void)
     eStatus.eImage->play(0.05f);
 
     if (patternTimer >= maxPatternTime) attackAble = true;
+
     else
     {
         attackAble = false;
         patternTimer += 0.1f;
     }
 
+    changeDirection();
     setEnemyHitbox();
     animChange();
     isDead();

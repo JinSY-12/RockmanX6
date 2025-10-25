@@ -3,6 +3,7 @@
 #include "BulletType.h"
 
 class BulletManager;
+class Player;
 
 class EnemyBase : public GameNode
 {
@@ -62,6 +63,8 @@ public:
 	float maxPatternTime;
 	bool attackAble;
 
+	Player* player;
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -86,6 +89,9 @@ public:
 		eStatus.hp -= damage;
 		eStatus.overpower = true;
 	}
+	inline void changeDirection(bool dir) { eStatus.lookRight = dir; }
+
+	void chasePlayer(float angle);
 
 	int getCurrentHp(void) { return eStatus.hp; }
 
@@ -94,11 +100,13 @@ public:
 
 	void isDead(void);
 
-	void breakEffectTest();
-
 	EnemyPos getEnemyPos() { return ePos; }
 	bool getEnemyLook() { return eStatus.lookRight; }
 
 	EnemyType getEnemyType() { return eType; }
+
+	void changeDirection(void);
+
+	void settingPlayer(Player* p) { player = p; }
 };
 

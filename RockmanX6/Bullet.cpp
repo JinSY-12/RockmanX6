@@ -131,6 +131,7 @@ HRESULT JunkBullet::init(EnemyBulletType type, int x, int y, bool isRight)
 	}
 
 	bStatus.type = BulletSize::Small;
+	bStatus.eBType = EnemyBulletType::JunkBullet;
 
 	bStatus.width = bStatus.shape->getFrameWidth();
 	bStatus.height = bStatus.shape->getFrameHeight();

@@ -14,6 +14,7 @@ public:
 		BulletSize type;
 		RECT hitBox;
 		BulletType bType;
+		EnemyBulletType eBType;
 
 		struct Pos
 		{
@@ -48,7 +49,11 @@ public:
 	int getBulletDamage(void) { return bStatus.demage; }
 	BulletSize getBulletSize(void) { return bStatus.type; }
 
+	int getBulletPosX(void) { return bStatus.pos.x; }
+	int getBulletPosY(void) { return bStatus.pos.y; }
+
 	BulletType getBulletType(void) { return bStatus.bType; }
+	EnemyBulletType getEnemyBulletType(void) { return bStatus.eBType; }
 };
 
 
