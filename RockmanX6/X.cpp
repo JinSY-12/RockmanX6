@@ -194,89 +194,83 @@ void X::update(void)
 				wallDrop();
 				pressLeft = false;
 			}
-		
+		}
+
 #pragma region Jump
-			/////////////////////////////////
-			// 점프 파트
-			/////////////////////////////////
+		/////////////////////////////////
+		// 점프 파트
+		/////////////////////////////////
 
-			// 점프 누르면 점프 파워 만큼 계속 올라가고
-			// 점프를 떼면 바로 낙하를 하게 만들어서 소점프, 대점프 구현
-			
-			if (KEYMANAGER->isOnceKeyDown('X') && !multiInput) // 'ㅌ' 검색을 위한 주석ㅋㅋㅋ
-			{
-				jump();
-			}
+		// 점프 누르면 점프 파워 만큼 계속 올라가고
+		// 점프를 떼면 바로 낙하를 하게 만들어서 소점프, 대점프 구현
 
-			if (KEYMANAGER->isOnceKeyUp('X') && !pStatus.isWallKick)
-			{
-				if (pStatus.velocityY < 0.0f) pStatus.velocityY = 0.0f;
-				pStatus.isJumpUp = false;
-			}
+		if (KEYMANAGER->isOnceKeyDown('X')) // 'ㅌ' 검색을 위한 주석ㅋㅋㅋ
+		{
+			jump();
+		}
+
+		if (KEYMANAGER->isOnceKeyUp('X') && !pStatus.isWallKick)
+		{
+			if (pStatus.velocityY < 0.0f) pStatus.velocityY = 0.0f;
+			pStatus.isJumpUp = false;
+		}
 
 #pragma endregion
 
 #pragma region Dash
-
-			if (KEYMANAGER->isOnceKeyDown('Z'))						// 'ㅋ' 문자 찾기 용
-			{
-				isMoving = false;
-				dash(pStatus.lookRight);
-			}
-
-			if (KEYMANAGER->isStayKeyDown('Z'))
-			{
-				dashTimer += 0.1f;
-
-				pressDash = true;
-
-				if (dashTimer <= maxDashTime)
-				{
-					if (pStatus.isDash && !pStatus.isJumpDash && dashTimer >= 0.8f)
-					{
-						currentState = CharacterState::Dash;
-						// move(pStatus.lookRight);
-					}
-				}
-
-				else
-				{
-					if (!pStatus.isJumpDash && pStatus.isDash)
-					{
-						pStatus.isDash = false;
-						aniDash = false;
-						pStatus.player->setFrameX(0);
-
-						cout << "통과1" << endl;
-						currentState = CharacterState::DashEnd;
-					}
-				}
-			}
-
-			if (KEYMANAGER->isOnceKeyUp('Z'))
-			{
-				SOUNDMANAGER->stop("SFX_DashStart");
-
-				pressDash = false;
-
-				if (!pStatus.isJumpDash)
-				{
-					if (pStatus.isDash && currentState == CharacterState::Dash)
-					{
-						cout << "통과2" << endl;
-						currentState = CharacterState::DashEnd;
-						pStatus.isDash = false;
-					}
-				}
-
-				aniDash = false;
-				dashTimer = 0.0f;
-			}
-
-#pragma endregion
-
+		if (KEYMANAGER->isOnceKeyDown('Z'))						// 'ㅋ' 문자 찾기 용
+		{
+			dash(pStatus.lookRight);
 		}
 
+		if (KEYMANAGER->isStayKeyDown('Z'))
+		{
+			dashTimer += 0.1f;
+
+			pressDash = true;
+
+			if (dashTimer <= maxDashTime)
+			{
+				if (pStatus.isDash && !pStatus.isJumpDash && dashTimer >= 0.3f)
+				{
+					currentState = CharacterState::Dash;
+					move(pStatus.lookRight);
+				}
+			}
+
+			else
+			{
+				if (!pStatus.isJumpDash && pStatus.isDash)
+				{
+					pStatus.isDash = false;
+					aniDash = false;
+					pStatus.player->setFrameX(0);
+
+					currentState = CharacterState::DashEnd;
+				}
+			}
+		}
+
+		if (KEYMANAGER->isOnceKeyUp('Z'))
+		{
+			SOUNDMANAGER->stop("SFX_DashStart");
+
+			pressDash = false;
+
+			if (!pStatus.isJumpDash)
+			{
+				if (pStatus.isDash && currentState == CharacterState::Dash)
+				{
+					currentState = CharacterState::DashEnd;
+					pStatus.isDash = false;
+				}
+			}
+
+			aniDash = false;
+			dashTimer = 0.0f;
+		}
+
+#pragma endregion
 #pragma region Attack
 		/////////////////////////////////
 		// 공격 파트
@@ -287,16 +281,16 @@ void X::update(void)
 
 		now = TIMEMANAGER->getWorldTime();
 
-		if (TIMEMANAGER->getWorldTime() - chargeBurstCount >= 0.5f) chargeBurstDelay = false;
-
-		if (KEYMANAGER->isOnceKeyDown('C')) // 'ㅊ' 검색을 위한 주석ㅋㅋㅋ
+		if (TIMEMANAGER->getWorldTime() - chargeBurstCount >= 0.3f) chargeBurstDelay = false;
+		
+		if (KEYMANAGER->isOnceKeyDown('C'))		// 'ㅊ' 검색을 위한 주석ㅋㅋㅋ
 		{
 			attackTimer = TIMEMANAGER->getWorldTime();
 			attCheckOnce = true;
 			
 			if (normalBurstAble == true && chargeBurstDelay == false && bManager->getMaxBullets() < 3) attack();
 		}
-
+		
 		if (KEYMANAGER->isStayKeyDown('C') && attCheckOnce == true)
 		{
 			// 시작하기전에 미리 누르고 있으면 차지 안되게
@@ -304,6 +298,22 @@ void X::update(void)
 			{
 				// 차지
 				chargeCount += chargeSpeed;
+
+				if (chargeCount >= 0.3f && chargeCount < 1.0f)
+				{
+					chargeEffectAlpha = 255;
+					chargeEffect->play(0.02f);
+				}
+
+				else if (chargeCount >= 1.0f)
+				{
+					chargeEffectAlpha = 255;
+					chargeEffect->play(0.02f);
+
+					chargeAuraAlpha = 255;
+					chargeAura->play(0.03f);
+				}
+
 			}
 
 			if (!isCharging && chargeCount >= 0.3f)
@@ -317,12 +327,21 @@ void X::update(void)
 		{
 			// 차지 시간에 따른 버스터 발사
 			chargeBurst();
+			chargeEffectAlpha = 0;
+			chargeAuraAlpha = 0;
 
+			chargeEffect->setFrameX(0);
+			chargeAura->setFrameX(0);
 			SOUNDMANAGER->stop("SFX_X_BurstCharge");
 			chargeCount = 0.0f;
 			isCharging = false;
 			attCheckOnce = false;
 			attCheckOnce = true;
+		}
+
+		if (KEYMANAGER->isOnceKeyDown('V'))					// 'ㅍ' 문자 찾기 용
+		{
+			specialAttack();
 		}
 
 #pragma endregion
@@ -337,9 +356,13 @@ void X::update(void)
 	currentAnimChange();
 
 	pStatus.player->play(animSpeed);
+	attackHandEffect->play(0.06f);
+	bursterEffectAlphaDown();
+
 	frameCheck();
 	isDead();
 	invincibleTimerUpdate();
+	
 	UIMANAGER->setCurrentPlayerStatus(pStatus.hp, pStatus.mp, pStatus.maxHp, progress.life);
 
 #pragma endregion
@@ -351,6 +374,18 @@ void X::render(void)
 		hitBoxCenter.y - pStatus.player->getFrameHeight() - animOffset.y,
 		pStatus.player->getFrameX(), pStatus.lookRight, 255);
 	
+	chargeEffect->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
+		hitBoxCenter.y - chargeEffect->getFrameHeight() + 10 * SCALE_FACTOR,
+		chargeEffect->getFrameX(), pStatus.lookRight, chargeEffectAlpha);
+
+	chargeAura->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
+		hitBoxCenter.y - chargeAura->getFrameHeight() + 10 * SCALE_FACTOR,
+		chargeAura->getFrameX(), pStatus.lookRight, chargeAuraAlpha);
+
+	attackHandEffect->frameAlphaRender(getMemDC(), hitBoxCenter.x - attackHandEffect->getFrameWidth() / 2,
+		hitBoxCenter.y - attackHandEffect->getFrameHeight(),
+		attackHandEffect->getFrameX(), pStatus.lookRight, bursterEffectAlpha);
+
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
 		// 캐릭터 좌표
@@ -422,22 +457,31 @@ void X::render(void)
 
 void X::jump(void)
 {
-	if (pStatus.isOnGround || pStatus.touchLeft || pStatus.touchRight) Player::jump();
-	else; // 호버링
+	if (pStatus.movable)
+	{
+		if (pStatus.isOnGround || pStatus.touchLeft || pStatus.touchRight) Player::jump();
+		else; // 호버링
+	}
 }
 
 void X::dash(bool direction)
 {
-	if (pStatus.isOnGround) Player::dash(direction);
-	else if (!pStatus.isOnGround); // 아머가 있을때 에어대시
+	if (pStatus.movable)
+	{
+		if (pStatus.isOnGround) Player::dash(direction);
+		else if (!pStatus.isOnGround); // 아머가 있을때 에어대시
+	}
 }
 
 void X::attack(void)
 {
-	if (pStatus.movable)
+	if (pStatus.movable && !pStatus.isAttack)
 	{
 		attState = SholderState::Burst;
 		SOUNDMANAGER->play("SFX_X_Burster1", 0.5f);
+		bursterEffectName = "SFX_BursterEffect1";
+		bursterEffectAlpha = 255;
+		attackHandEffect->setFrameX(0);
 
 		burstloop = true;
 		lastShootTime = now;
@@ -445,7 +489,6 @@ void X::attack(void)
 
 		if (pStatus.lookRight)
 		{
-
 			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::Buster, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
 			else bManager->fire(BulletType::Buster, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
 		}
@@ -460,12 +503,15 @@ void X::attack(void)
 
 void X::chargeBurst(void)
 {
-	if (pStatus.movable)
+	if (pStatus.movable && !pStatus.isAttack)
 	{
-		if (chargeCount >= 0.4f && chargeCount < 1.5f)
+		if (chargeCount >= 0.3f && chargeCount < 1.0f)
 		{
 			attState = SholderState::Burst;
 			SOUNDMANAGER->play("SFX_X_Burster2", 0.5f);
+			bursterEffectName = "SFX_BursterEffect2";
+			bursterEffectAlpha = 255;
+			attackHandEffect->setFrameX(0);
 
 			// 공격 회수 장면을 위한 타이머 저장 -> 안하면 바로 내림ㅋㅋ
 			attackTimer = TIMEMANAGER->getWorldTime();
@@ -473,7 +519,7 @@ void X::chargeBurst(void)
 			burstloop = true;
 			chargeBurstCount = TIMEMANAGER->getWorldTime();
 			chargeBurstDelay = true;
-			
+			pStatus.isAttack = true;
 
 			if (pStatus.lookRight)
 			{
@@ -488,18 +534,22 @@ void X::chargeBurst(void)
 			}
 		}
 
-		else if (chargeCount >= 1.5f)
+		else if (chargeCount >= 1.0f)
 		{
 			attState = SholderState::LargeBurst;
 
 			SOUNDMANAGER->play("SFX_X_Burster3", 0.5f);
 			if (RND->getInt(10) < 5) SOUNDMANAGER->play("Voice_X_Burster", 0.5f);
+			bursterEffectName = "SFX_BursterEffect3";
+			bursterEffectAlpha = 255;
+			attackHandEffect->setFrameX(0);
 
 			attackTimer = TIMEMANAGER->getWorldTime();
 
 			burstloop = true;
 			chargeBurstCount = TIMEMANAGER->getWorldTime();
 			chargeBurstDelay = true;
+			pStatus.isAttack = true;
 
 			if (pStatus.lookRight)
 			{
@@ -534,7 +584,7 @@ void X::frameCheck(void)
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			{
 				attState = SholderState::Hold;
-				pStatus.player->setFrameX(0);
+				//pStatus.player->setFrameX(0);
 			}
 		}
 
@@ -544,7 +594,7 @@ void X::frameCheck(void)
 			if(pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			{
 				attState = SholderState::None;
-				pStatus.player->setFrameX(0);
+				//pStatus.player->setFrameX(0);
 			}
 		}
 
@@ -552,14 +602,14 @@ void X::frameCheck(void)
 		{
 			if (burstloop == true)
 			{
-				pStatus.player->setFrameX(0);
+				//pStatus.player->setFrameX(0);
 				burstloop = false;
 			}
 
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			{
 				attState = SholderState::None;
-				pStatus.player->setFrameX(0);
+				//pStatus.player->setFrameX(0);
 			}
 		}
 	}
@@ -896,7 +946,7 @@ void X::spawn(int x, int y)
 
 	// 점프 초기화
 	pStatus.jumpPower = -15.0;
-	pStatus.maxFallSpeed = 12.0f;
+	pStatus.maxFallSpeed = 15.0f;
 	pStatus.velocityY = 0.0f;
 	wallkickMaxTime = 1.0f;
 	wallkickTimer = 0.0f;
@@ -924,23 +974,52 @@ void X::spawn(int x, int y)
 	lastShootTime = 0.0f;
 	shotCoolDown = 0.06f;
 	burstSound = "SFX_X_Burster1";
+	bursterEffectName = "SFX_BursterEffect1";
 	chargeCount = 0.0f;
 	chargeSpeed = 0.01f;
 	isCharging = false;
 	pStatus.firePointY = 12 * SCALE_FACTOR;
-	
+	chargeEffectAlpha = 0;
+	chargeAuraAlpha = 0;
+	bursterEffectAlpha = 0;
+	pStatus.isAttack = false;
+
+	pStatus.attackDelayTimer = 0.0f;
+	pStatus.attackDelayMaxTime = 0.0f;
+
 	// 애니메이션 초기화
 	currentAnim = "X_Spawn";
 	previousAnim = currentAnim;
 	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
 	afterImage = IMAGEMANAGER->findImage(currentAnim);
+	chargeEffect = IMAGEMANAGER->findImage("SFX_Charge");
+	chargeAura = IMAGEMANAGER->findImage("SFX_ChargeAura"); 
+	attackHandEffect = IMAGEMANAGER->findImage(bursterEffectName);
+	// subHandEffect = IMAGEMANAGER->findImage("SFX_WallSlide");
+
 	animSpeed = 0.1f;
 	attChange = false;
 	burstloop = false;
 	aniDash = false;
-	chargeEffect = IMAGEMANAGER->findImage("SFX_X_Charge");
 
 	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y - hitBoxHeight / 2);
+}
+
+void X::specialAttack(void)
+{
+	if (!pStatus.isAttack)
+	{
+		attState = SholderState::Special;
+
+		// if (pStatus.isOnGround) pStatus.movable = false;
+		pStatus.isAttack = true;
+
+		pStatus.velocityX = 0;
+	}
+}
+
+void X::coolDownControl(void)
+{
 }
 
 void X::returnToIdle(void)
@@ -967,14 +1046,11 @@ void X::returnToIdle(void)
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			currentState = CharacterState::Idle;
 		break;
+	
 	default:
 		currentState = CharacterState::Idle;
 		isMoving = false;
 		break;
 	}
-
 	
-	// aniDash = false;
 }
-
-

@@ -19,6 +19,11 @@ HRESULT CameraManager::init(void)
 
     mBtype = BossType::None;
 
+	isAutoMove = false;
+	targetX = 0.0f;
+    targetY = 0.0f;
+	lerpSpeed = 0.05f;
+
     return S_OK;
 }
 
@@ -29,6 +34,7 @@ void CameraManager::release(void)
 
 void CameraManager::update(void)
 {
+#pragma region 페이드 인/아웃 처리
     // 페이드-인
     if (_isBlackPadeIn)
     {
@@ -81,9 +87,30 @@ void CameraManager::update(void)
         }
     }
 
+#pragma endregion
+
+    if (isAutoMove)
+    {
+        camera.x += (targetX - camera.x) * lerpSpeed;
+
+        if(useLerpY) camera.y += (targetY - camera.y) * lerpSpeed;
+
+		bool reachedX = fabs(camera.x - targetX) < 1.0f;
+		bool reachedY = !useLerpY || fabs(camera.y - targetY) < 1.0f;
+
+        // 거의 다 도착했으면 멈춤
+        if (reachedX && reachedY)
+        {
+            camera.x = targetX;
+			if (useLerpY) camera.y = targetY;
+            isAutoMove = false;
+        }
+
+        return;
+    }
+
     setMaxCameraRange();
     cameraOffset();
-    cameraTest();
 }
 
 void CameraManager::render(HDC hdc)
@@ -265,9 +292,27 @@ void CameraManager::setMaxCameraRange()
     }
 }
 
-void CameraManager::cameraTest(void)
+void CameraManager::startAutoMove(float x, float y, bool useY)
 {
-
+    targetX = x;
+    targetY = y;
+    useLerpY = useY;
+    isAutoMove = true;
 }
 
+void CameraManager::bossRoomOffest(void)
+{
+    if (isAutoMove)
+    {
+        camera.x = camera.x + (targetX - camera.x) * lerpSpeed;
 
+        // 거의 다 도착했으면 멈춤
+        if (fabs(camera.x - targetX) < 1.0f)
+        {
+            camera.x = targetX;
+            isAutoMove = false;
+        }
+
+        return; // 자동 이동 중엔 playerPos 무시
+    }
+}

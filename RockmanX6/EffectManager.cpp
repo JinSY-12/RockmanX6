@@ -14,7 +14,7 @@ void EffectManager::update(void)
 {
 	for (_viEffect = _vEffect.begin(); _viEffect != _vEffect.end(); )
 	{
-		(*_viEffect).image->play(0.06f);
+		(*_viEffect).image->play(0.05f);
 		
 		if ((*_viEffect).image->getFrameX() >= (*_viEffect).image->getMaxFrameX())
 		{
@@ -56,10 +56,12 @@ void EffectManager::spawnEffect(EffectType eType, int x, int y, bool direct)
 		_vEffect.push_back(effect);
 		break;
 	case EffectType::DashStartDust:
-		break;
-	case EffectType::DashEndDust:
+		effect.image = IMAGEMANAGER->findImage("SFX_DashBoost")->cloneImage();
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::WallKick:
+		effect.image = IMAGEMANAGER->findImage("SFX_WallKick")->cloneImage();
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::WallSlide:
 		break;

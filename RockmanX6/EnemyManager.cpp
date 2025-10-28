@@ -23,7 +23,7 @@ void EnemyManager::update(void)
 
 	if (_vEnemy.size() > 0)
 	{
-		checkSightCollision();
+		// checkSightCollision();
 		checkHitBoxCollision();
 	}
 }

@@ -15,12 +15,12 @@ HRESULT EnemyBase::init(int x, int y)
 
 void EnemyBase::release(void)
 {
-
+	// Do nothing!
 }
 
 void EnemyBase::update(void)
 {
-
+	// Do nothing!
 }
 
 void EnemyBase::render(void)
@@ -36,41 +36,43 @@ void EnemyBase::render(void)
 
 void EnemyBase::attack(void)
 {
-
+	// Do nothing!
 }
 
 void EnemyBase::setEnemyHitbox(void)
 {
+	int dir = (eStatus.lookRight ? 1 : -1);
+
+	eStatus.attSight.left = ePos.x - CAMERAMANAGER->getCameraPos().x;
+	eStatus.attSight.right = ePos.x + dir * eStatus.sightWidth - CAMERAMANAGER->getCameraPos().x;;
+
+	if (eStatus.attSight.left > eStatus.attSight.right)
+		std::swap(eStatus.attSight.left, eStatus.attSight.right);
+
+	eStatus.attSight.top = ePos.y - (eStatus.height + eStatus.sightHeight) / 2 - CAMERAMANAGER->getCameraPos().y;
+	eStatus.attSight.bottom = ePos.y - (eStatus.height - eStatus.sightHeight) / 2 - CAMERAMANAGER->getCameraPos().y;
+
 	eStatus.eHitBox.left = ePos.x - eStatus.width / 2 - CAMERAMANAGER->getCameraPos().x;
 	eStatus.eHitBox.right = ePos.x + eStatus.width / 2 - CAMERAMANAGER->getCameraPos().x;
-	
+
 	eStatus.eHitBox.top = ePos.y - eStatus.height - CAMERAMANAGER->getCameraPos().y;
 	eStatus.eHitBox.bottom = ePos.y - CAMERAMANAGER->getCameraPos().y;
-
-	int dir;
-	if (eStatus.lookRight) dir = -1;
-	else dir = 1;
-	
-	eStatus.attSight.left = ePos.x - dir * eStatus.sightWidth - CAMERAMANAGER->getCameraPos().x;
-	eStatus.attSight.right = ePos.x - CAMERAMANAGER->getCameraPos().x;
-	
-	eStatus.attSight.top = ePos.y - (eStatus.height + eStatus.sightHeight)/2 - CAMERAMANAGER->getCameraPos().y;
-	eStatus.attSight.bottom = ePos.y - (eStatus.height - eStatus.sightHeight)/2 - CAMERAMANAGER->getCameraPos().y;
 }
 
 void EnemyBase::pattern(void)
 {
-	if (!eStatus.isAtt)
+	if (eStatus.patternTimer >= eStatus.maxPatternTime)	eStatus.attackAble = true;
+		
+	else
 	{
-		patternTimer += 0.1f;
-
-		if (patternTimer >= maxPatternTime)	attackAble = true;
+		eStatus.attackAble = false;
+		eStatus.patternTimer += 0.1f;
 	}
 }
 
 void EnemyBase::chasePlayer(float angle)
 {
-
+	// Do nothing!
 }
 
 void EnemyBase::isDead(void)
@@ -86,7 +88,28 @@ void EnemyBase::changeDirection(void)
 {
 	float angle = atan2f((float)(player->getCharPos().y - ePos.y), (float)(player->getCharPos().x - ePos.x)) * 180 / PI;
 
-	if (angle > -70.0f && angle < 70.0f) eStatus.lookRight = true;
+	if (eState == EnemyState::Idle)
+	{
+		if (angle > -70.0f && angle < 70.0f) eStatus.lookRight = true;
+		else if (angle > 110.0f || angle < -110.0f) eStatus.lookRight = false;
+	}
+}
 
-	else if(angle > 110.0f || angle < -110.0f ) eStatus.lookRight = false;
+void EnemyBase::chekcPlayerCollision(void)
+{
+	// Do nothing!
+}
+
+void EnemyBase::enemyInvincibleTimerUpdate(void)
+{
+	if (eStatus.invincibleTimer >= eStatus.invincibleMaxTime)
+	{
+		eStatus.invincibleTimer = 0.0f;
+		eStatus.overpower = false;
+	}
+
+	else if (eStatus.overpower)
+	{
+		eStatus.invincibleTimer += 0.1f;
+	}
 }

@@ -46,8 +46,16 @@ public:
 
 		bool lookRight;
 		bool isAtt;
-		bool overpower;
 		bool dead;
+
+		float patternTimer;
+		float maxPatternTime;
+		bool attackAble;
+
+		float invincibleTimer;
+		float invincibleMaxTime;
+		bool overpower;
+
 	};
 
 	EnemyStatus eStatus;
@@ -59,9 +67,7 @@ public:
 
 	BulletManager* bManager;
 
-	float patternTimer;
-	float maxPatternTime;
-	bool attackAble;
+
 
 	Player* player;
 
@@ -95,7 +101,7 @@ public:
 
 	int getCurrentHp(void) { return eStatus.hp; }
 
-	bool getAttAble(void) { return attackAble; }
+	bool getAttAble(void) { return eStatus.attackAble; }
 	bool getIsDead(void) { return eStatus.dead; }
 
 	void isDead(void);
@@ -108,5 +114,9 @@ public:
 	void changeDirection(void);
 
 	void settingPlayer(Player* p) { player = p; }
+	virtual void chekcPlayerCollision(void);
+
+	void enemyInvincibleTimerUpdate(void);
+
 };
 

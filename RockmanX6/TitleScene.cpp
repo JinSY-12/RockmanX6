@@ -195,12 +195,9 @@ void TitleScene::addImage(void)
 	//////////////////////////////////
 
 	//// 배경 스테이지 ////
-
 	// 인트로 스테이지
-	// IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 974 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 974 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 974 * SCALE_FACTOR, true, MAGENTA);
-
 
 	//////////////////////////////////
 	// 캐릭터 이미지
@@ -208,12 +205,15 @@ void TitleScene::addImage(void)
 
 	//// 애니메이션////
 
+	// 이펙트
+	IMAGEMANAGER->addFrameImage("SFX_DashBoost", "Resources/Image/SFX/SFX_DashBoost.bmp", 432 * SCALE_FACTOR, 78 * SCALE_FACTOR, 8, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_WallKick", "Resources/Image/SFX/SFX_WallKick.bmp", 136 * SCALE_FACTOR, 68 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+
 	//////////////////////////////////
 	// 엑스
 	//////////////////////////////////
 
 	// 엑스 이미지
-
 	IMAGEMANAGER->addFrameImage("X_Spawn", "Resources/Image/Player/X/X_Spawn.bmp", 1156 * SCALE_FACTOR, 192 * SCALE_FACTOR, 17, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Idle", "Resources/Image/Player/X/X_Idle.bmp", 140 * SCALE_FACTOR, 92 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_WalkStart", "Resources/Image/Player/X/X_WalkStart.bmp", 96 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
@@ -251,11 +251,22 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_SmallDamaged", "Resources/Image/Player/X/X_SmallDamaged.bmp", 324 * SCALE_FACTOR, 116 * SCALE_FACTOR, 9, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_LargeDamaged", "Resources/Image/Player/X/X_LargeDamaged.bmp", 644 * SCALE_FACTOR, 116 * SCALE_FACTOR, 14, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("X_Saber", "Resources/Image/Player/X/X_Saber.bmp", 1695 * SCALE_FACTOR, 144 * SCALE_FACTOR, 15, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_JumpSaber", "Resources/Image/Player/X/X_JumpSaber.bmp", 800 * SCALE_FACTOR, 128 * SCALE_FACTOR, 8, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_WallSlideSaber", "Resources/Image/Player/X/X_WallSlideSaber.bmp", 920 * SCALE_FACTOR, 120 * SCALE_FACTOR, 10, 2, true, MAGENTA);
+
 	// 엑스 웨폰
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/Bullet/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/Bullet/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Burster3", "Resources/Image/Player/Bullet/X/SFX_Burster3_Bullet.bmp", 183 * SCALE_FACTOR, 60 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 
+	// 엑스 이펙트
+	IMAGEMANAGER->addFrameImage("SFX_Charge", "Resources/Image/Player/Effect/X/SFX_Charge.bmp", 518 * SCALE_FACTOR, 148 * SCALE_FACTOR, 7, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_ChargeAura", "Resources/Image/Player/Effect/X/SFX_ChargeAura.bmp", 320 * SCALE_FACTOR, 128 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("SFX_BursterEffect1", "Resources/Image/Player/Effect/X/SFX_Burster1_Effect.bmp", 100 * SCALE_FACTOR, 52 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_BursterEffect2", "Resources/Image/Player/Effect/X/SFX_Burster2_Effect.bmp", 56 * SCALE_FACTOR, 48 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_BursterEffect3", "Resources/Image/Player/Effect/X/SFX_Burster3_Effect.bmp", 348 * SCALE_FACTOR, 156 * SCALE_FACTOR, 6, 2, true, MAGENTA);
 
 	//////////////////////////////////
 	// 제로
@@ -265,6 +276,7 @@ void TitleScene::addImage(void)
 
 	// 제로 웨폰
 
+	// 제로 이펙트
 
 	//// 머그샷////
 
@@ -289,8 +301,6 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("SFX_JunkBullet", "Resources/Image/Enemy/Bullet/Minion/SFX_JunkBullet.bmp", 16 * SCALE_FACTOR, 32 * SCALE_FACTOR, 1 , 2, true, MAGENTA);
 
 	IMAGEMANAGER->addFrameImage("SFX_Explosion", "Resources/Image/SFX/SFX_Explosion.bmp", 610 * SCALE_FACTOR, 86 * SCALE_FACTOR, 10, 2, true, MAGENTA);
-	
-	// IMAGEMANAGER->addFrameImage("SFX_Explosion", "Resources/Image/Enemy/SFX/SFX_Explosion.bmp", 610 * SCALE_FACTOR, 86 * SCALE_FACTOR, 10, 2, true, MAGENTA);
 
 	//////////////////////////////////
 	// 보스
@@ -429,6 +439,9 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_X_Burster1Hit", "Resources/Sound/SFX/Character/X/SFX_X_Burster1Hit.wav", false, false);
 	
 	SOUNDMANAGER->addSound("SFX_Jump", "Resources/Sound/SFX/Character/SFX_Jump.wav", false, false);
+
+	SOUNDMANAGER->addSound("SFX_WallTouch", "Resources/Sound/SFX/Character/SFX_WallTouch.wav", false, false);
+
 	
 	//////////////////////////////////
 	// 제로

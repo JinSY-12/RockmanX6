@@ -17,5 +17,7 @@ public:
 	void animChange();
 
 	void attack(void) override;
+
+	void chekcPlayerCollision(void)	override;
 };
 

@@ -39,10 +39,12 @@ HRESULT Junkroid::init(int x, int y)
 
     eStatus.lookRight = false;
 
-    patternTimer = 0.0f;
-    maxPatternTime = 15.0f;
-
+    eStatus.patternTimer = 0.0f;
+    eStatus.maxPatternTime = 15.0f;
+	eStatus.invincibleTimer = 0.0f;
+    eStatus.invincibleMaxTime = 3.0f;
     eStatus.isAtt = false;
+
 
     return S_OK;
 }
@@ -56,17 +58,12 @@ void Junkroid::update(void)
 {
     eStatus.eImage->play(0.05f);
 
-    if (patternTimer >= maxPatternTime) attackAble = true;
-
-    else
-    {
-        attackAble = false;
-        patternTimer += 0.1f;
-    }
-
+    pattern();
     changeDirection();
     setEnemyHitbox();
+    chekcPlayerCollision();
     animChange();
+    enemyInvincibleTimerUpdate();
     isDead();
 }
 
@@ -89,5 +86,17 @@ void Junkroid::attack(void)
 {
     eState = EnemyState::Attack;
     bManager->fire(EnemyBulletType::JunkBullet, ePos.x, ePos.y - eStatus.height / 2 - + fPos.y, eStatus.lookRight);
-    patternTimer = 0.0f;
+    eStatus.patternTimer = 0.0f;
+}
+
+void Junkroid::chekcPlayerCollision()
+{
+    RECT temp;
+    if (IntersectRect(&temp, &eStatus.attSight, &player->getPlayerRect()))
+    {
+        if (eStatus.attackAble)
+        {
+			attack();
+        }
+	}
 }

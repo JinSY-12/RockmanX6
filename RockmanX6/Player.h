@@ -61,7 +61,8 @@ public:
 		None,
 		Burst,
 		LargeBurst,
-		Hold
+		Hold,
+		Special
 	};
 
 	// 캐릭터 상태값
@@ -108,6 +109,7 @@ public:
 		int firePointX;
 		int firePointY;
 
+
 		// 스탯
 		float hp;
 		float maxHp;
@@ -146,6 +148,11 @@ public:
 		bool movable;
 		float invincibleTimer;
 		float invincibleMaxTime;
+
+		// 공격 관련
+		float attackDelayTimer;
+		float attackDelayMaxTime;
+		bool isAttack;
 	};
 
 	struct Progress
@@ -233,6 +240,9 @@ public:
 
 	GImage* afterImage;
 
+	GImage* attackHandEffect;
+	GImage* subHandEffect;
+
 	int colorType;
 	int colorTimer;
 
@@ -250,6 +260,7 @@ public:
 	virtual void jump(void);
 	virtual void dash(bool direction);
 	virtual void attack(void);
+	virtual void specialAttack(void);
 
 	void wallSlide(void);
 	void wallDrop(void);
@@ -375,6 +386,7 @@ public:
 	inline void reduceHp(int damage, BulletSize size) {
 
 		pStatus.hp -= damage;
+		pStatus.isAttack = false;
 
 		if (pStatus.hp > 0)
 		{
@@ -455,5 +467,7 @@ public:
 	virtual void colorChange(void);
 
 	void changeAnimation(const string& animName, int frame);
+
+	virtual void coolDownControl(void);
 };
 

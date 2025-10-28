@@ -67,6 +67,12 @@ private:
 
 	BossType mBtype;
 
+	bool isAutoMove;
+	float targetX;
+	float targetY;
+	float lerpSpeed;
+	bool useLerpY;
+
 public:
 	HRESULT init(void);
 	void release(void);
@@ -104,7 +110,11 @@ public:
 	
 	void setMaxCameraRange(void);
 	void setStage(BossType stage) { mBtype = stage; }
-	void cameraTest(void);
+
+	void startAutoMove(float x, float y, bool useLerpY);
+	void bossRoomOffest(void);
+
+	bool getIsAutoMove() { return isAutoMove; }
 
 	CameraManager() {}
 	~CameraManager() {}

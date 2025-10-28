@@ -44,21 +44,21 @@ HRESULT Burster::init(BulletType type, int x, int y, bool isRight)
 	case BulletType::Buster:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster1")->cloneImage();
-		bStatus.demage = 0;
+		bStatus.demage = 1;
 		bStatus.bType = BulletType::Buster;
 		break;
 
 	case BulletType::ChargeBurst1:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster2")->cloneImage();
-		bStatus.demage = 0;
+		bStatus.demage = 2;
 		bStatus.bType = BulletType::ChargeBurst1;
 		break;
 
 	case BulletType::ChargeBurst2:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster3")->cloneImage();
-		bStatus.demage = 0;
+		bStatus.demage = 4;
 		bStatus.bType = BulletType::ChargeBurst2;
 		break;
 	}
@@ -75,7 +75,7 @@ HRESULT Burster::init(BulletType type, int x, int y, bool isRight)
 	else bStatus.hitBox = RectMake(x - bStatus.width + 4 * SCALE_FACTOR, y - bStatus.shape->getFrameHeight() / 2, bStatus.shape->getFrameWidth() , bStatus.shape->getFrameHeight());
 
 	int direction = isRight ? 1 : -1;
-	bStatus.speed = direction * 20.0f;
+	bStatus.speed = direction * 25.0f;
 	bStatus.isFire = true;
 
 	return S_OK;
@@ -126,7 +126,7 @@ HRESULT JunkBullet::init(EnemyBulletType type, int x, int y, bool isRight)
 	case EnemyBulletType::JunkBullet:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("SFX_JunkBullet")->cloneImage();
-		bStatus.demage = 0;
+		bStatus.demage = 2;
 		break;
 	}
 

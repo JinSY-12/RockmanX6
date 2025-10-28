@@ -90,6 +90,8 @@ void Player::dash(bool direction)
 {
 	pStatus.velocityX = 0.0f;
 	
+	isMoving = false;
+
 	if (direction == true && !pStatus.touchRight)
 	{
 		currentState = CharacterState::Dash;
@@ -105,6 +107,12 @@ void Player::dash(bool direction)
 	}
 
 	else dashSpeed = 0.0f;
+
+	if (pStatus.isOnGround)
+	{
+		if (pStatus.lookRight) EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x + hitBoxWidth / 2 - IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameWidth(), charPos.y + IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameHeight() / 2, pStatus.lookRight);
+		else EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x + hitBoxWidth, charPos.y + IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameHeight() / 2, pStatus.lookRight);
+	}
 }
 
 void Player::sfxPlay(void)
@@ -135,10 +143,9 @@ void Player::sfxPlay(void)
 			SOUNDMANAGER->play("SFX_Jump", 0.5f);
 		}
 
-		
 		else if (currentState == CharacterState::WallKick)
 		{
-
+			SOUNDMANAGER->play("Voice_" + pStatus.charName + "Jump1", 0.5f);
 		}
 		
 		else if (currentState == CharacterState::Dash)
@@ -150,6 +157,12 @@ void Player::sfxPlay(void)
 		else if (currentState == CharacterState::Idle && previousState == CharacterState::Dash)
 		{
 			soundResult = "SFX_DashEnd";
+			SOUNDMANAGER->play(soundResult, 0.5f);
+		}
+
+		else if (currentState == CharacterState::WallSlide)
+		{
+			soundResult = "SFX_WallTouch";
 			SOUNDMANAGER->play(soundResult, 0.5f);
 		}
 
@@ -228,8 +241,6 @@ void Player::wallKick(void)
 	pStatus.velocityY = -9.0f;
 	pStatus.isWallKick = true;
 	
-	SOUNDMANAGER->play("Voice_" + pStatus.charName + "Jump1", 0.5f);
-
 	if (pStatus.lookRight)
 	{
 		pStatus.wallKickRight = true;
@@ -241,6 +252,8 @@ void Player::wallKick(void)
 		}
 
 		else pStatus.velocityX = -6.5f;
+		
+		EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x + hitBoxWidth / 2, charPos.y + IMAGEMANAGER->findImage("SFX_WallKick")->getFrameHeight() / 2, pStatus.lookRight);
 	}
 
 	else
@@ -253,12 +266,19 @@ void Player::wallKick(void)
 			pStatus.velocityX = pStatus.dashSpeed;
 		}
 		else pStatus.velocityX = 6.5f;
+
+		EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x + hitBoxWidth - IMAGEMANAGER->findImage("SFX_WallKick")->getFrameWidth(), charPos.y + IMAGEMANAGER->findImage("SFX_WallKick")->getFrameHeight() / 2, pStatus.lookRight);
 	}
 }
 
 void Player::attack(void)
 {
 	// Do Nothing!!	
+}
+
+void Player::specialAttack(void)
+{
+	// Do Nothing!!
 }
 
 void Player::applyForce(void)
@@ -353,8 +373,8 @@ void Player::spawn(int x, int y)
 void Player::currentAnimChange(void)
 {
 	////////////////////////
-// 워프
-////////////////////////
+	// 워프
+	////////////////////////
 
 	if (currentState == CharacterState::Warp)
 	{
@@ -389,6 +409,18 @@ void Player::currentAnimChange(void)
 			animSpeed = 0.17f;
 			changeAnimation(pStatus.charName + "Idle", 0);
 			break;
+
+		case SholderState::Special:
+			animSpeed = 0.045f;
+			if (previousState == CharacterState::JumpUp || previousState == CharacterState::FallingDown)
+			{
+				attState = SholderState::None;
+				pStatus.movable = true;
+				pStatus.isAttack = false;
+			}
+			else changeAnimation("X_Saber", 0);
+			break;
+
 		}
 	}
 
@@ -412,6 +444,16 @@ void Player::currentAnimChange(void)
 			case SholderState::None:
 				changeAnimation(pStatus.charName + "WalkStart", 0);
 				break;
+			case SholderState::Special:
+				if (previousState == CharacterState::JumpUp || previousState == CharacterState::FallingDown)
+				{
+					attState = SholderState::None;
+					pStatus.movable = true;
+					pStatus.isAttack = false;
+				}
+				else changeAnimation("X_Saber", 0);
+				animSpeed = 0.045f;
+				break;
 			}
 
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) isMoving = true;
@@ -433,6 +475,16 @@ void Player::currentAnimChange(void)
 				if (previousAnim == pStatus.charName + "WalkStart") changeAnimation(pStatus.charName + "WalkLoop", 0);
 				else changeAnimation(pStatus.charName + "WalkLoop", pStatus.player->getFrameX());
 				break;
+			case SholderState::Special:
+				animSpeed = 0.045f;
+				if (previousState == CharacterState::JumpUp || previousState == CharacterState::FallingDown)
+				{
+					attState = SholderState::None;
+					pStatus.movable = true;
+					pStatus.isAttack = false;
+				}
+				else changeAnimation("X_Saber", 0);
+				break;
 			}
 		}
 	}
@@ -449,6 +501,8 @@ void Player::currentAnimChange(void)
 
 			switch (attState)
 			{
+			case SholderState::Special:
+				animSpeed = 0.045f;
 			case SholderState::Burst:
 			case SholderState::LargeBurst:
 				changeAnimation(pStatus.charName + "DashBurstStart", 0);
@@ -457,6 +511,19 @@ void Player::currentAnimChange(void)
 			case SholderState::None:
 				changeAnimation(pStatus.charName + "DashStart", 0);
 				break;
+			
+				/*
+
+				if (previousState == CharacterState::JumpUp || previousState == CharacterState::FallingDown)
+				{
+					attState = SholderState::None;
+					pStatus.movable = true;
+					pStatus.isAttack = false;
+				}
+				
+				else changeAnimation("X_Saber", 0);
+				break;
+				*/
 			}
 
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) isMoving = true;
@@ -468,6 +535,8 @@ void Player::currentAnimChange(void)
 
 			switch (attState)
 			{
+			case SholderState::Special:
+				animSpeed = 0.045f;
 			case SholderState::Burst:
 			case SholderState::LargeBurst:
 				if (previousAnim == pStatus.charName + "DashBurstStart") changeAnimation(pStatus.charName + "DashBurstLoop", 0);
@@ -478,6 +547,17 @@ void Player::currentAnimChange(void)
 				if (previousAnim == pStatus.charName + "DashStart") changeAnimation(pStatus.charName + "DashLoop", 0);
 				else changeAnimation(pStatus.charName + "DashLoop", pStatus.player->getFrameX());
 				break;
+			
+				/*
+				if (previousState == CharacterState::JumpUp || previousState == CharacterState::FallingDown)
+				{
+					attState = SholderState::None;
+					pStatus.movable = true;
+					pStatus.isAttack = false;
+				}
+				else changeAnimation("X_Saber", 0);
+				break;
+				*/
 			}
 		}
 	}
@@ -496,12 +576,15 @@ void Player::currentAnimChange(void)
 		case SholderState::LargeBurst:
 			if (previousAnim == pStatus.charName + "DashEnd") changeAnimation(pStatus.charName + "DashEndBurst", pStatus.player->getFrameX());
 			else changeAnimation(pStatus.charName + "DashEndBurst", 0);
-
 			break;
 		case SholderState::Hold:
 		case SholderState::None:
 			if (previousAnim == pStatus.charName + "DashEndBurst") changeAnimation(pStatus.charName + "DashEnd", pStatus.player->getFrameX());
 			else changeAnimation(pStatus.charName + "DashEnd", 0);
+			break;
+		case SholderState::Special:
+			animSpeed = 0.045f;
+			changeAnimation("X_Saber", 0);
 			break;
 		}
 	}
@@ -520,12 +603,21 @@ void Player::currentAnimChange(void)
 		case SholderState::LargeBurst:
 			if (previousAnim == pStatus.charName + "Jump") changeAnimation(pStatus.charName + "JumpBurst", pStatus.player->getFrameX());
 			else changeAnimation(pStatus.charName + "JumpBurst", 0);
-
 			break;
 		case SholderState::Hold:
 		case SholderState::None:
 			if (previousAnim == pStatus.charName + "JumpBurst") changeAnimation(pStatus.charName + "Jump", pStatus.player->getFrameX());
 			else changeAnimation(pStatus.charName + "Jump", 0);
+			break;
+		case SholderState::Special:
+			animSpeed = 0.045f;
+			if (previousState == CharacterState::WallKick)
+			{
+				attState = SholderState::None;
+				pStatus.movable = true;
+				pStatus.isAttack = false;
+			}
+			else changeAnimation("X_JumpSaber", 0);
 			break;
 		}
 
@@ -546,12 +638,24 @@ void Player::currentAnimChange(void)
 		case SholderState::LargeBurst:
 			if (previousAnim == pStatus.charName + "Jump") changeAnimation(pStatus.charName + "JumpBurst", pStatus.player->getFrameX());
 			else changeAnimation(pStatus.charName + "JumpBurst", 5);
-
 			break;
 		case SholderState::Hold:
 		case SholderState::None:
 			if (previousAnim == pStatus.charName + "JumpBurst") changeAnimation(pStatus.charName + "Jump", pStatus.player->getFrameX());
 			else changeAnimation(pStatus.charName + "Jump", 5);
+			break;
+		case SholderState::Special:
+			animSpeed = 0.045f;
+			if (pStatus.charName == "X_")
+			{
+				if (previousState == CharacterState::WallKick || previousState == CharacterState::WallSlide)
+				{
+					attState = SholderState::None;
+					pStatus.movable = true;
+					pStatus.isAttack = false;
+				}
+				else changeAnimation("X_JumpSaber", 0);
+			}
 			break;
 		}
 
@@ -579,6 +683,16 @@ void Player::currentAnimChange(void)
 			if (previousAnim == pStatus.charName + "WallSlideBurst") changeAnimation(pStatus.charName + "WallSlide", pStatus.player->getFrameX());
 			else changeAnimation(pStatus.charName + "WallSlide", 0);
 			break;
+		case SholderState::Special:
+			animSpeed = 0.045f;
+			if (previousState == CharacterState::JumpUp || previousState == CharacterState::FallingDown)
+			{
+				attState = SholderState::None;
+				pStatus.movable = true;
+				pStatus.isAttack = false;
+			}
+			else changeAnimation("X_WallSlideSaber", 0);
+			break;
 		}
 
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
@@ -598,12 +712,23 @@ void Player::currentAnimChange(void)
 		case SholderState::LargeBurst:
 			if (previousAnim == pStatus.charName + "WallKick") changeAnimation(pStatus.charName + "WallKickBurst", pStatus.player->getFrameX());
 			else changeAnimation(pStatus.charName + "WallKickBurst", 0);
-
 			break;
+
 		case SholderState::Hold:
 		case SholderState::None:
 			if (previousAnim == pStatus.charName + "WallKickBurst") changeAnimation(pStatus.charName + "WallKick", pStatus.player->getFrameX());
 			else changeAnimation(pStatus.charName + "WallKick", 0);
+			break;
+
+		case SholderState::Special:
+			animSpeed = 0.045f;
+			if (previousState == CharacterState::WallSlide || previousState == CharacterState::JumpUp || previousState == CharacterState::FallingDown)
+			{
+				attState = SholderState::None;
+				pStatus.movable = true;
+				pStatus.isAttack = false;
+			}
+			else changeAnimation("X_JumpSaber", 0);
 			break;
 		}
 
@@ -611,16 +736,31 @@ void Player::currentAnimChange(void)
 	}
 
 	////////////////////////
-	// 데미지
+	// 데미지 애니메이션 종료
 	////////////////////////
 
 	else if (currentState == CharacterState::OverPower)
 	{
-		animSpeed = 0.1f;
+		animSpeed = 0.08f;
 
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.movable = true;
 	}
 
+	////////////////////////
+	// 세이버 애니메이션 종료
+	////////////////////////
+
+	if (attState == SholderState::Special)
+	{
+		if (pStatus.player->getFrameX() >= 3) pStatus.movable = false;
+		
+		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+		{
+			attState = SholderState::None;
+			pStatus.movable = true;
+			pStatus.isAttack = false;
+		}
+	}
 
 	////////////////////////
 	// 공격 애니메이션 타이밍 체크
@@ -640,6 +780,8 @@ void Player::currentAnimChange(void)
 			else if (currentState == CharacterState::Idle) attState = SholderState::Hold;
 		}
 	}
+
+	else if(attState == SholderState::None) pStatus.isAttack = false;
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom;
@@ -687,6 +829,11 @@ void Player::changeAnimation(const string& animName, int frame)
 		pStatus.player = IMAGEMANAGER->findImage(currentAnim);
 		pStatus.player->setFrameX(frame);
 	}
+}
+
+void Player::coolDownControl()
+{
+	// Do Nothing!!
 }
 
 string Player::printBodyState(void)
