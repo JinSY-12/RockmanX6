@@ -352,9 +352,7 @@ void X::update(void)
 #pragma region Animation Change + SFX Sound Play
 
 	applyForce();
-	sfxPlay();
 	currentAnimChange();
-
 	pStatus.player->play(animSpeed);
 	attackHandEffect->play(0.06f);
 	bursterEffectAlphaDown();
@@ -370,8 +368,8 @@ void X::update(void)
 
 void X::render(void)
 {
-	pStatus.player->frameAlphaRender(getMemDC(), hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 - animOffset.x,
-		hitBoxCenter.y - pStatus.player->getFrameHeight() - animOffset.y,
+	pStatus.player->frameAlphaRender(getMemDC(), hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
+		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
 		pStatus.player->getFrameX(), pStatus.lookRight, 255);
 	
 	chargeEffect->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
@@ -988,14 +986,14 @@ void X::spawn(int x, int y)
 	pStatus.attackDelayMaxTime = 0.0f;
 
 	// 애니메이션 초기화
-	currentAnim = "X_Spawn";
+	previousAnim = "X_Spawn";
+	currentAnim = "X_Idle";
 	previousAnim = currentAnim;
 	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
 	afterImage = IMAGEMANAGER->findImage(currentAnim);
 	chargeEffect = IMAGEMANAGER->findImage("SFX_Charge");
 	chargeAura = IMAGEMANAGER->findImage("SFX_ChargeAura"); 
 	attackHandEffect = IMAGEMANAGER->findImage(bursterEffectName);
-	// subHandEffect = IMAGEMANAGER->findImage("SFX_WallSlide");
 
 	animSpeed = 0.1f;
 	attChange = false;
@@ -1011,7 +1009,7 @@ void X::specialAttack(void)
 	{
 		attState = SholderState::Special;
 
-		// if (pStatus.isOnGround) pStatus.movable = false;
+		if (pStatus.isOnGround) pStatus.movable = false;
 		pStatus.isAttack = true;
 
 		pStatus.velocityX = 0;

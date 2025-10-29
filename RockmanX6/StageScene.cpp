@@ -148,7 +148,7 @@ void StageScene::enemySettting(BossType bType)
 	{
 		// ¿Œ∆Æ∑Œ
 	case BossType::Intro:
-		eManager.spawnEnemy(EnemyType::Junkroid, 1300, 2680);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1300, 2680);
 		// eManager.spawnEnemy(EnemyType::Junkroid, 1800, 2680);
 		break;
 

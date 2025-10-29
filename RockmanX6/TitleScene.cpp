@@ -241,10 +241,7 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addFrameImage("X_DashBurstStart", "Resources/Image/Player/X/X_DashBurstStart.bmp", 132 * SCALE_FACTOR, 86 * SCALE_FACTOR, 2, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_DashBurstLoop", "Resources/Image/Player/X/X_DashBurstLoop.bmp", 198 * SCALE_FACTOR, 86 * SCALE_FACTOR, 3, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_Dash", "Resources/Image/Player/X/X_Dash.bmp", 330 * SCALE_FACTOR, 86 * SCALE_FACTOR, 5, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_DashBurst", "Resources/Image/Player/X/X_DashBurst.bmp", 330 * SCALE_FACTOR, 86 * SCALE_FACTOR, 5, 2, true, MAGENTA);
-
+	
 	IMAGEMANAGER->addFrameImage("X_DashEnd", "Resources/Image/Player/X/X_DashEnd.bmp", 264 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_DashEndBurst", "Resources/Image/Player/X/X_DashEndBurst.bmp", 264 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 
@@ -442,6 +439,8 @@ void TitleScene::addSound(void)
 
 	SOUNDMANAGER->addSound("SFX_WallTouch", "Resources/Sound/SFX/Character/SFX_WallTouch.wav", false, false);
 
+	SOUNDMANAGER->addSound("SFX_X_Saber", "Resources/Sound/SFX/Character/X/SFX_X_Saber.wav", false, false);
+	
 	
 	//////////////////////////////////
 	// Á¦·Î

@@ -42,7 +42,7 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.patternTimer = 0.0f;
     eStatus.maxPatternTime = 15.0f;
 	eStatus.invincibleTimer = 0.0f;
-    eStatus.invincibleMaxTime = 3.0f;
+    eStatus.invincibleMaxTime = 0.0f;
     eStatus.isAtt = false;
 
 
