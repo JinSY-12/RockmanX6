@@ -59,6 +59,7 @@ public:
 
 	// 상태 조절 관련
 	void coolDownControl(void) override;
+	void multiHitControl(void) override;
 
 	// 기능용 함수
 	void returnToIdle(void);

@@ -163,6 +163,8 @@ public:
     }
 
     // ÇÁ·¹ÀÓ X
+
+
     inline int getFrameX(void) { return _imageInfo->currentFrameX; }
     inline void setFrameX(int frameX)
     {

@@ -102,13 +102,14 @@ public:
 	{
 		// 판정 및 이미지
 		GImage* player;
+
 		RECT hitBox;
+		RECT saberHitBox;
 		RECT floorCheck;
 
 		string charName;
 		int firePointX;
 		int firePointY;
-
 
 		// 스탯
 		float hp;
@@ -153,6 +154,8 @@ public:
 		float attackDelayTimer;
 		float attackDelayMaxTime;
 		bool isAttack;
+		
+		
 	};
 
 	struct Progress
@@ -248,6 +251,10 @@ public:
 
 	BulletType bulletType;
 
+	// 세이버 다단히트 관련
+	bool canHit;
+	bool worldDelay;
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -269,6 +276,7 @@ public:
 	// 캐릭터 공통 상태값
 	void applyForce(void);
 	void sfxPlay(void);
+	void soundPlay(string soundName);
 	void setBulletManager(BulletManager* manager) { bManager = manager; };
 
 	// 캐릭터 스폰
@@ -296,6 +304,9 @@ public:
 	
 	inline bool getPlayerSight(void) { return pStatus.lookRight; }
 	inline bool getOverPower(void) { return pStatus.invincible; }
+
+	inline bool getCanHit(void) { return canHit; }
+	inline bool getWorldDelay(void) { return worldDelay; }
 
 	// 상태값
 	inline void setLeftCollision(bool left, int leftline)
@@ -469,5 +480,6 @@ public:
 	void changeAnimation(const string& animName, int frame);
 
 	virtual void coolDownControl(void);
+	virtual void multiHitControl(void);
 };
 

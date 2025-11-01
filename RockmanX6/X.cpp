@@ -92,7 +92,7 @@ void X::update(void)
 	// 플레이어의 게임 플레이 파트
 	/////////////////////////////////
 
-	if (inputEnabled == true)
+	if (inputEnabled == true && worldDelay == false)
 	{
 		/////////////////////////////////
 		// 이동
@@ -354,10 +354,11 @@ void X::update(void)
 	applyForce();
 	currentAnimChange();
 	pStatus.player->play(animSpeed);
-	attackHandEffect->play(0.06f);
+	attackHandEffect->play(0.05f);
 	bursterEffectAlphaDown();
 
 	frameCheck();
+	multiHitControl();
 	isDead();
 	invincibleTimerUpdate();
 	
@@ -371,7 +372,7 @@ void X::render(void)
 	pStatus.player->frameAlphaRender(getMemDC(), hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
 		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
 		pStatus.player->getFrameX(), pStatus.lookRight, 255);
-	
+
 	chargeEffect->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
 		hitBoxCenter.y - chargeEffect->getFrameHeight() + 10 * SCALE_FACTOR,
 		chargeEffect->getFrameX(), pStatus.lookRight, chargeEffectAlpha);
@@ -380,10 +381,19 @@ void X::render(void)
 		hitBoxCenter.y - chargeAura->getFrameHeight() + 10 * SCALE_FACTOR,
 		chargeAura->getFrameX(), pStatus.lookRight, chargeAuraAlpha);
 
-	attackHandEffect->frameAlphaRender(getMemDC(), hitBoxCenter.x - attackHandEffect->getFrameWidth() / 2,
-		hitBoxCenter.y - attackHandEffect->getFrameHeight(),
-		attackHandEffect->getFrameX(), pStatus.lookRight, bursterEffectAlpha);
+	pStatus.firePointX = 0 * SCALE_FACTOR;
+	// pStatus.firePointY = 0 * SCALE_FACTOR;
+	
+	busterPos.y = 0 * SCALE_FACTOR;
 
+	int aimX;
+	if (pStatus.lookRight) aimX = pStatus.hitBox.right;
+	else aimX = pStatus.hitBox.left - attackHandEffect->getFrameWidth();
+
+	attackHandEffect->frameAlphaRender(getMemDC(), aimX + pStatus.firePointX + busterPos.x,
+		pStatus.hitBox.top - attackHandEffect->getFrameHeight()/2 + pStatus.firePointY + busterPos.y,
+		attackHandEffect->getFrameX(), pStatus.lookRight, bursterEffectAlpha);
+	
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
 		// 캐릭터 좌표
@@ -481,6 +491,8 @@ void X::attack(void)
 		bursterEffectAlpha = 255;
 		attackHandEffect->setFrameX(0);
 
+		busterPos.x = 0 * SCALE_FACTOR;
+
 		burstloop = true;
 		lastShootTime = now;
 		isCharging = false;
@@ -510,6 +522,8 @@ void X::chargeBurst(void)
 			bursterEffectName = "SFX_BursterEffect2";
 			bursterEffectAlpha = 255;
 			attackHandEffect->setFrameX(0);
+
+			busterPos.x = 0 * SCALE_FACTOR;
 
 			// 공격 회수 장면을 위한 타이머 저장 -> 안하면 바로 내림ㅋㅋ
 			attackTimer = TIMEMANAGER->getWorldTime();
@@ -541,6 +555,9 @@ void X::chargeBurst(void)
 			bursterEffectName = "SFX_BursterEffect3";
 			bursterEffectAlpha = 255;
 			attackHandEffect->setFrameX(0);
+
+			if(pStatus.lookRight) busterPos.x = -36 * SCALE_FACTOR;
+			else busterPos.x = 36 * SCALE_FACTOR;
 
 			attackTimer = TIMEMANAGER->getWorldTime();
 
@@ -582,7 +599,7 @@ void X::frameCheck(void)
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			{
 				attState = SholderState::Hold;
-				//pStatus.player->setFrameX(0);
+				// pStatus.player->setFrameX(0);
 			}
 		}
 
@@ -592,7 +609,7 @@ void X::frameCheck(void)
 			if(pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			{
 				attState = SholderState::None;
-				//pStatus.player->setFrameX(0);
+				pStatus.player->setFrameX(0);
 			}
 		}
 
@@ -600,14 +617,14 @@ void X::frameCheck(void)
 		{
 			if (burstloop == true)
 			{
-				//pStatus.player->setFrameX(0);
+				pStatus.player->setFrameX(0);
 				burstloop = false;
 			}
 
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			{
 				attState = SholderState::None;
-				//pStatus.player->setFrameX(0);
+				pStatus.player->setFrameX(0);
 			}
 		}
 	}
@@ -963,6 +980,7 @@ void X::spawn(int x, int y)
 	// 무적 초기화
 	pStatus.invincibleMaxTime = 5.0f;
 	pStatus.invincibleTimer = 0.0f;
+	worldDelay = false;
 
 	// 상태 초기화 - 공격 관련
 	normalBurstAble = true;
@@ -981,14 +999,14 @@ void X::spawn(int x, int y)
 	chargeAuraAlpha = 0;
 	bursterEffectAlpha = 0;
 	pStatus.isAttack = false;
+	canHit = false;
 
 	pStatus.attackDelayTimer = 0.0f;
 	pStatus.attackDelayMaxTime = 0.0f;
 
 	// 애니메이션 초기화
-	previousAnim = "X_Spawn";
-	currentAnim = "X_Idle";
-	previousAnim = currentAnim;
+	previousAnim = "X_Idle";
+	currentAnim = "X_Spawn";
 	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
 	afterImage = IMAGEMANAGER->findImage(currentAnim);
 	chargeEffect = IMAGEMANAGER->findImage("SFX_Charge");
@@ -1018,6 +1036,47 @@ void X::specialAttack(void)
 
 void X::coolDownControl(void)
 {
+}
+
+void X::multiHitControl(void)
+{
+	int frame = pStatus.player->getFrameX();
+
+	if (attState == SholderState::Special)
+	{
+		switch (currentState)
+		{
+			case CharacterState::Idle:
+			case CharacterState::Walk:
+			case CharacterState::Dash:
+				if (frame == 3 || frame == 4 || frame == 5)
+				{
+					canHit = true;
+					SOUNDMANAGER->play("SFX_HitTest", 0.5f);
+				}
+				break;
+			case CharacterState::JumpUp:
+			case CharacterState::FallingDown:
+				if (frame == 2 || frame == 4)
+				{
+					canHit = true;
+					SOUNDMANAGER->play("SFX_HitTest", 0.5f);
+				}
+				break;
+			case CharacterState::WallSlide:
+				if (frame == 2 || frame == 4)
+				{
+					canHit = true;
+					SOUNDMANAGER->play("SFX_HitTest", 0.5f);
+				}
+				break;
+			default:
+				canHit = false;
+				break;
+		}
+	}
+
+	else canHit = false;
 }
 
 void X::returnToIdle(void)

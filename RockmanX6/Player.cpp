@@ -212,6 +212,11 @@ void Player::sfxPlay(void)
 		}
 }
 
+void Player::soundPlay(string soundName)
+{
+	
+}
+
 void Player::wallSlide(void)
 {
 	currentState = CharacterState::WallSlide;
@@ -389,6 +394,7 @@ void Player::currentAnimChange(void)
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 16 * SCALE_FACTOR; // 16픽셀 아래로 = 워프 이펙트와 발 위치가 다름
 		}
+				
 		changeAnimation(pStatus.charName + "Spawn", 0);
 	}
 
@@ -398,6 +404,8 @@ void Player::currentAnimChange(void)
 
 	else if (currentState == CharacterState::Idle)
 	{
+		pStatus.firePointY = 10 * SCALE_FACTOR;
+
 		switch (attState)
 		{
 		case SholderState::LargeBurst:
@@ -418,7 +426,7 @@ void Player::currentAnimChange(void)
 			animSpeed = 0.1f;
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
-			changeAnimation(pStatus.charName + "StandBurstLoop", 0);
+			changeAnimation(pStatus.charName + "StandBurstEnd", 0);
 			break;
 
 		case SholderState::None:
@@ -954,7 +962,7 @@ void Player::colorChange(void)
 
 void Player::changeAnimation(const string& animName, int frame)
 {
-	if (currentAnim != animName)
+	if (previousAnim != animName)
 	{
 		currentAnim = animName;
 		pStatus.player = IMAGEMANAGER->findImage(currentAnim);
@@ -1003,6 +1011,11 @@ string Player::printAttState(void)
 }
 
 void Player::setHitBox(void)
+{
+	// Do Nothing!
+}
+
+void Player::multiHitControl(void)
 {
 	// Do Nothing!
 }
