@@ -34,6 +34,7 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	playAble = false;
 	soundOnce = false;
 
+
 	return S_OK;
 }
 
@@ -62,13 +63,9 @@ void StageScene::update(void)
 		// 플레이어는 이미 천장에 소환 되어 있다
 		// 레디 로고 이후에 플레이어의 동작 시작으로 하늘에서 내려오는 연출
 		bManager.update();
-
 		player->update();
-
 		eManager.update();
-
 		EFFECTMANAGER->update();
-
 	}
 
 }
@@ -148,7 +145,7 @@ void StageScene::enemySettting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
-		// eManager.spawnEnemy(EnemyType::Junkroid, 1300, 2680);
+		eManager.spawnEnemy(EnemyType::Junkroid, 1300, 2680);
 		// eManager.spawnEnemy(EnemyType::Junkroid, 1800, 2680);
 		break;
 
@@ -474,3 +471,4 @@ void StageScene::stageCollision(void)
 
 	
 }
+

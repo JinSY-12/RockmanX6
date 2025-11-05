@@ -26,6 +26,8 @@ private:
 
 	string bursterEffectName;
 
+	int test;
+
 public:
 	HRESULT init(void);
 	HRESULT init(int x, int y);

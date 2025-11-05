@@ -92,7 +92,7 @@ void X::update(void)
 	// 플레이어의 게임 플레이 파트
 	/////////////////////////////////
 
-	if (inputEnabled == true && worldDelay == false)
+	if (inputEnabled == true && animDelay == false)
 	{
 		/////////////////////////////////
 		// 이동
@@ -350,18 +350,22 @@ void X::update(void)
 #pragma endregion
 
 #pragma region Animation Change + SFX Sound Play
+	
 
-	applyForce();
-	currentAnimChange();
-	pStatus.player->play(animSpeed);
-	attackHandEffect->play(0.05f);
-	bursterEffectAlphaDown();
+	if (!animDelay)
+	{
+		applyForce();
+		currentAnimChange();
+		pStatus.player->play(animSpeed);
+		attackHandEffect->play(0.05f);
+		bursterEffectAlphaDown();
+		frameCheck();
+	}
 
-	frameCheck();
 	multiHitControl();
 	isDead();
 	invincibleTimerUpdate();
-	
+
 	UIMANAGER->setCurrentPlayerStatus(pStatus.hp, pStatus.mp, pStatus.maxHp, progress.life);
 
 #pragma endregion
@@ -460,6 +464,7 @@ void X::render(void)
 		// 히트박스 출력
 		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
 		DrawRectMakeColor(getMemDC(), pStatus.floorCheck, RGB(0, 0, 255), 2);
+		DrawRectMakeColor(getMemDC(), pStatus.saberHitBox, RGB(255, 0, 255), 2);
 	}
 }
 
@@ -689,6 +694,9 @@ void X::setHitBox(void)
 	}
 
 	pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - 5 * SCALE_FACTOR, pStatus.hitBox.bottom, 10 * SCALE_FACTOR, 5);
+	
+	if(pStatus.lookRight) pStatus.saberHitBox = RectMake(pStatus.hitBox.right, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
+	else pStatus.saberHitBox = RectMake(pStatus.hitBox.left - saberWidth, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
 }
 
 void X::colorSetting(void)
@@ -920,9 +928,13 @@ void X::spawn(int x, int y)
 
 	pStatus.hitBox = RectMakeCenter(charPos.x, 0 - hitBoxHeight / 2, hitBoxWidth, hitBoxHeight);
 	pStatus.floorCheck = RectMakeCenter(charPos.x, charPos.y, 10, 4);
+	pStatus.saberHitBox = RectMakeCenter(charPos.x, charPos.y, 10, 4);
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom - hitBoxHeight;
+
+	saberWidth = 1;
+	saberHeight = 1;
 
 	// 캐릭터 세팅
 	pStatus.hp = pStatus.maxHp;
@@ -936,7 +948,7 @@ void X::spawn(int x, int y)
 	pStatus.wallKickRight = true;
 	progress.life = 2;
 	UIMANAGER->setMaxHp(pStatus.maxHp);
-
+	pStatus.saberDamage = 1;
 	////////////////////
 	// 상태 초기화
 	////////////////////
@@ -980,7 +992,6 @@ void X::spawn(int x, int y)
 	// 무적 초기화
 	pStatus.invincibleMaxTime = 5.0f;
 	pStatus.invincibleTimer = 0.0f;
-	worldDelay = false;
 
 	// 상태 초기화 - 공격 관련
 	normalBurstAble = true;
@@ -1000,9 +1011,13 @@ void X::spawn(int x, int y)
 	bursterEffectAlpha = 0;
 	pStatus.isAttack = false;
 	canHit = false;
+	test = false;
 
 	pStatus.attackDelayTimer = 0.0f;
 	pStatus.attackDelayMaxTime = 0.0f;
+
+	multiHitTimer = 0.0f;
+	multiHitMaxTime = 0.2f;
 
 	// 애니메이션 초기화
 	previousAnim = "X_Idle";
@@ -1012,6 +1027,9 @@ void X::spawn(int x, int y)
 	chargeEffect = IMAGEMANAGER->findImage("SFX_Charge");
 	chargeAura = IMAGEMANAGER->findImage("SFX_ChargeAura"); 
 	attackHandEffect = IMAGEMANAGER->findImage(bursterEffectName);
+
+	prevFrame = -1;
+	currentFrame = pStatus.player->getFrameX();
 
 	animSpeed = 0.1f;
 	attChange = false;
@@ -1041,42 +1059,104 @@ void X::coolDownControl(void)
 void X::multiHitControl(void)
 {
 	int frame = pStatus.player->getFrameX();
-
-	if (attState == SholderState::Special)
+	
+	if (!animDelay)
 	{
-		switch (currentState)
+		if (attState == SholderState::Special)
 		{
+			switch (currentState)
+			{
 			case CharacterState::Idle:
 			case CharacterState::Walk:
 			case CharacterState::Dash:
-				if (frame == 3 || frame == 4 || frame == 5)
+				canHit = prevFrame != frame && (frame == 3 || frame == 4 || frame == 5);
+				// Saber 3 4 5 = 43 * 43 / 54 * 70 / 55 * 55
+				switch(frame)
 				{
-					canHit = true;
-					SOUNDMANAGER->play("SFX_HitTest", 0.5f);
+					case 3:
+						saberWidth = 60 * SCALE_FACTOR;
+						saberHeight = 43 * SCALE_FACTOR;
+						saberOffsetY = -8 * SCALE_FACTOR;
+						pStatus.saberDamage = 1;
+						// animDelay = true;
+						break;
+					case 4:
+						saberWidth = 65 * SCALE_FACTOR;
+						saberHeight = 70 * SCALE_FACTOR;
+						saberOffsetY = 8 * SCALE_FACTOR;
+						pStatus.saberDamage = 1;
+						// animDelay = true;
+						break;
+					case 5:
+						saberWidth = 66 * SCALE_FACTOR;
+						saberHeight = 55 * SCALE_FACTOR;
+						saberOffsetY = 9 * SCALE_FACTOR;
+						pStatus.saberDamage = 2;
+						// animDelay = true;
+						break;
 				}
 				break;
 			case CharacterState::JumpUp:
 			case CharacterState::FallingDown:
-				if (frame == 2 || frame == 4)
+				canHit = prevFrame != frame && (frame == 3 || frame == 4);
+				// Jump 3 4 = 50 * 46 / 60 * 52
+				switch (frame)
 				{
-					canHit = true;
-					SOUNDMANAGER->play("SFX_HitTest", 0.5f);
+				case 3:
+					saberWidth = 50 * SCALE_FACTOR;
+					saberHeight = 46 * SCALE_FACTOR;
+					saberOffsetY = 0;
+					pStatus.saberDamage = 1;
+					break;
+				case 4:
+					saberWidth = 60 * SCALE_FACTOR;
+					saberHeight = 52 * SCALE_FACTOR;
+					saberOffsetY = 0;
+					pStatus.saberDamage = 1;
+					break;
 				}
 				break;
 			case CharacterState::WallSlide:
-				if (frame == 2 || frame == 4)
+				canHit = prevFrame != frame && (frame == 2 || frame == 3);
+				// Wall 2 3 = 58 * 44 / 58 * 40
+				switch (frame)
 				{
-					canHit = true;
-					SOUNDMANAGER->play("SFX_HitTest", 0.5f);
+				case 2:
+					saberWidth = 58 * SCALE_FACTOR;
+					saberHeight = 44 * SCALE_FACTOR;
+					saberOffsetY = 0;
+					pStatus.saberDamage = 1;
+					break;
+				case 3:
+					saberWidth = 58 * SCALE_FACTOR;
+					saberHeight = 40 * SCALE_FACTOR;
+					saberOffsetY = 0;
+					pStatus.saberDamage = 1;
+					break;
 				}
 				break;
 			default:
 				canHit = false;
 				break;
+			}
 		}
+		else canHit = false;
 	}
 
-	else canHit = false;
+	else
+	{
+		multiHitTimer += 0.1f;
+
+		if (multiHitTimer > multiHitMaxTime)
+		{
+			multiHitTimer = 0.0f;
+			animDelay = false;
+			cout << "1111111111" << endl;
+		}
+		canHit = false;
+	}
+
+	prevFrame = frame;
 }
 
 void X::returnToIdle(void)

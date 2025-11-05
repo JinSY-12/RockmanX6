@@ -441,7 +441,7 @@ void TitleScene::addSound(void)
 
 	SOUNDMANAGER->addSound("SFX_X_Saber", "Resources/Sound/SFX/Character/X/SFX_X_Saber.wav", false, false);
 	
-	SOUNDMANAGER->addSound("SFX_HitTest", "Resources/Sound/SFX/Character/SFX_HitTest.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_SaberHit", "Resources/Sound/SFX/Character/SFX_SaberHit.wav", false, false);
 	
 	
 	//////////////////////////////////

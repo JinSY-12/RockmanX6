@@ -61,7 +61,7 @@ void Junkroid::update(void)
     pattern();
     changeDirection();
     setEnemyHitbox();
-    chekcPlayerCollision();
+    // chekcPlayerCollision();
     animChange();
     enemyInvincibleTimerUpdate();
     isDead();

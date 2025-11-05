@@ -24,6 +24,7 @@ void EnemyManager::update(void)
 	if (_vEnemy.size() > 0)
 	{
 		// checkSightCollision();
+		checkAttackCollision();
 		checkHitBoxCollision();
 	}
 }
@@ -38,6 +39,26 @@ void EnemyManager::render(void)
 
 void EnemyManager::checkAttackCollision(void)
 {
+	for (_viEnemy = _vEnemy.begin(); _viEnemy != _vEnemy.end(); )
+	{
+		RECT temp;
+		if (IntersectRect(&temp, &_player->getSaberRect(), &(*_viEnemy)->getEnemyHitBox()) && !(*_viEnemy)->getOverPower() && _player->getCanHit())
+		{
+			(*_viEnemy)->reduceHp(_player->getSaberDamage());
+			_player->setAnimDelay(true);
+			SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
+		}
+
+		if ((*_viEnemy)->getIsDead())
+		{
+			playExplodeEffect((*_viEnemy)->getEnemyType(), (*_viEnemy)->getEnemyPos().x, (*_viEnemy)->getEnemyPos().y, (*_viEnemy)->getEnemyLook());
+			playExplodeSound((*_viEnemy)->getEnemyType());
+
+			_viEnemy = _vEnemy.erase(_viEnemy);
+		}
+
+		else ++_viEnemy;
+	}
 
 }
 

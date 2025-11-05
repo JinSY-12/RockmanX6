@@ -116,6 +116,7 @@ public:
 		float maxHp;
 		float mp;
 		float maxMp;
+		int saberDamage;
 
 		// 이동 스탯
 		float moveSpeed;
@@ -154,7 +155,6 @@ public:
 		float attackDelayTimer;
 		float attackDelayMaxTime;
 		bool isAttack;
-		
 		
 	};
 
@@ -253,7 +253,17 @@ public:
 
 	// 세이버 다단히트 관련
 	bool canHit;
-	bool worldDelay;
+	bool animDelay;
+
+	int prevFrame;
+	int currentFrame;
+
+	float multiHitTimer;
+	float multiHitMaxTime;
+
+	int saberWidth;
+	int saberHeight;
+	int saberOffsetY;
 
 public:
 	virtual HRESULT init(void);
@@ -296,6 +306,7 @@ public:
 	// settter/getter
 	// 좌표 및 판정
 	RECT getPlayerRect(void) { return pStatus.hitBox; }
+	RECT getSaberRect(void) { return pStatus.saberHitBox; }
 	inline int getPlayerCenter(void) { return charPos.x; }
 	inline int getPlayerTop(void) { return charPos.y - hitBoxHeight; }
 	inline int getPlayerBottom(void) { return charPos.y; }
@@ -306,7 +317,7 @@ public:
 	inline bool getOverPower(void) { return pStatus.invincible; }
 
 	inline bool getCanHit(void) { return canHit; }
-	inline bool getWorldDelay(void) { return worldDelay; }
+	inline int getSaberDamage(void) { return pStatus.saberDamage; }
 
 	// 상태값
 	inline void setLeftCollision(bool left, int leftline)
@@ -388,6 +399,7 @@ public:
 		}
 	}
 	void setOverPower(bool op, BulletSize bullet);
+	void setAnimDelay(bool delay) { animDelay = delay; }
 
 	Progress getProgress(void) { return progress; }
 
@@ -481,5 +493,6 @@ public:
 
 	virtual void coolDownControl(void);
 	virtual void multiHitControl(void);
+
 };
 

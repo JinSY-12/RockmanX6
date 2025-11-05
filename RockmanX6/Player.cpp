@@ -385,7 +385,7 @@ void Player::currentAnimChange(void)
 	////////////////////////
 	// ฟ๖วม
 	////////////////////////
-
+	
 	if (currentState == CharacterState::Warp)
 	{
 		if (pStatus.charName == "X_")
