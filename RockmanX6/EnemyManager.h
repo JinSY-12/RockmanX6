@@ -28,7 +28,7 @@ private:
 	// viBossBase _viBoss;
 	
 	Player* _player;
-	EnemyBase* enemy;
+	EnemyBase* _enemy;
 	BulletManager* _bManager;
 
 	string Map;
@@ -42,9 +42,7 @@ public:
 	void update(void);
 	void render(void);
 	
-	void checkAttackCollision(void);
 	void checkHitBoxCollision(void);
-	void checkSightCollision(void);
 
 	void spawnEnemy(EnemyType eType, int x, int y);
 	void spawnBoss(BossType bType, int x, int y);

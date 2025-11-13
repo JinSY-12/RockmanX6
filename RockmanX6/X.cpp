@@ -363,6 +363,7 @@ void X::update(void)
 	}
 
 	multiHitControl();
+	setHitBox();
 	isDead();
 	invincibleTimerUpdate();
 
@@ -391,8 +392,7 @@ void X::render(void)
 	busterPos.y = 0 * SCALE_FACTOR;
 
 	int aimX;
-	if (pStatus.lookRight) aimX = pStatus.hitBox.right;
-	else aimX = pStatus.hitBox.left - attackHandEffect->getFrameWidth();
+	aimX = pStatus.lookRight ? pStatus.hitBox.right : pStatus.hitBox.left - attackHandEffect->getFrameWidth();
 
 	attackHandEffect->frameAlphaRender(getMemDC(), aimX + pStatus.firePointX + busterPos.x,
 		pStatus.hitBox.top - attackHandEffect->getFrameHeight()/2 + pStatus.firePointY + busterPos.y,
@@ -561,8 +561,7 @@ void X::chargeBurst(void)
 			bursterEffectAlpha = 255;
 			attackHandEffect->setFrameX(0);
 
-			if(pStatus.lookRight) busterPos.x = -36 * SCALE_FACTOR;
-			else busterPos.x = 36 * SCALE_FACTOR;
+			busterPos.x = pStatus.lookRight ? -36 * SCALE_FACTOR : 36 * SCALE_FACTOR;
 
 			attackTimer = TIMEMANAGER->getWorldTime();
 
@@ -693,10 +692,23 @@ void X::setHitBox(void)
 		break;
 	}
 
-	pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - 5 * SCALE_FACTOR, pStatus.hitBox.bottom, 10 * SCALE_FACTOR, 5);
+	pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - hitBoxWidth / 2 + 5, pStatus.hitBox.bottom, hitBoxWidth - 10, 5);
+	// pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - 5 * SCALE_FACTOR, pStatus.hitBox.bottom, 10 * SCALE_FACTOR, 5);
 	
-	if(pStatus.lookRight) pStatus.saberHitBox = RectMake(pStatus.hitBox.right, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
-	else pStatus.saberHitBox = RectMake(pStatus.hitBox.left - saberWidth, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
+	if (pStatus.lookRight)
+	{
+		if(currentState == CharacterState::WallSlide) pStatus.saberHitBox = RectMake(pStatus.hitBox.left - saberWidth + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
+		else
+		{
+			pStatus.saberHitBox = RectMake(pStatus.hitBox.right + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
+		}
+	}
+
+	else
+	{
+		if (currentState == CharacterState::WallSlide) pStatus.saberHitBox = RectMake(pStatus.hitBox.right + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
+		else pStatus.saberHitBox = RectMake(pStatus.hitBox.left - saberWidth + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
+	}
 }
 
 void X::colorSetting(void)
@@ -927,8 +939,9 @@ void X::spawn(int x, int y)
 	charPos.y = y;
 
 	pStatus.hitBox = RectMakeCenter(charPos.x, 0 - hitBoxHeight / 2, hitBoxWidth, hitBoxHeight);
-	pStatus.floorCheck = RectMakeCenter(charPos.x, charPos.y, 10, 4);
-	pStatus.saberHitBox = RectMakeCenter(charPos.x, charPos.y, 10, 4);
+	pStatus.floorCheck = RectMakeCenter(charPos.x, charPos.y, hitBoxWidth, 4);
+	// pStatus.floorCheck = RectMakeCenter(charPos.x, charPos.y, 10, 4);
+	pStatus.saberHitBox = RectMake(pStatus.hitBox.right + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom - hitBoxHeight;
@@ -1011,13 +1024,12 @@ void X::spawn(int x, int y)
 	bursterEffectAlpha = 0;
 	pStatus.isAttack = false;
 	canHit = false;
-	test = false;
 
 	pStatus.attackDelayTimer = 0.0f;
 	pStatus.attackDelayMaxTime = 0.0f;
 
 	multiHitTimer = 0.0f;
-	multiHitMaxTime = 0.2f;
+	multiHitMaxTime = 0.5f;
 
 	// 애니메이션 초기화
 	previousAnim = "X_Idle";
@@ -1076,23 +1088,26 @@ void X::multiHitControl(void)
 					case 3:
 						saberWidth = 60 * SCALE_FACTOR;
 						saberHeight = 43 * SCALE_FACTOR;
+						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = -8 * SCALE_FACTOR;
-						pStatus.saberDamage = 1;
-						// animDelay = true;
+						pStatus.saberDamage = 0;
+						//pStatus.saberDamage = 1;
 						break;
 					case 4:
 						saberWidth = 65 * SCALE_FACTOR;
 						saberHeight = 70 * SCALE_FACTOR;
+						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = 8 * SCALE_FACTOR;
-						pStatus.saberDamage = 1;
-						// animDelay = true;
+						pStatus.saberDamage = 0;
+						//pStatus.saberDamage = 1;
 						break;
 					case 5:
 						saberWidth = 66 * SCALE_FACTOR;
 						saberHeight = 55 * SCALE_FACTOR;
+						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = 9 * SCALE_FACTOR;
-						pStatus.saberDamage = 2;
-						// animDelay = true;
+						pStatus.saberDamage = 0;
+						//pStatus.saberDamage = 2;
 						break;
 				}
 				break;
@@ -1103,15 +1118,18 @@ void X::multiHitControl(void)
 				switch (frame)
 				{
 				case 3:
-					saberWidth = 50 * SCALE_FACTOR;
+					pStatus.lookRight;
+					saberWidth = 45 * SCALE_FACTOR;
 					saberHeight = 46 * SCALE_FACTOR;
-					saberOffsetY = 0;
+					saberOffsetX = pStatus.lookRight ? -10 * SCALE_FACTOR : 10 * SCALE_FACTOR;
+					saberOffsetY = 0 * SCALE_FACTOR;
 					pStatus.saberDamage = 1;
 					break;
 				case 4:
-					saberWidth = 60 * SCALE_FACTOR;
+					saberWidth = 55 * SCALE_FACTOR;
 					saberHeight = 52 * SCALE_FACTOR;
-					saberOffsetY = 0;
+					saberOffsetX = pStatus.lookRight ? -10 * SCALE_FACTOR : 10 * SCALE_FACTOR;
+					saberOffsetY = 0 * SCALE_FACTOR;
 					pStatus.saberDamage = 1;
 					break;
 				}
@@ -1124,13 +1142,15 @@ void X::multiHitControl(void)
 				case 2:
 					saberWidth = 58 * SCALE_FACTOR;
 					saberHeight = 44 * SCALE_FACTOR;
-					saberOffsetY = 0;
+					saberOffsetX = 0 * SCALE_FACTOR;
+					saberOffsetY = -12 * SCALE_FACTOR;
 					pStatus.saberDamage = 1;
 					break;
 				case 3:
 					saberWidth = 58 * SCALE_FACTOR;
 					saberHeight = 40 * SCALE_FACTOR;
-					saberOffsetY = 0;
+					saberOffsetX = 0 * SCALE_FACTOR;
+					saberOffsetY = -12 * SCALE_FACTOR;
 					pStatus.saberDamage = 1;
 					break;
 				}
@@ -1151,7 +1171,6 @@ void X::multiHitControl(void)
 		{
 			multiHitTimer = 0.0f;
 			animDelay = false;
-			cout << "1111111111" << endl;
 		}
 		canHit = false;
 	}

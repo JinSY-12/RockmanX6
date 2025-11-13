@@ -450,8 +450,7 @@ void Player::currentAnimChange(void)
 				else
 				{
 					animSpeed = 0.045f;
-					if (pStatus.lookRight) animOffset.x = 27 * SCALE_FACTOR;
-					else animOffset.x = -27 * SCALE_FACTOR;
+					animOffset.x = pStatus.lookRight ? 27 * SCALE_FACTOR : -27 * SCALE_FACTOR;
 					animOffset.y = 9 * SCALE_FACTOR;
 					changeAnimation("X_Saber", 0);
 				}
@@ -497,8 +496,7 @@ void Player::currentAnimChange(void)
 					else
 					{
 						animSpeed = 0.045f;
-						if (pStatus.lookRight) animOffset.x = 27 * SCALE_FACTOR;
-						else animOffset.x = -27 * SCALE_FACTOR;
+						animOffset.x = pStatus.lookRight ? 27 * SCALE_FACTOR : -27 * SCALE_FACTOR;
 						animOffset.y = 9 * SCALE_FACTOR;
 						changeAnimation("X_Saber", 0);
 					}
@@ -541,8 +539,7 @@ void Player::currentAnimChange(void)
 					else
 					{
 						animSpeed = 0.045f;
-						if (pStatus.lookRight) animOffset.x = 27 * SCALE_FACTOR;
-						else animOffset.x = -27 * SCALE_FACTOR;
+						animOffset.x = pStatus.lookRight ? 27 * SCALE_FACTOR : -27 * SCALE_FACTOR;
 						animOffset.y = 9 * SCALE_FACTOR;
 						changeAnimation("X_Saber", 0);
 					}
@@ -588,8 +585,7 @@ void Player::currentAnimChange(void)
 					else
 					{
 						animSpeed = 0.045f;
-						if (pStatus.lookRight) animOffset.x = 27 * SCALE_FACTOR;
-						else animOffset.x = -27 * SCALE_FACTOR;
+						animOffset.x = pStatus.lookRight ? 27 * SCALE_FACTOR : -27 * SCALE_FACTOR;
 						animOffset.y = 9 * SCALE_FACTOR;
 						changeAnimation("X_Saber", 0);
 					}
@@ -632,8 +628,7 @@ void Player::currentAnimChange(void)
 					else
 					{
 						animSpeed = 0.045f;
-						if (pStatus.lookRight) animOffset.x = 27 * SCALE_FACTOR;
-						else animOffset.x = -27 * SCALE_FACTOR;
+						animOffset.x = pStatus.lookRight ? 27 * SCALE_FACTOR : -27 * SCALE_FACTOR;
 						animOffset.y = 9 * SCALE_FACTOR;
 						changeAnimation("X_Saber", 0);
 					}
@@ -679,8 +674,7 @@ void Player::currentAnimChange(void)
 				else
 				{
 					animSpeed = 0.045f;
-					if (pStatus.lookRight) animOffset.x = 27 * SCALE_FACTOR;
-					else animOffset.x = -27 * SCALE_FACTOR;
+					animOffset.x = pStatus.lookRight ? 27 * SCALE_FACTOR : -27 * SCALE_FACTOR;
 					animOffset.y = 9 * SCALE_FACTOR;
 					changeAnimation("X_Saber", 0);
 				}
@@ -726,8 +720,7 @@ void Player::currentAnimChange(void)
 				else
 				{
 					animSpeed = 0.045f;
-					if (pStatus.lookRight) animOffset.x = 11 * SCALE_FACTOR;
-					else animOffset.x = -11 * SCALE_FACTOR;
+					animOffset.x = pStatus.lookRight ? 11 * SCALE_FACTOR : -11 * SCALE_FACTOR;
 					animOffset.y = -1 * SCALE_FACTOR;
 					changeAnimation("X_JumpSaber", 0);
 				}
@@ -775,8 +768,7 @@ void Player::currentAnimChange(void)
 				else
 				{
 					animSpeed = 0.045f;
-					if (pStatus.lookRight) animOffset.x = 11 * SCALE_FACTOR;
-					else animOffset.x = -11 * SCALE_FACTOR;
+					animOffset.x = pStatus.lookRight ? 11 * SCALE_FACTOR : -11 * SCALE_FACTOR;
 					animOffset.y = -1 * SCALE_FACTOR;
 					changeAnimation("X_JumpSaber", 0);
 				}
@@ -823,8 +815,7 @@ void Player::currentAnimChange(void)
 				else
 				{
 					animSpeed = 0.045f;
-					if (pStatus.lookRight) animOffset.x = -28 * SCALE_FACTOR;
-					else animOffset.x = 28 * SCALE_FACTOR;
+					animOffset.x = pStatus.lookRight ? -28 * SCALE_FACTOR : 28 * SCALE_FACTOR;
 					animOffset.y = 0 * SCALE_FACTOR;
 					changeAnimation("X_WallSlideSaber", 0);
 				}
@@ -924,8 +915,6 @@ void Player::currentAnimChange(void)
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom;
-
-	setHitBox();
 
 	previousAnim = currentAnim;
 	previousState = currentState;

@@ -263,6 +263,7 @@ public:
 
 	int saberWidth;
 	int saberHeight;
+	int saberOffsetX;
 	int saberOffsetY;
 
 public:
@@ -318,6 +319,7 @@ public:
 
 	inline bool getCanHit(void) { return canHit; }
 	inline int getSaberDamage(void) { return pStatus.saberDamage; }
+	inline int getPlayerHitBoxWidth(void) { return hitBoxWidth; }
 
 	// 상태값
 	inline void setLeftCollision(bool left, int leftline)
@@ -428,21 +430,16 @@ public:
 				// 소경직
 				changeAnimation(pStatus.charName + "SmallDamaged", 0);
 
-				if(pStatus.lookRight) pStatus.velocityX = -3.0f;
-				else pStatus.velocityX = 3.0f;
-
+				pStatus.velocityX = pStatus.lookRight ? -3.0f : 3.0f;
 				pStatus.velocityY = 0.0f;
-
 				break;
+
 			case BulletSize::Large:
 				// 대경직
 				changeAnimation(pStatus.charName + "LargeDamaged", 0);
 
-				if (pStatus.lookRight) pStatus.velocityX = -2.0f;
-				else pStatus.velocityX = 2.0f;
-
+				pStatus.velocityX = pStatus.lookRight ? -2.0f : 2.0f;
 				pStatus.velocityY = 0.0f;
-
 				break;
 			}
 		}	

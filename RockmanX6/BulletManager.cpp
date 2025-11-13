@@ -14,28 +14,28 @@ void BulletManager::release(void)
 
 void BulletManager::update(void)
 {
-	for (_viBullet = _vBullet.begin(); _viBullet != _vBullet.end();)
+	for (auto bullets = _vBullet.begin(); bullets != _vBullet.end();)
 	{
-		(*_viBullet)->update();
+		(*bullets)->update();
 
-		if ((*_viBullet)->bStatus.isFire == false)
+		if ((*bullets)->bStatus.isFire == false)
 		{
-			_viBullet = _vBullet.erase(_viBullet);
+			bullets = _vBullet.erase(bullets);
 		}
 			
-		else ++_viBullet;
+		else ++bullets;
 	}
 
-	for (_viEnemyBullet = _vEnemyBullet.begin(); _viEnemyBullet != _vEnemyBullet.end();)
+	for (auto enemyBullets = _vEnemyBullet.begin(); enemyBullets != _vEnemyBullet.end();)
 	{
-		(*_viEnemyBullet)->update();
+		(*enemyBullets)->update();
 
-		if ((*_viEnemyBullet)->bStatus.isFire == false)
+		if ((*enemyBullets)->bStatus.isFire == false)
 		{
-			_viEnemyBullet = _vEnemyBullet.erase(_viEnemyBullet);
+			enemyBullets = _vEnemyBullet.erase(enemyBullets);
 		}
 
-		else ++_viEnemyBullet;
+		else ++enemyBullets;
 	}
 
 	if(_vEnemyBullet.size() > 0) checkPlayerCollision();
@@ -43,14 +43,14 @@ void BulletManager::update(void)
 
 void BulletManager::render(void)
 {
-	for (_viBullet = _vBullet.begin(); _viBullet != _vBullet.end(); ++_viBullet)
+	for (auto bullets = _vBullet.begin(); bullets != _vBullet.end();++bullets)
 	{
-		(*_viBullet)->render();
+		(*bullets)->render();
 	}
-	
-	for (_viEnemyBullet = _vEnemyBullet.begin(); _viEnemyBullet != _vEnemyBullet.end(); ++_viEnemyBullet)
+
+	for (auto enemyBullets = _vEnemyBullet.begin(); enemyBullets != _vEnemyBullet.end();++enemyBullets)
 	{
-		(*_viEnemyBullet)->render();
+		(*enemyBullets)->render();
 	}
 }
 	
@@ -98,17 +98,17 @@ void BulletManager::fire(EnemyBulletType eType, int x, int y, bool direct)
 
 void BulletManager::checkPlayerCollision()
 {
-	for (_viEnemyBullet = _vEnemyBullet.begin(); _viEnemyBullet != _vEnemyBullet.end();)
+	for (auto enemyBullets = _vEnemyBullet.begin(); enemyBullets != _vEnemyBullet.end();)
 	{
 		RECT temp;
-		if (IntersectRect(&temp, &(*_viEnemyBullet)->getBulletRect(), &_player->getPlayerRect()) && _player->getOverPower() == false)
+		if (IntersectRect(&temp, &(*enemyBullets)->getBulletRect(), &_player->getPlayerRect()) && _player->getOverPower() == false)
 		{
-			_player->reduceHp((*_viEnemyBullet)->getBulletDamage(), (*_viEnemyBullet)->getBulletSize());
-			playExplodeEffect((*_viEnemyBullet)->getEnemyBulletType(), (*_viEnemyBullet)->getBulletPosX(), (*_viEnemyBullet)->getBulletPosY(), 0);
-			playExplodeSound((*_viEnemyBullet)->getEnemyBulletType());
-			_viEnemyBullet = _vEnemyBullet.erase(_viEnemyBullet);
+			_player->reduceHp((*enemyBullets)->getBulletDamage(), (*enemyBullets)->getBulletSize());
+			playExplodeEffect((*enemyBullets)->getEnemyBulletType(), (*enemyBullets)->getBulletPosX(), (*enemyBullets)->getBulletPosY(), 0);
+			playExplodeSound((*enemyBullets)->getEnemyBulletType());
+			enemyBullets = _vEnemyBullet.erase(enemyBullets);
 		}
 
-		else ++_viEnemyBullet;
+		else ++enemyBullets;
 	}
 }

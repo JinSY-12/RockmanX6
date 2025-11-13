@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Block.h" />
     <ClInclude Include="BossType.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
@@ -149,6 +150,9 @@
     <ClInclude Include="KeyManager.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MovieScene.h" />
+    <ClInclude Include="ObjectBase.h" />
+    <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="ObjectType.h" />
     <ClInclude Include="PaletteManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerType.h" />
@@ -171,6 +175,7 @@
     <ClInclude Include="Zero.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="CameraManager.cpp" />
@@ -189,6 +194,8 @@
     <ClCompile Include="KeyManager.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MovieScene.cpp" />
+    <ClCompile Include="ObjectBase.cpp" />
+    <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="PaletteManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ProgressBar.cpp">

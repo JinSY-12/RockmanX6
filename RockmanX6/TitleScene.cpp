@@ -189,7 +189,6 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addImage("Movie1_3", "Resources/Image/CutScene/Movie_1_3.bmp", 288 * 2, 240 * 2, true, MAGENTA);
 	IMAGEMANAGER->addImage("Movie1_5", "Resources/Image/CutScene/Movie_1_5.bmp", 288 * 2, 240 * 2, true, MAGENTA);
 
-
 	//////////////////////////////////
 	// 스테이지 이미지
 	//////////////////////////////////
@@ -313,6 +312,13 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addImage("Enemy_JunkroidFragment3", "Resources/Image/Enemy/Fragment/Enemy_JunkroidFragrment3.bmp", 26 * SCALE_FACTOR, 23 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("Enemy_JunkroidFragment4", "Resources/Image/Enemy/Fragment/Enemy_JunkroidFragrment4.bmp", 41 * SCALE_FACTOR, 21 * SCALE_FACTOR, true, MAGENTA);
 		
+	//////////////////////////////////
+	// 오브젝트
+	//////////////////////////////////
+	
+	IMAGEMANAGER->addImage("Object_Block", "Resources/Image/Object/Object_Block.bmp", 64 * SCALE_FACTOR, 64 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Object_Block_Pixel", "Resources/Image/Object/Object_Block_Pixel.bmp", 64 * SCALE_FACTOR, 64 * SCALE_FACTOR, true, MAGENTA);
+
 
 	//////////////////////////////////
 	// HUD

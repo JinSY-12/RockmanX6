@@ -16,107 +16,68 @@ void EnemyManager::release(void)
 
 void EnemyManager::update(void)
 {
-	for (_viEnemy = _vEnemy.begin(); _viEnemy != _vEnemy.end(); _viEnemy++)
+	for (auto enemy = _vEnemy.begin(); enemy != _vEnemy.end(); ++enemy)
 	{
-		(*_viEnemy)->update();
+		(*enemy)->update();
 	}
 
 	if (_vEnemy.size() > 0)
 	{
-		// checkSightCollision();
-		checkAttackCollision();
 		checkHitBoxCollision();
 	}
 }
 
 void EnemyManager::render(void)
 {
-	for (_viEnemy = _vEnemy.begin(); _viEnemy != _vEnemy.end(); _viEnemy++)
+	for (auto enemy = _vEnemy.begin(); enemy != _vEnemy.end(); ++enemy)
 	{
-		(*_viEnemy)->render();
+		(*enemy)->render();
 	}
-}
-
-void EnemyManager::checkAttackCollision(void)
-{
-	for (_viEnemy = _vEnemy.begin(); _viEnemy != _vEnemy.end(); )
-	{
-		RECT temp;
-		if (IntersectRect(&temp, &_player->getSaberRect(), &(*_viEnemy)->getEnemyHitBox()) && !(*_viEnemy)->getOverPower() && _player->getCanHit())
-		{
-			(*_viEnemy)->reduceHp(_player->getSaberDamage());
-			_player->setAnimDelay(true);
-			SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
-		}
-
-		if ((*_viEnemy)->getIsDead())
-		{
-			playExplodeEffect((*_viEnemy)->getEnemyType(), (*_viEnemy)->getEnemyPos().x, (*_viEnemy)->getEnemyPos().y, (*_viEnemy)->getEnemyLook());
-			playExplodeSound((*_viEnemy)->getEnemyType());
-
-			_viEnemy = _vEnemy.erase(_viEnemy);
-		}
-
-		else ++_viEnemy;
-	}
-
 }
 
 void EnemyManager::checkHitBoxCollision(void)
 {
-	for (_viEnemy = _vEnemy.begin(); _viEnemy != _vEnemy.end(); )
+	for (auto enemy = _vEnemy.begin(); enemy != _vEnemy.end();)
 	{
 		vector<Bullet*>& bullets = _bManager->getBullet();
 
 		for (auto it = bullets.begin(); it != bullets.end();)
 		{
 			RECT temp;
-			if (IntersectRect(&temp, &(*it)->getBulletRect(), &(*_viEnemy)->getEnemyHitBox()) && !(*_viEnemy)->getOverPower())
+			if (IntersectRect(&temp, &(*it)->getBulletRect(), &(*enemy)->getEnemyHitBox()) && !(*enemy)->getOverPower())
 			{
-				(*_viEnemy)->reduceHp((*it)->getBulletDamage());
+				(*enemy)->reduceHp((*it)->getBulletDamage());
 
-				playHitEffect((*it)->getBulletType(), (*_viEnemy)->getEnemyPos().x, (*_viEnemy)->getEnemyPos().y, (*_viEnemy)->getEnemyLook());
+				playHitEffect((*it)->getBulletType(), (*enemy)->getEnemyPos().x, (*enemy)->getEnemyPos().y, (*enemy)->getEnemyLook());
 				playHitSound((*it)->getBulletType());
 
 				it = bullets.erase(it);
 			}
+
 			else ++it;
 		}
 		
-		if ((*_viEnemy)->getIsDead())
+		if ((*enemy)->getIsDead())
 		{
-			playExplodeEffect((*_viEnemy)->getEnemyType(), (*_viEnemy)->getEnemyPos().x, (*_viEnemy)->getEnemyPos().y, (*_viEnemy)->getEnemyLook());
-			playExplodeSound((*_viEnemy)->getEnemyType());
+			playExplodeEffect((*enemy)->getEnemyType(), (*enemy)->getEnemyPos().x, (*enemy)->getEnemyPos().y, (*enemy)->getEnemyLook());
+			playExplodeSound((*enemy)->getEnemyType());
 
-			_viEnemy = _vEnemy.erase(_viEnemy);
+			enemy = _vEnemy.erase(enemy);
 		}
 
-		else ++_viEnemy;
+		else ++enemy;
 	}
 }
-
-void EnemyManager::checkSightCollision(void)
-{
-	for (_viEnemy = _vEnemy.begin(); _viEnemy != _vEnemy.end(); _viEnemy++)
-	{
-		RECT temp;
-		if (IntersectRect(&temp , &(*_viEnemy)->getEnemySight(), &_player->getPlayerRect()) && (*_viEnemy)->getAttAble())
-		{
-			(*_viEnemy)->attack();
-		}
-	}
-}
-
 void EnemyManager::spawnEnemy(EnemyType eType, int x, int y)
 {
 	switch (eType)
 	{
 	case EnemyType::Junkroid:
-		enemy = new Junkroid;
-		enemy->init(x, y);
-		enemy->settingBulletManager(_bManager);
-		enemy->settingPlayer(_player);
-		_vEnemy.push_back(enemy);
+		_enemy = new Junkroid;
+		_enemy->init(x, y);
+		_enemy->settingBulletManager(_bManager);
+		_enemy->settingPlayer(_player);
+		_vEnemy.push_back(_enemy);
 		break;
 	}
 }

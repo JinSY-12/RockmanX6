@@ -20,12 +20,15 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	
 	bManager.settingPlayer(player.get());
 
+	oManager.setttingPlayer(player.get());
+	oManager.setttingBulletManager(&bManager);
+	
 	// 스테이지 세팅
 	UIMANAGER->SettingProgressBar(pType, bType);
 	stageSettting(bType);
 
 	// 스테이지 시작 준비
-	// SOUNDMANAGER->play(stagBGM, 0.5f);
+	SOUNDMANAGER->play(stagBGM, 0.5f);
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
 	noticeAniSpeed = 1;
@@ -65,22 +68,22 @@ void StageScene::update(void)
 		bManager.update();
 		player->update();
 		eManager.update();
+		oManager.update();
 		EFFECTMANAGER->update();
 	}
-
 }
 
 void StageScene::render(void)
 {
 	mStage->render(getMemDC(), 0, 0, CAMERAMANAGER->getCameraPos().x, CAMERAMANAGER->getCameraPos().y, WINSIZE_X, WINSIZE_Y);
 	
+	eManager.render();
+	oManager.render();
+	bManager.render();
+
 	player->render();
 
-	eManager.render();
-
 	EFFECTMANAGER->render(getMemDC());
-
-	bManager.render();
 
 	if(noticeStart)	mReadyLogo->render(getMemDC(), (WINSIZE_X - mReadyLogo->getWidth()) / 2,
 		(WINSIZE_Y - mReadyLogo->getHeight()) / 2);
@@ -120,6 +123,7 @@ void StageScene::stageSettting(BossType bType)
 			player->setStageGravity(gravity);
 			rectSetting();
 			enemySettting(bType);
+			objectSetting(bType);
 			break;
 
 		// 커맨드 얀마크
@@ -146,7 +150,6 @@ void StageScene::enemySettting(BossType bType)
 		// 인트로
 	case BossType::Intro:
 		eManager.spawnEnemy(EnemyType::Junkroid, 1300, 2680);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 1800, 2680);
 		break;
 
 		// 커맨드 얀마크
@@ -158,6 +161,27 @@ void StageScene::enemySettting(BossType bType)
 		break;
 	}
 }
+
+void StageScene::objectSetting(BossType bType)
+{
+	switch (bType)
+	{
+		// 인트로
+	case BossType::Intro:
+		oManager.spawnObject(ObjectType::Block , 800, 2680);
+
+		break;
+
+		// 커맨드 얀마크
+	case BossType::CommanYanmark:
+
+		break;
+
+	defalut:
+		break;
+	}
+}
+
 
 bool StageScene::noticeAnim(void)
 {
@@ -389,7 +413,7 @@ void StageScene::stageCollision(void)
 	{
 		if (player->getPlayerSight() == true)
 		{
-			for (int line = player->getPlayerCenter() - 5 * SCALE_FACTOR; line <= player->getPlayerCenter() + 5 * SCALE_FACTOR; line++)
+			for (int line = player->getPlayerCenter() - player->getPlayerHitBoxWidth() / 2 + 5; line <= player->getPlayerCenter() + player->getPlayerHitBoxWidth() / 2 - 5 ; line++)
 			{
 				// 컬러 비교
 				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);

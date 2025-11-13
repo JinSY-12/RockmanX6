@@ -61,8 +61,9 @@ void Junkroid::update(void)
     pattern();
     changeDirection();
     setEnemyHitbox();
-    // chekcPlayerCollision();
     animChange();
+    checkPlayerCollision();
+    checkPlayerAttCollision();
     enemyInvincibleTimerUpdate();
     isDead();
 }
@@ -89,7 +90,7 @@ void Junkroid::attack(void)
     eStatus.patternTimer = 0.0f;
 }
 
-void Junkroid::chekcPlayerCollision()
+void Junkroid::checkPlayerCollision()
 {
     RECT temp;
     if (IntersectRect(&temp, &eStatus.attSight, &player->getPlayerRect()))
@@ -100,3 +101,15 @@ void Junkroid::chekcPlayerCollision()
         }
 	}
 }
+
+void Junkroid::checkPlayerAttCollision(void)
+{
+    RECT temp;
+    if (IntersectRect(&temp, &player->getSaberRect(), &eStatus.eHitBox) && !eStatus.overpower && player->getCanHit())
+    {
+        eStatus.hp -= player->getSaberDamage();
+        player->setAnimDelay(true);
+        SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
+    }
+}
+

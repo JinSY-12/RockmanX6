@@ -5,6 +5,7 @@
 #include "Zero.h"
 #include "BulletManager.h"
 #include "EnemyManager.h"
+#include "ObjectManager.h"
 
 class StageScene : public GameNode
 {
@@ -27,6 +28,7 @@ private:
 
 	BulletManager bManager;
 	EnemyManager eManager;
+	ObjectManager oManager;
 
 	float gravity;
 
@@ -51,10 +53,12 @@ public:
 
 	void stageSettting(BossType bType);
 	void enemySettting(BossType bType);
-	
+	void objectSetting(BossType bType);
+
 	void rectSetting(void);
 	void stageCollision(void);
 
 	StageScene() {}
 	~StageScene() {}
 };
+

@@ -66,16 +66,15 @@ public:
 	EnemyType eType;
 
 	BulletManager* bManager;
-
-
-
 	Player* player;
 
 public:
+	/*
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
 	virtual void release(void);
 	virtual void update(void);
+	*/
 	virtual void render(void);
 
 	virtual void attack(void);
@@ -88,7 +87,6 @@ public:
 
 	inline void reduceEnemyHp(int damage) { eStatus.hp -= damage; }
 
-	inline void settingBulletManager(BulletManager* bullet) { bManager = bullet; }
 	inline bool getOverPower() { return eStatus.overpower; }
 	inline void reduceHp(int damage)
 	{
@@ -113,8 +111,13 @@ public:
 
 	void changeDirection(void);
 
-	void settingPlayer(Player* p) { player = p; }
-	virtual void chekcPlayerCollision(void);
+	// 공격, 피격 체크
+
+	inline void settingBulletManager(BulletManager* bullet) { bManager = bullet; }
+	inline void settingPlayer(Player* p) { player = p; }
+		
+	virtual void checkPlayerCollision(void);
+	virtual void checkPlayerAttCollision(void);
 
 	void enemyInvincibleTimerUpdate(void);
 

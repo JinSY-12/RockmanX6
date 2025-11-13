@@ -3,6 +3,7 @@
 #include "BulletManager.h"
 #include "Player.h"
 
+/*
 HRESULT EnemyBase::init(void)
 {
 	return S_OK;
@@ -22,10 +23,12 @@ void EnemyBase::update(void)
 {
 	// Do nothing!
 }
+*/
 
 void EnemyBase::render(void)
 {
-	eStatus.eImage->frameRender(getMemDC(), ePos.x - eStatus.eImage->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x, ePos.y - eStatus.eImage->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, eStatus.eImage->getFrameX(), eStatus.lookRight);
+	eStatus.eImage->frameRender(getMemDC(), ePos.x - eStatus.eImage->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x,
+		ePos.y - eStatus.eImage->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, eStatus.eImage->getFrameX(), eStatus.lookRight);
 
 	if (UIMANAGER->getIsDebugMode())
 	{
@@ -95,9 +98,16 @@ void EnemyBase::changeDirection(void)
 	}
 }
 
-void EnemyBase::chekcPlayerCollision(void)
+void EnemyBase::checkPlayerCollision(void)
 {
 	// Do nothing!
+	// 각자 타입에 맞는 공격을 하기 때문 각자 체크
+}
+
+void EnemyBase::checkPlayerAttCollision(void)
+{
+	// Do nothing!
+	// 공격 타입에 따라 안맞는 공격도 있어서 각자 체크
 }
 
 void EnemyBase::enemyInvincibleTimerUpdate(void)
