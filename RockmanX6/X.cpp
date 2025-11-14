@@ -1090,24 +1090,24 @@ void X::multiHitControl(void)
 						saberHeight = 43 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = -8 * SCALE_FACTOR;
-						pStatus.saberDamage = 0;
-						//pStatus.saberDamage = 1;
+						//pStatus.saberDamage = 0;
+						pStatus.saberDamage = 1;
 						break;
 					case 4:
 						saberWidth = 65 * SCALE_FACTOR;
 						saberHeight = 70 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = 8 * SCALE_FACTOR;
-						pStatus.saberDamage = 0;
-						//pStatus.saberDamage = 1;
+						//pStatus.saberDamage = 0;
+						pStatus.saberDamage = 1;
 						break;
 					case 5:
 						saberWidth = 66 * SCALE_FACTOR;
 						saberHeight = 55 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = 9 * SCALE_FACTOR;
-						pStatus.saberDamage = 0;
-						//pStatus.saberDamage = 2;
+						//pStatus.saberDamage = 0;
+						pStatus.saberDamage = 2;
 						break;
 				}
 				break;

@@ -24,6 +24,7 @@ public:
 		GImage* oPixel;
 
 		RECT oHitBox;
+		RECT worldRect;
 
 		int hp;
 		int maxHp;
@@ -53,6 +54,11 @@ public:
 	inline void settingPlayer(Player* p) { oPlayer = p; }
 
 	virtual void checkPlayerAttCollision(void);
+	virtual void checkWallCollision(void);
+
+	// getter,setter
+	inline RECT getObjectRect(void) { return oStatus.worldRect; }
+	inline RECT getObjectHitbox(void) { return oStatus.oHitBox; }
 
 	inline bool getIsDead(void) { return oStatus.dead; }
 	void checkDead(void);

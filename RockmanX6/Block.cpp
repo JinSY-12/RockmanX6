@@ -23,8 +23,8 @@ HRESULT Block::init(int x, int y)
     oPos.x = x;
     oPos.y = y;
 
-    oStatus.oHitBox = RectMakeCenter(x, y - oStatus.height / 2, oStatus.width, oStatus.height);
-
+    oStatus.oHitBox = RectMakeCenter(x + oStatus.width / 2, y + oStatus.height / 2, oStatus.width, oStatus.height);
+    oStatus.worldRect = oStatus.oHitBox;
     oStatus.dead = false;
 
     return S_OK;

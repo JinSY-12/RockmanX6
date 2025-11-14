@@ -21,11 +21,8 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.width = eStatus.eImage->getFrameWidth() - 10 * SCALE_FACTOR;
     eStatus.height = eStatus.eImage->getFrameHeight() - 5 * SCALE_FACTOR;
 
-    eStatus.sightWidth = eStatus.width * 2.5;
-    eStatus.sightHeight = eStatus.height;
-
-    ePos.x = x;
-    ePos.y = y;
+    eStatus.sightWidth = eStatus.width * 2;
+    eStatus.sightHeight = eStatus.height - 16 * SCALE_FACTOR;
 
     eState = EnemyState::Idle;
     eStatus.overpower = false;
@@ -34,8 +31,12 @@ HRESULT Junkroid::init(int x, int y)
     fPos.x = 0 * SCALE_FACTOR;
     fPos.y = IMAGEMANAGER->findImage("SFX_JunkBullet")->getFrameHeight();
 
-    eStatus.eHitBox = RectMakeCenter(x, y - eStatus.height / 2, eStatus.width, eStatus.height);
-    eStatus.attSight = RectMakeCenter(x, y - eStatus.sightHeight, eStatus.sightWidth, eStatus.sightHeight);
+    eStatus.eHitBox = RectMakeCenter(x + eStatus.width / 2, y + eStatus.height / 2, eStatus.width, eStatus.height);
+    eStatus.worldRect = eStatus.eHitBox;
+    eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2, y + eStatus.sightHeight, eStatus.sightWidth, eStatus.sightHeight);
+
+    ePos.x = (eStatus.worldRect.left + eStatus.worldRect.right) / 2;
+    ePos.y = eStatus.worldRect.bottom;
 
     eStatus.lookRight = false;
 
@@ -86,7 +87,8 @@ void Junkroid::animChange()
 void Junkroid::attack(void)
 {
     eState = EnemyState::Attack;
-    bManager->fire(EnemyBulletType::JunkBullet, ePos.x, ePos.y - eStatus.height / 2 - + fPos.y, eStatus.lookRight);
+    bManager->fire(EnemyBulletType::JunkBullet, (eStatus.worldRect.left + eStatus.worldRect.right) / 2,
+        eStatus.worldRect.top + fPos.y, eStatus.lookRight);
     eStatus.patternTimer = 0.0f;
 }
 

@@ -27,8 +27,8 @@ void EnemyBase::update(void)
 
 void EnemyBase::render(void)
 {
-	eStatus.eImage->frameRender(getMemDC(), ePos.x - eStatus.eImage->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x,
-		ePos.y - eStatus.eImage->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, eStatus.eImage->getFrameX(), eStatus.lookRight);
+	eStatus.eImage->frameRender(getMemDC(), eStatus.eHitBox.left, eStatus.eHitBox.top
+		, eStatus.eImage->getFrameX(), eStatus.lookRight);
 
 	if (UIMANAGER->getIsDebugMode())
 	{
@@ -44,22 +44,27 @@ void EnemyBase::attack(void)
 
 void EnemyBase::setEnemyHitbox(void)
 {
-	int dir = (eStatus.lookRight ? 1 : -1);
+	if (eStatus.lookRight)
+	{
+		eStatus.attSight.left = eStatus.eHitBox.right;
+		eStatus.attSight.right = eStatus.attSight.left + eStatus.sightWidth;
+	}
+	
+	else
+	{
+		eStatus.attSight.left = eStatus.eHitBox.left - eStatus.sightWidth;
+		eStatus.attSight.right = eStatus.attSight.left + eStatus.sightWidth;	
+	}
 
-	eStatus.attSight.left = ePos.x - CAMERAMANAGER->getCameraPos().x;
-	eStatus.attSight.right = ePos.x + dir * eStatus.sightWidth - CAMERAMANAGER->getCameraPos().x;;
+	eStatus.attSight.top = (eStatus.eHitBox.top + eStatus.eHitBox.bottom - eStatus.sightHeight) / 2;
+	eStatus.attSight.bottom = eStatus.attSight.top + eStatus.sightHeight;
 
-	if (eStatus.attSight.left > eStatus.attSight.right)
-		std::swap(eStatus.attSight.left, eStatus.attSight.right);
 
-	eStatus.attSight.top = ePos.y - (eStatus.height + eStatus.sightHeight) / 2 - CAMERAMANAGER->getCameraPos().y;
-	eStatus.attSight.bottom = ePos.y - (eStatus.height - eStatus.sightHeight) / 2 - CAMERAMANAGER->getCameraPos().y;
+	eStatus.eHitBox.left = eStatus.worldRect.left - CAMERAMANAGER->getCameraPos().x;
+	eStatus.eHitBox.right = eStatus.worldRect.right - CAMERAMANAGER->getCameraPos().x;
 
-	eStatus.eHitBox.left = ePos.x - eStatus.width / 2 - CAMERAMANAGER->getCameraPos().x;
-	eStatus.eHitBox.right = ePos.x + eStatus.width / 2 - CAMERAMANAGER->getCameraPos().x;
-
-	eStatus.eHitBox.top = ePos.y - eStatus.height - CAMERAMANAGER->getCameraPos().y;
-	eStatus.eHitBox.bottom = ePos.y - CAMERAMANAGER->getCameraPos().y;
+	eStatus.eHitBox.top = eStatus.worldRect.top - CAMERAMANAGER->getCameraPos().y;
+	eStatus.eHitBox.bottom = eStatus.worldRect.bottom - CAMERAMANAGER->getCameraPos().y;
 }
 
 void EnemyBase::pattern(void)

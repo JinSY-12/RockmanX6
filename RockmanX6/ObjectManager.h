@@ -34,5 +34,7 @@ public:
 
 	void setttingPlayer(Player* player) { _player = player; }
 	void setttingBulletManager(BulletManager* bManager) { _bManager = bManager; }
+
+	vector<ObjectBase*>& getObject() { return _vObject; }
 };
 

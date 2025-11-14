@@ -36,6 +36,7 @@ public:
 		int hp;
 
 		RECT eHitBox;
+		RECT worldRect;
 		RECT attSight;
 
 		int width;

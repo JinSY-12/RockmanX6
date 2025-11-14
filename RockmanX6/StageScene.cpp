@@ -149,7 +149,13 @@ void StageScene::enemySettting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
-		eManager.spawnEnemy(EnemyType::Junkroid, 1300, 2680);
+		eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+
+		eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 726 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 726 * SCALE_FACTOR);
 		break;
 
 		// 커맨드 얀마크
@@ -168,8 +174,10 @@ void StageScene::objectSetting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
-		oManager.spawnObject(ObjectType::Block , 800, 2680);
-
+		oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR);
+		oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR);
+		oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR);
+		oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 158 * SCALE_FACTOR);
 		break;
 
 		// 커맨드 얀마크
@@ -476,6 +484,7 @@ void StageScene::stageCollision(void)
 		}
 	}
 
+	// 스테이지 벽과의 벽판정
 	for (auto& floor : _vFloor)
 	{
 		if(player->getPlayerLeft() - 4 < floor.right && player->getPlayerRight() > floor.right
@@ -493,6 +502,22 @@ void StageScene::stageCollision(void)
 		}
 	}
 
-	
+	// 오브젝트와의 벽판정
+	for (auto* obj : oManager.getObject())
+	{
+		if (player->getPlayerLeft() - 4 < obj->getObjectRect().right && player->getPlayerRight() > obj->getObjectRect().right
+			&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
+		{
+			player->setLeftCollision(true, obj->getObjectRect().right);
+			break;
+		}
+
+		if (player->getPlayerRight() + 4 > obj->getObjectRect().left && player->getPlayerLeft() < obj->getObjectRect().left
+			&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
+		{
+			player->setRightCollision(true, obj->getObjectRect().left);
+			break;
+		}
+	}
 }
 
