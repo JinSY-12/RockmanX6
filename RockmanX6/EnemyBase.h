@@ -59,8 +59,8 @@ public:
 
 	};
 
-	EnemyStatus eStatus;
 	EnemyState eState;
+	EnemyStatus eStatus;
 	EnemyPos ePos;
 	FirePointOffset fPos;
 
@@ -116,6 +116,8 @@ public:
 
 	inline void settingBulletManager(BulletManager* bullet) { bManager = bullet; }
 	inline void settingPlayer(Player* p) { player = p; }
+	inline int getEnemyWidth(void) { return eStatus.width; }
+	inline int getEnemyHeight(void) { return eStatus.height; }
 		
 	virtual void checkPlayerCollision(void);
 	virtual void checkPlayerAttCollision(void);

@@ -35,7 +35,7 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.worldRect = eStatus.eHitBox;
     eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2, y + eStatus.sightHeight, eStatus.sightWidth, eStatus.sightHeight);
 
-    ePos.x = (eStatus.worldRect.left + eStatus.worldRect.right) / 2;
+    ePos.x = x;
     ePos.y = eStatus.worldRect.bottom;
 
     eStatus.lookRight = false;

@@ -44,6 +44,12 @@ void EnemyBase::attack(void)
 
 void EnemyBase::setEnemyHitbox(void)
 {
+	eStatus.eHitBox.left = eStatus.worldRect.left - CAMERAMANAGER->getCameraPos().x;
+	eStatus.eHitBox.right = eStatus.worldRect.right - CAMERAMANAGER->getCameraPos().x;
+
+	eStatus.eHitBox.top = eStatus.worldRect.top - CAMERAMANAGER->getCameraPos().y;
+	eStatus.eHitBox.bottom = eStatus.worldRect.bottom - CAMERAMANAGER->getCameraPos().y;
+
 	if (eStatus.lookRight)
 	{
 		eStatus.attSight.left = eStatus.eHitBox.right;
@@ -58,13 +64,6 @@ void EnemyBase::setEnemyHitbox(void)
 
 	eStatus.attSight.top = (eStatus.eHitBox.top + eStatus.eHitBox.bottom - eStatus.sightHeight) / 2;
 	eStatus.attSight.bottom = eStatus.attSight.top + eStatus.sightHeight;
-
-
-	eStatus.eHitBox.left = eStatus.worldRect.left - CAMERAMANAGER->getCameraPos().x;
-	eStatus.eHitBox.right = eStatus.worldRect.right - CAMERAMANAGER->getCameraPos().x;
-
-	eStatus.eHitBox.top = eStatus.worldRect.top - CAMERAMANAGER->getCameraPos().y;
-	eStatus.eHitBox.bottom = eStatus.worldRect.bottom - CAMERAMANAGER->getCameraPos().y;
 }
 
 void EnemyBase::pattern(void)

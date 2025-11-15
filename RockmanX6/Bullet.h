@@ -52,6 +52,11 @@ public:
 	int getBulletPosX(void) { return bStatus.pos.x; }
 	int getBulletPosY(void) { return bStatus.pos.y; }
 
+	int getBulletWidth(void) { return bStatus.width; }
+	int getBulletHeight(void) { return bStatus.height; }
+
+	bool getBulletDir(void) { return bStatus.rightDirect; }
+
 	BulletType getBulletType(void) { return bStatus.bType; }
 	EnemyBulletType getEnemyBulletType(void) { return bStatus.eBType; }
 };

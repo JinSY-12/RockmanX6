@@ -18,8 +18,9 @@ void ObjectManager::update(void)
 	{
 		if ((*object)->getIsDead())
 		{
-			object = _vObject.erase(object);
 			SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
+			EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, (*object)->getObjectPos().x, (*object)->getObjectPos().y, (*object)->getObjectWidth(), (*object)->getObjectHeight(), 0);
+			object = _vObject.erase(object);
 		}
 
 		else

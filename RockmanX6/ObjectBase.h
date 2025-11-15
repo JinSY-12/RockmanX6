@@ -43,6 +43,7 @@ public:
 	BulletManager* oBManager;
 	Player* oPlayer;
 
+
 public:
 
 	virtual void render(void);
@@ -59,6 +60,10 @@ public:
 	// getter,setter
 	inline RECT getObjectRect(void) { return oStatus.worldRect; }
 	inline RECT getObjectHitbox(void) { return oStatus.oHitBox; }
+	inline ObjectPos getObjectPos(void) { return oPos; }
+
+	inline int getObjectWidth(void) { return oStatus.width; }
+	inline int getObjectHeight(void) { return oStatus.height; }
 
 	inline bool getIsDead(void) { return oStatus.dead; }
 	void checkDead(void);

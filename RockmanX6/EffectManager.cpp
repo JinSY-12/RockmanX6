@@ -31,8 +31,8 @@ void EffectManager::render(HDC hdc)
 {
 	for (_viEffect = _vEffect.begin(); _viEffect != _vEffect.end(); _viEffect++)
 	{
-		(*_viEffect).image->frameRender(hdc, (*_viEffect).x - (*_viEffect).image->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x,
-			(*_viEffect).y - (*_viEffect).image->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, (*_viEffect).image->getFrameX(), (*_viEffect).direct);
+		(*_viEffect).image->frameRender(hdc, (*_viEffect).x - CAMERAMANAGER->getCameraPos().x,
+			(*_viEffect).y - CAMERAMANAGER->getCameraPos().y, (*_viEffect).image->getFrameX(), (*_viEffect).direct);
 	}
 
 	for (_viFragments = _vFragments.begin(); _viFragments != _vFragments.end(); _viFragments++)
@@ -43,29 +43,27 @@ void EffectManager::render(HDC hdc)
 
 }
 
-void EffectManager::spawnEffect(EffectType eType, int x, int y, bool direct)
+void EffectManager::spawnEffect(EffectType eType, int x, int y, int width, int height, bool direct)
 {
-	effect.x = x;
-	effect.y = y - 20 * SCALE_FACTOR;
-	effect.direct = direct;
-
 	switch (eType)
 	{
 	case EffectType::SmallEnemyBomb:
 		effect.image = IMAGEMANAGER->findImage("SFX_Explosion")->cloneImage();
-		_vEffect.push_back(effect);
 		break;
 	case EffectType::DashStartDust:
 		effect.image = IMAGEMANAGER->findImage("SFX_DashBoost")->cloneImage();
-		_vEffect.push_back(effect);
 		break;
 	case EffectType::WallKick:
 		effect.image = IMAGEMANAGER->findImage("SFX_WallKick")->cloneImage();
-		_vEffect.push_back(effect);
-		break;
-	case EffectType::WallSlide:
 		break;
 	}
+	
+	effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+	effect.y = y - (height + effect.image->getFrameHeight()) / 2;
+	
+	effect.direct = direct;
+
+	_vEffect.push_back(effect);
 }
 
 void EffectManager::SpawnFragments(EnemyType type, int x, int y)

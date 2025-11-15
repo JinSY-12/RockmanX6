@@ -114,8 +114,8 @@ void Player::dash(bool direction)
 
 	if (pStatus.isOnGround)
 	{
-		if (pStatus.lookRight) EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x + hitBoxWidth / 2 - IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameWidth(), charPos.y + IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameHeight() / 2, pStatus.lookRight);
-		else EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x + hitBoxWidth, charPos.y + IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameHeight() / 2, pStatus.lookRight);
+		// if (pStatus.lookRight) EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x + hitBoxWidth / 2 - IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameWidth(), charPos.y + IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameHeight() / 2, pStatus.lookRight);
+		// else EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x + hitBoxWidth, charPos.y + IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameHeight() / 2, pStatus.lookRight);
 	}
 }
 
@@ -261,9 +261,9 @@ void Player::wallKick(void)
 			pStatus.velocityX = -pStatus.dashSpeed;
 		}
 
-		else pStatus.velocityX = -6.5f;
+		else pStatus.velocityX = -5.0f;
 		
-		EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x + hitBoxWidth / 2, charPos.y + IMAGEMANAGER->findImage("SFX_WallKick")->getFrameHeight() / 2, pStatus.lookRight);
+		// EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x + hitBoxWidth / 2, charPos.y + IMAGEMANAGER->findImage("SFX_WallKick")->getFrameHeight() / 2, pStatus.lookRight);
 	}
 
 	else
@@ -277,7 +277,7 @@ void Player::wallKick(void)
 		}
 		else pStatus.velocityX = 6.5f;
 
-		EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x + hitBoxWidth - IMAGEMANAGER->findImage("SFX_WallKick")->getFrameWidth(), charPos.y + IMAGEMANAGER->findImage("SFX_WallKick")->getFrameHeight() / 2, pStatus.lookRight);
+		// EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x + hitBoxWidth - IMAGEMANAGER->findImage("SFX_WallKick")->getFrameWidth(), charPos.y + IMAGEMANAGER->findImage("SFX_WallKick")->getFrameHeight() / 2, pStatus.lookRight);
 	}
 }
 

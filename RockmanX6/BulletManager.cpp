@@ -38,7 +38,7 @@ void BulletManager::update(void)
 		else ++enemyBullets;
 	}
 
-	if(_vEnemyBullet.size() > 0) checkPlayerCollision();
+	// if(_vEnemyBullet.size() > 0) checkPlayerCollision();
 }
 
 void BulletManager::render(void)
@@ -104,7 +104,7 @@ void BulletManager::checkPlayerCollision()
 		if (IntersectRect(&temp, &(*enemyBullets)->getBulletRect(), &_player->getPlayerRect()) && _player->getOverPower() == false)
 		{
 			_player->reduceHp((*enemyBullets)->getBulletDamage(), (*enemyBullets)->getBulletSize());
-			playExplodeEffect((*enemyBullets)->getEnemyBulletType(), (*enemyBullets)->getBulletPosX(), (*enemyBullets)->getBulletPosY(), 0);
+			playExplodeEffect((*enemyBullets)->getEnemyBulletType(), (*enemyBullets)->getBulletPosX(), (*enemyBullets)->getBulletPosY(), (*enemyBullets)->getBulletWidth(), (*enemyBullets)->getBulletHeight(), 0);
 			playExplodeSound((*enemyBullets)->getEnemyBulletType());
 			enemyBullets = _vEnemyBullet.erase(enemyBullets);
 		}

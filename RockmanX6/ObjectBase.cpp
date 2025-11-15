@@ -8,7 +8,7 @@ void ObjectBase::render(void)
 	
 	if (UIMANAGER->getIsDebugMode())
 	{
-		DrawRectMakeColor(getMemDC(), oStatus.oHitBox, RGB(255, 255, 0), 1);
+		DrawRectMakeColor(getMemDC(), oStatus.oHitBox, RGB(255, 255, 0), 2);
 	}
 }
 
@@ -37,5 +37,6 @@ void ObjectBase::checkDead(void)
 	{
 		oStatus.hp = 0;
 		oStatus.dead = true;
+
 	}
 }

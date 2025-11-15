@@ -28,7 +28,7 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	stageSettting(bType);
 
 	// 스테이지 시작 준비
-	SOUNDMANAGER->play(stagBGM, 0.5f);
+	// SOUNDMANAGER->play(stagBGM, 0.5f);
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
 	noticeAniSpeed = 1;
@@ -174,6 +174,8 @@ void StageScene::objectSetting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
+		oManager.spawnObject(ObjectType::Block, 200 * SCALE_FACTOR, 830 * SCALE_FACTOR);
+
 		oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR);
 		oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR);
 		oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR);
@@ -239,7 +241,7 @@ void StageScene::rectSetting(void)
 	// 1
 	floor = RectMake(0, mStage->getHeight() - 40 * SCALE_FACTOR, 320 * SCALE_FACTOR, 40 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
-	// 2
+
 	floor = RectMake(floor.right, mStage->getHeight() - 75 * SCALE_FACTOR, 319 * SCALE_FACTOR, 75 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
@@ -399,14 +401,14 @@ void StageScene::rectSetting(void)
 	_vFloor.push_back(floor);
 
 	// -5 끝부분 다듬기 여기까지
-
-
+	
 #pragma endregion
 
 #pragma region Stage_Yanmark
 
 #pragma endregion
 
+	_vCheckFloor.resize(_vFloor.size());
 }
 
 void StageScene::stageCollision(void)
@@ -518,6 +520,64 @@ void StageScene::stageCollision(void)
 			player->setRightCollision(true, obj->getObjectRect().left);
 			break;
 		}
+	}
+
+	// 벽과 총알 충돌 판정 = 총알이 벽 관통이 안되게
+	for (int i = 0 ; i < _vFloor.size(); i++)
+	{
+		_vCheckFloor[i].left = _vFloor[i].left - CAMERAMANAGER->getCameraPos().x;
+		_vCheckFloor[i].right = _vFloor[i].right - CAMERAMANAGER->getCameraPos().x;
+		_vCheckFloor[i].top = _vFloor[i].top - CAMERAMANAGER->getCameraPos().y;
+		_vCheckFloor[i].bottom = _vFloor[i].bottom - CAMERAMANAGER->getCameraPos().y;
+	}
+
+	// 벽과 플레이어 총알 충돌 판정 = 총알이 벽 관통이 안되게
+
+	vector<Bullet*>& bullets = bManager.getBullet();
+
+	for (auto it = bullets.begin(); it != bullets.end();)
+	{
+		bool bulletHit = false;
+
+		for (auto floor = _vCheckFloor.begin(); floor != _vCheckFloor.end(); ++floor)
+		{
+			RECT temp;
+			if (IntersectRect(&temp, &(*it)->getBulletRect(), &(*floor))
+				&& (*it)->getBulletType() != BulletType::FalconBurst2)
+			{
+				SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.3f);
+				bulletHit = true;
+				break;
+			}
+		}
+
+		if (bulletHit) it = bullets.erase(it);
+		else  ++it;
+	}
+
+	// 벽과 적 총알 충돌 판정 = 총알이 벽 관통이 안되게
+
+	vector<Bullet*>& enemyBullets = bManager.getEnemyBullet();
+
+	for (auto it = enemyBullets.begin(); it != enemyBullets.end();)
+	{
+		bool bulletHit = false;
+
+		for (auto floor = _vCheckFloor.begin(); floor != _vCheckFloor.end(); ++floor)
+		{
+			RECT temp;
+			if (IntersectRect(&temp, &(*it)->getBulletRect(), &(*floor)))
+			{
+				SOUNDMANAGER->play("SFX_SmallExplosion", 0.3f);
+				EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, (*it)->getBulletPosX(), (*it)->getBulletPosY()
+					, (*it)->getBulletWidth(), (*it)->getBulletHeight(), 0);
+				bulletHit = true;
+				break;
+			}
+		}
+
+		if (bulletHit) it = enemyBullets.erase(it);
+		else  ++it;
 	}
 }
 

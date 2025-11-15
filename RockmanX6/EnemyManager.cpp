@@ -59,7 +59,7 @@ void EnemyManager::checkHitBoxCollision(void)
 		
 		if ((*enemy)->getIsDead())
 		{
-			playExplodeEffect((*enemy)->getEnemyType(), (*enemy)->getEnemyPos().x, (*enemy)->getEnemyPos().y, (*enemy)->getEnemyLook());
+			playExplodeEffect((*enemy)->getEnemyType(), (*enemy)->getEnemyPos().x, (*enemy)->getEnemyPos().y, (*enemy)->getEnemyWidth(), (*enemy)->getEnemyHeight(), (*enemy)->getEnemyLook());
 			playExplodeSound((*enemy)->getEnemyType());
 
 			enemy = _vEnemy.erase(enemy);
@@ -87,12 +87,12 @@ void EnemyManager::spawnBoss(BossType bType, int x, int y)
 
 }
 
-void EnemyManager::playExplodeEffect(EnemyType eType, int x, int y, int look)
+void EnemyManager::playExplodeEffect(EnemyType eType, int x, int y, int width, int height, int look)
 {
 	switch (eType)
 	{
 	case EnemyType::Junkroid:
-		EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, x, y, look);
+		EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, x, y, width, height, look);
 		EFFECTMANAGER->SpawnFragments(eType, x, y);
 		break;
 	}

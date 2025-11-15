@@ -50,7 +50,7 @@ public:
 	void setttingPlayer(Player* player) { _player = player; }
 	void setttingBulletManager(BulletManager* bManager) { _bManager = bManager; }
 	
-	void playExplodeEffect(EnemyType eType, int x, int y, int look);
+	void playExplodeEffect(EnemyType eType, int x, int y, int width, int height, int look);
 	void playExplodeSound(EnemyType eType);
 
 	void playHitEffect(BulletType bType, int x, int y, int look);

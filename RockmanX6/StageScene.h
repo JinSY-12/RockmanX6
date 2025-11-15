@@ -22,9 +22,12 @@ private:
 	
 	typedef vector<RECT> vFloor;
 	typedef vector<RECT>::iterator viFloor;
-	
+
+	typedef vector<RECT> vCheckFloor;
+
 	vFloor _vFloor;
 	viFloor _viFloor;
+	vCheckFloor _vCheckFloor;
 
 	BulletManager bManager;
 	EnemyManager eManager;
