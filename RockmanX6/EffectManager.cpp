@@ -25,6 +25,19 @@ void EffectManager::update(void)
 	}
 
 	moveFragments();
+
+	
+	for (auto img = _dqAfterImages.begin() ; img != _dqAfterImages.end();)
+	{
+		img->afterImageTimer += 0.1f;
+
+		if (img->afterImageTimer >= img->afterImageMaxTime)
+		{
+			img = _dqAfterImages.erase(img);
+		}
+
+		else ++img;
+	}
 }
 
 void EffectManager::render(HDC hdc)
@@ -40,7 +53,6 @@ void EffectManager::render(HDC hdc)
 		(*_viFragments).image->alphaRender(hdc, (*_viFragments).x - CAMERAMANAGER->getCameraPos().x,
 			(*_viFragments).y - CAMERAMANAGER->getCameraPos().y, 120);
 	}
-
 }
 
 void EffectManager::spawnEffect(EffectType eType, int x, int y, int width, int height, bool direct)
@@ -107,4 +119,37 @@ void EffectManager::moveFragments()
 		else ++_viFragments;
 	}
 }
+
+void EffectManager::addDashAfterImage(int x, int y, int frameX, int frameY, bool dir, string imageKey)
+{
+	AfterImage img;
+	img.image = IMAGEMANAGER->findImage(imageKey)->cloneImage();
+	img.x = x;
+	img.y = y;
+	img.frameX = frameX;
+	img.frameY = frameY;
+	img.direct = dir;
+	img.afterImageTimer = 0.0f;
+	img.afterImageMaxTime = 1.5f;
+
+	_dqAfterImages.push_back(img);
+}
+
+void EffectManager::deleteDashAfterImage(void)
+{
+	if (_dqAfterImages.size() > 0)
+	{
+		_dqAfterImages.clear();
+	}
+}
+
+void EffectManager::afterImageRender(HDC hdc)
+{
+	for (auto& img : _dqAfterImages)
+	{
+		if (img.direct) img.image->frameAlphaRender(hdc, img.x - img.image->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x, img.y - img.image->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, img.frameX, img.frameY, 150);
+		else img.image->frameAlphaRender(hdc, img.x - img.image->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x, img.y - img.image->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, img.frameX, img.frameY, 150);
+	}
+}
+
 

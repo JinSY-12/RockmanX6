@@ -240,9 +240,11 @@ public:
 	float dashSpeed;
 	bool pressDash;
 	bool aniDash;
+	
+	float afterImageTimer;
+	float afterImageInterval;
 
-	GImage* afterImage;
-
+	// 자체 이펙트 관련
 	GImage* attackHandEffect;
 	GImage* subHandEffect;
 
@@ -250,6 +252,21 @@ public:
 	int colorTimer;
 
 	BulletType bulletType;
+
+	// 차지샷 관련
+	float chargeBurstCount;
+	bool isCharging;
+
+	GImage* chargeEffect;
+	GImage* chargeAura;
+
+	int chargeEffectAlpha;
+	int chargeAuraAlpha;
+	int bursterEffectAlpha;
+
+	string bursterEffectName;
+
+	int test;
 
 	// 세이버 다단히트 관련
 	bool canHit;
@@ -300,6 +317,7 @@ public:
 	// 애니메이션 관련
 	virtual void setHitBox(void);
 	virtual void currentAnimChange(void);
+	virtual void afterImageControl(void);
 
 	// 상태 관련
 	inline void setStageGravity(float gravityPower) { progress.gravityAccel = gravityPower; }
@@ -490,6 +508,8 @@ public:
 
 	virtual void coolDownControl(void);
 	virtual void multiHitControl(void);
+
+	
 
 };
 

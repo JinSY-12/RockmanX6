@@ -25,7 +25,94 @@ void Player::update(void)
 
 void Player::render(void)
 {
-	// Do Nothing!!
+	pStatus.player->frameAlphaRender(getMemDC(), hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
+		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
+		pStatus.player->getFrameX(), pStatus.lookRight, 255);
+
+	afterImageControl();
+
+	if (chargeEffect != nullptr) chargeEffect->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
+		hitBoxCenter.y - chargeEffect->getFrameHeight() + 10 * SCALE_FACTOR,
+		chargeEffect->getFrameX(), pStatus.lookRight, chargeEffectAlpha);
+
+	if (chargeAura != nullptr) chargeAura->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
+		hitBoxCenter.y - chargeAura->getFrameHeight() + 10 * SCALE_FACTOR,
+		chargeAura->getFrameX(), pStatus.lookRight, chargeAuraAlpha);
+	
+	int aimX;
+	aimX = pStatus.lookRight ? pStatus.hitBox.right : pStatus.hitBox.left - attackHandEffect->getFrameWidth();
+
+	if (attackHandEffect != nullptr) attackHandEffect->frameAlphaRender(getMemDC(), aimX + pStatus.firePointX + busterPos.x,
+		pStatus.hitBox.top - attackHandEffect->getFrameHeight() / 2 + pStatus.firePointY + busterPos.y,
+		attackHandEffect->getFrameX(), pStatus.lookRight, bursterEffectAlpha);
+
+	if (UIMANAGER->getIsDebugMode() == true)
+	{
+		// 캐릭터 좌표
+		string temp1;
+		if (pStatus.isWallKick) temp1 = "O";
+		else temp1 = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, temp1, "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "스피드", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityX), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "애니메이션", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, currentAnim, "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 45, "점프 파워", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityY), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(charPos.x), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(charPos.y), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 45, "카메라 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().x), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 45, "카메라 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y), "DNF_M_18", RGB(0, 255, 255));
+
+		string temp;
+		if (CAMERAMANAGER->getLockX()) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100, "카메라 Lock X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+
+		if (CAMERAMANAGER->getLockY()) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 45, "카메라 Lock Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
+
+		if (pStatus.lookRight) temp = "우측";
+		else temp = "좌축";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100, "시야 방향", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+
+		if (pStatus.isDash) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100, "대시 중", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+
+		if (pStatus.isJumpDash) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 45, "대시 점프 중", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
+
+		// 히트박스 출력
+		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
+		DrawRectMakeColor(getMemDC(), pStatus.floorCheck, RGB(0, 0, 255), 2);
+		if(canHit) DrawRectMakeColor(getMemDC(), pStatus.saberHitBox, RGB(255, 0, 255), 4);
+	}
 }
 
 void Player::move(bool direction)
@@ -36,6 +123,7 @@ void Player::move(bool direction)
 		{
 			if (pStatus.lookRight && !pStatus.touchRight) pStatus.velocityX = dashSpeed;
 			else if(!pStatus.lookRight && !pStatus.touchLeft) pStatus.velocityX = -dashSpeed;
+			// pStatus.velocityX = 0;
 		}
 
 		else if (pStatus.isDash)
@@ -47,6 +135,7 @@ void Player::move(bool direction)
 				currentState = CharacterState::Idle;
 				pStatus.velocityX = 0.0f;
 			}
+			// pStatus.velocityX = 0;
 		}
 
 		else if (!pStatus.isDash)
@@ -54,16 +143,13 @@ void Player::move(bool direction)
 			if (pStatus.isOnGround) currentState = CharacterState::Walk;
 
 			float moveSpeed;
-			if (direction) moveSpeed = pStatus.moveSpeed;
-			else moveSpeed = -pStatus.moveSpeed;
-
+			// moveSpeed = 0;
+			moveSpeed = direction ? pStatus.moveSpeed : -pStatus.moveSpeed;
 			pStatus.velocityX = moveSpeed;
 		}
 
 		pStatus.isWallSlide = false;
 	}
-
-	
 }
 
 void Player::jump(void)
@@ -404,6 +490,7 @@ void Player::currentAnimChange(void)
 
 	else if (currentState == CharacterState::Idle)
 	{
+		pStatus.firePointX = 0 * SCALE_FACTOR;
 		pStatus.firePointY = 10 * SCALE_FACTOR;
 
 		switch (attState)
@@ -417,6 +504,7 @@ void Player::currentAnimChange(void)
 
 		case SholderState::Burst:
 			animSpeed = 0.07f;
+			
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			changeAnimation(pStatus.charName + "StandBurstLoop", 0);
@@ -437,7 +525,6 @@ void Player::currentAnimChange(void)
 			break;
 			
 		case SholderState::Special:
-
 			if (pStatus.charName == "X_")
 			{
 				if (previousState == CharacterState::JumpUp || previousState == CharacterState::FallingDown)
@@ -465,6 +552,9 @@ void Player::currentAnimChange(void)
 
 	else if (currentState == CharacterState::Walk)
 	{
+		pStatus.firePointX = pStatus.lookRight ? 7 * SCALE_FACTOR : -7 * SCALE_FACTOR;
+		pStatus.firePointY = 8 * SCALE_FACTOR;
+
 		if (!isMoving)
 		{
 			switch (attState)
@@ -514,6 +604,7 @@ void Player::currentAnimChange(void)
 			case SholderState::Burst:
 			case SholderState::LargeBurst:
 				animSpeed = 0.04f;
+				
 				animOffset.x = 0 * SCALE_FACTOR;
 				animOffset.y = 0 * SCALE_FACTOR;
 				if (previousAnim == pStatus.charName + "WalkBurstStart") changeAnimation(pStatus.charName + "WalkBurstLoop", 0);
@@ -547,6 +638,111 @@ void Player::currentAnimChange(void)
 				break;
 			}
 		}
+	}
+	
+	////////////////////////
+	// 점프
+	////////////////////////
+
+	else if (currentState == CharacterState::JumpUp)
+	{
+		pStatus.firePointX = pStatus.lookRight ? -1 * SCALE_FACTOR : 1 * SCALE_FACTOR;
+		pStatus.firePointY = 5 * SCALE_FACTOR;
+
+		switch (attState)
+		{
+		case SholderState::Burst:
+		case SholderState::LargeBurst:
+			animSpeed = 0.06f;
+			animOffset.x = 0 * SCALE_FACTOR;
+			animOffset.y = 0 * SCALE_FACTOR;
+			if (previousAnim == pStatus.charName + "Jump") changeAnimation(pStatus.charName + "JumpBurst", pStatus.player->getFrameX());
+			else changeAnimation(pStatus.charName + "JumpBurst", 0);
+			break;
+		case SholderState::Hold:
+		case SholderState::None:
+			animSpeed = 0.06f;
+			animOffset.x = 0 * SCALE_FACTOR;
+			animOffset.y = 0 * SCALE_FACTOR;
+			if (previousAnim == pStatus.charName + "JumpBurst") changeAnimation(pStatus.charName + "Jump", pStatus.player->getFrameX());
+			else if (previousAnim == pStatus.charName + "JumpSaber") changeAnimation(pStatus.charName + "Jump", 4);
+			else changeAnimation(pStatus.charName + "Jump", 0);
+			break;
+		case SholderState::Special:
+			if (pStatus.charName == "X_")
+			{
+				if (previousState == CharacterState::WallKick)
+				{
+					changeAnimation(pStatus.charName + "Jump", 0);
+					pStatus.movable = true;
+					pStatus.isAttack = false;
+				}
+				else
+				{
+					animSpeed = 0.045f;
+					animOffset.x = pStatus.lookRight ? 11 * SCALE_FACTOR : -11 * SCALE_FACTOR;
+					animOffset.y = -1 * SCALE_FACTOR;
+					changeAnimation("X_JumpSaber", 0);
+				}
+			}
+			break;
+
+		default:
+			break;
+		}
+
+		// 점프 도중 모션 고정
+		if (attState != SholderState::Special && pStatus.player->getFrameX() >= 4) pStatus.player->setFrameX(4);
+	}
+
+	////////////////////////
+	// 낙하
+	////////////////////////
+
+	else if (currentState == CharacterState::FallingDown)
+	{
+		pStatus.firePointX = pStatus.lookRight ? -1 * SCALE_FACTOR : 1 * SCALE_FACTOR;
+		pStatus.firePointY = 5 * SCALE_FACTOR;
+
+		switch (attState)
+		{
+		case SholderState::Burst:
+		case SholderState::LargeBurst:
+			animSpeed = 0.06f;
+			animOffset.x = 0 * SCALE_FACTOR;
+			animOffset.y = 0 * SCALE_FACTOR;
+			if (previousAnim == pStatus.charName + "Jump") changeAnimation(pStatus.charName + "JumpBurst", pStatus.player->getFrameX());
+			else changeAnimation(pStatus.charName + "JumpBurst", 5);
+			break;
+		case SholderState::Hold:
+		case SholderState::None:
+			animSpeed = 0.06f;
+			animOffset.x = 0 * SCALE_FACTOR;
+			animOffset.y = 0 * SCALE_FACTOR;
+			if (previousAnim == pStatus.charName + "JumpBurst") changeAnimation(pStatus.charName + "Jump", pStatus.player->getFrameX());
+			else changeAnimation(pStatus.charName + "Jump", 5);
+			break;
+		case SholderState::Special:
+			if (pStatus.charName == "X_")
+			{
+				if (previousState == CharacterState::WallKick || previousState == CharacterState::WallSlide)
+				{
+					attState = SholderState::None;
+					pStatus.movable = true;
+					pStatus.isAttack = false;
+				}
+				else
+				{
+					animSpeed = 0.045f;
+					animOffset.x = pStatus.lookRight ? 11 * SCALE_FACTOR : -11 * SCALE_FACTOR;
+					animOffset.y = -1 * SCALE_FACTOR;
+					changeAnimation("X_JumpSaber", 0);
+				}
+			}
+			break;
+		}
+
+		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
 	}
 
 	////////////////////////
@@ -593,11 +789,20 @@ void Player::currentAnimChange(void)
 				break;
 			}
 
+			// 프레임 관련 설정
+			/*
+			pStatus.firePointX = pStatus.lookRight ? 12 * SCALE_FACTOR : -12 * SCALE_FACTOR;
+			pStatus.firePointY = 10 * SCALE_FACTOR;
+			*/
+
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) isMoving = true;
 		}
 
 		else if (isMoving)
 		{
+			pStatus.firePointX = pStatus.lookRight ? 12 * SCALE_FACTOR : -12 * SCALE_FACTOR;
+			pStatus.firePointY = 10 * SCALE_FACTOR;
+
 			switch (attState)
 			{
 			case SholderState::Burst:
@@ -681,102 +886,13 @@ void Player::currentAnimChange(void)
 			}
 			break;
 		}
-	}
 
-	////////////////////////
-	// 점프
-	////////////////////////
+		// 프레임 별 버스터 발사 위치 설정
 
-	else if (currentState == CharacterState::JumpUp)
-	{		
-		switch (attState)
-		{
-		case SholderState::Burst:
-		case SholderState::LargeBurst:
-			animSpeed = 0.06f;
-			animOffset.x = 0 * SCALE_FACTOR;
-			animOffset.y = 0 * SCALE_FACTOR;
-			if (previousAnim == pStatus.charName + "Jump") changeAnimation(pStatus.charName + "JumpBurst", pStatus.player->getFrameX());
-			else changeAnimation(pStatus.charName + "JumpBurst", 0);
-			break;
-		case SholderState::Hold:
-		case SholderState::None:
-			animSpeed = 0.06f;
-			animOffset.x = 0 * SCALE_FACTOR;
-			animOffset.y = 0 * SCALE_FACTOR;
-			if (previousAnim == pStatus.charName + "JumpBurst") changeAnimation(pStatus.charName + "Jump", pStatus.player->getFrameX());
-			else if (previousAnim == pStatus.charName + "JumpSaber") changeAnimation(pStatus.charName + "Jump", 4);
-			else changeAnimation(pStatus.charName + "Jump", 0);
-			break;
-		case SholderState::Special:
-			if (pStatus.charName == "X_")
-			{				
-				if (previousState == CharacterState::WallKick)
-				{
-					changeAnimation(pStatus.charName + "Jump", 0);
-					pStatus.movable = true;
-					pStatus.isAttack = false;
-				}
-				else
-				{
-					animSpeed = 0.045f;
-					animOffset.x = pStatus.lookRight ? 11 * SCALE_FACTOR : -11 * SCALE_FACTOR;
-					animOffset.y = -1 * SCALE_FACTOR;
-					changeAnimation("X_JumpSaber", 0);
-				}
-			}
-			break;
-		}
-
-		// 점프 도중 모션 고정
-		if (attState != SholderState::Special && pStatus.player->getFrameX() >= 4) pStatus.player->setFrameX(4);
-	}
-
-	////////////////////////
-	// 낙하
-	////////////////////////
-
-	else if (currentState == CharacterState::FallingDown)
-	{
-		switch (attState)
-		{
-		case SholderState::Burst:
-		case SholderState::LargeBurst:
-			animSpeed = 0.06f;
-			animOffset.x = 0 * SCALE_FACTOR;
-			animOffset.y = 0 * SCALE_FACTOR;
-			if (previousAnim == pStatus.charName + "Jump") changeAnimation(pStatus.charName + "JumpBurst", pStatus.player->getFrameX());
-			else changeAnimation(pStatus.charName + "JumpBurst", 5);
-			break;
-		case SholderState::Hold:
-		case SholderState::None:
-			animSpeed = 0.06f;
-			animOffset.x = 0 * SCALE_FACTOR;
-			animOffset.y = 0 * SCALE_FACTOR;
-			if (previousAnim == pStatus.charName + "JumpBurst") changeAnimation(pStatus.charName + "Jump", pStatus.player->getFrameX());
-			else changeAnimation(pStatus.charName + "Jump", 5);
-			break;
-		case SholderState::Special:
-			if (pStatus.charName == "X_")
-			{
-				if (previousState == CharacterState::WallKick || previousState == CharacterState::WallSlide)
-				{
-					attState = SholderState::None;
-					pStatus.movable = true;
-					pStatus.isAttack = false;
-				}
-				else
-				{
-					animSpeed = 0.045f;
-					animOffset.x = pStatus.lookRight ? 11 * SCALE_FACTOR : -11 * SCALE_FACTOR;
-					animOffset.y = -1 * SCALE_FACTOR;
-					changeAnimation("X_JumpSaber", 0);
-				}
-			}
-			break;
-		}
-
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
+		/*
+		pStatus.firePointX = pStatus.lookRight ? 12 * SCALE_FACTOR : -12 * SCALE_FACTOR;
+		pStatus.firePointY = 10 * SCALE_FACTOR;
+		*/
 	}
 
 	////////////////////////
@@ -917,7 +1033,7 @@ void Player::currentAnimChange(void)
 	hitBoxCenter.y = pStatus.hitBox.bottom;
 
 	previousAnim = currentAnim;
-	previousState = currentState;
+	previousState = currentState;	
 }
 
 void Player::setOverPower(bool op, BulletSize bullet)
@@ -951,7 +1067,7 @@ void Player::colorChange(void)
 
 void Player::changeAnimation(const string& animName, int frame)
 {
-	if (previousAnim != animName)
+	if (currentAnim != animName)
 	{
 		currentAnim = animName;
 		pStatus.player = IMAGEMANAGER->findImage(currentAnim);
@@ -1007,4 +1123,28 @@ void Player::setHitBox(void)
 void Player::multiHitControl(void)
 {
 	// Do Nothing!
+}
+
+void Player::afterImageControl(void)
+{
+	if (pStatus.isDash || pStatus.isJumpDash)
+	{
+		afterImageTimer += 0.1f;
+
+		if (afterImageTimer >= afterImageInterval)
+		{
+			int x = charPos.x;
+			int y = charPos.y;
+			int frameX = pStatus.player->getFrameX();
+			int frameY = pStatus.player->getFrameY();
+			string key = currentAnim;
+			bool dir = pStatus.lookRight;
+
+			EFFECTMANAGER->addDashAfterImage(x, y, frameX, frameY, dir, key);
+
+			afterImageTimer = 0.0f;
+		}
+	}
+
+	// else EFFECTMANAGER->deleteDashAfterImage();
 }

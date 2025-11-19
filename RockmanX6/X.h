@@ -13,27 +13,11 @@ private:
 	bool normalBurstAble;
 	bool chargeBurstDelay;
 
-	// 차지샷 관련
-	float chargeBurstCount;
-	bool isCharging;
-
-	GImage* chargeEffect;
-	GImage* chargeAura;
-
-	int chargeEffectAlpha;
-	int chargeAuraAlpha;
-	int bursterEffectAlpha;
-
-	string bursterEffectName;
-
-	int test;
-
 public:
 	HRESULT init(void);
 	HRESULT init(int x, int y);
 	void release(void);
 	void update(void);
-	void render(void);
 
 	// 행동 관련
 	void jump(void) override;

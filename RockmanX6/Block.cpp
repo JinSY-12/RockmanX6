@@ -61,8 +61,7 @@ void Block::checkPlayerAttCollision(void)
     {
         if (IntersectRect(&temp, &(*it)->getBulletRect(), &oStatus.oHitBox))
         {
-            // 튕기기
-            
+            // ★튕기기 이펙트 이미지 추가★            
             SOUNDMANAGER->play("SFX_SaberHit", 0.5f); // 사운드 대체 할 것
             it = bullets.erase(it);
         }

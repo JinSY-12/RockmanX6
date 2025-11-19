@@ -81,6 +81,8 @@ void StageScene::render(void)
 	oManager.render();
 	bManager.render();
 
+	EFFECTMANAGER->afterImageRender(getMemDC());
+	
 	player->render();
 
 	EFFECTMANAGER->render(getMemDC());
@@ -174,8 +176,6 @@ void StageScene::objectSetting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
-		oManager.spawnObject(ObjectType::Block, 200 * SCALE_FACTOR, 830 * SCALE_FACTOR);
-
 		oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR);
 		oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR);
 		oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR);
@@ -419,11 +419,11 @@ void StageScene::stageCollision(void)
 	player->setTopCollision(false, 0);
 
 	// 바닥 체크
-	for (int row = player->getPlayerBottom() + 6; row >= player->getPlayerBottom(); row--)
+	for (int row = player->getPlayerBottom() + 5; row >= player->getPlayerBottom(); row--)
 	{
 		if (player->getPlayerSight() == true)
 		{
-			for (int line = player->getPlayerCenter() - player->getPlayerHitBoxWidth() / 2 + 5; line <= player->getPlayerCenter() + player->getPlayerHitBoxWidth() / 2 - 5 ; line++)
+			for (int line = player->getPlayerCenter() - player->getPlayerHitBoxWidth() / 3 + 5; line <= player->getPlayerCenter() + player->getPlayerHitBoxWidth() / 3 - 5 ; line++)
 			{
 				// 컬러 비교
 				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);

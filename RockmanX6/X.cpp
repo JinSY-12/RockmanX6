@@ -74,8 +74,6 @@ void X::update(void)
 
 #pragma endregion
 
-
-
 #pragma region Character Control
 
 	/////////////////////////////////
@@ -196,27 +194,6 @@ void X::update(void)
 			}
 		}
 
-#pragma region Jump
-		/////////////////////////////////
-		// 점프 파트
-		/////////////////////////////////
-
-		// 점프 누르면 점프 파워 만큼 계속 올라가고
-		// 점프를 떼면 바로 낙하를 하게 만들어서 소점프, 대점프 구현
-
-		if (KEYMANAGER->isOnceKeyDown('X')) // 'ㅌ' 검색을 위한 주석ㅋㅋㅋ
-		{
-			jump();
-		}
-
-		if (KEYMANAGER->isOnceKeyUp('X') && !pStatus.isWallKick)
-		{
-			if (pStatus.velocityY < 0.0f) pStatus.velocityY = 0.0f;
-			pStatus.isJumpUp = false;
-		}
-
-#pragma endregion
-
 #pragma region Dash
 		if (KEYMANAGER->isOnceKeyDown('Z'))						// 'ㅋ' 문자 찾기 용
 		{
@@ -271,6 +248,31 @@ void X::update(void)
 		}
 
 #pragma endregion
+
+#pragma region Jump
+		/////////////////////////////////
+		// 점프 파트
+		/////////////////////////////////
+
+		// 점프 누르면 점프 파워 만큼 계속 올라가고
+		// 점프를 떼면 바로 낙하를 하게 만들어서 소점프, 대점프 구현
+
+		if (KEYMANAGER->isOnceKeyDown('X')) // 'ㅌ' 검색을 위한 주석ㅋㅋㅋ
+		{
+			cout << "Press X" << endl;
+			jump();
+		}
+
+		if (KEYMANAGER->isOnceKeyUp('X') && !pStatus.isWallKick)
+		{
+			if (pStatus.velocityY < 0.0f) pStatus.velocityY = 0.0f;
+			pStatus.isJumpUp = false;
+		}
+
+#pragma endregion
+
+
+
 #pragma region Attack
 		/////////////////////////////////
 		// 공격 파트
@@ -351,7 +353,6 @@ void X::update(void)
 
 #pragma region Animation Change + SFX Sound Play
 	
-
 	if (!animDelay)
 	{
 		applyForce();
@@ -370,102 +371,6 @@ void X::update(void)
 	UIMANAGER->setCurrentPlayerStatus(pStatus.hp, pStatus.mp, pStatus.maxHp, progress.life);
 
 #pragma endregion
-}
-
-void X::render(void)
-{
-	pStatus.player->frameAlphaRender(getMemDC(), hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
-		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
-		pStatus.player->getFrameX(), pStatus.lookRight, 255);
-
-	chargeEffect->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
-		hitBoxCenter.y - chargeEffect->getFrameHeight() + 10 * SCALE_FACTOR,
-		chargeEffect->getFrameX(), pStatus.lookRight, chargeEffectAlpha);
-
-	chargeAura->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
-		hitBoxCenter.y - chargeAura->getFrameHeight() + 10 * SCALE_FACTOR,
-		chargeAura->getFrameX(), pStatus.lookRight, chargeAuraAlpha);
-
-	pStatus.firePointX = 0 * SCALE_FACTOR;
-	// pStatus.firePointY = 0 * SCALE_FACTOR;
-	
-	busterPos.y = 0 * SCALE_FACTOR;
-
-	int aimX;
-	aimX = pStatus.lookRight ? pStatus.hitBox.right : pStatus.hitBox.left - attackHandEffect->getFrameWidth();
-
-	attackHandEffect->frameAlphaRender(getMemDC(), aimX + pStatus.firePointX + busterPos.x,
-		pStatus.hitBox.top - attackHandEffect->getFrameHeight()/2 + pStatus.firePointY + busterPos.y,
-		attackHandEffect->getFrameX(), pStatus.lookRight, bursterEffectAlpha);
-	
-	if (UIMANAGER->getIsDebugMode() == true)
-	{
-		// 캐릭터 좌표
-		string temp1;
-		if(pStatus.isWallKick) temp1 = "O";
-		else temp1 = "X";
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, temp1, "DNF_M_18", RGB(0, 255, 255));
-		// TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, printBodyState(), "DNF_M_18", RGB(0, 255, 255));
-		
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "스피드", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityX), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "애니메이션", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, currentAnim, "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 45, "점프 파워", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityY), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(charPos.x), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(charPos.y), "DNF_M_18", RGB(0, 255, 255));
-		
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 45, "카메라 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().x), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 45, "카메라 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y), "DNF_M_18", RGB(0, 255, 255));
-		
-		string temp;
-		if (CAMERAMANAGER->getLockX()) temp = "O";
-		else temp = "X";
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100, "카메라 Lock X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
-
-		if (CAMERAMANAGER->getLockY()) temp = "O";
-		else temp = "X";
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 45, "카메라 Lock Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
-		
-		if (pStatus.lookRight) temp = "우측";
-		else temp = "좌축";
-		
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100, "시야 방향", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
-
-		if (pStatus.isDash) temp = "O";
-		else temp = "X";
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100, "대시 중", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
-
-		if (pStatus.isJumpDash) temp = "O";
-		else temp = "X";
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 45, "대시 점프 중", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
-
-		// 히트박스 출력
-		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
-		DrawRectMakeColor(getMemDC(), pStatus.floorCheck, RGB(0, 0, 255), 2);
-		DrawRectMakeColor(getMemDC(), pStatus.saberHitBox, RGB(255, 0, 255), 2);
-	}
 }
 
 void X::jump(void)
@@ -603,7 +508,6 @@ void X::frameCheck(void)
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			{
 				attState = SholderState::Hold;
-				// pStatus.player->setFrameX(0);
 			}
 		}
 
@@ -1001,6 +905,8 @@ void X::spawn(int x, int y)
 	pStatus.isDash = false;
 	pStatus.isJumpDash = false;
 	pressDash = false;
+	afterImageTimer = 0.0f;
+	afterImageInterval = 0.3f;
 
 	// 무적 초기화
 	pStatus.invincibleMaxTime = 5.0f;
@@ -1035,7 +941,7 @@ void X::spawn(int x, int y)
 	previousAnim = "X_Idle";
 	currentAnim = "X_Spawn";
 	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
-	afterImage = IMAGEMANAGER->findImage(currentAnim);
+	// afterImage = IMAGEMANAGER->findImage(currentAnim);
 	chargeEffect = IMAGEMANAGER->findImage("SFX_Charge");
 	chargeAura = IMAGEMANAGER->findImage("SFX_ChargeAura"); 
 	attackHandEffect = IMAGEMANAGER->findImage(bursterEffectName);
@@ -1081,6 +987,7 @@ void X::multiHitControl(void)
 			case CharacterState::Idle:
 			case CharacterState::Walk:
 			case CharacterState::Dash:
+			case CharacterState::DashEnd:
 				canHit = prevFrame != frame && (frame == 3 || frame == 4 || frame == 5);
 				// Saber 3 4 5 = 43 * 43 / 54 * 70 / 55 * 55
 				switch(frame)
@@ -1090,7 +997,6 @@ void X::multiHitControl(void)
 						saberHeight = 43 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = -8 * SCALE_FACTOR;
-						//pStatus.saberDamage = 0;
 						pStatus.saberDamage = 1;
 						break;
 					case 4:
@@ -1098,7 +1004,6 @@ void X::multiHitControl(void)
 						saberHeight = 70 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = 8 * SCALE_FACTOR;
-						//pStatus.saberDamage = 0;
 						pStatus.saberDamage = 1;
 						break;
 					case 5:
@@ -1106,7 +1011,6 @@ void X::multiHitControl(void)
 						saberHeight = 55 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = 9 * SCALE_FACTOR;
-						//pStatus.saberDamage = 0;
 						pStatus.saberDamage = 2;
 						break;
 				}
