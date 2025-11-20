@@ -68,8 +68,6 @@ private:
 
     COLORREF* mPixels;
 
-
-
 public:
 
     HRESULT init(int width, int height);

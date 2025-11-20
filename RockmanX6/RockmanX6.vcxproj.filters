@@ -255,6 +255,9 @@
     <ClInclude Include="ObjectType.h">
       <Filter>소스 파일\Object\ObjectBase</Filter>
     </ClInclude>
+    <ClInclude Include="MetaWheel.h">
+      <Filter>소스 파일\Enemy\Minion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameNode.cpp">
@@ -361,6 +364,9 @@
     </ClCompile>
     <ClCompile Include="Block.cpp">
       <Filter>소스 파일\Object\ObjectList</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaWheel.cpp">
+      <Filter>소스 파일\Enemy\Minion</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -55,6 +55,7 @@ public:
 	inline void settingPlayer(Player* p) { oPlayer = p; }
 
 	virtual void checkPlayerAttCollision(void);
+	virtual void checkBulletCollision(void);
 	virtual void checkWallCollision(void);
 
 	// getter,setter

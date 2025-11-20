@@ -149,6 +149,7 @@
     <ClInclude Include="Junkroid.h" />
     <ClInclude Include="KeyManager.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="MetaWheel.h" />
     <ClInclude Include="MovieScene.h" />
     <ClInclude Include="ObjectBase.h" />
     <ClInclude Include="ObjectManager.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="Junkroid.cpp" />
     <ClCompile Include="KeyManager.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="MetaWheel.cpp" />
     <ClCompile Include="MovieScene.cpp" />
     <ClCompile Include="ObjectBase.cpp" />
     <ClCompile Include="ObjectManager.cpp" />

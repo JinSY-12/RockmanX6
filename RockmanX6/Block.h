@@ -10,8 +10,7 @@ public:
 	HRESULT init(int x, int y) override;
 	void release(void) override;
 	void update(void) override;
-	// void render(void);
 
-	void checkPlayerAttCollision(void) override;
+	// void checkPlayerAttCollision(void) override;
 };
 

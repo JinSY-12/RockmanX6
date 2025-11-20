@@ -1,13 +1,11 @@
 #pragma once
 #include "EnemyBase.h"
 
-class Junkroid : public EnemyBase
+class MetaWheel : public EnemyBase
 {
 private:
 
-
 public:
-
 	HRESULT init(void) override;
 	HRESULT init(int x, int y) override;
 	void release(void) override;
@@ -18,5 +16,6 @@ public:
 	void attack(void) override;
 
 	void checkPlayerCollision(void)	override;
+	void checkPlayerAttCollision(void) override;
 };
 

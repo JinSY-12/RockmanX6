@@ -2,6 +2,7 @@
 #include "Junkroid.h"
 #include "BulletManager.h"
 #include "Player.h"
+#include "MetaWheel.h"
 
 HRESULT Junkroid::init(void)
 {
@@ -41,11 +42,10 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.lookRight = false;
 
     eStatus.patternTimer = 0.0f;
-    eStatus.maxPatternTime = 15.0f;
+    eStatus.maxPatternTime = 20.0f;
 	eStatus.invincibleTimer = 0.0f;
     eStatus.invincibleMaxTime = 0.0f;
     eStatus.isAtt = false;
-
 
     return S_OK;
 }
@@ -65,6 +65,7 @@ void Junkroid::update(void)
     animChange();
     checkPlayerCollision();
     checkPlayerAttCollision();
+    checkBulletCollision();
     enemyInvincibleTimerUpdate();
     isDead();
 }
@@ -82,6 +83,18 @@ void Junkroid::animChange()
         eStatus.eImage->resume();
         if (eStatus.eImage->getFrameX() >= eStatus.eImage->getMaxFrameX()) eState = EnemyState::Idle;
     }
+}
+
+void MetaWheel::attack(void)
+{
+}
+
+void MetaWheel::checkPlayerCollision(void)
+{
+}
+
+void MetaWheel::checkPlayerAttCollision(void)
+{
 }
 
 void Junkroid::attack(void)
@@ -103,15 +116,3 @@ void Junkroid::checkPlayerCollision()
         }
 	}
 }
-
-void Junkroid::checkPlayerAttCollision(void)
-{
-    RECT temp;
-    if (IntersectRect(&temp, &player->getSaberRect(), &eStatus.eHitBox) && !eStatus.overpower && player->getCanHit())
-    {
-        eStatus.hp -= player->getSaberDamage();
-        player->setAnimDelay(true);
-        SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
-    }
-}
-

@@ -16,9 +16,15 @@ private:
 		int startX;
 		int startY;
 
-		int velocityY;
+		int offsetX;
+		int offsetY;
 
 		int gravity;
+		int velocityY;
+		
+		float aniSpeed;
+
+		int alpha;
 	};
 
 	struct AfterImage

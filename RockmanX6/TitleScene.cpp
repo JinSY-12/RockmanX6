@@ -202,12 +202,22 @@ void TitleScene::addImage(void)
 	// 캐릭터 이미지
 	//////////////////////////////////
 
-	//// 애니메이션////
+	//////////////////////////////////
+	// 공통 이펙트
+	//////////////////////////////////
 
-	// 이펙트
 	IMAGEMANAGER->addFrameImage("SFX_DashBoost", "Resources/Image/SFX/SFX_DashBoost.bmp", 432 * SCALE_FACTOR, 78 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("SFX_WallKick", "Resources/Image/SFX/SFX_WallKick.bmp", 136 * SCALE_FACTOR, 68 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("SFX_BursterBlock", "Resources/Image/SFX/SFX_BursterBlock.bmp", 210 * SCALE_FACTOR, 132 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_BursterHit_1", "Resources/Image/SFX/SFX_BursterHit_1.bmp", 160 * SCALE_FACTOR, 124 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_BursterHit_2", "Resources/Image/SFX/SFX_BursterHit_2.bmp", 232 * SCALE_FACTOR, 176 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+
+	// * 4 인 이유는 사이즈가 작어서 키운거임
+	IMAGEMANAGER->addFrameImage("SFX_SaberHit_1", "Resources/Image/SFX/SFX_SaberHit_1.bmp", 402 * 4, 462 * 4, 3, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_SaberHit_2", "Resources/Image/SFX/SFX_SaberHit_2.bmp", 21 * 4, 532 * 4, 3, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_SaberHit_3", "Resources/Image/SFX/SFX_SaberHit_3.bmp", 798 * 4, 14 * 4, 3, 2, true, MAGENTA);
+	
 	//////////////////////////////////
 	// 엑스
 	//////////////////////////////////
@@ -402,6 +412,17 @@ void TitleScene::addSound(void)
 	//////////////////////////////////
 
 	//////////////////////////////////
+	// 곹옹 효과음
+	//////////////////////////////////
+
+	SOUNDMANAGER->addSound("SFX_DashStart", "Resources/Sound/SFX/Character/SFX_DashStart.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_DashEnd", "Resources/Sound/SFX/Character/SFX_DashEnd.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_Jump", "Resources/Sound/SFX/Character/SFX_Jump.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_WallTouch", "Resources/Sound/SFX/Character/SFX_WallTouch.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_SaberHit", "Resources/Sound/SFX/Character/SFX_SaberHit.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_Block", "Resources/Sound/SFX/Character/SFX_Block.wav", false, false);
+
+	//////////////////////////////////
 	// 엑스
 	//////////////////////////////////
 	
@@ -435,21 +456,11 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_X_BurstChargeLoop", "Resources/Sound/SFX/Character/X/SFX_X_BurstChargeLoop.wav", false, true);
 
 	SOUNDMANAGER->addSound("SFX_X_ArmorRoom", "Resources/Sound/SFX/Character/X/SFX_X_ArmorRoom.wav", false, false);
-
-	SOUNDMANAGER->addSound("SFX_DashStart", "Resources/Sound/SFX/Character/SFX_DashStart.wav", false, false);
-	SOUNDMANAGER->addSound("SFX_DashEnd", "Resources/Sound/SFX/Character/SFX_DashEnd.wav", false, false);
-
 	SOUNDMANAGER->addSound("SFX_X_Burster1Hit", "Resources/Sound/SFX/Character/X/SFX_X_Burster1Hit.wav", false, false);
-	
-	SOUNDMANAGER->addSound("SFX_Jump", "Resources/Sound/SFX/Character/SFX_Jump.wav", false, false);
-
-	SOUNDMANAGER->addSound("SFX_WallTouch", "Resources/Sound/SFX/Character/SFX_WallTouch.wav", false, false);
-
 	SOUNDMANAGER->addSound("SFX_X_Saber", "Resources/Sound/SFX/Character/X/SFX_X_Saber.wav", false, false);
 	
-	SOUNDMANAGER->addSound("SFX_SaberHit", "Resources/Sound/SFX/Character/SFX_SaberHit.wav", false, false);
-	
-	
+
+
 	//////////////////////////////////
 	// 제로
 	//////////////////////////////////

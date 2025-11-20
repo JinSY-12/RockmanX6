@@ -14,7 +14,7 @@ void EffectManager::update(void)
 {
 	for (_viEffect = _vEffect.begin(); _viEffect != _vEffect.end(); )
 	{
-		(*_viEffect).image->play(0.05f);
+		(*_viEffect).image->play((*_viEffect).aniSpeed);
 		
 		if ((*_viEffect).image->getFrameX() >= (*_viEffect).image->getMaxFrameX())
 		{
@@ -44,8 +44,8 @@ void EffectManager::render(HDC hdc)
 {
 	for (_viEffect = _vEffect.begin(); _viEffect != _vEffect.end(); _viEffect++)
 	{
-		(*_viEffect).image->frameRender(hdc, (*_viEffect).x - CAMERAMANAGER->getCameraPos().x,
-			(*_viEffect).y - CAMERAMANAGER->getCameraPos().y, (*_viEffect).image->getFrameX(), (*_viEffect).direct);
+		(*_viEffect).image->frameAlphaRender(hdc, (*_viEffect).x - CAMERAMANAGER->getCameraPos().x - effect.offsetX,
+			(*_viEffect).y - CAMERAMANAGER->getCameraPos().y - effect.offsetY, (*_viEffect).image->getFrameX(), (*_viEffect).direct, (*_viEffect).alpha);
 	}
 
 	for (_viFragments = _vFragments.begin(); _viFragments != _vFragments.end(); _viFragments++)
@@ -57,23 +57,82 @@ void EffectManager::render(HDC hdc)
 
 void EffectManager::spawnEffect(EffectType eType, int x, int y, int width, int height, bool direct)
 {
+	effect.direct = direct;
+	effect.alpha = 255;
+
 	switch (eType)
 	{
 	case EffectType::SmallEnemyBomb:
 		effect.image = IMAGEMANAGER->findImage("SFX_Explosion")->cloneImage();
+		effect.offsetX = direct ? 0 * SCALE_FACTOR : 0 * SCALE_FACTOR;
+		effect.offsetY = 0 * SCALE_FACTOR;
+		effect.aniSpeed = 0.05f;
+		
 		break;
 	case EffectType::DashStartDust:
 		effect.image = IMAGEMANAGER->findImage("SFX_DashBoost")->cloneImage();
+		effect.offsetX = direct ? 0 * SCALE_FACTOR : 0 * SCALE_FACTOR;
+		effect.offsetY = 0 * SCALE_FACTOR;
+		effect.aniSpeed = 0.05f;
 		break;
 	case EffectType::WallKick:
 		effect.image = IMAGEMANAGER->findImage("SFX_WallKick")->cloneImage();
+		effect.offsetX = direct ? 0 * SCALE_FACTOR : 0 * SCALE_FACTOR;
+		effect.offsetY = 0 * SCALE_FACTOR;
+		effect.aniSpeed = 0.05f;
+		break;
+	case EffectType::BursterBlock:
+		effect.image = IMAGEMANAGER->findImage("SFX_BursterBlock")->cloneImage();
+		effect.offsetX = 3 * SCALE_FACTOR;
+		effect.offsetY = -9 * SCALE_FACTOR;
+		effect.aniSpeed = 0.03f;
+		break;
+	case EffectType::BursterHit_1:
+		effect.image = IMAGEMANAGER->findImage("SFX_BursterHit_1")->cloneImage();
+		effect.offsetX = 6 * SCALE_FACTOR;
+		effect.offsetY = -5 * SCALE_FACTOR;
+		effect.aniSpeed = 0.03f;
+		break;
+	case EffectType::BursterHit_2:
+		effect.image = IMAGEMANAGER->findImage("SFX_BursterHit_2")->cloneImage();
+		effect.offsetX = 7 * SCALE_FACTOR;
+		effect.offsetY = -18 * SCALE_FACTOR;
+		effect.aniSpeed = 0.03f;
+		break;
+	case EffectType::SaberHit_1:
+		effect.image = IMAGEMANAGER->findImage("SFX_SaberHit_1")->cloneImage();
+		effect.offsetX = 0 * SCALE_FACTOR;
+		effect.offsetY = 0 * SCALE_FACTOR;
+		effect.aniSpeed = 0.08f;
+		effect.direct = 0;
+		effect.alpha = 150;
+		break;
+	case EffectType::SaberHit_2:
+		effect.image = IMAGEMANAGER->findImage("SFX_SaberHit_1")->cloneImage();
+		effect.offsetX = 0 * SCALE_FACTOR;
+		effect.offsetY = 0 * SCALE_FACTOR;
+		effect.aniSpeed = 0.08f;
+		effect.alpha = 150;
+		break;
+	case EffectType::SaberHit_3:
+		effect.image = IMAGEMANAGER->findImage("SFX_SaberHit_2")->cloneImage();
+		effect.offsetX = 0 * SCALE_FACTOR;
+		effect.offsetY = 0 * SCALE_FACTOR;
+		effect.aniSpeed = 0.08f;
+		effect.direct = 1;
+		effect.alpha = 150;
+		break;
+	case EffectType::SaberHit_4:
+		effect.image = IMAGEMANAGER->findImage("SFX_SaberHit_3")->cloneImage();
+		effect.offsetX = 0 * SCALE_FACTOR;
+		effect.offsetY = 0 * SCALE_FACTOR;
+		effect.aniSpeed = 0.08f;
+		effect.alpha = 150;
 		break;
 	}
 	
 	effect.x = x + (width - effect.image->getFrameWidth()) / 2;
 	effect.y = y - (height + effect.image->getFrameHeight()) / 2;
-	
-	effect.direct = direct;
 
 	_vEffect.push_back(effect);
 }

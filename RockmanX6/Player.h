@@ -508,8 +508,5 @@ public:
 
 	virtual void coolDownControl(void);
 	virtual void multiHitControl(void);
-
-	
-
 };
 

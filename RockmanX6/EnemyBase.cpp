@@ -110,8 +110,84 @@ void EnemyBase::checkPlayerCollision(void)
 
 void EnemyBase::checkPlayerAttCollision(void)
 {
-	// Do nothing!
-	// 공격 타입에 따라 안맞는 공격도 있어서 각자 체크
+	RECT temp;
+
+	if (IntersectRect(&temp, &player->getSaberRect(), &eStatus.eHitBox) && !eStatus.overpower && player->getCanHit())
+	{
+		int rnd = RND->getInt(4);
+
+		switch (eType)
+		{
+		case EnemyType::MetaDridler:
+			player->setAnimDelay(true);
+			// 튕기는 소리
+			// SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
+			break;
+			
+		default:
+			eStatus.hp -= player->getSaberDamage();
+			player->setAnimDelay(true);
+			SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
+
+			switch (rnd)
+			{
+			case 0:
+				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_1, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
+				break;
+			case 1:
+				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_2, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
+				break;
+			case 2:
+				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_3, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
+				break;
+			case 3:
+				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_4, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
+				break;
+			}			
+			break;
+		}
+	}
+}
+
+void EnemyBase::checkBulletCollision(void)
+{
+	vector<Bullet*>& bullets = bManager->getBullet();
+
+	for (auto it = bullets.begin(); it != bullets.end();)
+	{
+		RECT temp;
+
+		if (IntersectRect(&temp, &(*it)->getBulletRect(), &eStatus.eHitBox) && !eStatus.overpower)
+		{
+			switch (eType)
+			{
+			case EnemyType::MetaDridler:
+				// 튕기는 소리
+				SOUNDMANAGER->play("SFX_Block", 0.5f);
+				EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+				break;
+
+			default:
+				eStatus.hp -= (*it)->getBulletDamage();
+				eStatus.overpower = true;
+				SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.5f);
+				if((*it)->getBulletType() != BulletType::ChargeBurst2) EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+				else EFFECTMANAGER->spawnEffect(EffectType::BursterHit_2, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+
+				if ((*it)->getBulletType() == BulletType::ChargeBurst2 || (*it)->getBulletType() == BulletType::FalconBurst2)
+				{
+					if (eStatus.hp > 0) it = bullets.erase(it);
+				}
+
+				else it = bullets.erase(it);
+				break;
+			}
+
+			
+		}
+
+		else ++it;
+	}
 }
 
 void EnemyBase::enemyInvincibleTimerUpdate(void)

@@ -40,11 +40,12 @@ void Block::release(void)
 void Block::update(void)
 {
     setObjectHitbox();
+    checkBulletCollision();
     checkPlayerAttCollision();
     checkDead();
 }
 
-
+/*
 void Block::checkPlayerAttCollision(void)
 {
     RECT temp;
@@ -61,8 +62,8 @@ void Block::checkPlayerAttCollision(void)
     {
         if (IntersectRect(&temp, &(*it)->getBulletRect(), &oStatus.oHitBox))
         {
-            // ★튕기기 이펙트 이미지 추가★            
-            SOUNDMANAGER->play("SFX_SaberHit", 0.5f); // 사운드 대체 할 것
+			EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+            SOUNDMANAGER->play("SFX_Block", 0.5f);
             it = bullets.erase(it);
         }
 
@@ -70,3 +71,4 @@ void Block::checkPlayerAttCollision(void)
     }
     
 }
+*/

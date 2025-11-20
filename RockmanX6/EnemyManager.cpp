@@ -23,7 +23,7 @@ void EnemyManager::update(void)
 
 	if (_vEnemy.size() > 0)
 	{
-		checkHitBoxCollision();
+		checkDead();
 	}
 }
 
@@ -35,28 +35,10 @@ void EnemyManager::render(void)
 	}
 }
 
-void EnemyManager::checkHitBoxCollision(void)
+void EnemyManager::checkDead(void)
 {
 	for (auto enemy = _vEnemy.begin(); enemy != _vEnemy.end();)
 	{
-		vector<Bullet*>& bullets = _bManager->getBullet();
-
-		for (auto it = bullets.begin(); it != bullets.end();)
-		{
-			RECT temp;
-			if (IntersectRect(&temp, &(*it)->getBulletRect(), &(*enemy)->getEnemyHitBox()) && !(*enemy)->getOverPower())
-			{
-				(*enemy)->reduceHp((*it)->getBulletDamage());
-
-				playHitEffect((*it)->getBulletType(), (*enemy)->getEnemyPos().x, (*enemy)->getEnemyPos().y, (*enemy)->getEnemyLook());
-				playHitSound((*it)->getBulletType());
-
-				it = bullets.erase(it);
-			}
-
-			else ++it;
-		}
-		
 		if ((*enemy)->getIsDead())
 		{
 			playExplodeEffect((*enemy)->getEnemyType(), (*enemy)->getEnemyPos().x, (*enemy)->getEnemyPos().y, (*enemy)->getEnemyWidth(), (*enemy)->getEnemyHeight(), (*enemy)->getEnemyLook());

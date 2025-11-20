@@ -42,7 +42,7 @@ public:
 	void update(void);
 	void render(void);
 	
-	void checkHitBoxCollision(void);
+	void checkDead(void);
 
 	void spawnEnemy(EnemyType eType, int x, int y);
 	void spawnBoss(BossType bType, int x, int y);

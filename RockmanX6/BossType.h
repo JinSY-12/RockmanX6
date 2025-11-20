@@ -10,5 +10,10 @@ enum class BossType
 enum class EnemyType
 {
 	Junkroid,
-	RollingStone
+	MetaWheel,
+	MetaDridler,
+	Caterpiride,
+	NightmareVirus,
+	NightmareInsect,
+	WormSniper
 };

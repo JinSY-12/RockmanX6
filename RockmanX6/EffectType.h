@@ -6,5 +6,12 @@ enum class EffectType
 	LargeEnemyBomb,
 	DashStartDust,
 	WallKick,
-	WallSlide
+	WallSlide,
+	BursterBlock,
+	BursterHit_1,
+	BursterHit_2,
+	SaberHit_1,
+	SaberHit_2,
+	SaberHit_3,
+	SaberHit_4
 };

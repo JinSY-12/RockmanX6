@@ -531,8 +531,6 @@ void StageScene::stageCollision(void)
 		_vCheckFloor[i].bottom = _vFloor[i].bottom - CAMERAMANAGER->getCameraPos().y;
 	}
 
-	// 벽과 플레이어 총알 충돌 판정 = 총알이 벽 관통이 안되게
-
 	vector<Bullet*>& bullets = bManager.getBullet();
 
 	for (auto it = bullets.begin(); it != bullets.end();)
@@ -546,6 +544,9 @@ void StageScene::stageCollision(void)
 				&& (*it)->getBulletType() != BulletType::FalconBurst2)
 			{
 				SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.3f);
+				if((*it)->getBulletType() == BulletType::ChargeBurst2) EFFECTMANAGER->spawnEffect(EffectType::BursterHit_2, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+				else EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+
 				bulletHit = true;
 				break;
 			}

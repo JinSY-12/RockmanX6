@@ -29,6 +29,7 @@ public:
 
 		bool rightDirect;
 		bool isFire;
+		bool pierce;
 
 		int demage;
 	};
