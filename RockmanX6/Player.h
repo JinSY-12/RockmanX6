@@ -243,6 +243,7 @@ public:
 	
 	float afterImageTimer;
 	float afterImageInterval;
+	bool hideAfterimage;
 
 	// 자체 이펙트 관련
 	GImage* attackHandEffect;
@@ -268,7 +269,7 @@ public:
 
 	int test;
 
-	// 세이버 다단히트 관련
+	// 세이버 관련
 	bool canHit;
 	bool animDelay;
 
@@ -282,6 +283,7 @@ public:
 	int saberHeight;
 	int saberOffsetX;
 	int saberOffsetY;
+
 
 public:
 	virtual HRESULT init(void);
@@ -398,8 +400,11 @@ public:
 				pStatus.isDash = false;
 				pStatus.isJumpDash = false;
 			}
+
+			hideAfterimage = false;
 		}
 	}
+
 	inline void setTopCollision(bool top, int bottomline)
 	{
 		pStatus.isOnTop = top;
@@ -418,6 +423,9 @@ public:
 			wallkickTimer = wallkickMaxTime;
 		}
 	}
+
+	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
+
 	void setOverPower(bool op, BulletSize bullet);
 	void setAnimDelay(bool delay) { animDelay = delay; }
 

@@ -56,7 +56,6 @@ void ObjectBase::checkPlayerAttCollision(void)
 		default:
 			break;
 		}
-		
 	}
 }
 

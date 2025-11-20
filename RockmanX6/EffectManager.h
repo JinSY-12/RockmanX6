@@ -72,7 +72,6 @@ public:
 	void afterImageRender(HDC hdc);
 	
 	void spawnEffect(EffectType eType, int x, int y, int width, int height, bool direct);
-	//void spawnEffect(EffectType eType, int x, int y, bool direct);
 	void SpawnFragments(EnemyType type, int x, int y);
 
 	void moveFragments();

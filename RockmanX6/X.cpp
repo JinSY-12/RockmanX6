@@ -866,6 +866,7 @@ void X::spawn(int x, int y)
 	progress.life = 2;
 	UIMANAGER->setMaxHp(pStatus.maxHp);
 	pStatus.saberDamage = 1;
+
 	////////////////////
 	// 상태 초기화
 	////////////////////
@@ -907,6 +908,7 @@ void X::spawn(int x, int y)
 	pressDash = false;
 	afterImageTimer = 0.0f;
 	afterImageInterval = 0.3f;
+	hideAfterimage = false;
 
 	// 무적 초기화
 	pStatus.invincibleMaxTime = 5.0f;
@@ -967,6 +969,8 @@ void X::specialAttack(void)
 		pStatus.isAttack = true;
 
 		pStatus.velocityX = 0;
+
+		hideAfterimage = true;
 	}
 }
 

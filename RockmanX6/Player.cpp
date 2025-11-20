@@ -123,6 +123,7 @@ void Player::move(bool direction)
 		{
 			if (pStatus.lookRight && !pStatus.touchRight) pStatus.velocityX = dashSpeed;
 			else if(!pStatus.lookRight && !pStatus.touchLeft) pStatus.velocityX = -dashSpeed;
+			// 이동 막기
 			// pStatus.velocityX = 0;
 		}
 
@@ -135,6 +136,7 @@ void Player::move(bool direction)
 				currentState = CharacterState::Idle;
 				pStatus.velocityX = 0.0f;
 			}
+			// 이동 막기
 			// pStatus.velocityX = 0;
 		}
 
@@ -143,8 +145,9 @@ void Player::move(bool direction)
 			if (pStatus.isOnGround) currentState = CharacterState::Walk;
 
 			float moveSpeed;
-			// moveSpeed = 0;
 			moveSpeed = direction ? pStatus.moveSpeed : -pStatus.moveSpeed;
+			// 이동 막기
+			// moveSpeed = 0;
 			pStatus.velocityX = moveSpeed;
 		}
 
@@ -197,12 +200,6 @@ void Player::dash(bool direction)
 	}
 
 	else dashSpeed = 0.0f;
-
-	if (pStatus.isOnGround)
-	{
-		// if (pStatus.lookRight) EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x + hitBoxWidth / 2 - IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameWidth(), charPos.y + IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameHeight() / 2, pStatus.lookRight);
-		// else EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x + hitBoxWidth, charPos.y + IMAGEMANAGER->findImage("SFX_DashBoost")->getFrameHeight() / 2, pStatus.lookRight);
-	}
 }
 
 void Player::sfxPlay(void)
@@ -336,35 +333,20 @@ void Player::wallKick(void)
 	
 	pStatus.velocityY = -9.0f;
 	pStatus.isWallKick = true;
-	
-	if (pStatus.lookRight)
-	{
-		pStatus.wallKickRight = true;
-		
-		if (pressDash == true)
-		{
-			pStatus.isJumpDash = true;
-			pStatus.velocityX = -pStatus.dashSpeed;
-		}
 
-		else pStatus.velocityX = -5.0f;
-		
-		// EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x + hitBoxWidth / 2, charPos.y + IMAGEMANAGER->findImage("SFX_WallKick")->getFrameHeight() / 2, pStatus.lookRight);
+	int kickOffset;
+	kickOffset = pStatus.lookRight ? 0 : pStatus.player->getFrameWidth() / 2;
+	EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x - kickOffset, charPos.y, pStatus.player->getFrameWidth(), pStatus.player->getFrameHeight(), pStatus.lookRight);
+
+	pStatus.wallKickRight = pStatus.lookRight;
+
+	if (pressDash == true)
+	{
+		pStatus.isJumpDash = true;
+		pStatus.velocityX = pStatus.lookRight ? -pStatus.dashSpeed : pStatus.dashSpeed;
 	}
 
-	else
-	{
-		pStatus.wallKickRight = false;
-
-		if (pressDash == true)
-		{
-			pStatus.isJumpDash = true;
-			pStatus.velocityX = pStatus.dashSpeed;
-		}
-		else pStatus.velocityX = 6.5f;
-
-		// EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x + hitBoxWidth - IMAGEMANAGER->findImage("SFX_WallKick")->getFrameWidth(), charPos.y + IMAGEMANAGER->findImage("SFX_WallKick")->getFrameHeight() / 2, pStatus.lookRight);
-	}
+	else pStatus.velocityX = pStatus.lookRight ? -5.0f : 5.0f;
 }
 
 void Player::attack(void)
@@ -795,7 +777,16 @@ void Player::currentAnimChange(void)
 			pStatus.firePointY = 10 * SCALE_FACTOR;
 			*/
 
-			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) isMoving = true;
+			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+			{
+				if (pStatus.isOnGround)
+				{
+					int dashOffset;
+					dashOffset = pStatus.lookRight ? hitBoxWidth * 3.8 : -hitBoxWidth;
+					EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x - dashOffset, charPos.y, pStatus.player->getFrameWidth(), pStatus.player->getFrameHeight(), pStatus.lookRight);
+				}
+				isMoving = true;
+			}
 		}
 
 		else if (isMoving)
@@ -1067,7 +1058,7 @@ void Player::colorChange(void)
 
 void Player::changeAnimation(const string& animName, int frame)
 {
-	if (currentAnim != animName)
+	if (previousAnim != animName)
 	{
 		currentAnim = animName;
 		pStatus.player = IMAGEMANAGER->findImage(currentAnim);
@@ -1129,22 +1120,26 @@ void Player::afterImageControl(void)
 {
 	if (pStatus.isDash || pStatus.isJumpDash)
 	{
-		afterImageTimer += 0.1f;
+		if(hideAfterimage || attState == SholderState::Special)
+			EFFECTMANAGER->deleteDashAfterImage();
 
-		if (afterImageTimer >= afterImageInterval)
+		else
 		{
-			int x = charPos.x;
-			int y = charPos.y;
-			int frameX = pStatus.player->getFrameX();
-			int frameY = pStatus.player->getFrameY();
-			string key = currentAnim;
-			bool dir = pStatus.lookRight;
+			afterImageTimer += 0.1f;
 
-			EFFECTMANAGER->addDashAfterImage(x, y, frameX, frameY, dir, key);
+			if (afterImageTimer >= afterImageInterval)
+			{
+				int x = charPos.x;
+				int y = charPos.y;
+				int frameX = pStatus.player->getFrameX();
+				int frameY = pStatus.player->getFrameY();
+				string key = currentAnim;
+				bool dir = pStatus.lookRight;
 
-			afterImageTimer = 0.0f;
+				EFFECTMANAGER->addDashAfterImage(x, y, frameX, frameY, dir, key);
+
+				afterImageTimer = 0.0f;
+			}
 		}
 	}
-
-	// else EFFECTMANAGER->deleteDashAfterImage();
 }

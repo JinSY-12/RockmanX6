@@ -67,7 +67,6 @@ void EffectManager::spawnEffect(EffectType eType, int x, int y, int width, int h
 		effect.offsetX = direct ? 0 * SCALE_FACTOR : 0 * SCALE_FACTOR;
 		effect.offsetY = 0 * SCALE_FACTOR;
 		effect.aniSpeed = 0.05f;
-		
 		break;
 	case EffectType::DashStartDust:
 		effect.image = IMAGEMANAGER->findImage("SFX_DashBoost")->cloneImage();
@@ -77,8 +76,8 @@ void EffectManager::spawnEffect(EffectType eType, int x, int y, int width, int h
 		break;
 	case EffectType::WallKick:
 		effect.image = IMAGEMANAGER->findImage("SFX_WallKick")->cloneImage();
-		effect.offsetX = direct ? 0 * SCALE_FACTOR : 0 * SCALE_FACTOR;
-		effect.offsetY = 0 * SCALE_FACTOR;
+		effect.offsetX = 7 * SCALE_FACTOR;
+		effect.offsetY = -8 * SCALE_FACTOR;
 		effect.aniSpeed = 0.05f;
 		break;
 	case EffectType::BursterBlock:
