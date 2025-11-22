@@ -45,7 +45,6 @@ public:
 	inline void settingPlayer(Player* player) { _player = player; }
 
 	void playExplodeEffect(EnemyBulletType eBType, int x, int y, int width, int height, int look)
-	// void playExplodeEffect(EnemyBulletType eBType, int x, int y, int look)
 	{
 		switch (eBType)
 		{

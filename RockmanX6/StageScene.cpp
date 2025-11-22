@@ -28,7 +28,7 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	stageSettting(bType);
 
 	// 스테이지 시작 준비
-	// SOUNDMANAGER->play(stagBGM, 0.5f);
+	SOUNDMANAGER->play(stagBGM, 0.5f);
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
 	noticeAniSpeed = 1;
@@ -70,6 +70,12 @@ void StageScene::update(void)
 		eManager.update();
 		oManager.update();
 		EFFECTMANAGER->update();
+
+		if (KEYMANAGER->isOnceKeyDown('N'))
+		{
+			if (IMAGEMANAGER->findImage("Stage_Intro") == nullptr) cout << "!!!" << endl;
+			else cout << "Yes" << endl;
+		}
 	}
 }
 
@@ -413,7 +419,7 @@ void StageScene::rectSetting(void)
 
 void StageScene::stageCollision(void)
 {
-	player->setIsOnGround(false, 0);	
+	player->setIsOnGround(false, 0);
 	player->setRightCollision(false, 0);
 	player->setLeftCollision(false, 0);
 	player->setTopCollision(false, 0);
@@ -423,7 +429,7 @@ void StageScene::stageCollision(void)
 	{
 		if (player->getPlayerSight() == true)
 		{
-			for (int line = player->getPlayerCenter() - player->getPlayerHitBoxWidth() / 3 + 5; line <= player->getPlayerCenter() + player->getPlayerHitBoxWidth() / 3 - 5 ; line++)
+			for (int line = player->getPlayerCenter() - player->getPlayerHitBoxWidth() / 3 + 3 * SCALE_FACTOR; line <= player->getPlayerCenter() + player->getPlayerHitBoxWidth() / 3 - 3 * SCALE_FACTOR; line++)
 			{
 				// 컬러 비교
 				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
@@ -438,7 +444,7 @@ void StageScene::stageCollision(void)
 
 		else
 		{
-			for (int line = player->getPlayerCenter() + 5 * SCALE_FACTOR; line >= player->getPlayerCenter() - 5 * SCALE_FACTOR; line--)
+			for (int line = player->getPlayerCenter() + player->getPlayerHitBoxWidth() / 3 - 3 * SCALE_FACTOR; line >= player->getPlayerCenter() - player->getPlayerHitBoxWidth() / 3 + 3 * SCALE_FACTOR; line--)
 			{
 				// 컬러 비교
 				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
@@ -451,6 +457,7 @@ void StageScene::stageCollision(void)
 			}
 		}
 	}
+
 
 	// 천장 체크
 	for (int row = player->getPlayerTop() - 2; row <= player->getPlayerTop(); row++)

@@ -259,7 +259,6 @@ void X::update(void)
 
 		if (KEYMANAGER->isOnceKeyDown('X')) // 'ㅌ' 검색을 위한 주석ㅋㅋㅋ
 		{
-			cout << "Press X" << endl;
 			jump();
 		}
 
@@ -844,7 +843,6 @@ void X::spawn(int x, int y)
 
 	pStatus.hitBox = RectMakeCenter(charPos.x, 0 - hitBoxHeight / 2, hitBoxWidth, hitBoxHeight);
 	pStatus.floorCheck = RectMakeCenter(charPos.x, charPos.y, hitBoxWidth, 4);
-	// pStatus.floorCheck = RectMakeCenter(charPos.x, charPos.y, 10, 4);
 	pStatus.saberHitBox = RectMake(pStatus.hitBox.right + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
@@ -907,7 +905,7 @@ void X::spawn(int x, int y)
 	pStatus.isJumpDash = false;
 	pressDash = false;
 	afterImageTimer = 0.0f;
-	afterImageInterval = 0.3f;
+	afterImageInterval = 0.4f; // 이거 늘리면 잔상이 나오는 빈도수가 적어집니다.
 	hideAfterimage = false;
 
 	// 무적 초기화

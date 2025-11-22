@@ -201,6 +201,39 @@ HRESULT GImage::init(const char* fileName, int width, int height, int maxFrameX,
     return S_OK;
 }
 
+HRESULT GImage::initFromHBITMAP(HBITMAP hBmp, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor)
+{
+    aniPlaying = true;
+
+    if (_imageInfo != nullptr) this->release();
+
+    HDC hdc = GetDC(_hWnd);
+
+    _imageInfo = new IMAGE_INFO;
+
+    _imageInfo->loadType = LOAD_RESOURCE;
+    _imageInfo->resID = 0;
+    _imageInfo->hMemDC = CreateCompatibleDC(hdc);
+    _imageInfo->hBit = hBmp;
+    _imageInfo->hOBit = (HBITMAP)SelectObject(_imageInfo->hMemDC, _imageInfo->hBit);
+    _imageInfo->width = width;
+    _imageInfo->height = height;
+    _imageInfo->currentFrameX = 0;
+    _imageInfo->currentFrameY = 0;
+    _imageInfo->maxFrameX = maxFrameX - 1;
+    _imageInfo->maxFrameY = maxFrameY - 1;
+    _imageInfo->frameWidth = width / maxFrameX;
+    _imageInfo->frameHeight = height / maxFrameY;
+
+    _fileName = nullptr; // 파일 기반이 아니므로 이름 없음
+    _isTrans = isTrans;
+    _transColor = transColor;
+
+    ReleaseDC(_hWnd, hdc);
+
+    return S_OK;
+}
+
 HRESULT GImage::init(const char* fileName, float x, float y, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor)
 {
     aniPlaying = true;
@@ -303,6 +336,33 @@ void GImage::release(void)
         SAFE_DELETE(_blendImage);
     }
 
+}
+
+BYTE* GImage::getPixelData()  // 이름 변경
+{
+    if (!_imageInfo || !_imageInfo->hBit) return nullptr;
+
+    if (bmPixels) return bmPixels; // 이미 로딩된 경우 재사용
+
+    int w = _imageInfo->width;
+    int h = _imageInfo->height;
+
+    bmPixels = new BYTE[w * h * 4]; // 32bit bitmap -> 4바이트 (B,G,R,A)
+
+    BITMAPINFO bmi;
+    ZeroMemory(&bmi, sizeof(BITMAPINFO));
+    bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bmi.bmiHeader.biWidth = w;
+    bmi.bmiHeader.biHeight = -h; // top-down
+    bmi.bmiHeader.biPlanes = 1;
+    bmi.bmiHeader.biBitCount = 32;
+    bmi.bmiHeader.biCompression = BI_RGB;
+
+    HDC hdc = GetDC(nullptr);
+    ::GetDIBits(hdc, _imageInfo->hBit, 0, h, bmPixels, &bmi, DIB_RGB_COLORS);
+    ReleaseDC(nullptr, hdc);
+
+    return bmPixels;
 }
 
 void GImage::play(float frameUpdateSec)

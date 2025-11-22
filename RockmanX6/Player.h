@@ -404,7 +404,6 @@ public:
 			hideAfterimage = false;
 		}
 	}
-
 	inline void setTopCollision(bool top, int bottomline)
 	{
 		pStatus.isOnTop = top;
@@ -479,23 +478,7 @@ public:
 			pStatus.movable = false;
 		}
 	}
-
 	inline void reduceMp(int damage) { pStatus.mp -= damage; }
-	inline float lerp(float start, float end, float time)
-	{
-		return start + (end - start) * time;
-	}
-
-	inline void isDead(void)
-	{
-		if (pStatus.hp <= 0)
-		{
-			pStatus.hp = 0;
-			pStatus.invincible = true;
-			pStatus.Dead = false;
-		}
-	}
-
 	inline void invincibleTimerUpdate()
 	{
 		if (pStatus.invincible && !pStatus.Dead)
@@ -508,12 +491,25 @@ public:
 			}
 		}
 	}
+	inline void isDead(void)
+	{
+		if (pStatus.hp <= 0)
+		{
+			pStatus.hp = 0;
+			pStatus.invincible = true;
+			pStatus.Dead = false;
+		}
+	}
 
 	virtual void colorSetting(void);
 	virtual void colorChange(void);
 
 	void changeAnimation(const string& animName, int frame);
 
+	inline float lerp(float start, float end, float time)
+	{
+		return start + (end - start) * time;
+	}
 	virtual void coolDownControl(void);
 	virtual void multiHitControl(void);
 };

@@ -31,6 +31,12 @@ private:
 	{
 		GImage* image;
 
+		GImage* blue;
+		GImage* skyBlue;
+		GImage* lightBlue;
+
+		string imageKey;
+
 		int x;
 		int y;
 		
@@ -39,6 +45,7 @@ private:
 
 		bool direct;
 
+		// 타이머 - MaxTime를 늘리면 잔상이 오래간다!
 		float afterImageTimer;
 		float afterImageMaxTime;
 	};
@@ -62,7 +69,6 @@ private:
 
 	dqAfterImages _dqAfterImages;
 
-	static const size_t MAX_AFTER_IMAGES = 4;
 
 public:
 	HRESULT init(void);
@@ -79,5 +85,6 @@ public:
 	void addDashAfterImage(int x, int y, int frameX, int frameY, bool dir, string imageKey);
 	void deleteDashAfterImage(void);
 	
+	void setAfterImageColor(GImage* img, COLORREF color);
 };
 

@@ -136,6 +136,10 @@ using namespace MY_UTIL;
 #define PI					3.1415926
 #define MAGENTA				RGB(255, 0, 255)
 
+#define	BLUE				RGB(25, 95, 255)
+#define SKYBLUE				RGB(83, 143, 255)
+#define	LIGHTBLUE			RGB(140, 190, 255)
+
 constexpr int SCALE_FACTOR = 3;
 
 #endif

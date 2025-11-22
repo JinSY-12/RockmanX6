@@ -68,6 +68,8 @@ private:
 
     COLORREF* mPixels;
 
+    BYTE* bmPixels = nullptr; // raw pixel 저장용
+
 public:
 
     HRESULT init(int width, int height);
@@ -77,11 +79,13 @@ public:
     HRESULT init(const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
     HRESULT init(const char* fileName, float x, float y, int width, int height, int maxFrameX, int maxFrameY, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
     HRESULT initForAlphaBlend(void);
+    HRESULT initFromHBITMAP(HBITMAP hBmp, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor);
 
     void setTransColor(bool isTrans, COLORREF transColor);
 
     void release(void);
 
+    BYTE* getPixelData();
 
     void play(float frameUpdateSec);
     inline void resume(void) { aniPlaying = true; }
@@ -162,8 +166,6 @@ public:
 
     // 프레임 X
 
-
-
     inline int getFrameX(void) { return _imageInfo->currentFrameX; }
     inline void setFrameX(int frameX)
     {
@@ -201,7 +203,18 @@ public:
 
     inline char* getFileName() { return _fileName; }
     inline bool getIsTrans() { return _isTrans; }
+	inline LPIMAGE_INFO getImageInfo() { return _imageInfo; }
+
+	inline void setIsTrans(bool isTrans) { _isTrans = isTrans; }
+    inline void setTransColor(COLORREF transColor) { _transColor = transColor; }
+	inline void setImageInfo(LPIMAGE_INFO imageInfo) { _imageInfo = imageInfo; }
     inline COLORREF getTransColor() { return _transColor; }
+
+	inline HBITMAP getHBit() { return _imageInfo->hBit; }
+	inline void setHBit(HBITMAP hBmp) {
+        if (_imageInfo->hBit) DeleteObject(_imageInfo->hBit);
+        _imageInfo->hBit = hBmp;
+    }
 
     inline GImage* cloneImage()
     {

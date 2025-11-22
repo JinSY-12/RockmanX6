@@ -22,7 +22,13 @@ public:
     GImage* addFrameImage(string strKey, const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
     GImage* addFrameImage(string strKey, const char* fileName, float x, float y, int width, int height, int maxFrameX, int maxFrameY, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
 
+    GImage* newAddFrameImage(string strKey, const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
+    
+    GImage* addAfterImage(const string& srcKey, COLORREF targetColor);
+    
     GImage* findImage(string strKey);
+
+    // void addAfterImage(string strKey, COLORREF rgb);
 
     bool deleteImage(string strkey);
     bool deleteAll();

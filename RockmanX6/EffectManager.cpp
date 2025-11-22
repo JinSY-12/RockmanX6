@@ -25,11 +25,20 @@ void EffectManager::update(void)
 	}
 
 	moveFragments();
-
 	
 	for (auto img = _dqAfterImages.begin() ; img != _dqAfterImages.end();)
 	{
 		img->afterImageTimer += 0.1f;
+		
+		if (img->afterImageTimer > img->afterImageMaxTime * 2 / 3)
+		{
+			(*img).image = (*img).lightBlue;
+		}
+		
+		else if (img->afterImageTimer > img->afterImageMaxTime / 3)
+		{
+			(*img).image = (*img).skyBlue;
+		}
 
 		if (img->afterImageTimer >= img->afterImageMaxTime)
 		{
@@ -181,7 +190,11 @@ void EffectManager::moveFragments()
 void EffectManager::addDashAfterImage(int x, int y, int frameX, int frameY, bool dir, string imageKey)
 {
 	AfterImage img;
-	img.image = IMAGEMANAGER->findImage(imageKey)->cloneImage();
+	img.imageKey = imageKey;
+	img.blue = IMAGEMANAGER->findImage(imageKey + "_Blue");
+	img.skyBlue = IMAGEMANAGER->findImage(imageKey + "_SkyBlue");
+	img.lightBlue = IMAGEMANAGER->findImage(imageKey + "_LightBlue");
+	img.image = img.blue;
 	img.x = x;
 	img.y = y;
 	img.frameX = frameX;
@@ -201,12 +214,17 @@ void EffectManager::deleteDashAfterImage(void)
 	}
 }
 
+void EffectManager::setAfterImageColor(GImage* img, COLORREF color)
+{
+	HDC hdcMem = CreateCompatibleDC(NULL);
+}
+
 void EffectManager::afterImageRender(HDC hdc)
 {
 	for (auto& img : _dqAfterImages)
 	{
-		if (img.direct) img.image->frameAlphaRender(hdc, img.x - img.image->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x, img.y - img.image->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, img.frameX, img.frameY, 150);
-		else img.image->frameAlphaRender(hdc, img.x - img.image->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x, img.y - img.image->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, img.frameX, img.frameY, 150);
+		if (img.direct) img.image->frameAlphaRender(hdc, img.x - img.image->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x, img.y - img.image->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, img.frameX, img.frameY, 100);
+		else img.image->frameAlphaRender(hdc, img.x - img.image->getFrameWidth() / 2 - CAMERAMANAGER->getCameraPos().x, img.y - img.image->getFrameHeight() - CAMERAMANAGER->getCameraPos().y, img.frameX, img.frameY, 100);
 	}
 }
 

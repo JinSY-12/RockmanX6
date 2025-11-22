@@ -38,7 +38,7 @@ void BulletManager::update(void)
 		else ++enemyBullets;
 	}
 
-	// if(_vEnemyBullet.size() > 0) checkPlayerCollision();
+	if(_vEnemyBullet.size() > 0) checkPlayerCollision();
 }
 
 void BulletManager::render(void)
