@@ -427,7 +427,7 @@ void X::chargeBurst(void)
 		if (chargeCount >= 0.3f && chargeCount < 1.0f)
 		{
 			attState = SholderState::Burst;
-			SOUNDMANAGER->play("SFX_X_Burster2", 0.5f);
+			
 			bursterEffectName = "SFX_BursterEffect2";
 			bursterEffectAlpha = 255;
 			attackHandEffect->setFrameX(0);
