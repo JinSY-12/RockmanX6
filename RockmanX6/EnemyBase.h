@@ -46,7 +46,7 @@ public:
 		int sightHeight;
 
 		bool lookRight;
-		bool isAtt;
+		bool isOnAttack;
 		bool dead;
 
 		float patternTimer;
@@ -57,6 +57,14 @@ public:
 		float invincibleMaxTime;
 		bool overpower;
 
+		bool touchLeftWall;
+		bool touchRightWall;
+		
+		float VelocityX;
+		float VelocityY;
+
+		float moveSpeed;
+		float updownSpeed;
 	};
 
 	EnemyState eState;
@@ -91,6 +99,8 @@ public:
 	// getter, setter
 	RECT getEnemySight() { return eStatus.attSight; }
 	RECT getEnemyHitBox() { return eStatus.eHitBox; }
+	RECT getEnemyWorldRect() { return eStatus.worldRect; }
+
 	inline int getEnemyWidth(void) { return eStatus.width; }
 	inline int getEnemyHeight(void) { return eStatus.height; }
 	int getCurrentHp(void) { return eStatus.hp; }
@@ -100,6 +110,9 @@ public:
 	EnemyPos getEnemyPos() { return ePos; }
 	bool getEnemyLook() { return eStatus.lookRight; }
 	EnemyType getEnemyType() { return eType; }
+
+	void setEnemyLeftTouch(bool touch) { eStatus.touchLeftWall = touch; }
+	void setEnemyRightTouch(bool touch) { eStatus.touchRightWall = touch; }
 
 	// 공격, 피격 관련
 	inline void settingBulletManager(BulletManager* bullet) { bManager = bullet; }

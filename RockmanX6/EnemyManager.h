@@ -3,6 +3,7 @@
 #include "BossType.h"
 #include "EnemyBase.h"
 #include "Junkroid.h"
+#include "MetaWheel.h"
 #include "EffectType.h"
 
 class Player;
@@ -55,6 +56,8 @@ public:
 
 	void playHitEffect(BulletType bType, int x, int y, int look);
 	void playHitSound(BulletType bType);
+
+	vector<EnemyBase*>& getEnemy() { return _vEnemy; }
 
 	EnemyManager() {}
 	~EnemyManager() {}

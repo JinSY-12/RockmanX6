@@ -126,8 +126,8 @@ void StageScene::stageSettting(BossType bType)
 			mPixelStage = IMAGEMANAGER->findImage("Pixel_Intro");
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
-			// player->init(4380 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
-			player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			player->init(1500 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			//player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();
 			enemySettting(bType);
@@ -157,13 +157,16 @@ void StageScene::enemySettting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
-		eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
 
-		eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 726 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 726 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 726 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 726 * SCALE_FACTOR);
+
+		eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 845 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 845 * SCALE_FACTOR);
 		break;
 
 		// 커맨드 얀마크
@@ -182,7 +185,7 @@ void StageScene::objectSetting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
-		oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR);
+		// oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR);
 		oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR);
 		oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR);
 		oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 158 * SCALE_FACTOR);
@@ -458,7 +461,6 @@ void StageScene::stageCollision(void)
 		}
 	}
 
-
 	// 천장 체크
 	for (int row = player->getPlayerTop() - 2; row <= player->getPlayerTop(); row++)
 	{
@@ -509,6 +511,34 @@ void StageScene::stageCollision(void)
 			player->setRightCollision(true, floor.left);
 			break;
 		}
+	}
+
+	// for (auto& floor : _vFloor)
+	for (auto* enemy : eManager.getEnemy())
+	{
+		bool leftTouch = false;
+		bool rightTouch = false;
+
+		// for (auto* enemy : eManager.getEnemy())
+
+		for (auto& floor : _vFloor)
+		{
+			if (enemy->getEnemyWorldRect().left - 8 < floor.right && enemy->getEnemyWorldRect().right > floor.right
+				&& enemy->getEnemyWorldRect().bottom > floor.top && enemy->getEnemyWorldRect().top < floor.bottom)
+			{
+				leftTouch = true;
+			}
+
+			if (enemy->getEnemyWorldRect().right + 8 > floor.left && enemy->getEnemyWorldRect().left < floor.left
+				&& enemy->getEnemyWorldRect().bottom > floor.top && enemy->getEnemyWorldRect().top < floor.bottom)
+			{
+				rightTouch = true;
+			}
+
+		}
+
+		enemy->setEnemyLeftTouch(leftTouch);
+		enemy->setEnemyRightTouch(rightTouch);
 	}
 
 	// 오브젝트와의 벽판정
@@ -564,7 +594,6 @@ void StageScene::stageCollision(void)
 	}
 
 	// 벽과 적 총알 충돌 판정 = 총알이 벽 관통이 안되게
-
 	vector<Bullet*>& enemyBullets = bManager.getEnemyBullet();
 
 	for (auto it = enemyBullets.begin(); it != enemyBullets.end();)

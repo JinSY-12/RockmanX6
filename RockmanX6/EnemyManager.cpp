@@ -61,6 +61,13 @@ void EnemyManager::spawnEnemy(EnemyType eType, int x, int y)
 		_enemy->settingPlayer(_player);
 		_vEnemy.push_back(_enemy);
 		break;
+	case EnemyType::MetaWheel:
+		_enemy = new MetaWheel;
+		_enemy->init(x, y);
+		_enemy->settingBulletManager(_bManager);
+		_enemy->settingPlayer(_player);
+		_vEnemy.push_back(_enemy);
+		break;
 	}
 }
 
@@ -74,9 +81,11 @@ void EnemyManager::playExplodeEffect(EnemyType eType, int x, int y, int width, i
 	switch (eType)
 	{
 	case EnemyType::Junkroid:
+	case EnemyType::MetaWheel:
 		EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, x, y, width, height, look);
 		EFFECTMANAGER->SpawnFragments(eType, x, y);
 		break;
+	
 	}
 }
 

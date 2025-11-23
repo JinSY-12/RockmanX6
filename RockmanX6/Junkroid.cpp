@@ -29,6 +29,9 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.overpower = false;
     eStatus.dead = false;
 
+    eStatus.touchLeftWall = false;
+    eStatus.touchRightWall = false;
+
     fPos.x = 0 * SCALE_FACTOR;
     fPos.y = IMAGEMANAGER->findImage("SFX_JunkBullet")->getFrameHeight();
 
@@ -45,7 +48,11 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.maxPatternTime = 20.0f;
 	eStatus.invincibleTimer = 0.0f;
     eStatus.invincibleMaxTime = 0.0f;
-    eStatus.isAtt = false;
+    eStatus.isOnAttack = false;
+
+    eStatus.moveSpeed = 0.0f;
+    eStatus.updownSpeed = 0.0f;
+        
 
     return S_OK;
 }
@@ -74,6 +81,7 @@ void Junkroid::animChange()
 {
     if (eState == EnemyState::Idle)
     {
+        eStatus.isOnAttack = false;
         eStatus.eImage->setFrameX(0);
         eStatus.eImage->pause();
     }
@@ -81,20 +89,9 @@ void Junkroid::animChange()
     else if (eState == EnemyState::Attack)
     {
         eStatus.eImage->resume();
+        eStatus.isOnAttack = true;
         if (eStatus.eImage->getFrameX() >= eStatus.eImage->getMaxFrameX()) eState = EnemyState::Idle;
     }
-}
-
-void MetaWheel::attack(void)
-{
-}
-
-void MetaWheel::checkPlayerCollision(void)
-{
-}
-
-void MetaWheel::checkPlayerAttCollision(void)
-{
 }
 
 void Junkroid::attack(void)
@@ -102,7 +99,6 @@ void Junkroid::attack(void)
     eState = EnemyState::Attack;
     bManager->fire(EnemyBulletType::JunkBullet, (eStatus.worldRect.left + eStatus.worldRect.right) / 2,
         eStatus.worldRect.top + fPos.y, eStatus.lookRight);
-    eStatus.patternTimer = 0.0f;
 }
 
 void Junkroid::checkPlayerCollision()
@@ -112,7 +108,8 @@ void Junkroid::checkPlayerCollision()
     {
         if (eStatus.attackAble)
         {
-			attack();
+			// attack();
+            eStatus.attackAble = false;
         }
 	}
 }

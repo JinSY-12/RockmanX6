@@ -68,12 +68,15 @@ void EnemyBase::setEnemyHitbox(void)
 
 void EnemyBase::pattern(void)
 {
-	if (eStatus.patternTimer >= eStatus.maxPatternTime)	eStatus.attackAble = true;
-		
-	else
+	if (!eStatus.isOnAttack)
 	{
-		eStatus.attackAble = false;
 		eStatus.patternTimer += 0.1f;
+
+		if (eStatus.patternTimer >= eStatus.maxPatternTime)
+		{
+			eStatus.attackAble = true;
+			eStatus.patternTimer = 0.0f;
+		}
 	}
 }
 
@@ -97,15 +100,20 @@ void EnemyBase::changeDirection(void)
 
 	if (eState == EnemyState::Idle)
 	{
-		if (angle > -70.0f && angle < 70.0f) eStatus.lookRight = true;
-		else if (angle > 110.0f || angle < -110.0f) eStatus.lookRight = false;
+		if (angle > -70.0f && angle < 70.0f)
+		{
+			eStatus.lookRight = true;
+		}
+		else if (angle > 110.0f || angle < -110.0f)
+		{
+			eStatus.lookRight = false;
+		}
 	}
 }
 
 void EnemyBase::checkPlayerCollision(void)
 {
 	// Do nothing!
-	// 각자 타입에 맞는 공격을 하기 때문 각자 체크
 }
 
 void EnemyBase::checkPlayerAttCollision(void)
@@ -120,8 +128,8 @@ void EnemyBase::checkPlayerAttCollision(void)
 		{
 		case EnemyType::MetaDridler:
 			player->setAnimDelay(true);
-			// 튕기는 소리
-			// SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
+			// 튕기는 이펙트
+			SOUNDMANAGER->play("SFX_Block", 0.5f);
 			break;
 			
 		default:
@@ -162,9 +170,11 @@ void EnemyBase::checkBulletCollision(void)
 			switch (eType)
 			{
 			case EnemyType::MetaDridler:
+			// case EnemyType::MetaWheel:
 				// 튕기는 소리
-				SOUNDMANAGER->play("SFX_Block", 0.5f);
 				EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+				SOUNDMANAGER->play("SFX_Block", 0.5f);
+				it = bullets.erase(it);
 				break;
 
 			default:
@@ -182,8 +192,6 @@ void EnemyBase::checkBulletCollision(void)
 				else it = bullets.erase(it);
 				break;
 			}
-
-			
 		}
 
 		else ++it;

@@ -199,10 +199,6 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
 
 	//////////////////////////////////
-	// 캐릭터 이미지
-	//////////////////////////////////
-
-	//////////////////////////////////
 	// 공통 이펙트
 	//////////////////////////////////
 
@@ -212,6 +208,7 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("SFX_BursterBlock", "Resources/Image/SFX/SFX_BursterBlock.bmp", 210 * SCALE_FACTOR, 132 * SCALE_FACTOR, 5, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("SFX_BursterHit_1", "Resources/Image/SFX/SFX_BursterHit_1.bmp", 160 * SCALE_FACTOR, 124 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("SFX_BursterHit_2", "Resources/Image/SFX/SFX_BursterHit_2.bmp", 232 * SCALE_FACTOR, 176 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_Explosion", "Resources/Image/SFX/SFX_Explosion.bmp", 610 * SCALE_FACTOR, 86 * SCALE_FACTOR, 10, 2, true, MAGENTA);
 
 	// * 4 인 이유는 사이즈가 작어서 키운거임
 	IMAGEMANAGER->addFrameImage("SFX_SaberHit_1", "Resources/Image/SFX/SFX_SaberHit_1.bmp", 402 * 4, 462 * 4, 3, 2, true, MAGENTA);
@@ -219,62 +216,13 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("SFX_SaberHit_3", "Resources/Image/SFX/SFX_SaberHit_3.bmp", 798 * 4, 14 * 4, 3, 2, true, MAGENTA);
 	
 	//////////////////////////////////
+	// 캐릭터 이미지
+	//////////////////////////////////
+
+	//////////////////////////////////
 	// 엑스
 	//////////////////////////////////
-	//newAddFrameImage
 	// 엑스 이미지
-	/*
-	IMAGEMANAGER->addFrameImage("X_Spawn", "Resources/Image/Player/X/X_Spawn.bmp", 1156 * SCALE_FACTOR, 192 * SCALE_FACTOR, 17, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_Idle", "Resources/Image/Player/X/X_Idle.bmp", 140 * SCALE_FACTOR, 92 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WalkStart", "Resources/Image/Player/X/X_WalkStart.bmp", 96 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WalkLoop", "Resources/Image/Player/X/X_WalkLoop.bmp", 686 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_Walk", "Resources/Image/Player/X/X_Walk.bmp", 784 * SCALE_FACTOR, 94 * SCALE_FACTOR, 16, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_WalkBurstStart", "Resources/Image/Player/X/X_WalkBurstStart.bmp", 110 * SCALE_FACTOR, 94 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WalkBurstLoop", "Resources/Image/Player/X/X_WalkBurstLoop.bmp", 798 * SCALE_FACTOR, 94 * SCALE_FACTOR, 14, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_StandBurstLoop", "Resources/Image/Player/X/X_StandBurstLoop.bmp", 164 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_StandBurstEnd", "Resources/Image/Player/X/X_StandBurstEnd.bmp", 82 * SCALE_FACTOR, 88 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_StandChargeBurst", "Resources/Image/Player/X/X_StandChargeBurst.bmp", 287 * SCALE_FACTOR, 102 * SCALE_FACTOR, 7, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_Jump", "Resources/Image/Player/X/X_Jump.bmp", 272 * SCALE_FACTOR, 116 * SCALE_FACTOR, 8, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_JumpBurst", "Resources/Image/Player/X/X_JumpBurst.bmp", 336 * SCALE_FACTOR, 116 * SCALE_FACTOR, 8, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_WallSlide", "Resources/Image/Player/X/X_WallSlide.bmp", 188 * SCALE_FACTOR, 128 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WallSlideBurst", "Resources/Image/Player/X/X_WallSlideBurst.bmp", 188 * SCALE_FACTOR, 128 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_WallKick", "Resources/Image/Player/X/X_WallKick.bmp", 114 * SCALE_FACTOR, 108 * SCALE_FACTOR, 3, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WallKickBurst", "Resources/Image/Player/X/X_WallKickBurst.bmp", 114 * SCALE_FACTOR, 108 * SCALE_FACTOR, 3, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_DashStart", "Resources/Image/Player/X/X_DashStart.bmp", 132 * SCALE_FACTOR, 86 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_DashLoop", "Resources/Image/Player/X/X_DashLoop.bmp", 198 * SCALE_FACTOR, 86 * SCALE_FACTOR, 3, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_DashBurstStart", "Resources/Image/Player/X/X_DashBurstStart.bmp", 132 * SCALE_FACTOR, 86 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_DashBurstLoop", "Resources/Image/Player/X/X_DashBurstLoop.bmp", 198 * SCALE_FACTOR, 86 * SCALE_FACTOR, 3, 2, true, MAGENTA);
-	
-	IMAGEMANAGER->addFrameImage("X_DashEnd", "Resources/Image/Player/X/X_DashEnd.bmp", 264 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_DashEndBurst", "Resources/Image/Player/X/X_DashEndBurst.bmp", 264 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_SmallDamaged", "Resources/Image/Player/X/X_SmallDamaged.bmp", 324 * SCALE_FACTOR, 116 * SCALE_FACTOR, 9, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_LargeDamaged", "Resources/Image/Player/X/X_LargeDamaged.bmp", 644 * SCALE_FACTOR, 116 * SCALE_FACTOR, 14, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("X_Saber", "Resources/Image/Player/X/X_Saber.bmp", 1695 * SCALE_FACTOR, 144 * SCALE_FACTOR, 15, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_JumpSaber", "Resources/Image/Player/X/X_JumpSaber.bmp", 800 * SCALE_FACTOR, 128 * SCALE_FACTOR, 8, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_WallSlideSaber", "Resources/Image/Player/X/X_WallSlideSaber.bmp", 920 * SCALE_FACTOR, 120 * SCALE_FACTOR, 10, 2, true, MAGENTA);
-
-	// 엑스 웨폰
-	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/Bullet/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/Bullet/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_Burster3", "Resources/Image/Player/Bullet/X/SFX_Burster3_Bullet.bmp", 183 * SCALE_FACTOR, 60 * SCALE_FACTOR, 3, 2, true, MAGENTA);
-
-	// 엑스 이펙트
-	IMAGEMANAGER->addFrameImage("SFX_Charge", "Resources/Image/Player/Effect/X/SFX_Charge.bmp", 518 * SCALE_FACTOR, 148 * SCALE_FACTOR, 7, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("SFX_ChargeAura", "Resources/Image/Player/Effect/X/SFX_ChargeAura.bmp", 320 * SCALE_FACTOR, 128 * SCALE_FACTOR, 5, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("SFX_BursterEffect1", "Resources/Image/Player/Effect/X/SFX_Burster1_Effect.bmp", 100 * SCALE_FACTOR, 52 * SCALE_FACTOR, 5, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("SFX_BursterEffect2", "Resources/Image/Player/Effect/X/SFX_Burster2_Effect.bmp", 56 * SCALE_FACTOR, 48 * SCALE_FACTOR, 4, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("SFX_BursterEffect3", "Resources/Image/Player/Effect/X/SFX_Burster3_Effect.bmp", 348 * SCALE_FACTOR, 156 * SCALE_FACTOR, 6, 2, true, MAGENTA);
-	*/
 
 	IMAGEMANAGER->addFrameImage("X_Spawn", "Resources/Image/Player/X/X_Spawn.bmp", 1156 * SCALE_FACTOR, 192 * SCALE_FACTOR, 17, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Idle", "Resources/Image/Player/X/X_Idle.bmp", 140 * SCALE_FACTOR, 92 * SCALE_FACTOR, 4, 2, true, MAGENTA);
@@ -354,20 +302,26 @@ void TitleScene::addImage(void)
 	//////////////////////////////////
 	// 적
 	//////////////////////////////////
-
-	IMAGEMANAGER->addFrameImage("Enemy_Junkroid", "Resources/Image/Enemy/Minion/Enemy_Junkroid.bmp", 396 * SCALE_FACTOR, 122 * SCALE_FACTOR, 6, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("SFX_JunkBullet", "Resources/Image/Enemy/Bullet/Minion/SFX_JunkBullet.bmp", 16 * SCALE_FACTOR, 32 * SCALE_FACTOR, 1 , 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("SFX_Explosion", "Resources/Image/SFX/SFX_Explosion.bmp", 610 * SCALE_FACTOR, 86 * SCALE_FACTOR, 10, 2, true, MAGENTA);
-
+	
 	//////////////////////////////////
 	// 보스
 	//////////////////////////////////
 
+	//////////////////////////////////
+	// 미니언
+	//////////////////////////////////
+	
+	IMAGEMANAGER->addFrameImage("Enemy_Junkroid", "Resources/Image/Enemy/Minion/Enemy_Junkroid.bmp", 396 * SCALE_FACTOR, 122 * SCALE_FACTOR, 6, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("Enemy_MetaWheel", "Resources/Image/Enemy/Minion/Enemy_MetaWheel.bmp", 560 * SCALE_FACTOR, 140 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 
 	//////////////////////////////////
-	// 미니언 파편
+	// 적군 웨펀
+	//////////////////////////////////
+
+	IMAGEMANAGER->addFrameImage("SFX_JunkBullet", "Resources/Image/Enemy/Bullet/Minion/SFX_JunkBullet.bmp", 16 * SCALE_FACTOR, 32 * SCALE_FACTOR, 1, 2, true, MAGENTA);
+
+	//////////////////////////////////
+	//  파편
 	//////////////////////////////////
 
 	IMAGEMANAGER->addImage("Enemy_JunkroidFragment1", "Resources/Image/Enemy/Fragment/Enemy_JunkroidFragrment1.bmp", 39 * SCALE_FACTOR, 20 * SCALE_FACTOR, true, MAGENTA);
@@ -381,7 +335,6 @@ void TitleScene::addImage(void)
 	
 	IMAGEMANAGER->addImage("Object_Block", "Resources/Image/Object/Object_Block.bmp", 64 * SCALE_FACTOR, 64 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("Object_Block_Pixel", "Resources/Image/Object/Object_Block_Pixel.bmp", 64 * SCALE_FACTOR, 64 * SCALE_FACTOR, true, MAGENTA);
-
 
 	//////////////////////////////////
 	// HUD
