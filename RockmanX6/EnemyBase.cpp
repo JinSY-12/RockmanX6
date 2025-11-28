@@ -3,7 +3,7 @@
 #include "BulletManager.h"
 #include "Player.h"
 
-/*
+
 HRESULT EnemyBase::init(void)
 {
 	return S_OK;
@@ -23,17 +23,17 @@ void EnemyBase::update(void)
 {
 	// Do nothing!
 }
-*/
 
-void EnemyBase::render(void)
+
+void EnemyBase::render(HDC hdc)
 {
-	eStatus.eImage->frameRender(getMemDC(), eStatus.eHitBox.left, eStatus.eHitBox.top
-		, eStatus.eImage->getFrameX(), eStatus.lookRight);
+	eStatus.eImage->frameRender(hdc, eStatus.eHitBox.left, eStatus.eHitBox.top
+		, eStatus.eImage->getFrameX(), status.lookRight);
 
 	if (UIMANAGER->getIsDebugMode())
 	{
-		DrawRectMakeColor(getMemDC(), eStatus.eHitBox, RGB(0, 255, 255), 2);
-		DrawRectMakeColor(getMemDC(), eStatus.attSight, RGB(255, 0, 255), 2);
+		DrawRectMakeColor(hdc, eStatus.eHitBox, RGB(0, 255, 255), 2);
+		DrawRectMakeColor(hdc, eStatus.attSight, RGB(255, 0, 255), 2);
 	}
 }
 
@@ -50,7 +50,7 @@ void EnemyBase::setEnemyHitbox(void)
 	eStatus.eHitBox.top = eStatus.worldRect.top - CAMERAMANAGER->getCameraPos().y;
 	eStatus.eHitBox.bottom = eStatus.worldRect.bottom - CAMERAMANAGER->getCameraPos().y;
 
-	if (eStatus.lookRight)
+	if (status.lookRight)
 	{
 		eStatus.attSight.left = eStatus.eHitBox.right;
 		eStatus.attSight.right = eStatus.attSight.left + eStatus.sightWidth;
@@ -87,26 +87,26 @@ void EnemyBase::chasePlayer(float angle)
 
 void EnemyBase::isDead(void)
 {
-	if (eStatus.hp <= 0)
+	if (status.hp <= 0)
 	{
-		eStatus.hp = 0;
-		eStatus.dead = true;
+		status.hp = 0;
+		status.dead = true;
 	}
 }
 
 void EnemyBase::changeDirection(void)
 {
-	float angle = atan2f((float)(player->getCharPos().y - ePos.y), (float)(player->getCharPos().x - ePos.x)) * 180 / PI;
+	float angle = atan2f((float)(player->getPos().y - pos.y), (float)(player->getPos().x - pos.x)) * 180 / PI;
 
 	if (eState == EnemyState::Idle)
 	{
 		if (angle > -70.0f && angle < 70.0f)
 		{
-			eStatus.lookRight = true;
+			status.lookRight = true;
 		}
 		else if (angle > 110.0f || angle < -110.0f)
 		{
-			eStatus.lookRight = false;
+			status.lookRight = false;
 		}
 	}
 }
@@ -120,7 +120,7 @@ void EnemyBase::checkPlayerAttCollision(void)
 {
 	RECT temp;
 
-	if (IntersectRect(&temp, &player->getSaberRect(), &eStatus.eHitBox) && !eStatus.overpower && player->getCanHit())
+	if (IntersectRect(&temp, &player->getSaberRect(), &eStatus.eHitBox) && !status.overpower && player->getCanHit())
 	{
 		int rnd = RND->getInt(4);
 
@@ -133,23 +133,23 @@ void EnemyBase::checkPlayerAttCollision(void)
 			break;
 			
 		default:
-			eStatus.hp -= player->getSaberDamage();
+			status.hp -= player->getPhyscialDamage();
 			player->setAnimDelay(true);
 			SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
 
 			switch (rnd)
 			{
 			case 0:
-				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_1, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
+				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_1, pos.x, pos.y, status.width, status.height, status.lookRight);
 				break;
 			case 1:
-				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_2, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
+				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_2, pos.x, pos.y, status.width, status.height, status.lookRight);
 				break;
 			case 2:
-				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_3, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
+				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_3, pos.x, pos.y, status.width, status.height, status.lookRight);
 				break;
 			case 3:
-				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_4, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
+				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_4, pos.x, pos.y, status.width, status.height, status.lookRight);
 				break;
 			}			
 			break;
@@ -165,7 +165,7 @@ void EnemyBase::checkBulletCollision(void)
 	{
 		RECT temp;
 
-		if (IntersectRect(&temp, &(*it)->getBulletRect(), &eStatus.eHitBox) && !eStatus.overpower)
+		if (IntersectRect(&temp, &(*it)->getBulletRect(), &eStatus.eHitBox) && !status.overpower)
 		{
 			switch (eType)
 			{
@@ -178,15 +178,15 @@ void EnemyBase::checkBulletCollision(void)
 				break;
 
 			default:
-				eStatus.hp -= (*it)->getBulletDamage();
-				eStatus.overpower = true;
+				status.hp -= (*it)->getBulletDamage();
+				status.overpower = true;
 				SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.5f);
 				if((*it)->getBulletType() != BulletType::ChargeBurst2) EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
 				else EFFECTMANAGER->spawnEffect(EffectType::BursterHit_2, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
 
 				if ((*it)->getBulletType() == BulletType::ChargeBurst2 || (*it)->getBulletType() == BulletType::FalconBurst2)
 				{
-					if (eStatus.hp > 0) it = bullets.erase(it);
+					if (status.hp > 0) it = bullets.erase(it);
 				}
 
 				else it = bullets.erase(it);
@@ -203,10 +203,10 @@ void EnemyBase::enemyInvincibleTimerUpdate(void)
 	if (eStatus.invincibleTimer >= eStatus.invincibleMaxTime)
 	{
 		eStatus.invincibleTimer = 0.0f;
-		eStatus.overpower = false;
+		status.overpower = false;
 	}
 
-	else if (eStatus.overpower)
+	else if (status.overpower)
 	{
 		eStatus.invincibleTimer += 0.1f;
 	}

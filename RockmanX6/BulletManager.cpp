@@ -3,13 +3,15 @@
 #include "Player.h"
 #include "EffectManager.h"
 
-HRESULT BulletManager::init(void)
+void BulletManager::onEvent(const Event& event)
 {
-	return S_OK;
-}
-
-void BulletManager::release(void)
-{
+	switch (event.eType)
+	{
+	case EventType::ShootBulltet:
+		ShootEvent* shootData = static_cast<ShootEvent*>(event.data);
+		fire(shootData->bType, shootData->x, shootData->y, shootData->direct);
+		break;
+	}
 }
 
 void BulletManager::update(void)

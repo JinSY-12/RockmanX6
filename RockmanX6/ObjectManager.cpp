@@ -36,7 +36,7 @@ void ObjectManager::render(void)
 {
 	for (auto object = _vObject.begin(); object != _vObject.end(); ++object)
 	{
-		(*object)->render();
+		(*object)->render(getMemDC());
 	}
 }
 

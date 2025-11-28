@@ -10,13 +10,13 @@ HRESULT X::init(void)
 HRESULT X::init(int x, int y)
 {
 	// 캐릭터 기본값
-	hitBoxWidth = 25 * SCALE_FACTOR;
-	hitBoxHeight = 41 * SCALE_FACTOR;
+	status.width = 25 * SCALE_FACTOR;
+	status.height = 41 * SCALE_FACTOR;
 
-	pStatus.maxHp = 30.0;
-	pStatus.maxMp = 10.0;
+	status.maxHp = 30.0;
+	status.maxMp = 10.0;
 	
-	UIMANAGER->setMaxHp(static_cast<int>(pStatus.maxHp));
+	UIMANAGER->setMaxHp(static_cast<int>(status.maxHp));
 	maxDashTime = 3.5f;
 	
 	// 캐릭터 소환 - 게임 시작
@@ -32,7 +32,7 @@ void X::release(void)
 
 void X::update(void)
 {
-	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y - hitBoxHeight / 2);
+	CAMERAMANAGER->setPlayerPos(pos.x, pos.y - status.hitBoxHeight / 2);
 
 #pragma region WarpIn
 
@@ -108,63 +108,63 @@ void X::update(void)
 				if (lastKeyIsRight == true)
 				{
 					// 왼쪽 유지
-					pStatus.lookRight = false;
+					status.lookRight = false;
 
 					if (pStatus.touchLeft)
 					{
 						if (pStatus.isOnGround)	currentState = CharacterState::Idle;
-						else if (!pStatus.isOnGround && !pStatus.lookRight && !pStatus.isJumpUp) wallSlide();// 벽타기
-						else if (!pStatus.isOnGround && !pStatus.lookRight && pStatus.isJumpUp);
+						else if (!pStatus.isOnGround && !status.lookRight && !pStatus.isJumpUp) wallSlide();// 벽타기
+						else if (!pStatus.isOnGround && !status.lookRight && pStatus.isJumpUp);
 					}
 
-					else move(pStatus.lookRight);
+					else move(status.lookRight);
 				}
 
 				else if (lastKeyIsRight == false)
 				{
 					// 오른쪽 유지
-					pStatus.lookRight = true;
+					status.lookRight = true;
 
 					if (pStatus.touchRight)
 					{
 						if (pStatus.isOnGround) currentState = CharacterState::Idle;
-						else if (!pStatus.isOnGround && pStatus.lookRight && !pStatus.isJumpUp) wallSlide();
-						else if (!pStatus.isOnGround && pStatus.lookRight && pStatus.isJumpUp);
+						else if (!pStatus.isOnGround && status.lookRight && !pStatus.isJumpUp) wallSlide();
+						else if (!pStatus.isOnGround && status.lookRight && pStatus.isJumpUp);
 					}
 
-					else move(pStatus.lookRight);
+					else move(status.lookRight);
 				}
 			}
 
 			else if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && !(pStatus.isWallKick && pStatus.wallKickRight)) // !(pStatus.velocityX < 0.0f) 
 			{
 				multiInput = false;
-				pStatus.lookRight = true;
+				status.lookRight = true;
 				pressRight = true;
 
 				if (pStatus.touchRight)
 				{
 					if (pStatus.isOnGround)	currentState = CharacterState::Idle;
-					else  if (!pStatus.isOnGround && pStatus.lookRight && !pStatus.isJumpUp) wallSlide(); // 벽타기
-					else if (!pStatus.isOnGround && pStatus.lookRight && pStatus.isJumpUp);
+					else  if (!pStatus.isOnGround && status.lookRight && !pStatus.isJumpUp) wallSlide(); // 벽타기
+					else if (!pStatus.isOnGround && status.lookRight && pStatus.isJumpUp);
 				}
 
-				else move(pStatus.lookRight);
+				else move(status.lookRight);
 			}
 
 			else if (KEYMANAGER->isStayKeyDown(VK_LEFT) && !(pStatus.isWallKick && !pStatus.wallKickRight))  // !(pStatus.velocityX > 0.0f) 
 			{
 				multiInput = false;
-				pStatus.lookRight = false;
+				status.lookRight = false;
 				pressLeft = true;
 				if (pStatus.touchLeft)
 				{
 					if (pStatus.isOnGround) currentState = CharacterState::Idle;
-					else if (!pStatus.isOnGround && !pStatus.lookRight && !pStatus.isJumpUp) wallSlide(); // 벽타기
-					else if (!pStatus.isOnGround && !pStatus.lookRight && pStatus.isJumpUp);
+					else if (!pStatus.isOnGround && !status.lookRight && !pStatus.isJumpUp) wallSlide(); // 벽타기
+					else if (!pStatus.isOnGround && !status.lookRight && pStatus.isJumpUp);
 				}
 
-				else move(pStatus.lookRight);
+				else move(status.lookRight);
 			}
 
 			// 대기 상태 변환 + 대기 상태 변환 애니메이션
@@ -197,7 +197,7 @@ void X::update(void)
 #pragma region Dash
 		if (KEYMANAGER->isOnceKeyDown('Z'))						// 'ㅋ' 문자 찾기 용
 		{
-			dash(pStatus.lookRight);
+			dash(status.lookRight);
 		}
 
 		if (KEYMANAGER->isStayKeyDown('Z'))
@@ -211,7 +211,7 @@ void X::update(void)
 				if (pStatus.isDash && !pStatus.isJumpDash && dashTimer >= 0.3f)
 				{
 					currentState = CharacterState::Dash;
-					move(pStatus.lookRight);
+					move(status.lookRight);
 				}
 			}
 
@@ -367,7 +367,7 @@ void X::update(void)
 	isDead();
 	invincibleTimerUpdate();
 
-	UIMANAGER->setCurrentPlayerStatus(pStatus.hp, pStatus.mp, pStatus.maxHp, progress.life);
+	UIMANAGER->setCurrentPlayerStatus(status.hp, status.mp, status.maxHp, progress.life);
 
 #pragma endregion
 }
@@ -395,28 +395,19 @@ void X::attack(void)
 	if (pStatus.movable && !pStatus.isAttack)
 	{
 		attState = SholderState::Burst;
+		busterPos.x = 0 * SCALE_FACTOR;
+		shootEvent = makeShootEvent(BulletType::Buster);
 		SOUNDMANAGER->play("SFX_X_Burster1", 0.5f);
+
 		bursterEffectName = "SFX_BursterEffect1";
 		bursterEffectAlpha = 255;
 		attackHandEffect->setFrameX(0);
-
-		busterPos.x = 0 * SCALE_FACTOR;
 
 		burstloop = true;
 		lastShootTime = now;
 		isCharging = false;
 
-		if (pStatus.lookRight)
-		{
-			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::Buster, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
-			else bManager->fire(BulletType::Buster, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
-		}
-
-		else
-		{
-			if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::Buster, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
-			else bManager->fire(BulletType::Buster, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
-		}
+		EVENTMANAGER->dispatchEvents({EventType::ShootBulltet, &shootEvent});
 	}
 }
 
@@ -427,12 +418,14 @@ void X::chargeBurst(void)
 		if (chargeCount >= 0.3f && chargeCount < 1.0f)
 		{
 			attState = SholderState::Burst;
-			
+			busterPos.x = 0 * SCALE_FACTOR;
+			shootEvent = makeShootEvent(BulletType::ChargeBurst1);
+			SOUNDMANAGER->play("SFX_X_Burster1", 0.5f);
+
 			bursterEffectName = "SFX_BursterEffect2";
 			bursterEffectAlpha = 255;
 			attackHandEffect->setFrameX(0);
 
-			busterPos.x = 0 * SCALE_FACTOR;
 
 			// 공격 회수 장면을 위한 타이머 저장 -> 안하면 바로 내림ㅋㅋ
 			attackTimer = TIMEMANAGER->getWorldTime();
@@ -442,30 +435,22 @@ void X::chargeBurst(void)
 			chargeBurstDelay = true;
 			pStatus.isAttack = true;
 
-			if (pStatus.lookRight)
-			{
-				if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst1, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
-				else bManager->fire(BulletType::ChargeBurst1, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
-			}
-
-			else
-			{
-				if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst1, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
-				else bManager->fire(BulletType::ChargeBurst1, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
-			}
+			EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
 		}
 
 		else if (chargeCount >= 1.0f)
 		{
 			attState = SholderState::LargeBurst;
+			busterPos.x = 30 * SCALE_FACTOR;
 
+			shootEvent = makeShootEvent(BulletType::ChargeBurst2);
 			SOUNDMANAGER->play("SFX_X_Burster3", 0.5f);
 			if (RND->getInt(10) < 5) SOUNDMANAGER->play("Voice_X_Burster", 0.5f);
+
 			bursterEffectName = "SFX_BursterEffect3";
 			bursterEffectAlpha = 255;
 			attackHandEffect->setFrameX(0);
 
-			busterPos.x = pStatus.lookRight ? -36 * SCALE_FACTOR : 36 * SCALE_FACTOR;
 
 			attackTimer = TIMEMANAGER->getWorldTime();
 
@@ -474,17 +459,7 @@ void X::chargeBurst(void)
 			chargeBurstDelay = true;
 			pStatus.isAttack = true;
 
-			if (pStatus.lookRight)
-			{
-				if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst2, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
-				else bManager->fire(BulletType::ChargeBurst2, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
-			}
-
-			else
-			{
-				if (currentState == CharacterState::WallSlide) bManager->fire(BulletType::ChargeBurst2, charPos.x - pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, !pStatus.lookRight);
-				else bManager->fire(BulletType::ChargeBurst2, charPos.x + pStatus.firePointX, charPos.y - hitBoxHeight + pStatus.firePointY, pStatus.lookRight);
-			}
+			EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
 		}
 	}
 
@@ -541,64 +516,64 @@ void X::setHitBox(void)
 {
 	if (CAMERAMANAGER->getLockX() == true)
 	{
-		pStatus.hitBox.left = charPos.x - hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
-		pStatus.hitBox.right = charPos.x + hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
+		pStatus.hitBox.left = pos.x - status.hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
+		pStatus.hitBox.right = pos.x + status.hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
 	}
 
 	else
 	{
-		pStatus.hitBox.left = hitBoxCenter.x - (hitBoxWidth / 2);
-		pStatus.hitBox.right = hitBoxCenter.x + (hitBoxWidth / 2);
+		pStatus.hitBox.left = hitBoxCenter.x - (status.hitBoxWidth / 2);
+		pStatus.hitBox.right = hitBoxCenter.x + (status.hitBoxWidth / 2);
 	}
 
 	if (CAMERAMANAGER->getLockY() == true)
 	{
-		pStatus.hitBox.bottom = charPos.y - CAMERAMANAGER->getCameraPos().y;
-		pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
+		pStatus.hitBox.bottom = pos.y - CAMERAMANAGER->getCameraPos().y;
+		pStatus.hitBox.top = pStatus.hitBox.bottom - status.hitBoxHeight;
 	}
 	
 	else
 	{
 		pStatus.hitBox.bottom = hitBoxCenter.y;
-		pStatus.hitBox.top = hitBoxCenter.y - hitBoxHeight;
+		pStatus.hitBox.top = hitBoxCenter.y - status.hitBoxHeight;
 	}
 
 	switch (currentState)
 	{
 	case CharacterState::Warp:
-		hitBoxWidth = 25 * SCALE_FACTOR;
-		hitBoxHeight = 41 * SCALE_FACTOR;
+		status.hitBoxWidth = 25 * SCALE_FACTOR;
+		status.hitBoxHeight = 41 * SCALE_FACTOR;
 		break;
 	case CharacterState::Idle:
-		hitBoxWidth = 25 * SCALE_FACTOR;
-		hitBoxHeight = 41 * SCALE_FACTOR;
+		status.hitBoxWidth = 25 * SCALE_FACTOR;
+		status.hitBoxHeight = 41 * SCALE_FACTOR;
 		break;
 	case CharacterState::Walk:
-		hitBoxWidth = 25 * SCALE_FACTOR;
-		hitBoxHeight = 41 * SCALE_FACTOR;
+		status.hitBoxWidth = 25 * SCALE_FACTOR;
+		status.hitBoxHeight = 41 * SCALE_FACTOR;
 		break;
 	case CharacterState::JumpUp:
-		hitBoxWidth = 25 * SCALE_FACTOR;
-		hitBoxHeight = 45 * SCALE_FACTOR;
+		status.hitBoxWidth = 25 * SCALE_FACTOR;
+		status.hitBoxHeight = 45 * SCALE_FACTOR;
 		break;
 	case CharacterState::FallingDown:
-		hitBoxWidth = 25 * SCALE_FACTOR;
-		hitBoxHeight = 45 * SCALE_FACTOR;
+		status.hitBoxWidth = 25 * SCALE_FACTOR;
+		status.hitBoxHeight = 45 * SCALE_FACTOR;
 		break;
 	case CharacterState::Dash:
-		hitBoxWidth = 25 * SCALE_FACTOR;
-		hitBoxHeight = 28 * SCALE_FACTOR;
+		status.hitBoxWidth = 25 * SCALE_FACTOR;
+		status.hitBoxHeight = 28 * SCALE_FACTOR;
 		break;
 	case CharacterState::WallSlide:
-		hitBoxWidth = 25 * SCALE_FACTOR;
-		hitBoxHeight = 45 * SCALE_FACTOR;
+		status.hitBoxWidth = 25 * SCALE_FACTOR;
+		status.hitBoxHeight = 45 * SCALE_FACTOR;
 		break;
 	}
 
-	pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - hitBoxWidth / 2 + 5, pStatus.hitBox.bottom, hitBoxWidth - 10, 5);
+	pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - status.hitBoxWidth / 2 + 5, pStatus.hitBox.bottom, status.hitBoxWidth - 10, 5);
 	// pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - 5 * SCALE_FACTOR, pStatus.hitBox.bottom, 10 * SCALE_FACTOR, 5);
 	
-	if (pStatus.lookRight)
+	if (status.lookRight)
 	{
 		if(currentState == CharacterState::WallSlide) pStatus.saberHitBox = RectMake(pStatus.hitBox.left - saberWidth + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
 		else
@@ -831,6 +806,8 @@ void X::colorChange(void)
 	}
 }
 
+
+
 void X::spawn(int x, int y)
 {
 	////////////////////
@@ -838,22 +815,26 @@ void X::spawn(int x, int y)
 	////////////////////
 	
 	// 캐릭터 생성
-	charPos.x = x;
-	charPos.y = y;
+	// x는 센터, y는 바닥 기준 좌표
+	pos.x = x;
+	pos.y = y;
 
-	pStatus.hitBox = RectMakeCenter(charPos.x, 0 - hitBoxHeight / 2, hitBoxWidth, hitBoxHeight);
-	pStatus.floorCheck = RectMakeCenter(charPos.x, charPos.y, hitBoxWidth, 4);
+	// charPos.x = x;
+	// charPos.y = y;
+
+	pStatus.hitBox = RectMakeCenter(pos.x, 0 - status.hitBoxHeight / 2, status.hitBoxWidth, status.hitBoxHeight);
+	pStatus.floorCheck = RectMakeCenter(pos.x, pos.y, status.hitBoxWidth, 4);
 	pStatus.saberHitBox = RectMake(pStatus.hitBox.right + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
-	hitBoxCenter.y = pStatus.hitBox.bottom - hitBoxHeight;
+	hitBoxCenter.y = pStatus.hitBox.bottom - status.hitBoxHeight;
 
 	saberWidth = 1;
 	saberHeight = 1;
 
 	// 캐릭터 세팅
-	pStatus.hp = pStatus.maxHp;
-	pStatus.mp = pStatus.maxMp;
+	status.hp = status.maxHp;
+	status.mp = status.maxMp;
 	pStatus.moveSpeed = 4.5f;
 	pStatus.dashSpeed = 12.0f;
 	
@@ -862,8 +843,8 @@ void X::spawn(int x, int y)
 	pStatus.touchRight = false;
 	pStatus.wallKickRight = true;
 	progress.life = 2;
-	UIMANAGER->setMaxHp(pStatus.maxHp);
-	pStatus.saberDamage = 1;
+	UIMANAGER->setMaxHp(status.maxHp);
+	status.physicalDamage = 1;
 
 	////////////////////
 	// 상태 초기화
@@ -873,13 +854,13 @@ void X::spawn(int x, int y)
 	previousState = CharacterState::Idle;
 	currentState = CharacterState::Warp;
 	attState == SholderState::None;
-	pStatus.lookRight = true;
+	status.lookRight = true;
 	isMoving = false;
 	pStatus.isDash = false;
 	pStatus.isWallKick = false;
 	pStatus.isWallSlide = false;
 	colorType = 0;
-	pStatus.Dead = false;
+	status.dead = false;
 	pStatus.movable = true;
 	pStatus.isOnTop = false;
 
@@ -954,7 +935,7 @@ void X::spawn(int x, int y)
 	burstloop = false;
 	aniDash = false;
 
-	CAMERAMANAGER->setPlayerPos(charPos.x, charPos.y - hitBoxHeight / 2);
+	CAMERAMANAGER->setPlayerPos(pos.x, pos.y - status.hitBoxHeight / 2);
 }
 
 void X::specialAttack(void)
@@ -999,21 +980,21 @@ void X::multiHitControl(void)
 						saberHeight = 43 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = -8 * SCALE_FACTOR;
-						pStatus.saberDamage = 1;
+						status.physicalDamage = 1;
 						break;
 					case 4:
 						saberWidth = 65 * SCALE_FACTOR;
 						saberHeight = 70 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = 8 * SCALE_FACTOR;
-						pStatus.saberDamage = 1;
+						status.physicalDamage = 1;
 						break;
 					case 5:
 						saberWidth = 66 * SCALE_FACTOR;
 						saberHeight = 55 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = 9 * SCALE_FACTOR;
-						pStatus.saberDamage = 2;
+						status.physicalDamage = 2;
 						break;
 				}
 				break;
@@ -1024,19 +1005,19 @@ void X::multiHitControl(void)
 				switch (frame)
 				{
 				case 3:
-					pStatus.lookRight;
+					status.lookRight;
 					saberWidth = 45 * SCALE_FACTOR;
 					saberHeight = 46 * SCALE_FACTOR;
-					saberOffsetX = pStatus.lookRight ? -10 * SCALE_FACTOR : 10 * SCALE_FACTOR;
+					saberOffsetX = status.lookRight ? -10 * SCALE_FACTOR : 10 * SCALE_FACTOR;
 					saberOffsetY = 0 * SCALE_FACTOR;
-					pStatus.saberDamage = 1;
+					status.physicalDamage = 1;
 					break;
 				case 4:
 					saberWidth = 55 * SCALE_FACTOR;
 					saberHeight = 52 * SCALE_FACTOR;
-					saberOffsetX = pStatus.lookRight ? -10 * SCALE_FACTOR : 10 * SCALE_FACTOR;
+					saberOffsetX = status.lookRight ? -10 * SCALE_FACTOR : 10 * SCALE_FACTOR;
 					saberOffsetY = 0 * SCALE_FACTOR;
-					pStatus.saberDamage = 1;
+					status.physicalDamage = 1;
 					break;
 				}
 				break;
@@ -1050,14 +1031,14 @@ void X::multiHitControl(void)
 					saberHeight = 44 * SCALE_FACTOR;
 					saberOffsetX = 0 * SCALE_FACTOR;
 					saberOffsetY = -12 * SCALE_FACTOR;
-					pStatus.saberDamage = 1;
+					status.physicalDamage = 1;
 					break;
 				case 3:
 					saberWidth = 58 * SCALE_FACTOR;
 					saberHeight = 40 * SCALE_FACTOR;
 					saberOffsetX = 0 * SCALE_FACTOR;
 					saberOffsetY = -12 * SCALE_FACTOR;
-					pStatus.saberDamage = 1;
+					status.physicalDamage = 1;
 					break;
 				}
 				break;
@@ -1114,5 +1095,17 @@ void X::returnToIdle(void)
 		isMoving = false;
 		break;
 	}
-	
+}
+
+ShootEvent X::makeShootEvent(BulletType bType)
+{
+	ShootEvent shootEvent;
+
+	shootEvent.bType = bType;
+	shootEvent.x = status.lookRight != (currentState == CharacterState::WallSlide)
+		? pos.x + status.hitBoxWidth / 2 + (busterPos.x + pStatus.firePointX) : pos.x - status.hitBoxWidth / 2 - (busterPos.x + pStatus.firePointX);
+	shootEvent.y = pos.y - status.hitBoxHeight + pStatus.firePointY;
+	shootEvent.direct = status.lookRight != (currentState == CharacterState::WallSlide);
+
+	return shootEvent;
 }

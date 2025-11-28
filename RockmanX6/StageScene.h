@@ -6,6 +6,8 @@
 #include "BulletManager.h"
 #include "EnemyManager.h"
 #include "ObjectManager.h"
+#include "CollisionManager.h"
+#include "DamageManager.h"
 
 class StageScene : public GameNode
 {
@@ -20,6 +22,7 @@ private:
 	RECT mZone;
 	RECT floor;
 	
+
 	typedef vector<RECT> vFloor;
 	typedef vector<RECT>::iterator viFloor;
 
@@ -32,6 +35,8 @@ private:
 	BulletManager bManager;
 	EnemyManager eManager;
 	ObjectManager oManager;
+	CollisionManager cManager;
+	DamageManager dManager;
 
 	float gravity;
 

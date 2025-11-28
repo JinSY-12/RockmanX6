@@ -5,7 +5,7 @@
 class MainGame : public GameNode
 {
 private:
-
+	
 public:
 	HRESULT init(void);
 	void release(void);

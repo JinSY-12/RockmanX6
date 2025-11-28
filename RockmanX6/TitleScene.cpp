@@ -434,9 +434,9 @@ void TitleScene::addSound(void)
 	
 	// 보이스
 	SOUNDMANAGER->addSound("Voice_X_Burster", "Resources/Sound/Voice/Character/X/Voice_X_Burster.wav", false, false);
-	SOUNDMANAGER->addSound("Voice_X_Jump1", "Resources/Sound/Voice/Character/X/Voice_X_Jump1.wav", false, false);
-	SOUNDMANAGER->addSound("Voice_X_Jump2", "Resources/Sound/Voice/Character/X/Voice_X_Jump2.wav", false, false);
-	SOUNDMANAGER->addSound("Voice_X_Jump3", "Resources/Sound/Voice/Character/X/Voice_X_Jump3.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_Jump0", "Resources/Sound/Voice/Character/X/Voice_X_Jump1.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_Jump1", "Resources/Sound/Voice/Character/X/Voice_X_Jump2.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_X_Jump2", "Resources/Sound/Voice/Character/X/Voice_X_Jump3.wav", false, false);
 	SOUNDMANAGER->addSound("Voice_X_WallKick", "Resources/Sound/Voice/Character/X/Voice_X_WallKick.wav", false, false);
 
 	SOUNDMANAGER->addSound("Voice_X_Dead", "Resources/Sound/Voice/Character/X/Voice_X_Dead.wav", false, false);
@@ -465,8 +465,6 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_X_Burster1Hit", "Resources/Sound/SFX/Character/X/SFX_X_Burster1Hit.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_X_Saber", "Resources/Sound/SFX/Character/X/SFX_X_Saber.wav", false, false);
 	
-
-
 	//////////////////////////////////
 	// 제로
 	//////////////////////////////////

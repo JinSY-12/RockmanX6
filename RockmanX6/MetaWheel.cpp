@@ -12,33 +12,34 @@ HRESULT MetaWheel::init(int x, int y)
 {
     eType = EnemyType::MetaWheel;
 
-    eStatus.maxHp = 10;
-    eStatus.hp = eStatus.maxHp;
+    status.maxHp = 10;
+    status.hp = status.maxHp;
+    status.physicalDamage = 4;
 
     eStatus.eImage = new GImage;
     eStatus.eImage = IMAGEMANAGER->findImage("Enemy_MetaWheel")->cloneImage();
 
-    eStatus.width = eStatus.eImage->getFrameWidth() - 5 * SCALE_FACTOR;
-    eStatus.height = eStatus.eImage->getFrameHeight() - 5 * SCALE_FACTOR;
+    status.width = eStatus.eImage->getFrameWidth() - 5 * SCALE_FACTOR;
+    status.height = eStatus.eImage->getFrameHeight() - 5 * SCALE_FACTOR;
 
-    eStatus.sightWidth = eStatus.width * 2;
-    eStatus.sightHeight = eStatus.height - 16 * SCALE_FACTOR;
+    eStatus.sightWidth = status.width * 2;
+    eStatus.sightHeight = status.height - 16 * SCALE_FACTOR;
 
     eState = EnemyState::Idle;
-    eStatus.overpower = false;
-    eStatus.dead = false;
+    status.overpower = false;
+    status.dead = false;
 
     fPos.x = 0 * SCALE_FACTOR;
     fPos.y = IMAGEMANAGER->findImage("SFX_JunkBullet")->getFrameHeight();
 
-    eStatus.eHitBox = RectMakeCenter(x + eStatus.width / 2, y + eStatus.height / 2, eStatus.width, eStatus.height);
+    eStatus.eHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width, status.height);
     eStatus.worldRect = eStatus.eHitBox;
     eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2, y + eStatus.sightHeight, eStatus.sightWidth, eStatus.sightHeight);
 
-    ePos.x = x;
-    ePos.y = eStatus.worldRect.bottom;
+    pos.x = x;
+    pos.y = eStatus.worldRect.bottom;
 
-    eStatus.lookRight = false;
+    status.lookRight = false;
 
     eStatus.patternTimer = 0.0f;
     eStatus.maxPatternTime = 20.0f;
@@ -62,13 +63,13 @@ void MetaWheel::release(void)
 void MetaWheel::update(void)
 {
     setEnemyHitbox();
-    checkPlayerCollision();
-    checkPlayerAttCollision();
+    //checkPlayerCollision();
+    //checkPlayerAttCollision();
     checkBulletCollision();
     enemyInvincibleTimerUpdate();
     isDead();
 
-    if (eStatus.touchLeftWall && !eStatus.lookRight)
+    if (eStatus.touchLeftWall && !status.lookRight)
     {
         eState = EnemyState::Idle;
         eStatus.isOnAttack = false;
@@ -76,7 +77,7 @@ void MetaWheel::update(void)
         eStatus.eImage->setFrameX(eStatus.eImage->getMaxFrameX() - eStatus.eImage->getFrameX());
     }
 
-    else if (eStatus.touchRightWall && eStatus.lookRight)
+    else if (eStatus.touchRightWall && status.lookRight)
     {
         eState = EnemyState::Idle;
         eStatus.isOnAttack = false;
@@ -92,11 +93,11 @@ void MetaWheel::update(void)
     case EnemyBase::EnemyState::Attack:
         eStatus.isOnAttack = true;
         eStatus.eImage->play(0.3f);
-        eStatus.VelocityX = eStatus.lookRight ? eStatus.moveSpeed : -eStatus.moveSpeed;
+        eStatus.VelocityX = status.lookRight ? eStatus.moveSpeed : -eStatus.moveSpeed;
 
         eStatus.worldRect.left += eStatus.VelocityX;
         eStatus.worldRect.right += eStatus.VelocityX;
-        ePos.x += eStatus.VelocityX;
+        pos.x += eStatus.VelocityX;
         break;
     default:
         break;

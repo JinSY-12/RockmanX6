@@ -124,11 +124,11 @@ void MovieScene::render(void)
 		// 무비 끝 + 페이드 아웃
 		if (testNum == 1)
 		{
-			//SOUNDMANAGER->play("BGM_Desert", 0.5f);
+			SOUNDMANAGER->play("BGM_Desert", 0.5f);
 		}
 		else if (testNum == 3)
 		{
-			//SOUNDMANAGER->play("Siren", 0.5f);
+			SOUNDMANAGER->play("Siren", 0.5f);
 		}
 
 		testNum++;

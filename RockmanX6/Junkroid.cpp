@@ -13,21 +13,22 @@ HRESULT Junkroid::init(int x, int y)
 {
     eType = EnemyType::Junkroid;
 
-    eStatus.maxHp = 4;
-    eStatus.hp = eStatus.maxHp;
+    status.maxHp = 4;
+    status.hp = status.maxHp;
+    status.physicalDamage = 2;
 
     eStatus.eImage = new GImage;
     eStatus.eImage = IMAGEMANAGER->findImage("Enemy_Junkroid")->cloneImage();
 
-    eStatus.width = eStatus.eImage->getFrameWidth() - 10 * SCALE_FACTOR;
-    eStatus.height = eStatus.eImage->getFrameHeight() - 5 * SCALE_FACTOR;
+    status.width = eStatus.eImage->getFrameWidth() - 10 * SCALE_FACTOR;
+    status.height = eStatus.eImage->getFrameHeight() - 5 * SCALE_FACTOR;
 
-    eStatus.sightWidth = eStatus.width * 2;
-    eStatus.sightHeight = eStatus.height - 16 * SCALE_FACTOR;
+    eStatus.sightWidth = status.width * 2;
+    eStatus.sightHeight = status.height - 16 * SCALE_FACTOR;
 
     eState = EnemyState::Idle;
-    eStatus.overpower = false;
-    eStatus.dead = false;
+    status.overpower = false;
+    status.dead = false;
 
     eStatus.touchLeftWall = false;
     eStatus.touchRightWall = false;
@@ -35,14 +36,14 @@ HRESULT Junkroid::init(int x, int y)
     fPos.x = 0 * SCALE_FACTOR;
     fPos.y = IMAGEMANAGER->findImage("SFX_JunkBullet")->getFrameHeight();
 
-    eStatus.eHitBox = RectMakeCenter(x + eStatus.width / 2, y + eStatus.height / 2, eStatus.width, eStatus.height);
+    eStatus.eHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width, status.height);
     eStatus.worldRect = eStatus.eHitBox;
     eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2, y + eStatus.sightHeight, eStatus.sightWidth, eStatus.sightHeight);
 
-    ePos.x = x;
-    ePos.y = eStatus.worldRect.bottom;
+    pos.x = x;
+    pos.y = eStatus.worldRect.bottom;
 
-    eStatus.lookRight = false;
+    status.lookRight = false;
 
     eStatus.patternTimer = 0.0f;
     eStatus.maxPatternTime = 20.0f;
@@ -70,8 +71,8 @@ void Junkroid::update(void)
     changeDirection();
     setEnemyHitbox();
     animChange();
-    checkPlayerCollision();
-    checkPlayerAttCollision();
+    // checkPlayerCollision();
+    // checkPlayerAttCollision();
     checkBulletCollision();
     enemyInvincibleTimerUpdate();
     isDead();
@@ -98,7 +99,7 @@ void Junkroid::attack(void)
 {
     eState = EnemyState::Attack;
     bManager->fire(EnemyBulletType::JunkBullet, (eStatus.worldRect.left + eStatus.worldRect.right) / 2,
-        eStatus.worldRect.top + fPos.y, eStatus.lookRight);
+        eStatus.worldRect.top + fPos.y, status.lookRight);
 }
 
 void Junkroid::checkPlayerCollision()

@@ -31,7 +31,7 @@ void EnemyManager::render(void)
 {
 	for (auto enemy = _vEnemy.begin(); enemy != _vEnemy.end(); ++enemy)
 	{
-		(*enemy)->render();
+		(*enemy)->render(getMemDC());
 	}
 }
 
@@ -41,7 +41,7 @@ void EnemyManager::checkDead(void)
 	{
 		if ((*enemy)->getIsDead())
 		{
-			playExplodeEffect((*enemy)->getEnemyType(), (*enemy)->getEnemyPos().x, (*enemy)->getEnemyPos().y, (*enemy)->getEnemyWidth(), (*enemy)->getEnemyHeight(), (*enemy)->getEnemyLook());
+			playExplodeEffect((*enemy)->getEnemyType(), (*enemy)->getEnemyPos().x, (*enemy)->getEnemyPos().y, (*enemy)->getWidth(), (*enemy)->getHeight(), (*enemy)->getLookRight());
 			playExplodeSound((*enemy)->getEnemyType());
 
 			enemy = _vEnemy.erase(enemy);
@@ -93,7 +93,9 @@ void EnemyManager::playExplodeSound(EnemyType eType)
 {
 	switch(eType)
 	{
-	case EnemyType::Junkroid:
+	case EnemyType::MetaDridler:
+		// SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
+	default:
 		SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
 		break;
 	}

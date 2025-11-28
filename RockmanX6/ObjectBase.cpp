@@ -3,13 +3,35 @@
 #include "BulletManager.h"
 #include "Player.h"
 
-void ObjectBase::render(void)
+HRESULT ObjectBase::init(void)
 {
-	oStatus.oImage->render(getMemDC(), oStatus.oHitBox.left, oStatus.oHitBox.top);
+	// Do Nothing!
+	return S_OK;
+}
+
+HRESULT ObjectBase::init(int x, int y)
+{
+	// Do Nothing!
+	return S_OK;
+}
+
+void ObjectBase::release(void)
+{
+	// Do Nothing!
+}
+
+void ObjectBase::update(void)
+{
+	// Do Nothing!
+}
+
+void ObjectBase::render(HDC hdc)
+{
+	oStatus.oImage->render(hdc, oStatus.oHitBox.left, oStatus.oHitBox.top);
 	
 	if (UIMANAGER->getIsDebugMode())
 	{
-		DrawRectMakeColor(getMemDC(), oStatus.oHitBox, RGB(255, 255, 0), 2);
+		DrawRectMakeColor(hdc, oStatus.oHitBox, RGB(255, 255, 0), 2);
 	}
 }
 
@@ -32,7 +54,7 @@ void ObjectBase::checkPlayerAttCollision(void)
 		switch (oStatus.oType)
 		{
 		case ObjectType::Block:
-			oStatus.hp -= oPlayer->getSaberDamage();
+			status.hp -= oPlayer->getPhyscialDamage();
 			oPlayer->setAnimDelay(true);
 			SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
 			
@@ -92,10 +114,9 @@ void ObjectBase::checkWallCollision(void)
 
 void ObjectBase::checkDead(void)
 {
-	if (oStatus.hp <= 0)
+	if (status.hp <= 0)
 	{
-		oStatus.hp = 0;
-		oStatus.dead = true;
-
+		status.hp = 0;
+		status.dead = true;
 	}
 }

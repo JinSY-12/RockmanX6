@@ -1,16 +1,18 @@
 #pragma once
 #include "GameNode.h"
+#include "CombatEntity.h"
 #include "EffectType.h"
 #include "BulletType.h"
+#include "SoundType.h"
+#include "Event.h"
 
 class BulletManager;
 
-class Player : public GameNode
+class Player : public CombatEntity
 {
 private:
 
-
-public:
+protected:
 
 #pragma region PlayerType
 
@@ -32,12 +34,13 @@ public:
 #pragma endregion
 
 #pragma region PlayerStruct
+	/*
 	struct CharcterPos
 	{
 		int x;
 		int y;
 	};
-
+	*/
 	struct Anim
 	{
 		int x;
@@ -112,12 +115,7 @@ public:
 		int firePointY;
 
 		// 스탯
-		float hp;
-		float maxHp;
-		float mp;
-		float maxMp;
-		int saberDamage;
-
+		// 체력과 데미지는 CombatEntity 공통 스탯에
 		// 이동 스탯
 		float moveSpeed;
 		float dashSpeed;
@@ -126,10 +124,9 @@ public:
 		
 		// 상태값
 		bool invincible;
-		bool lookRight;
+		// bool lookRight;
 		bool isOnGround;
 		bool isOnTop;
-		bool Dead;
 
 		bool touchLeft;
 		bool touchRight;
@@ -155,7 +152,6 @@ public:
 		float attackDelayTimer;
 		float attackDelayMaxTime;
 		bool isAttack;
-		
 	};
 
 	struct Progress
@@ -183,11 +179,11 @@ public:
 	PlayerPalette playerColor[15];
 
 	// 캐릭터 판정 및 좌표
-	int hitBoxWidth;
-	int hitBoxHeight;
+	// int hitBoxWidth;
+	// int hitBoxHeight;
 
-	CharcterPos hitBoxCenter;
-	CharcterPos charPos;
+	// CharcterPos hitBoxCenter;
+	// CharcterPos charPos;
 	Anim animBaseline;
 	BursterPos busterPos;
 
@@ -284,13 +280,14 @@ public:
 	int saberOffsetX;
 	int saberOffsetY;
 
+	ShootEvent shootEvent;
 
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
 	virtual void release(void);
 	virtual void update(void);
-	virtual void render(void);
+	virtual void render(HDC memDC);
 
 	// 캐릭터 공통 조작
 	virtual void move(bool direction);
@@ -328,20 +325,17 @@ public:
 	// 좌표 및 판정
 	RECT getPlayerRect(void) { return pStatus.hitBox; }
 	RECT getSaberRect(void) { return pStatus.saberHitBox; }
-	inline int getPlayerCenter(void) { return charPos.x; }
-	inline int getPlayerTop(void) { return charPos.y - hitBoxHeight; }
-	inline int getPlayerBottom(void) { return charPos.y; }
-	inline int getPlayerLeft(void) { return charPos.x - hitBoxWidth / 2; }
-	inline int getPlayerRight(void) { return charPos.x + hitBoxWidth /2; }
-	
-	inline bool getPlayerSight(void) { return pStatus.lookRight; }
-	inline bool getOverPower(void) { return pStatus.invincible; }
-
+	inline int getPlayerCenter(void) { return pos.x; }
+	inline int getPlayerTop(void) { return pos.y - status.hitBoxHeight; }
+	inline int getPlayerBottom(void) { return pos.y; }
+	inline int getPlayerLeft(void) { return pos.x - status.hitBoxWidth / 2; }
+	inline int getPlayerRight(void) { return pos.x + status.hitBoxWidth /2; }
 	inline bool getCanHit(void) { return canHit; }
-	inline int getSaberDamage(void) { return pStatus.saberDamage; }
-	inline int getPlayerHitBoxWidth(void) { return hitBoxWidth; }
+	inline int getPlayerHitBoxWidth(void) { return status.hitBoxWidth; }
+	Progress getProgress(void) { return progress; }
 
-	// 상태값
+	void setOverPower(bool op, BulletSize bullet);
+	void setAnimDelay(bool delay) { animDelay = delay; }
 	inline void setLeftCollision(bool left, int leftline)
 	{
 		pStatus.touchLeft = left;
@@ -349,11 +343,11 @@ public:
 		if (pStatus.touchLeft == true)
 		{
 			wallkickTimer = 0.0f;
-			charPos.x = leftline + hitBoxWidth / 2;
+			pos.x = leftline + status.hitBoxWidth / 2;
 
 			int left = leftline - CAMERAMANAGER->getCameraPos().x;
 			pStatus.hitBox.left = left;
-			pStatus.hitBox.right = pStatus.hitBox.left + hitBoxWidth;
+			pStatus.hitBox.right = pStatus.hitBox.left + status.hitBoxWidth;
 
 			pStatus.velocityX = 0.0f;
 
@@ -369,11 +363,11 @@ public:
 		{
 			wallkickTimer = 0.0f;
 
-			charPos.x = rightline - hitBoxWidth / 2;
+			pos.x = rightline - status.hitBoxWidth / 2;
 
 			int right = rightline - CAMERAMANAGER->getCameraPos().x;
 			pStatus.hitBox.right = right;
-			pStatus.hitBox.left = pStatus.hitBox.right - hitBoxWidth;
+			pStatus.hitBox.left = pStatus.hitBox.right - status.hitBoxWidth;
 			
 			pStatus.velocityX = 0.0f;
 
@@ -387,11 +381,11 @@ public:
 		
 		if (pStatus.isOnGround == true)
 		{
-			charPos.y = topline - 2;
+			pos.y = topline - 2;
 
 			int bottom = topline - CAMERAMANAGER->getCameraPos().y;
 			pStatus.hitBox.bottom = bottom - 2;
-			pStatus.hitBox.top = pStatus.hitBox.bottom - hitBoxHeight;
+			pStatus.hitBox.top = pStatus.hitBox.bottom - status.hitBoxHeight;
 
 			pStatus.velocityY = 0.0f;
 
@@ -410,11 +404,11 @@ public:
 
 		if (top == true)
 		{
-			charPos.y = bottomline + 3  + hitBoxHeight;
+			pos.y = bottomline + 3  + status.hitBoxHeight;
 
 			int top = bottomline - CAMERAMANAGER->getCameraPos().y;
 			pStatus.hitBox.top = top + 3 ;
-			pStatus.hitBox.bottom = pStatus.hitBox.top + hitBoxHeight;
+			pStatus.hitBox.bottom = pStatus.hitBox.top + status.hitBoxHeight;
 
 			pStatus.velocityY = 0.0f;
 			pStatus.velocityX = 0.0f;
@@ -422,66 +416,15 @@ public:
 			wallkickTimer = wallkickMaxTime;
 		}
 	}
-
 	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
-
-	void setOverPower(bool op, BulletSize bullet);
-	void setAnimDelay(bool delay) { animDelay = delay; }
-
-	Progress getProgress(void) { return progress; }
-
-	CharcterPos& getCharPos(void) { return charPos; }
-
+	
 	// 스탯 관련
-	inline void reduceHp(int damage, BulletSize size) {
-
-		pStatus.hp -= damage;
-		pStatus.isAttack = false;
-
-		if (pStatus.hp > 0)
-		{
-			int random = RND->getInt(2);
-			if (random == 0) SOUNDMANAGER->play("Voice_X_Damaged1");
-			else SOUNDMANAGER->play("Voice_X_Damaged2");
-			
-			currentState = CharacterState::OverPower;
-			pStatus.movable = false;
-			pStatus.invincible = true;
-			animSpeed = 0.06f;
-
-			switch (size)
-			{
-			case BulletSize::Small:
-				// 소경직
-				changeAnimation(pStatus.charName + "SmallDamaged", 0);
-
-				pStatus.velocityX = pStatus.lookRight ? -3.0f : 3.0f;
-				pStatus.velocityY = 0.0f;
-				break;
-
-			case BulletSize::Large:
-				// 대경직
-				changeAnimation(pStatus.charName + "LargeDamaged", 0);
-
-				pStatus.velocityX = pStatus.lookRight ? -2.0f : 2.0f;
-				pStatus.velocityY = 0.0f;
-				break;
-			}
-		}	
-
-		else 
-		{
-			currentState = CharacterState::Dead;
-			SOUNDMANAGER->play("Voice_" + pStatus.charName + "Dead");
-			pStatus.Dead = true;
-			pStatus.invincible = true;
-			pStatus.movable = false;
-		}
-	}
-	inline void reduceMp(int damage) { pStatus.mp -= damage; }
+	void reduceHp(int damage, BulletSize size);
+	
+	inline void reduceMp(int damage) { status.mp -= damage; }
 	inline void invincibleTimerUpdate()
 	{
-		if (pStatus.invincible && !pStatus.Dead)
+		if (pStatus.invincible && !status.dead)
 		{
 			pStatus.invincibleTimer += 0.1f;
 			if (pStatus.invincibleTimer >= pStatus.invincibleMaxTime)
@@ -493,11 +436,11 @@ public:
 	}
 	inline void isDead(void)
 	{
-		if (pStatus.hp <= 0)
+		if (status.hp <= 0)
 		{
-			pStatus.hp = 0;
+			status.hp = 0;
 			pStatus.invincible = true;
-			pStatus.Dead = false;
+			status.dead = false;
 		}
 	}
 
@@ -512,5 +455,8 @@ public:
 	}
 	virtual void coolDownControl(void);
 	virtual void multiHitControl(void);
+
+	virtual ShootEvent makeShootEvent(BulletType bType);
+	
 };
 

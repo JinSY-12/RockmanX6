@@ -54,6 +54,5 @@ void MainGame::render(void)
 
 	UIMANAGER->render(getMemDC());
 
-
 	this->getBackBuffer()->render(getHDC());
 }

@@ -93,6 +93,7 @@ ID2D1HwndRenderTarget*			_ID2DRenderTarget = nullptr;
 #include "Utils.h"
 #include "TimeManager.h"
 #include "TextManager.h"
+#include "EventManager.h"
 
 using namespace MY_UTIL;
 
@@ -108,6 +109,8 @@ using namespace MY_UTIL;
 #define TIMEMANAGER TimeManager::getSingleton()
 #define TEXTMANAGER TextManager::getSingleton()
 #define EFFECTMANAGER EffectManager::getSingleton()
+#define EVENTMANAGER EventManager::getSingleton()
+
 
 
 //! ≈∏¿Ã∆≤

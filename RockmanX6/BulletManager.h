@@ -2,11 +2,12 @@
 #include "GameNode.h"
 #include "Bullet.h"
 #include "BulletType.h"
+#include "IEventListener.h"
 
 class Player;
 class EnemeyManager;
 
-class BulletManager : public GameNode
+class BulletManager : public IEventListener
 {
 private:
 	Bullet* bullet;
@@ -28,8 +29,8 @@ private:
 	Player* _player;
 
 public:
-	HRESULT init(void);
-	void release(void);
+	void onEvent(const Event& event) override;
+
 	void update(void);
 	void render(void);
 
@@ -60,7 +61,8 @@ public:
 		switch (eBType)
 		{
 		case EnemyBulletType::JunkBullet:
-			SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
+			
+			// SOUNDMANAGER.play("SFX_SmallExplosion", 0.5f);
 			break;
 		}
 	}

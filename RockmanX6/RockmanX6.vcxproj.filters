@@ -106,14 +106,8 @@
     <Filter Include="소스 파일\Player\PlayerBase\Player">
       <UniqueIdentifier>{4ab94611-fd8a-4da8-9be7-8d143ada8fdc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Player\PlayerBase\PlayerType">
-      <UniqueIdentifier>{f2fa74f8-77b9-46e6-8732-82877f8b08cb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Player\Weapon\Bullet">
       <UniqueIdentifier>{54bfd0b8-f611-4eac-b211-47064046da15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Player\Weapon\BulletType">
-      <UniqueIdentifier>{d0b67aa1-f16d-4618-8341-c36338805e7c}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\FrameWork\Manager\Object">
       <UniqueIdentifier>{2f640317-ed81-496f-90c0-60454e396c72}</UniqueIdentifier>
@@ -126,6 +120,15 @@
     </Filter>
     <Filter Include="소스 파일\Object\ObjectList">
       <UniqueIdentifier>{a0cf4ae7-0dd1-40b4-9e92-ae83b800f782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\ManagerBase">
+      <UniqueIdentifier>{af662c3a-fa6f-4851-86f0-10917fa3677e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Event">
+      <UniqueIdentifier>{e73fd240-9a1e-4f62-aecc-6de156659be6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FrameWork\Manager\Damage">
+      <UniqueIdentifier>{62e3215e-80bd-4699-803a-700f1037de2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -228,17 +231,11 @@
     <ClInclude Include="Player.h">
       <Filter>소스 파일\Player\PlayerBase\Player</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerType.h">
-      <Filter>소스 파일\Player\PlayerBase\PlayerType</Filter>
-    </ClInclude>
     <ClInclude Include="BossType.h">
       <Filter>소스 파일\Enemy\Boss</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>소스 파일\Player\Weapon\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="BulletType.h">
-      <Filter>소스 파일\Player\Weapon\BulletType</Filter>
     </ClInclude>
     <ClInclude Include="EffectType.h">
       <Filter>소스 파일\FrameWork\Manager\Effect</Filter>
@@ -257,6 +254,33 @@
     </ClInclude>
     <ClInclude Include="MetaWheel.h">
       <Filter>소스 파일\Enemy\Minion</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletType.h">
+      <Filter>소스 파일\Player\Weapon\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerType.h">
+      <Filter>소스 파일\Player\PlayerBase\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>소스 파일\FrameWork\Manager\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="IEventListener.h">
+      <Filter>소스 파일\FrameWork\Manager\ManagerBase</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundType.h">
+      <Filter>소스 파일\FrameWork\Manager\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>소스 파일\FrameWork\Manager\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="CombatEntity.h">
+      <Filter>소스 파일\Player\PlayerBase\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -367,6 +391,21 @@
     </ClCompile>
     <ClCompile Include="MetaWheel.cpp">
       <Filter>소스 파일\Enemy\Minion</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="IEventListener.cpp">
+      <Filter>소스 파일\FrameWork\Manager\ManagerBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>소스 파일\FrameWork\Manager\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatEntity.cpp">
+      <Filter>소스 파일\Player\PlayerBase\Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

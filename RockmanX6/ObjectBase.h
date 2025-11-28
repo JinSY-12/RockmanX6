@@ -2,11 +2,12 @@
 #include "GameNode.h"
 #include "BulletType.h"
 #include "ObjectType.h"
+#include "CombatEntity.h"
 
 class BulletManager;
 class Player;
 
-class ObjectBase : public GameNode
+class ObjectBase : public CombatEntity
 {
 private:
 
@@ -26,13 +27,8 @@ public:
 		RECT oHitBox;
 		RECT worldRect;
 
-		int hp;
-		int maxHp;
-
 		int width;
 		int height;
-
-		bool dead;
 	};
 
 public:
@@ -45,8 +41,11 @@ public:
 
 
 public:
-
-	virtual void render(void);
+	virtual HRESULT init(void);
+	virtual HRESULT init(int x, int y);
+	virtual void release(void);
+	virtual void update(void);
+	virtual void render(HDC hdc);
 
 	virtual void setObjectHitbox(void);
 
@@ -66,7 +65,7 @@ public:
 	inline int getObjectWidth(void) { return oStatus.width; }
 	inline int getObjectHeight(void) { return oStatus.height; }
 
-	inline bool getIsDead(void) { return oStatus.dead; }
+	inline bool getIsDead(void) { return status.dead; }
 	void checkDead(void);
 	
 };

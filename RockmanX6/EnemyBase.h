@@ -1,27 +1,28 @@
 #pragma once
 #include "GameNode.h"
 #include "BulletType.h"
+#include "CombatEntity.h"
 
 class BulletManager;
 class Player;
 
-class EnemyBase : public GameNode
+class EnemyBase : public CombatEntity
 {
 private:
 
-public:
+protected:
 	enum class EnemyState
 	{
 		Idle,
 		Attack
 	};
-
+	/*
 	struct EnemyPos
 	{
 		int x;
 		int y;
 	};
-
+	*/
 	struct FirePointOffset
 	{
 		int x;
@@ -32,22 +33,18 @@ public:
 	{
 		GImage* eImage;
 
-		int maxHp;
-		int hp;
-
 		RECT eHitBox;
 		RECT worldRect;
 		RECT attSight;
 
-		int width;
-		int height;
+		// int width;
+		// int height;
 
 		int sightWidth;
 		int sightHeight;
 
-		bool lookRight;
+		// bool lookRight;
 		bool isOnAttack;
-		bool dead;
 
 		float patternTimer;
 		float maxPatternTime;
@@ -55,7 +52,6 @@ public:
 
 		float invincibleTimer;
 		float invincibleMaxTime;
-		bool overpower;
 
 		bool touchLeftWall;
 		bool touchRightWall;
@@ -69,16 +65,20 @@ public:
 
 	EnemyState eState;
 	EnemyStatus eStatus;
-	EnemyPos ePos;
+	// EnemyPos ePos;
 	FirePointOffset fPos;
-
+	
 	EnemyType eType;
 
 	BulletManager* bManager;
 	Player* player;
 
 public:
-	virtual void render(void);
+	virtual HRESULT init(void);
+	virtual HRESULT init(int x, int y);
+	virtual void release(void);
+	virtual void update(void);
+	virtual void render(HDC hdc);
 	virtual void attack(void);
 	
 	// 青悼 包访
@@ -87,12 +87,13 @@ public:
 
 	// 惑怕 包府
 	void isDead(void);
-	inline void reduceHp(int damage)
+	inline void freduceHp(int damage)
 	{
-		eStatus.hp -= damage;
-		eStatus.overpower = true;
+		status.hp -= damage;
+		status.overpower = true;
 	}
-	inline void changeDirection(bool dir) { eStatus.lookRight = dir; }
+
+	inline void changeDirection(bool dir) { status.lookRight = dir; }
 	void chasePlayer(float angle);
 	void changeDirection(void);
 
@@ -101,14 +102,14 @@ public:
 	RECT getEnemyHitBox() { return eStatus.eHitBox; }
 	RECT getEnemyWorldRect() { return eStatus.worldRect; }
 
-	inline int getEnemyWidth(void) { return eStatus.width; }
-	inline int getEnemyHeight(void) { return eStatus.height; }
-	int getCurrentHp(void) { return eStatus.hp; }
+	// inline int getEnemyWidth(void) { return status.width; }
+	// inline int getEnemyHeight(void) { return status.height; }
+	int getCurrentHp(void) { return status.hp; }
 	bool getAttAble(void) { return eStatus.attackAble; }
-	bool getIsDead(void) { return eStatus.dead; }
-	inline bool getOverPower() { return eStatus.overpower; }
-	EnemyPos getEnemyPos() { return ePos; }
-	bool getEnemyLook() { return eStatus.lookRight; }
+	bool getIsDead(void) { return status.dead; }
+	// inline bool getOverPower() { return status.overpower; }
+	Position getEnemyPos() { return pos; }
+	// bool getEnemyLook() { return status.lookRight; }
 	EnemyType getEnemyType() { return eType; }
 
 	void setEnemyLeftTouch(bool touch) { eStatus.touchLeftWall = touch; }

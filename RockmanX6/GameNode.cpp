@@ -44,7 +44,7 @@ HRESULT GameNode::init(bool managerInit)
 
         TIMEMANAGER->init();
 
-        // UIMANAGER->init();
+        UIMANAGER->init();
 
         SCENEMANAGER->init();
 
@@ -74,14 +74,14 @@ void GameNode::release(void)
         IMAGEMANAGER->release();
         IMAGEMANAGER->releaseSingleton();
 
-        SOUNDMANAGER->release();
-        SOUNDMANAGER->releaseSingleton();
-
         TIMEMANAGER->release();
         TIMEMANAGER->releaseSingleton();
 
         CAMERAMANAGER->release();
         CAMERAMANAGER->releaseSingleton();
+
+        SOUNDMANAGER->release();
+        SOUNDMANAGER->releaseSingleton();
 
         SCENEMANAGER->release();
         SCENEMANAGER->releaseSingleton();

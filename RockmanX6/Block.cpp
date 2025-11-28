@@ -12,8 +12,8 @@ HRESULT Block::init(int x, int y)
 {
     oStatus.oType = ObjectType::Block;
 
-    oStatus.maxHp = 10;
-    oStatus.hp = oStatus.maxHp;
+    status.maxHp = 10;
+    status.hp = status.maxHp;
 
     oStatus.oImage = new GImage;
     oStatus.oImage = IMAGEMANAGER->findImage("Object_Block")->cloneImage();
@@ -27,7 +27,7 @@ HRESULT Block::init(int x, int y)
     oPos.x = x;
     oPos.y = oStatus.worldRect.bottom;
 
-    oStatus.dead = false;
+    status.dead = false;
     
     return S_OK;
 }
@@ -53,7 +53,8 @@ void Block::checkPlayerAttCollision(void)
     {
         oStatus.hp -= oPlayer->getSaberDamage();
         oPlayer->setAnimDelay(true);
-        SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
+        
+        ("SFX_SaberHit", 0.5f);
     }
     
     vector<Bullet*>& bullets = oBManager->getBullet();

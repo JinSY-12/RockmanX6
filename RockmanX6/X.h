@@ -26,6 +26,9 @@ public:
 	void chargeBurst(void);
 	void specialAttack(void) override;
 
+	// 이벤트 관련
+	ShootEvent makeShootEvent(BulletType bType) override;
+
 	void spawn(int x, int y) override;
 
 	// 애니메이션 관련

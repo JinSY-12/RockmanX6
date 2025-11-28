@@ -13,22 +13,33 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 		break;
 	}
 
+	EVENTMANAGER->addListener(&bManager);
+	EVENTMANAGER->addListener(&dManager);
+
+	// 데미지, 애너미 매니저 추가 해야 함
+	// EVENTMANAGER->addListener(&eManager);
+
+	cManager.settingManager(player.get(), &eManager, &bManager, &oManager);
+
 	player->setBulletManager(&bManager);
 
+	// 콜리전 매니저가 추가되면 삭제
 	eManager.setttingPlayer(player.get());
 	eManager.setttingBulletManager(&bManager);
 	
-	bManager.settingPlayer(player.get());
+	//bManager.settingPlayer(player.get());
 
 	oManager.setttingPlayer(player.get());
 	oManager.setttingBulletManager(&bManager);
-	
+	// 콜리전 매니저가 추가되면 여기까지 삭제
+	// 얘네는 생성과 관리만 할 예정임
+
 	// 스테이지 세팅
 	UIMANAGER->SettingProgressBar(pType, bType);
 	stageSettting(bType);
 
 	// 스테이지 시작 준비
-	SOUNDMANAGER->play(stagBGM, 0.5f);
+	// SOUNDMANAGER->play(stagBGM, 0.5f);
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
 	noticeAniSpeed = 1;
@@ -69,6 +80,9 @@ void StageScene::update(void)
 		player->update();
 		eManager.update();
 		oManager.update();
+
+		cManager.update();
+
 		EFFECTMANAGER->update();
 
 		if (KEYMANAGER->isOnceKeyDown('N'))
@@ -89,7 +103,7 @@ void StageScene::render(void)
 
 	EFFECTMANAGER->afterImageRender(getMemDC());
 	
-	player->render();
+	player->render(getMemDC());
 
 	EFFECTMANAGER->render(getMemDC());
 
@@ -126,8 +140,8 @@ void StageScene::stageSettting(BossType bType)
 			mPixelStage = IMAGEMANAGER->findImage("Pixel_Intro");
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
-			player->init(1500 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
-			//player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(1500 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();
 			enemySettting(bType);
@@ -157,10 +171,10 @@ void StageScene::enemySettting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
-		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
 
 		// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 726 * SCALE_FACTOR);
 		// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 726 * SCALE_FACTOR);
@@ -430,7 +444,7 @@ void StageScene::stageCollision(void)
 	// 바닥 체크
 	for (int row = player->getPlayerBottom() + 5; row >= player->getPlayerBottom(); row--)
 	{
-		if (player->getPlayerSight() == true)
+		if (player->getLookRight() == true)
 		{
 			for (int line = player->getPlayerCenter() - player->getPlayerHitBoxWidth() / 3 + 3 * SCALE_FACTOR; line <= player->getPlayerCenter() + player->getPlayerHitBoxWidth() / 3 - 3 * SCALE_FACTOR; line++)
 			{
@@ -464,7 +478,7 @@ void StageScene::stageCollision(void)
 	// 천장 체크
 	for (int row = player->getPlayerTop() - 2; row <= player->getPlayerTop(); row++)
 	{
-		if (player->getPlayerSight() == true)
+		if (player->getLookRight() == true)
 		{
 			for (int line = player->getPlayerCenter() - 5 * SCALE_FACTOR; line <= player->getPlayerCenter() + 5 * SCALE_FACTOR; line++)
 			{
