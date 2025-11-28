@@ -147,6 +147,7 @@ protected:
 		bool movable;
 		float invincibleTimer;
 		float invincibleMaxTime;
+		float overpowerMaxTime;
 
 		// 공격 관련
 		float attackDelayTimer;
@@ -323,7 +324,7 @@ public:
 
 	// settter/getter
 	// 좌표 및 판정
-	RECT getPlayerRect(void) { return pStatus.hitBox; }
+	RECT getPlayerHitBox(void) { return pStatus.hitBox; }
 	RECT getSaberRect(void) { return pStatus.saberHitBox; }
 	inline int getPlayerCenter(void) { return pos.x; }
 	inline int getPlayerTop(void) { return pos.y - status.hitBoxHeight; }
@@ -419,18 +420,24 @@ public:
 	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
 	
 	// 스탯 관련
-	void reduceHp(int damage, BulletSize size);
+	void reduceHp(int damage);
 	
 	inline void reduceMp(int damage) { status.mp -= damage; }
 	inline void invincibleTimerUpdate()
 	{
-		if (pStatus.invincible && !status.dead)
+		if (status.overpower && !status.dead)
 		{
 			pStatus.invincibleTimer += 0.1f;
-			if (pStatus.invincibleTimer >= pStatus.invincibleMaxTime)
+			
+			if (pStatus.invincibleTimer >= pStatus.overpowerMaxTime)
+			{
+				status.overpower = false;
+				pStatus.invincibleTimer = 0.0f;
+			}
+
+			else if (pStatus.invincibleTimer >= pStatus.invincibleMaxTime)
 			{
 				pStatus.invincible = false;
-				pStatus.invincibleTimer = 0.0f;
 			}
 		}
 	}

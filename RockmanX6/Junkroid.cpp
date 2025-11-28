@@ -11,6 +11,7 @@ HRESULT Junkroid::init(void)
 
 HRESULT Junkroid::init(int x, int y)
 {
+    status.type = CombatEntityType::Enemy;
     eType = EnemyType::Junkroid;
 
     status.maxHp = 4;
@@ -105,7 +106,7 @@ void Junkroid::attack(void)
 void Junkroid::checkPlayerCollision()
 {
     RECT temp;
-    if (IntersectRect(&temp, &eStatus.attSight, &player->getPlayerRect()))
+    if (IntersectRect(&temp, &eStatus.attSight, &player->getPlayerHitBox()))
     {
         if (eStatus.attackAble)
         {

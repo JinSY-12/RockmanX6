@@ -87,7 +87,7 @@ public:
 
 	// 상태 관리
 	void isDead(void);
-	inline void freduceHp(int damage)
+	inline void reduceHp(int damage)
 	{
 		status.hp -= damage;
 		status.overpower = true;

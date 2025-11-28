@@ -3,11 +3,10 @@
 // 플레이어 총알 종류
 enum class BulletType
 {
-	Buster,
+	Burster,
 	ChargeBurst1,
 	ChargeBurst2,
-	FalconBurst2,
-	None
+	FalconBurst2
 };
 
 // 적군 총알 종류

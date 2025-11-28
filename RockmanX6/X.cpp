@@ -396,7 +396,7 @@ void X::attack(void)
 	{
 		attState = SholderState::Burst;
 		busterPos.x = 0 * SCALE_FACTOR;
-		shootEvent = makeShootEvent(BulletType::Buster);
+		shootEvent = makeShootEvent(BulletType::Burster);
 		SOUNDMANAGER->play("SFX_X_Burster1", 0.5f);
 
 		bursterEffectName = "SFX_BursterEffect1";
@@ -821,6 +821,7 @@ void X::spawn(int x, int y)
 
 	// charPos.x = x;
 	// charPos.y = y;
+	status.type = CombatEntityType::Player;
 
 	pStatus.hitBox = RectMakeCenter(pos.x, 0 - status.hitBoxHeight / 2, status.hitBoxWidth, status.hitBoxHeight);
 	pStatus.floorCheck = RectMakeCenter(pos.x, pos.y, status.hitBoxWidth, 4);
@@ -891,6 +892,7 @@ void X::spawn(int x, int y)
 
 	// 무적 초기화
 	pStatus.invincibleMaxTime = 5.0f;
+	pStatus.overpowerMaxTime = 10.0f;
 	pStatus.invincibleTimer = 0.0f;
 
 	// 상태 초기화 - 공격 관련

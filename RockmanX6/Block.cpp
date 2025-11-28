@@ -10,6 +10,7 @@ HRESULT Block::init(void)
 
 HRESULT Block::init(int x, int y)
 {
+    status.type = CombatEntityType::Object;
     oStatus.oType = ObjectType::Block;
 
     status.maxHp = 10;

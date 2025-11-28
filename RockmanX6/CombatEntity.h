@@ -1,8 +1,17 @@
 #pragma once
 
+enum class CombatEntityType
+{
+	Player,
+	Enemy,
+	Object
+};
+
 class CombatEntity
 {
 protected:
+	
+
 	struct Position
 	{
 		int x;
@@ -11,6 +20,8 @@ protected:
 
 	struct Attributes
 	{
+		CombatEntityType type;
+
 		float hp;
 		float maxHp;
 		float mp;
@@ -36,7 +47,6 @@ protected:
 
 public:
 
-	void reduceHp(int damage);
 	Position getPos() { return pos; }
 	int getWidth() { return status.width; }
 	int getHeight() { return status.height; }
@@ -44,5 +54,6 @@ public:
 	bool getOverPower() { return status.overpower; }
 
 	float getPhyscialDamage() { return status.physicalDamage; }
+	CombatEntityType getEntityType() const { return status.type; }
 };
 

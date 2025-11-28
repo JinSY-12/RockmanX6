@@ -48,7 +48,6 @@ void CollisionManager::checkPlayerVsEnemy(void)
 
 		if (IntersectRect(&temp, &player->getSaberRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && player->getCanHit())
 		{
-			int rnd = RND->getInt(4);
 			player->setAnimDelay(true);
 
 			switch (enemy->getEnemyType())
@@ -61,36 +60,30 @@ void CollisionManager::checkPlayerVsEnemy(void)
 			default:
 				damageEvent.attacker = player;
 				damageEvent.target = enemy;
-				damageEvent.bType = BulletType::None;
+				damageEvent.dType = DamageType::Saber;
 				damageEvent.damage = damageEvent.target->getPhyscialDamage();
 				EVENTMANAGER->dispatchEvents({EventType::Damage, &damageEvent});
-
-				/*
-				// enemy->;
-				enemy->reduceHp(player->getSaberDamage());
-				player->setAnimDelay(true);
-				SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
-
-				switch (rnd)
-				{
-				case 0:
-					//EFFECTMANAGER->spawnEffect(EffectType::SaberHit_1, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
-					break;
-				case 1:
-					//EFFECTMANAGER->spawnEffect(EffectType::SaberHit_2, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
-					break;
-				case 2:
-					//EFFECTMANAGER->spawnEffect(EffectType::SaberHit_3, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
-					break;
-				case 3:
-					//EFFECTMANAGER->spawnEffect(EffectType::SaberHit_4, ePos.x, ePos.y, eStatus.width, eStatus.height, eStatus.lookRight);
-					break;
-				}
-				*/
 				break;
 			}
 		}
 	}
+
+	for (auto& enemy : ememies->getEnemy())
+	{
+		RECT temp;
+
+		if (IntersectRect(&temp, &player->getPlayerHitBox(), &enemy->getEnemyHitBox()) && !player->getOverPower())
+		{
+			damageEvent.attacker = enemy;
+			damageEvent.target = player;
+			damageEvent.dType = DamageType::Touch;
+			damageEvent.damage = damageEvent.target->getPhyscialDamage();
+			EVENTMANAGER->dispatchEvents({ EventType::Damage, &damageEvent });
+			break;
+		}
+	}
+
+
 }
 
 void CollisionManager::checkPlayerVsObject(void)

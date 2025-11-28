@@ -41,12 +41,12 @@ HRESULT Burster::init(BulletType type, int x, int y, bool isRight)
 {
 	switch (type)
 	{
-	case BulletType::Buster:
+	case BulletType::Burster:
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster1")->cloneImage();
 		//bStatus.demage = 0;
 		bStatus.demage = 1;
-		bStatus.bType = BulletType::Buster;
+		bStatus.bType = BulletType::Burster;
 		break;
 
 	case BulletType::ChargeBurst1:

@@ -1087,10 +1087,10 @@ void Player::setOverPower(bool op, BulletSize bullet)
 	}
 }
 
-void Player::reduceHp(int damage, BulletSize size)
+void Player::reduceHp(int damage)
 {
-
 	status.hp -= damage;
+	status.overpower = true;
 	pStatus.isAttack = false;
 
 	if (status.hp > 0)
@@ -1104,23 +1104,19 @@ void Player::reduceHp(int damage, BulletSize size)
 		pStatus.invincible = true;
 		animSpeed = 0.06f;
 
-		switch (size)
+		if (damage > 5)
 		{
-		case BulletSize::Small:
-			// 소경직
-			changeAnimation(pStatus.charName + "SmallDamaged", 0);
-
-			pStatus.velocityX = status.lookRight ? -3.0f : 3.0f;
-			pStatus.velocityY = 0.0f;
-			break;
-
-		case BulletSize::Large:
-			// 대경직
 			changeAnimation(pStatus.charName + "LargeDamaged", 0);
 
 			pStatus.velocityX = status.lookRight ? -2.0f : 2.0f;
 			pStatus.velocityY = 0.0f;
-			break;
+		}
+		else if (damage > 0 && damage <= 5)
+		{
+			changeAnimation(pStatus.charName + "SmallDamaged", 0);
+
+			pStatus.velocityX = status.lookRight ? -3.0f : 3.0f;
+			pStatus.velocityY = 0.0f;
 		}
 	}
 

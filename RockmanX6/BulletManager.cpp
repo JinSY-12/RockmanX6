@@ -61,7 +61,7 @@ void BulletManager::fire(BulletType pType, int x, int y, bool direct)
 	switch (pType)
 	{
 		//¹ö½ºÅÍ
-		case BulletType::Buster:
+		case BulletType::Burster:
 			bullet = new Burster;
 			bullet->init(pType, x, y, direct);
 			_vBullet.push_back(bullet);
@@ -103,9 +103,9 @@ void BulletManager::checkPlayerCollision()
 	for (auto enemyBullets = _vEnemyBullet.begin(); enemyBullets != _vEnemyBullet.end();)
 	{
 		RECT temp;
-		if (IntersectRect(&temp, &(*enemyBullets)->getBulletRect(), &_player->getPlayerRect()) && _player->getOverPower() == false)
+		if (IntersectRect(&temp, &(*enemyBullets)->getBulletRect(), &_player->getPlayerHitBox()) && _player->getOverPower() == false)
 		{
-			_player->reduceHp((*enemyBullets)->getBulletDamage(), (*enemyBullets)->getBulletSize());
+			_player->reduceHp((*enemyBullets)->getBulletDamage());
 			playExplodeEffect((*enemyBullets)->getEnemyBulletType(), (*enemyBullets)->getBulletPosX(), (*enemyBullets)->getBulletPosY(), (*enemyBullets)->getBulletWidth(), (*enemyBullets)->getBulletHeight(), 0);
 			playExplodeSound((*enemyBullets)->getEnemyBulletType());
 			enemyBullets = _vEnemyBullet.erase(enemyBullets);

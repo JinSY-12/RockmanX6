@@ -38,12 +38,22 @@ struct ShootEvent
 	bool direct;
 };
 
+enum class DamageType
+{
+	Burster,
+	ChargeBurst1,
+	ChargeBurst2,
+	FalconBurst2,
+	Saber,
+	Touch
+};
+
 struct DamageEvent
 {
 	CombatEntity* attacker;
 	CombatEntity* target;
 	int damage;
-	BulletType bType;
+	DamageType dType;
 	bool targetDead;
 };
 

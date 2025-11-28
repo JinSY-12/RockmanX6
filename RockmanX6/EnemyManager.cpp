@@ -105,7 +105,7 @@ void EnemyManager::playHitEffect(BulletType bType, int x, int y, int look)
 {
 	switch (bType)
 	{
-	case BulletType::Buster:
+	case BulletType::Burster:
 		break;
 	}
 }
@@ -114,7 +114,7 @@ void EnemyManager::playHitSound(BulletType bType)
 {
 	switch (bType)
 	{
-	case BulletType::Buster:
+	case BulletType::Burster:
 		SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.5f);
 		break;
 	}
