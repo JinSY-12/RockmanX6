@@ -57,6 +57,7 @@ public:
 	int getBulletHeight(void) { return bStatus.height; }
 
 	bool getBulletDir(void) { return bStatus.rightDirect; }
+	void setBulletFire(bool fire) { bStatus.isFire = fire; }
 
 	BulletType getBulletType(void) { return bStatus.bType; }
 	EnemyBulletType getEnemyBulletType(void) { return bStatus.eBType; }

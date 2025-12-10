@@ -2,6 +2,7 @@
 #include "IEventListener.h"
 #include "Player.h"
 #include "EnemyManager.h"
+#include "ObjectManager.h"
 #include "BulletManager.h"
 
 class DamageManager : public IEventListener

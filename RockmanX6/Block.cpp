@@ -19,14 +19,14 @@ HRESULT Block::init(int x, int y)
     oStatus.oImage = new GImage;
     oStatus.oImage = IMAGEMANAGER->findImage("Object_Block")->cloneImage();
 
-    oStatus.width = oStatus.oImage->getWidth();
-    oStatus.height = oStatus.oImage->getHeight();
+    status.width = oStatus.oImage->getWidth();
+    status.height = oStatus.oImage->getHeight();
     
-    oStatus.oHitBox = RectMakeCenter(x + oStatus.width / 2, y + oStatus.height / 2, oStatus.width, oStatus.height);
+    oStatus.oHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width, status.height);
     oStatus.worldRect = oStatus.oHitBox;
     
-    oPos.x = x;
-    oPos.y = oStatus.worldRect.bottom;
+    pos.x = x;
+    pos.y = oStatus.worldRect.bottom;
 
     status.dead = false;
     
@@ -41,8 +41,8 @@ void Block::release(void)
 void Block::update(void)
 {
     setObjectHitbox();
-    checkBulletCollision();
-    checkPlayerAttCollision();
+    // checkBulletCollision();
+    // checkPlayerAttCollision();
     checkDead();
 }
 

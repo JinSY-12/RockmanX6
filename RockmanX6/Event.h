@@ -4,16 +4,18 @@
 #include "CombatEntity.h"
 #include <string>
 
+class Bullet;
+
 enum class EventType
 {
 	ShootBulltet,
 	BulletHitEnemy,
-	BulletDeflected,
 	BulletErase,
 	PlayEffectSound,
 	PlayVoiceSound,
 	StopSound,
-	Damage
+	TouchDamage,
+	BulletDamage,
 };
 
 enum class EntityType
@@ -54,6 +56,8 @@ struct DamageEvent
 	CombatEntity* target;
 	int damage;
 	DamageType dType;
+	BulletType bType;
+	Bullet* bullet;
 	bool targetDead;
 };
 

@@ -10,8 +10,6 @@ enum class CombatEntityType
 class CombatEntity
 {
 protected:
-	
-
 	struct Position
 	{
 		int x;
@@ -52,6 +50,7 @@ public:
 	int getHeight() { return status.height; }
 	bool getLookRight() { return status.lookRight; }
 	bool getOverPower() { return status.overpower; }
+	int getCurrentHp() { return status.hp; }
 
 	float getPhyscialDamage() { return status.physicalDamage; }
 	CombatEntityType getEntityType() const { return status.type; }

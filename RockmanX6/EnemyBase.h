@@ -16,13 +16,7 @@ protected:
 		Idle,
 		Attack
 	};
-	/*
-	struct EnemyPos
-	{
-		int x;
-		int y;
-	};
-	*/
+
 	struct FirePointOffset
 	{
 		int x;
@@ -37,13 +31,9 @@ protected:
 		RECT worldRect;
 		RECT attSight;
 
-		// int width;
-		// int height;
-
 		int sightWidth;
 		int sightHeight;
 
-		// bool lookRight;
 		bool isOnAttack;
 
 		float patternTimer;
@@ -65,7 +55,6 @@ protected:
 
 	EnemyState eState;
 	EnemyStatus eStatus;
-	// EnemyPos ePos;
 	FirePointOffset fPos;
 	
 	EnemyType eType;
@@ -102,14 +91,9 @@ public:
 	RECT getEnemyHitBox() { return eStatus.eHitBox; }
 	RECT getEnemyWorldRect() { return eStatus.worldRect; }
 
-	// inline int getEnemyWidth(void) { return status.width; }
-	// inline int getEnemyHeight(void) { return status.height; }
-	int getCurrentHp(void) { return status.hp; }
 	bool getAttAble(void) { return eStatus.attackAble; }
 	bool getIsDead(void) { return status.dead; }
-	// inline bool getOverPower() { return status.overpower; }
 	Position getEnemyPos() { return pos; }
-	// bool getEnemyLook() { return status.lookRight; }
 	EnemyType getEnemyType() { return eType; }
 
 	void setEnemyLeftTouch(bool touch) { eStatus.touchLeftWall = touch; }
@@ -120,7 +104,6 @@ public:
 	inline void settingPlayer(Player* p) { player = p; }
 
 	virtual void checkPlayerCollision(void);
-	virtual void checkPlayerAttCollision(void);
 	virtual void checkBulletCollision(void);
 
 	void enemyInvincibleTimerUpdate(void);

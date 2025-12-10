@@ -56,7 +56,7 @@ public:
 	virtual void checkPlayerAttCollision(void);
 	virtual void checkBulletCollision(void);
 	virtual void checkWallCollision(void);
-
+	
 	// getter,setter
 	inline RECT getObjectRect(void) { return oStatus.worldRect; }
 	inline RECT getObjectHitbox(void) { return oStatus.oHitBox; }
@@ -64,6 +64,10 @@ public:
 
 	inline int getObjectWidth(void) { return oStatus.width; }
 	inline int getObjectHeight(void) { return oStatus.height; }
+
+	ObjectType getObjectType(void) { return oStatus.oType; }
+
+	inline void reduceHp(int damage) { status.hp -= damage; }
 
 	inline bool getIsDead(void) { return status.dead; }
 	void checkDead(void);

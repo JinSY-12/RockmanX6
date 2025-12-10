@@ -116,47 +116,6 @@ void EnemyBase::checkPlayerCollision(void)
 	// Do nothing!
 }
 
-void EnemyBase::checkPlayerAttCollision(void)
-{
-	RECT temp;
-
-	if (IntersectRect(&temp, &player->getSaberRect(), &eStatus.eHitBox) && !status.overpower && player->getCanHit())
-	{
-		int rnd = RND->getInt(4);
-
-		switch (eType)
-		{
-		case EnemyType::MetaDridler:
-			player->setAnimDelay(true);
-			// Æ¨±â´Â ÀÌÆåÆ®
-			SOUNDMANAGER->play("SFX_Block", 0.5f);
-			break;
-			
-		default:
-			status.hp -= player->getPhyscialDamage();
-			player->setAnimDelay(true);
-			SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
-
-			switch (rnd)
-			{
-			case 0:
-				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_1, pos.x, pos.y, status.width, status.height, status.lookRight);
-				break;
-			case 1:
-				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_2, pos.x, pos.y, status.width, status.height, status.lookRight);
-				break;
-			case 2:
-				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_3, pos.x, pos.y, status.width, status.height, status.lookRight);
-				break;
-			case 3:
-				EFFECTMANAGER->spawnEffect(EffectType::SaberHit_4, pos.x, pos.y, status.width, status.height, status.lookRight);
-				break;
-			}			
-			break;
-		}
-	}
-}
-
 void EnemyBase::checkBulletCollision(void)
 {
 	vector<Bullet*>& bullets = bManager->getBullet();

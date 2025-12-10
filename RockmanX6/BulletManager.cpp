@@ -8,8 +8,16 @@ void BulletManager::onEvent(const Event& event)
 	switch (event.eType)
 	{
 	case EventType::ShootBulltet:
+	{
 		ShootEvent* shootData = static_cast<ShootEvent*>(event.data);
 		fire(shootData->bType, shootData->x, shootData->y, shootData->direct);
+	}
+		break;
+	case EventType::BulletErase:
+	{
+		DamageEvent* damageData = static_cast<DamageEvent*>(event.data); 
+		// 일단 보류
+	}
 		break;
 	}
 }

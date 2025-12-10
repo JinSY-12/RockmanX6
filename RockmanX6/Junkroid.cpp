@@ -74,7 +74,7 @@ void Junkroid::update(void)
     animChange();
     // checkPlayerCollision();
     // checkPlayerAttCollision();
-    checkBulletCollision();
+    // checkBulletCollision();
     enemyInvincibleTimerUpdate();
     isDead();
 }

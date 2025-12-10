@@ -44,7 +44,7 @@ public:
 
 	inline int getMaxBullets() { return _vBullet.size(); }
 	inline void settingPlayer(Player* player) { _player = player; }
-
+	
 	void playExplodeEffect(EnemyBulletType eBType, int x, int y, int width, int height, int look)
 	{
 		switch (eBType)
