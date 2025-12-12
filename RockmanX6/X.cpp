@@ -200,7 +200,7 @@ void X::update(void)
 			dash(status.lookRight);
 		}
 
-		if (KEYMANAGER->isStayKeyDown('Z'))
+		if (KEYMANAGER->isStayKeyDown('Z') && pStatus.movable)
 		{
 			dashTimer += 0.1f;
 
@@ -228,7 +228,7 @@ void X::update(void)
 			}
 		}
 
-		if (KEYMANAGER->isOnceKeyUp('Z'))
+		if (KEYMANAGER->isOnceKeyUp('Z') && pStatus.movable)
 		{
 			SOUNDMANAGER->stop("SFX_DashStart");
 
@@ -357,7 +357,7 @@ void X::update(void)
 		applyForce();
 		currentAnimChange();
 		pStatus.player->play(animSpeed);
-		attackHandEffect->play(0.05f);
+		attackHandEffect->play(effectAnimSpeed);
 		bursterEffectAlphaDown();
 		frameCheck();
 	}
@@ -402,6 +402,7 @@ void X::attack(void)
 		bursterEffectName = "SFX_BursterEffect1";
 		bursterEffectAlpha = 255;
 		attackHandEffect->setFrameX(0);
+		effectAnimSpeed = 0.05f;
 
 		burstloop = true;
 		lastShootTime = now;
@@ -425,7 +426,7 @@ void X::chargeBurst(void)
 			bursterEffectName = "SFX_BursterEffect2";
 			bursterEffectAlpha = 255;
 			attackHandEffect->setFrameX(0);
-
+			effectAnimSpeed = 0.05f;
 
 			// 공격 회수 장면을 위한 타이머 저장 -> 안하면 바로 내림ㅋㅋ
 			attackTimer = TIMEMANAGER->getWorldTime();
@@ -450,7 +451,7 @@ void X::chargeBurst(void)
 			bursterEffectName = "SFX_BursterEffect3";
 			bursterEffectAlpha = 255;
 			attackHandEffect->setFrameX(0);
-
+			effectAnimSpeed = 0.07f;
 
 			attackTimer = TIMEMANAGER->getWorldTime();
 
@@ -924,15 +925,16 @@ void X::spawn(int x, int y)
 	previousAnim = "X_Idle";
 	currentAnim = "X_Spawn";
 	pStatus.player = IMAGEMANAGER->findImage(currentAnim);
-	// afterImage = IMAGEMANAGER->findImage(currentAnim);
 	chargeEffect = IMAGEMANAGER->findImage("SFX_Charge");
 	chargeAura = IMAGEMANAGER->findImage("SFX_ChargeAura"); 
 	attackHandEffect = IMAGEMANAGER->findImage(bursterEffectName);
+	charAlpha = 255;
 
 	prevFrame = -1;
 	currentFrame = pStatus.player->getFrameX();
 
 	animSpeed = 0.1f;
+	effectAnimSpeed = 0.05f;
 	attChange = false;
 	burstloop = false;
 	aniDash = false;
@@ -942,7 +944,7 @@ void X::spawn(int x, int y)
 
 void X::specialAttack(void)
 {
-	if (!pStatus.isAttack)
+	if (!pStatus.isAttack && pStatus.movable)
 	{
 		attState = SholderState::Special;
 

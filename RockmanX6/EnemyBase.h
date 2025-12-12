@@ -51,6 +51,9 @@ protected:
 
 		float moveSpeed;
 		float updownSpeed;
+
+		int animOffsetX;
+		int animOffsetY;
 	};
 
 	EnemyState eState;
@@ -92,7 +95,7 @@ public:
 	RECT getEnemyWorldRect() { return eStatus.worldRect; }
 
 	bool getAttAble(void) { return eStatus.attackAble; }
-	bool getIsDead(void) { return status.dead; }
+	
 	Position getEnemyPos() { return pos; }
 	EnemyType getEnemyType() { return eType; }
 

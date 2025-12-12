@@ -115,7 +115,21 @@ void CollisionManager::checkPlayerVsObject(void)
 
 void CollisionManager::checkPlayerVsBullet(void)
 {
+	RECT temp;
 
+	for (auto& bullet : bullets->getEnemyBullet())
+	{
+		if (IntersectRect(&temp, &bullet->getBulletRect(), &player->getPlayerHitBox()) && !player->getOverPower() && !player->getIsDead())
+		{
+			damageEvent.attacker = player;
+			damageEvent.target = player;
+			damageEvent.bType = bullet->getBulletType();
+			damageEvent.damage = bullet->getBulletDamage();
+			damageEvent.bullet = bullet;
+			EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
+			break;
+		}
+	}
 }
 
 void CollisionManager::checkBulletVsEnemy(void)
@@ -134,7 +148,6 @@ void CollisionManager::checkBulletVsEnemy(void)
 				damageEvent.damage = bullet->getBulletDamage();
 				damageEvent.bullet = bullet;
 				EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
-				// EVENTMANAGER->dispatchEvents({ EventType::BulletErase, &damageEvent });
 				break;
 			}
 		}
@@ -154,7 +167,6 @@ void CollisionManager::checkBulletVsEnemy(void)
 				damageEvent.damage = bullet->getBulletDamage();
 				damageEvent.bullet = bullet;
 				EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
-				// EVENTMANAGER->dispatchEvents({ EventType::BulletErase, &damageEvent });
 				break;
 			}
 		}

@@ -27,7 +27,7 @@ void EnemyBase::update(void)
 
 void EnemyBase::render(HDC hdc)
 {
-	eStatus.eImage->frameRender(hdc, eStatus.eHitBox.left, eStatus.eHitBox.top
+	eStatus.eImage->frameRender(hdc, eStatus.eHitBox.left, eStatus.eHitBox.top - eStatus.animOffsetY
 		, eStatus.eImage->getFrameX(), status.lookRight);
 
 	if (UIMANAGER->getIsDebugMode())

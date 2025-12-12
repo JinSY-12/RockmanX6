@@ -22,7 +22,7 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.eImage = IMAGEMANAGER->findImage("Enemy_Junkroid")->cloneImage();
 
     status.width = eStatus.eImage->getFrameWidth() - 10 * SCALE_FACTOR;
-    status.height = eStatus.eImage->getFrameHeight() - 5 * SCALE_FACTOR;
+    status.height = eStatus.eImage->getFrameHeight() - 10 * SCALE_FACTOR;
 
     eStatus.sightWidth = status.width * 2;
     eStatus.sightHeight = status.height - 16 * SCALE_FACTOR;
@@ -37,9 +37,12 @@ HRESULT Junkroid::init(int x, int y)
     fPos.x = 0 * SCALE_FACTOR;
     fPos.y = IMAGEMANAGER->findImage("SFX_JunkBullet")->getFrameHeight();
 
-    eStatus.eHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width, status.height);
+    eStatus.animOffsetX = 0 * SCALE_FACTOR;
+    eStatus.animOffsetY = 5 * SCALE_FACTOR;
+
+    eStatus.eHitBox = RectMakeCenter(x + status.width / 2 + eStatus.animOffsetX, y + status.height / 2 + eStatus.animOffsetY, status.width, status.height);
     eStatus.worldRect = eStatus.eHitBox;
-    eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2, y + eStatus.sightHeight, eStatus.sightWidth, eStatus.sightHeight);
+    eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2 + eStatus.animOffsetX, y + eStatus.sightHeight + eStatus.animOffsetY, eStatus.sightWidth, eStatus.sightHeight);
 
     pos.x = x;
     pos.y = eStatus.worldRect.bottom;
@@ -72,9 +75,7 @@ void Junkroid::update(void)
     changeDirection();
     setEnemyHitbox();
     animChange();
-    // checkPlayerCollision();
-    // checkPlayerAttCollision();
-    // checkBulletCollision();
+    checkPlayerCollision();
     enemyInvincibleTimerUpdate();
     isDead();
 }
@@ -99,8 +100,16 @@ void Junkroid::animChange()
 void Junkroid::attack(void)
 {
     eState = EnemyState::Attack;
-    bManager->fire(EnemyBulletType::JunkBullet, (eStatus.worldRect.left + eStatus.worldRect.right) / 2,
-        eStatus.worldRect.top + fPos.y, status.lookRight);
+
+    ShootEvent shootEvent;
+
+    shootEvent.bType = BulletType::JunkBullet;
+    shootEvent.x = (eStatus.worldRect.left + eStatus.worldRect.right) / 2;
+    shootEvent.y = eStatus.worldRect.top + fPos.y;
+    shootEvent.direct = status.lookRight;
+
+    EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
+
 }
 
 void Junkroid::checkPlayerCollision()
@@ -110,7 +119,7 @@ void Junkroid::checkPlayerCollision()
     {
         if (eStatus.attackAble)
         {
-			// attack();
+			attack();
             eStatus.attackAble = false;
         }
 	}

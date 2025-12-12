@@ -142,6 +142,8 @@ using namespace MY_UTIL;
 #define	BLUE				RGB(25, 95, 255)
 #define SKYBLUE				RGB(83, 143, 255)
 #define	LIGHTBLUE			RGB(140, 190, 255)
+#define	WHITE				RGB(255, 255, 255)
+
 
 constexpr int SCALE_FACTOR = 3;
 

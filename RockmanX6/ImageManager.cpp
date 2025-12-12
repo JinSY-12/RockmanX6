@@ -94,6 +94,7 @@ GImage* ImageManager::addFrameImage(string strKey, const char* fileName, int wid
 		this->addAfterImage(strKey, BLUE);
 		this->addAfterImage(strKey, SKYBLUE);
 		this->addAfterImage(strKey, LIGHTBLUE);
+		this->addAfterImage(strKey, WHITE);
 	}
 
 	else if (strKey.find("Zero_") != string::npos)
@@ -173,6 +174,9 @@ GImage* ImageManager::addAfterImage(const string& srcKey, COLORREF targetColor)
 		break;
 	case LIGHTBLUE:
 		newKey = srcKey + "_LightBlue";
+		break;
+	case WHITE:
+		newKey = srcKey + "_White";
 		break;
 	default:
 		newKey = srcKey;

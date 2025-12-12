@@ -95,9 +95,7 @@ void DamageManager::onEvent(const Event& event)
 				int offset;
 				switch (obejct->getObjectType())
 				{
-				case ObjectType::Block:
-					cout << bullet->getBulletDir() << endl;
-					
+				case ObjectType::Block:					
 					offset = bullet->getBulletDir() ? damage->target->getWidth()/2 : -(damage->target->getWidth()/2);
 					EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, damage->target->getPos().x - offset, bullet->getBulletPosY() , damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
 					
@@ -106,6 +104,23 @@ void DamageManager::onEvent(const Event& event)
 					break;
 				default:
 					break;
+				}
+			}
+
+			else if (damage->target->getEntityType() == CombatEntityType::Player)
+			{
+				Player* player = static_cast<Player*>(damage->target);
+				player->reduceHp(damage->damage);
+				bullet->setBulletFire(false);
+
+				int offset;
+				switch (bullet->getBulletType())
+				{
+					case BulletType::JunkBullet:
+						offset = bullet->getBulletDir() ? damage->target->getWidth() / 2 : -(damage->target->getWidth() / 2);
+						EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
+						SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
+						break;
 				}
 			}
 			break;

@@ -48,7 +48,7 @@ void BulletManager::update(void)
 		else ++enemyBullets;
 	}
 
-	if(_vEnemyBullet.size() > 0) checkPlayerCollision();
+	// if(_vEnemyBullet.size() > 0) checkPlayerCollision();
 }
 
 void BulletManager::render(void)
@@ -68,7 +68,7 @@ void BulletManager::fire(BulletType pType, int x, int y, bool direct)
 {
 	switch (pType)
 	{
-		//버스터
+		// 버스터
 		case BulletType::Burster:
 			bullet = new Burster;
 			bullet->init(pType, x, y, direct);
@@ -85,6 +85,14 @@ void BulletManager::fire(BulletType pType, int x, int y, bool direct)
 			_vBullet.push_back(bullet);
 			break;
 		// 제로 버스터 추가 예정
+		//case BulletType::ZeroBurster:
+		//	break;
+		// 적 총알
+		case BulletType::JunkBullet:
+			bullet = new JunkBullet;
+			bullet->init(pType, x, y, direct);
+			_vEnemyBullet.push_back(bullet);
+			break;
 		defalut:
 			break;
 	}
@@ -114,8 +122,8 @@ void BulletManager::checkPlayerCollision()
 		if (IntersectRect(&temp, &(*enemyBullets)->getBulletRect(), &_player->getPlayerHitBox()) && _player->getOverPower() == false)
 		{
 			_player->reduceHp((*enemyBullets)->getBulletDamage());
-			playExplodeEffect((*enemyBullets)->getEnemyBulletType(), (*enemyBullets)->getBulletPosX(), (*enemyBullets)->getBulletPosY(), (*enemyBullets)->getBulletWidth(), (*enemyBullets)->getBulletHeight(), 0);
-			playExplodeSound((*enemyBullets)->getEnemyBulletType());
+			playExplodeEffect((*enemyBullets)->getBulletType(), (*enemyBullets)->getBulletPosX(), (*enemyBullets)->getBulletPosY(), (*enemyBullets)->getBulletWidth(), (*enemyBullets)->getBulletHeight(), 0);
+			playExplodeSound((*enemyBullets)->getBulletType());
 			enemyBullets = _vEnemyBullet.erase(enemyBullets);
 		}
 

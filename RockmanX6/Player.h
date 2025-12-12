@@ -180,11 +180,6 @@ protected:
 	PlayerPalette playerColor[15];
 
 	// 캐릭터 판정 및 좌표
-	// int hitBoxWidth;
-	// int hitBoxHeight;
-
-	// CharcterPos hitBoxCenter;
-	// CharcterPos charPos;
 	Anim animBaseline;
 	BursterPos busterPos;
 
@@ -203,6 +198,7 @@ protected:
 
 	int animDir;
 	float animSpeed;
+	float effectAnimSpeed;
 	float delayTimer;
 	bool attChange;
 
@@ -213,6 +209,8 @@ protected:
 	float now;
 	float lastShootTime;
 	float shotCoolDown;
+
+	int charAlpha;
 
 	bool burstloop;
 
@@ -427,20 +425,29 @@ public:
 	{
 		if (status.overpower && !status.dead)
 		{
-			pStatus.invincibleTimer += 0.1f;
-			
-			if (pStatus.invincibleTimer >= pStatus.overpowerMaxTime)
+			// 무적 시작 + 데미지 받는 중
+			if (pStatus.invincible)
 			{
-				status.overpower = false;
-				pStatus.invincibleTimer = 0.0f;
-			}
+				// 무적 시작 + 이동 가능
+				pStatus.invincibleTimer += 0.1f;
 
-			else if (pStatus.invincibleTimer >= pStatus.invincibleMaxTime)
-			{
-				pStatus.invincible = false;
+				if (static_cast<int>(pStatus.invincibleTimer * 10) % 5  == 0)
+				{
+					charAlpha = (charAlpha >= 200) ? 50 : 200;
+				}
+
+				// 무적 시간늘리려면 pStatus.overpowerMaxTime 을 늘리면 되지요오
+				if (pStatus.invincibleTimer >= pStatus.overpowerMaxTime)
+				{
+					charAlpha = 255;
+					status.overpower = false;
+					pStatus.invincible = false;
+					pStatus.invincibleTimer = 0.0f;
+				}
 			}
-		}
+		}		
 	}
+
 	inline void isDead(void)
 	{
 		if (status.hp <= 0)

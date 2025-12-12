@@ -52,6 +52,8 @@ public:
 	bool getOverPower() { return status.overpower; }
 	int getCurrentHp() { return status.hp; }
 
+	bool getIsDead() { return status.dead; }
+
 	float getPhyscialDamage() { return status.physicalDamage; }
 	CombatEntityType getEntityType() const { return status.type; }
 };

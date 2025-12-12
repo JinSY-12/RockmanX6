@@ -6,7 +6,8 @@ enum class BulletType
 	Burster,
 	ChargeBurst1,
 	ChargeBurst2,
-	FalconBurst2
+	FalconBurst2,
+	JunkBullet
 };
 
 // 적군 총알 종류

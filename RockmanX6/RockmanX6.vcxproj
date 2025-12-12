@@ -160,7 +160,6 @@
     <ClInclude Include="ObjectBase.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ObjectType.h" />
-    <ClInclude Include="PaletteManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerType.h" />
     <ClInclude Include="ProgressBar.h">
@@ -210,7 +209,6 @@
     <ClCompile Include="MovieScene.cpp" />
     <ClCompile Include="ObjectBase.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
-    <ClCompile Include="PaletteManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ProgressBar.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

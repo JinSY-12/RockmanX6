@@ -14,7 +14,6 @@ public:
 		BulletSize type;
 		RECT hitBox;
 		BulletType bType;
-		EnemyBulletType eBType;
 
 		struct Pos
 		{
@@ -60,7 +59,7 @@ public:
 	void setBulletFire(bool fire) { bStatus.isFire = fire; }
 
 	BulletType getBulletType(void) { return bStatus.bType; }
-	EnemyBulletType getEnemyBulletType(void) { return bStatus.eBType; }
+	// EnemyBulletType getEnemyBulletType(void) { return bStatus.eBType; }
 };
 
 
@@ -88,7 +87,7 @@ private:
 public:
 
 	HRESULT init(void);
-	HRESULT init(EnemyBulletType type, int x, int y, bool isRight);
+	HRESULT init(BulletType type, int x, int y, bool isRight);
 	void release(void);
 	void update(void);
 	void render(void) override;

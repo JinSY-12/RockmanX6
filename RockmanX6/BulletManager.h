@@ -45,22 +45,22 @@ public:
 	inline int getMaxBullets() { return _vBullet.size(); }
 	inline void settingPlayer(Player* player) { _player = player; }
 	
-	void playExplodeEffect(EnemyBulletType eBType, int x, int y, int width, int height, int look)
+	void playExplodeEffect(BulletType eBType, int x, int y, int width, int height, int look)
 	{
 		switch (eBType)
 		{
-		case EnemyBulletType::JunkBullet:
+		case BulletType::JunkBullet:
 			EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, x, y, width, height, look);
 
 			break;
 		}
 	}
 
-	void playExplodeSound(EnemyBulletType eBType)
+	void playExplodeSound(BulletType eBType)
 	{
 		switch (eBType)
 		{
-		case EnemyBulletType::JunkBullet:
+		case BulletType::JunkBullet:
 			
 			// SOUNDMANAGER.play("SFX_SmallExplosion", 0.5f);
 			break;

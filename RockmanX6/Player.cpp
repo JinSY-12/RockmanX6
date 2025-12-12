@@ -25,33 +25,9 @@ void Player::update(void)
 
 void Player::render(HDC memDC)
 {
-	/*
-	pStatus.player->frameAlphaRender(getMemDC(), hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
-		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
-		pStatus.player->getFrameX(), pStatus.lookRight, 255);
-
-	afterImageControl();
-
-	if (chargeEffect != nullptr) chargeEffect->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
-		hitBoxCenter.y - chargeEffect->getFrameHeight() + 10 * SCALE_FACTOR,
-		chargeEffect->getFrameX(), pStatus.lookRight, chargeEffectAlpha);
-
-	if (chargeAura != nullptr) chargeAura->frameAlphaRender(getMemDC(), hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
-		hitBoxCenter.y - chargeAura->getFrameHeight() + 10 * SCALE_FACTOR,
-		chargeAura->getFrameX(), pStatus.lookRight, chargeAuraAlpha);
-
-	int aimX;
-	aimX = pStatus.lookRight != (currentState == CharacterState::WallSlide) ? pStatus.hitBox.right - (busterPos.x + pStatus.firePointX): pStatus.hitBox.left - attackHandEffect->getFrameWidth() + (busterPos.x + pStatus.firePointX);
-	bool dir = pStatus.lookRight != (currentState == CharacterState::WallSlide) ? true : false;
-
-	if (attackHandEffect != nullptr) attackHandEffect->frameAlphaRender(getMemDC(), aimX,
-		pStatus.hitBox.top - attackHandEffect->getFrameHeight() / 2 + pStatus.firePointY + busterPos.y,
-		attackHandEffect->getFrameX(), dir, bursterEffectAlpha);
-	*/
-
 	pStatus.player->frameAlphaRender(memDC, hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
 		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
-		pStatus.player->getFrameX(), status.lookRight, 255);
+		pStatus.player->getFrameX(), status.lookRight, charAlpha);
 
 	afterImageControl();
 
@@ -164,7 +140,7 @@ void Player::move(bool direction)
 				pStatus.velocityX = 0.0f;
 			}
 			// 이동 막기
-			// pStatus.velocityX = 0;
+			pStatus.velocityX = 0;
 		}
 
 		else if (!pStatus.isDash)
@@ -174,7 +150,7 @@ void Player::move(bool direction)
 			float moveSpeed;
 			moveSpeed = direction ? pStatus.moveSpeed : -pStatus.moveSpeed;
 			// 이동 막기
-			// moveSpeed = 0;
+			moveSpeed = 0;
 			pStatus.velocityX = moveSpeed;
 		}
 
@@ -499,7 +475,7 @@ void Player::currentAnimChange(void)
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 16 * SCALE_FACTOR; // 16픽셀 아래로 = 워프 이펙트와 발 위치가 다름
 		}
-				
+
 		changeAnimation(pStatus.charName + "Spawn", 0);
 	}
 
@@ -523,7 +499,6 @@ void Player::currentAnimChange(void)
 
 		case SholderState::Burst:
 			animSpeed = 0.07f;
-			
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			changeAnimation(pStatus.charName + "StandBurstLoop", 0);
@@ -542,7 +517,7 @@ void Player::currentAnimChange(void)
 			animOffset.y = 0 * SCALE_FACTOR;
 			changeAnimation(pStatus.charName + "Idle", 0);
 			break;
-			
+
 		case SholderState::Special:
 			if (pStatus.charName == "X_")
 			{
@@ -571,7 +546,7 @@ void Player::currentAnimChange(void)
 
 	else if (currentState == CharacterState::Walk)
 	{
-		pStatus.firePointX = 7 * SCALE_FACTOR;
+		pStatus.firePointX = -6 * SCALE_FACTOR;
 		pStatus.firePointY = 8 * SCALE_FACTOR;
 
 		if (!isMoving)
@@ -623,7 +598,7 @@ void Player::currentAnimChange(void)
 			case SholderState::Burst:
 			case SholderState::LargeBurst:
 				animSpeed = 0.04f;
-				
+
 				animOffset.x = 0 * SCALE_FACTOR;
 				animOffset.y = 0 * SCALE_FACTOR;
 				if (previousAnim == pStatus.charName + "WalkBurstStart") changeAnimation(pStatus.charName + "WalkBurstLoop", 0);
@@ -658,7 +633,7 @@ void Player::currentAnimChange(void)
 			}
 		}
 	}
-	
+
 	////////////////////////
 	// 점프
 	////////////////////////
@@ -809,10 +784,17 @@ void Player::currentAnimChange(void)
 			}
 
 			// 프레임 관련 설정
-			/*
-			pStatus.firePointX = pStatus.lookRight ? 12 * SCALE_FACTOR : -12 * SCALE_FACTOR;
-			pStatus.firePointY = 10 * SCALE_FACTOR;
-			*/
+			switch (pStatus.player->getFrameX())
+			{
+			case 0:
+				pStatus.firePointX = -3 * SCALE_FACTOR;
+				pStatus.firePointY = 5;
+				break;
+			case 1:
+				pStatus.firePointX = -5 * SCALE_FACTOR;
+				pStatus.firePointY = 6 * SCALE_FACTOR;
+				break;
+			}
 
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 			{
@@ -821,7 +803,6 @@ void Player::currentAnimChange(void)
 					int dashOffset;
 					dashOffset = status.lookRight ? status.hitBoxWidth * 3.8 : -status.hitBoxWidth;
 					EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, pos.x - dashOffset, pos.y, pStatus.player->getFrameWidth(), pStatus.player->getFrameHeight(), status.lookRight);
-					// EFFECTMANAGER->spawnEffect(EffectType::DashStartDust, charPos.x - dashOffset, charPos.y, pStatus.player->getFrameWidth(), pStatus.player->getFrameHeight(), pStatus.lookRight);
 				}
 				isMoving = true;
 			}
@@ -829,7 +810,7 @@ void Player::currentAnimChange(void)
 
 		else if (isMoving)
 		{
-			pStatus.firePointX = 12 * SCALE_FACTOR;
+			pStatus.firePointX = -12 * SCALE_FACTOR;
 			pStatus.firePointY = 10 * SCALE_FACTOR;
 
 			switch (attState)
@@ -917,12 +898,26 @@ void Player::currentAnimChange(void)
 		}
 
 		// 프레임 별 버스터 발사 위치 설정
-
-		/*
-		pStatus.firePointX = pStatus.lookRight ? 12 * SCALE_FACTOR : -12 * SCALE_FACTOR;
-		pStatus.firePointY = 10 * SCALE_FACTOR;
-		*/
-	}
+		switch (pStatus.player->getFrameX())
+		{
+		case 0:
+			pStatus.firePointX = -10 * SCALE_FACTOR;
+			pStatus.firePointY = 0;
+			break;
+		case 1:
+			pStatus.firePointX = -11 * SCALE_FACTOR;
+			pStatus.firePointY = 0;
+			break;
+		case 2:
+			pStatus.firePointX = -10 * SCALE_FACTOR;
+			pStatus.firePointY = 1;
+			break;
+		case 4:
+			pStatus.firePointX = -10 * SCALE_FACTOR;
+			pStatus.firePointY = 1;
+			break;
+		}
+	} 
 
 	////////////////////////
 	// 벽 타기
@@ -1007,10 +1002,10 @@ void Player::currentAnimChange(void)
 					pStatus.movable = true;
 					pStatus.isAttack = false;
 				}
-			}			
+			}
 			break;
 		}
-		
+
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) currentState = CharacterState::FallingDown;
 	}
 
@@ -1018,10 +1013,14 @@ void Player::currentAnimChange(void)
 	// 데미지 애니메이션 종료
 	////////////////////////
 
-	else if (currentState == CharacterState::OverPower)
+	if (currentState == CharacterState::OverPower)
 	{
-		animSpeed = 0.06f;
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX()) pStatus.movable = true;
+		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+		{
+			pStatus.invincible = true;
+			pStatus.movable = true;
+			currentState = CharacterState::Idle;
+		}
 	}
 
 	////////////////////////
@@ -1031,7 +1030,7 @@ void Player::currentAnimChange(void)
 	if (attState == SholderState::Special)
 	{
 		if (pStatus.player->getFrameX() >= 3 && pStatus.isOnGround) pStatus.movable = false;
-		
+
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 		{
 			attState = SholderState::None;
@@ -1072,7 +1071,7 @@ void Player::setOverPower(bool op, BulletSize bullet)
 {
 	pStatus.invincible = op;
 
-	if (pStatus.invincible) currentState = CharacterState::OverPower;
+	// if (pStatus.invincible) currentState = CharacterState::OverPower;
 
 	switch (bullet)
 	{
@@ -1089,19 +1088,24 @@ void Player::setOverPower(bool op, BulletSize bullet)
 
 void Player::reduceHp(int damage)
 {
+	currentState = CharacterState::OverPower;
+
 	status.hp -= damage;
 	status.overpower = true;
 	pStatus.isAttack = false;
+	pStatus.isDash = false;
+	pStatus.isJumpDash = false;
+
+	dashTimer = 0.0f;
 
 	if (status.hp > 0)
 	{
 		int random = RND->getInt(2);
 		if (random == 0) SOUNDMANAGER->play("Voice_"+ pStatus.charName + "Damaged1");
 		else SOUNDMANAGER->play("Voice_" + pStatus.charName + "Damaged2");
-
-		currentState = CharacterState::OverPower;
+				
 		pStatus.movable = false;
-		pStatus.invincible = true;
+		// pStatus.invincible = true;
 		animSpeed = 0.06f;
 
 		if (damage > 5)
@@ -1111,6 +1115,7 @@ void Player::reduceHp(int damage)
 			pStatus.velocityX = status.lookRight ? -2.0f : 2.0f;
 			pStatus.velocityY = 0.0f;
 		}
+
 		else if (damage > 0 && damage <= 5)
 		{
 			changeAnimation(pStatus.charName + "SmallDamaged", 0);

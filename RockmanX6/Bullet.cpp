@@ -122,19 +122,15 @@ HRESULT JunkBullet::init(void)
 	return S_OK;
 }
 
-HRESULT JunkBullet::init(EnemyBulletType type, int x, int y, bool isRight)
+HRESULT JunkBullet::init(BulletType type, int x, int y, bool isRight)
 {
-	switch (type)
-	{
-	case EnemyBulletType::JunkBullet:
-		bStatus.shape = new GImage;
-		bStatus.shape = IMAGEMANAGER->findImage("SFX_JunkBullet")->cloneImage();
-		bStatus.demage = 2;
-		break;
-	}
+	
+	bStatus.shape = new GImage;
+	bStatus.shape = IMAGEMANAGER->findImage("SFX_JunkBullet")->cloneImage();
+	bStatus.demage = 2;
 
 	bStatus.type = BulletSize::Small;
-	bStatus.eBType = EnemyBulletType::JunkBullet;
+	bStatus.bType = BulletType::JunkBullet;
 
 	bStatus.width = bStatus.shape->getFrameWidth();
 	bStatus.height = bStatus.shape->getFrameHeight();
