@@ -47,7 +47,7 @@ void Player::render(HDC memDC)
 		pStatus.hitBox.top - attackHandEffect->getFrameHeight() / 2 + pStatus.firePointY + busterPos.y,
 		attackHandEffect->getFrameX(), dir, bursterEffectAlpha);
 
-	/*
+	
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
 		// 캐릭터 좌표
@@ -55,67 +55,70 @@ void Player::render(HDC memDC)
 		if (pStatus.isWallKick) temp1 = "O";
 		else temp1 = "X";
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 20, temp1, "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100 + 20, temp1, "DNF_M_18", RGB(0, 255, 255));
+								   
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "스피드", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityX), "DNF_M_18", RGB(0, 255, 255));
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "스피드", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityX), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "애니메이션", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, currentAnim, "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 45, "점프 파워", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityY), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(charPos.x), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(charPos.y), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 45, "카메라 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().x), "DNF_M_18", RGB(0, 255, 255));
-
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 45, "카메라 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 80, WINSIZE_Y / 100, "애니메이션", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 20, currentAnim, "DNF_M_18", RGB(0, 255, 255));
+								   
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 45, "점프 파워", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityY), "DNF_M_18", RGB(0, 255, 255));
+								  
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(pos.x), "DNF_M_18", RGB(0, 255, 255));
+								 
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(pos.y), "DNF_M_18", RGB(0, 255, 255));
+								   
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 45, "카메라 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().x), "DNF_M_18", RGB(0, 255, 255));
+								   
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 45, "카메라 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y), "DNF_M_18", RGB(0, 255, 255));
 
 		string temp;
 		if (CAMERAMANAGER->getLockX()) temp = "O";
 		else temp = "X";
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100, "카메라 Lock X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100, "카메라 Lock X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
 		if (CAMERAMANAGER->getLockY()) temp = "O";
 		else temp = "X";
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 45, "카메라 Lock Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 45, "카메라 Lock Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
 
-		if (pStatus.lookRight) temp = "우측";
+		if (status.lookRight) temp = "우측";
 		else temp = "좌축";
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100, "시야 방향", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 420, WINSIZE_Y / 100, "시야 방향", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 45, "캐릭터 위치", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 65, CAMERAMANAGER->getZoneNum(), "DNF_M_18", RGB(0, 255, 255));
 
 		if (pStatus.isDash) temp = "O";
 		else temp = "X";
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100, "대시 중", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 500, WINSIZE_Y / 100, "대시 중", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
 		if (pStatus.isJumpDash) temp = "O";
 		else temp = "X";
 
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 45, "대시 점프 중", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(getMemDC(), WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 45, "대시 점프 중", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
 
 		// 히트박스 출력
-		DrawRectMakeColor(getMemDC(), pStatus.hitBox, RGB(255, 0, 0), 2);
-		DrawRectMakeColor(getMemDC(), pStatus.floorCheck, RGB(0, 0, 255), 2);
-		if(canHit) DrawRectMakeColor(getMemDC(), pStatus.saberHitBox, RGB(255, 0, 255), 4);
+		DrawRectMakeColor(memDC, pStatus.hitBox, RGB(255, 0, 0), 2);
+		DrawRectMakeColor(memDC, pStatus.floorCheck, RGB(0, 0, 255), 2);
+		// if(canHit) DrawRectMakeColor(memDC(), pStatus.saberHitBox, RGB(255, 0, 255), 4);
 	}
-	*/
+	
 }
 
 void Player::move(bool direction)
@@ -126,7 +129,7 @@ void Player::move(bool direction)
 		{
 			if (status.lookRight && !pStatus.touchRight) pStatus.velocityX = dashSpeed;
 			else if(!status.lookRight && !pStatus.touchLeft) pStatus.velocityX = -dashSpeed;
-			// 이동 막기
+			// 이동 막기 - 테스트용
 			// pStatus.velocityX = 0;
 		}
 
@@ -139,8 +142,8 @@ void Player::move(bool direction)
 				currentState = CharacterState::Idle;
 				pStatus.velocityX = 0.0f;
 			}
-			// 이동 막기
-			pStatus.velocityX = 0;
+			// 이동 막기 - 테스트용
+			// pStatus.velocityX = 0;
 		}
 
 		else if (!pStatus.isDash)
@@ -149,8 +152,8 @@ void Player::move(bool direction)
 
 			float moveSpeed;
 			moveSpeed = direction ? pStatus.moveSpeed : -pStatus.moveSpeed;
-			// 이동 막기
-			moveSpeed = 0;
+			// 이동 막기 - 테스트용
+			// moveSpeed = 0;
 			pStatus.velocityX = moveSpeed;
 		}
 
@@ -389,38 +392,68 @@ void Player::applyForce(void)
 	// X축 이동 - 기본 베이스
 	if (CAMERAMANAGER->getLockX() == true)
 	{
-		if (pStatus.hitBox.left + pStatus.velocityX >= 0)
+		if (pos.x - 12 * SCALE_FACTOR + pStatus.velocityX <= CAMERAMANAGER->getCameraRange().left)
 		{
-			pStatus.hitBox.left += pStatus.velocityX;
-			pStatus.hitBox.right += pStatus.velocityX;
-			pos.x += pStatus.velocityX;
-			// charPos.x += pStatus.velocityX;
+			pos.x = CAMERAMANAGER->getCameraRange().left + 12 * SCALE_FACTOR;
+			currentState = CharacterState::Idle;
+		}
+
+		else if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().right + 320 * SCALE_FACTOR)
+		{
+			pos.x = CAMERAMANAGER->getCameraRange().right - 12 * SCALE_FACTOR + + 320 * SCALE_FACTOR;
+			currentState = CharacterState::Idle;
 		}
 
 		else
 		{
-			pos.x = pStatus.hitBox.left + status.hitBoxWidth / 2;
-			// charPos.x = pStatus.hitBox.left + hitBoxWidth / 2;
+			pStatus.hitBox.left += pStatus.velocityX;
+			pStatus.hitBox.right += pStatus.velocityX;
+			pos.x += pStatus.velocityX;
+		}
+
+		/*
+		if (pos.x - 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().left)
+		{
+			pStatus.hitBox.left += pStatus.velocityX;
+			pStatus.hitBox.right += pStatus.velocityX;
+			pos.x += pStatus.velocityX;
+		}
+
+		else
+		{
+			pos.x = CAMERAMANAGER->getCameraRange().left + 12 * SCALE_FACTOR;
 			currentState = CharacterState::Idle;
 		}
+
+		if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX <= CAMERAMANAGER->getCameraRange().right)
+		{
+			pStatus.hitBox.left += pStatus.velocityX;
+			pStatus.hitBox.right += pStatus.velocityX;
+			pos.x += pStatus.velocityX;
+		}
+
+		else
+		{
+			pos.x = CAMERAMANAGER->getCameraRange().right - 12 * SCALE_FACTOR;
+			currentState = CharacterState::Idle;
+		}
+
+		*/
 	}
 
 	else pos.x += pStatus.velocityX;
-		//charPos.x += pStatus.velocityX;
-
+		
 	// 워프 - 존나 빠르게
 	if (!pStatus.isOnGround && currentState == CharacterState::Warp)
 	{
 		if (CAMERAMANAGER->getLockY() == true)
 		{
 			pos.y += 16;
-			// charPos.y += 16;
 			pStatus.hitBox.top += 16;
 			pStatus.hitBox.bottom += 16;
 		}
 
 		else pos.y += 12;
-			// charPos.y += 12;
 	}
 
 	// Y축 이동 - 기본 베이스
@@ -439,13 +472,11 @@ void Player::applyForce(void)
 		if (CAMERAMANAGER->getLockY() == true)
 		{
 			pos.y += pStatus.velocityY;
-			// charPos.y += pStatus.velocityY;
 			pStatus.hitBox.top += pStatus.velocityY;
 			pStatus.hitBox.bottom += pStatus.velocityY;
 		}
 
 		else pos.y += pStatus.velocityY;
-			// charPos.y += pStatus.velocityY;
 		
 		// 공중에서 상태 변경
 		if (currentState == CharacterState::JumpUp)	if (pStatus.velocityY > -7.0f) pStatus.isJumpUp = false;

@@ -73,6 +73,8 @@ private:
 	float lerpSpeed;
 	bool useLerpY;
 
+	string zoneNum;
+
 public:
 	HRESULT init(void);
 	void release(void);
@@ -99,6 +101,8 @@ public:
 	// 카메라 좌표 설정
 	CameraPos getCameraPos(void) { return camera; }
 	void setCameraPos(int x, int y) { camera.x += x, camera.y += y; }
+	CameraRange getCameraRange() { return cameraRange; }
+
 
 	MapSize getMapSize(void) { return mapSize; }
 	void settingMapMaxSize(int x, int y) { mapSize.x = x, mapSize.y = y; }
@@ -115,6 +119,8 @@ public:
 	void bossRoomOffest(void);
 
 	bool getIsAutoMove() { return isAutoMove; }
+
+	string getZoneNum() { return zoneNum; }
 
 	CameraManager() {}
 	~CameraManager() {}

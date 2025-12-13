@@ -205,17 +205,27 @@ void CameraManager::setMaxCameraRange()
         // 카메라 고정 값 right는 오른쪽 끝으로 정하고 좌표에서 - 320을 하면 고정이 됩니다.
 
         case BossType::Intro:            
-            if (camera.x >= 0 * SCALE_FACTOR && camera.x < (3530 - 160) * SCALE_FACTOR)
+            if (camera.x >= 0 * SCALE_FACTOR && camera.x < (1760 - 160) * SCALE_FACTOR)
             {
                 cameraRange.top = 288 * SCALE_FACTOR;
                 cameraRange.bottom = WINSIZE_Y;
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
                 
-                // cout << "Zone 1" << endl;
+                zoneNum = "Zone 1-1";
+            }
+
+            if (camera.x >= (1760 - 160) * SCALE_FACTOR && camera.x < (3530 - 160) * SCALE_FACTOR)
+            {
+                cameraRange.top = 288 * SCALE_FACTOR;
+                cameraRange.bottom = WINSIZE_Y;
+                cameraRange.left = (1760 - 160) * SCALE_FACTOR;
+                cameraRange.right = mapSize.x;
+
+                zoneNum = "Zone 1-2";
             }
             
-            else if (camera.x >= (3530 - 160) * SCALE_FACTOR && camera.x < (4064 - 160) * SCALE_FACTOR)
+            else if (camera.x >= (3530 - 160) * SCALE_FACTOR && camera.x < (4020 - 160) * SCALE_FACTOR)
             {
                 cameraRange.top = 480 * SCALE_FACTOR;
                 cameraRange.bottom = WINSIZE_Y;  
@@ -223,17 +233,17 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
 
-                // cout << "Zone 2" << endl;
+                zoneNum = "Zone 2";
             }
 
-            else if (camera.x >= (4064 - 160) * SCALE_FACTOR && camera.x < (5168 - 160) * SCALE_FACTOR && camera.y >= 490 * SCALE_FACTOR)
+            else if (camera.x >= (4020 - 160) * SCALE_FACTOR && camera.x < (5168 - 160) * SCALE_FACTOR && camera.y >= 480 * SCALE_FACTOR)
             {
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = 5400 * SCALE_FACTOR;
                 cameraRange.top = 480 * SCALE_FACTOR;
                 cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
 
-                // cout << "Zone 3" << endl;
+                zoneNum = "Zone 3";
             }
 
             // 여기 위까지 확인 완료
@@ -254,40 +264,44 @@ void CameraManager::setMaxCameraRange()
                 // 카메라 좌우 범위
                 if (camera.y <= (280 - 120) * SCALE_FACTOR)
                 {
-                    cameraRange.left = 5008 * SCALE_FACTOR;
+                    cameraRange.left = (5168 - 160) * SCALE_FACTOR;
                     cameraRange.right = mapSize.x;
                     cameraRange.bottom = bottomStart + (bottomEnd - bottomStart) * t;
 
-                    // cout << "Zone 6" << endl;
+                    zoneNum = "Zone 6";
                 }
                 
                 else if (camera.y <= (480 - 120) * SCALE_FACTOR)
                 {
-                    cameraRange.left = 5008 * SCALE_FACTOR;
+                    cameraRange.left = (5168 - 160) * SCALE_FACTOR;
                     cameraRange.right = (5440 - 320) * SCALE_FACTOR;
                     cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
 
-                    // cout << "Zone 5" << endl;
+                    zoneNum = "Zone 5";
                 }
 
                 else
                 {
-                    cameraRange.left = 0 * SCALE_FACTOR;
+                    cameraRange.left = (5168 - 160) * SCALE_FACTOR;
                     cameraRange.right = (5440 - 320) * SCALE_FACTOR;
                     cameraRange.bottom = WINSIZE_Y + 240 * SCALE_FACTOR;
 
-                    // cout << "Zone 4" << endl;
+                    zoneNum = "Zone 4";
                 }
             }
 
-            else if (camera.x >= (5376 - 160) * SCALE_FACTOR)
+            else if (camera.x >= (5376 - 160) * SCALE_FACTOR && camera.x < (5600 - 160) * SCALE_FACTOR)
             {
                 cameraRange.left = 0 * SCALE_FACTOR;
-                cameraRange.right = mapSize.x - 320 * SCALE_FACTOR;
+                cameraRange.right = (5600 - 160) * SCALE_FACTOR;
                 cameraRange.bottom = WINSIZE_Y + 700 * SCALE_FACTOR;
-
-                // cout << "Zone Boss" << endl;
+                
+                zoneNum = "Zone Last";
             }
+
+            // 보스 입장 준비
+
+            // 보스 전
             break;
     }
 }
