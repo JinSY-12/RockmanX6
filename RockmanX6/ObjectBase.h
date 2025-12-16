@@ -1,5 +1,5 @@
 #pragma once
-#include "GameNode.h"
+// #include "GameNode.h"
 #include "BulletType.h"
 #include "ObjectType.h"
 #include "CombatEntity.h"
@@ -41,8 +41,9 @@ public:
 
 
 public:
-	virtual HRESULT init(void);
-	virtual HRESULT init(int x, int y);
+	// virtual HRESULT init(void);
+	// virtual HRESULT init(int x, int y);
+	// virtual HRESULT init(int x, int y, int location);
 	virtual void release(void);
 	virtual void update(void);
 	virtual void render(HDC hdc);

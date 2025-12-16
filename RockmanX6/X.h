@@ -14,8 +14,8 @@ private:
 	bool chargeBurstDelay;
 
 public:
-	HRESULT init(void);
-	HRESULT init(int x, int y);
+	HRESULT init(void) override;
+	HRESULT init(int x, int y) override;
 	void release(void);
 	void update(void);
 

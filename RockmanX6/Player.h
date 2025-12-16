@@ -1,5 +1,5 @@
 #pragma once
-#include "GameNode.h"
+// #include "GameNode.h"
 #include "CombatEntity.h"
 #include "EffectType.h"
 #include "BulletType.h"
@@ -282,11 +282,9 @@ protected:
 	ShootEvent shootEvent;
 
 public:
-	virtual HRESULT init(void);
-	virtual HRESULT init(int x, int y);
-	virtual void release(void);
-	virtual void update(void);
-	virtual void render(HDC memDC);
+	// virtual HRESULT init(void);
+	// virtual HRESULT init(int x, int y);
+	void render(HDC memDC) override;
 
 	// 캐릭터 공통 조작
 	virtual void move(bool direction);

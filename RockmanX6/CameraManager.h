@@ -7,7 +7,13 @@ class CameraManager : public SingletonBase<CameraManager>
 private:
 
 #pragma region 좌표값들
-	
+	enum CameraMoveDir
+	{
+		None,
+		Up,
+		Down
+	};
+
 	struct CameraPos
 	{
 		int x;
@@ -41,6 +47,7 @@ private:
 	MapSize mapSize;
 	PlayerPos playerPos;
 	CameraRange cameraRange;
+	CameraMoveDir moveDir;
 
 	// 페이드 인/아웃 세팅
 	GImage* _blackImage;
@@ -74,6 +81,18 @@ private:
 	bool useLerpY;
 
 	string zoneNum;
+
+	bool cameraMove;
+	bool lerpCompleteX;
+	bool lerpCompleteY;
+
+	bool test;
+
+	int locationTestX;
+	int locationTestRight;
+
+	int locationTestY;
+	int locationTestBottom;
 
 public:
 	HRESULT init(void);
@@ -121,6 +140,10 @@ public:
 	bool getIsAutoMove() { return isAutoMove; }
 
 	string getZoneNum() { return zoneNum; }
+
+	float cameraLerpY(float slopeStartX, float slopeEndX, float bottomStart, float bottomEnd);
+
+	bool forceCameraMove(int targetPointX, int targetPointY, int targetRight, int targetTop, int cameraMoveSpeedX, int cameraMoveSpeedY);
 
 	CameraManager() {}
 	~CameraManager() {}

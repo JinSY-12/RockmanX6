@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "BulletManager.h"
 
+/*
 HRESULT Player::init(void)
 {
 	// Do Nothing!!
@@ -22,6 +23,7 @@ void Player::update(void)
 {
 	// Do Nothing!!
 }
+*/
 
 void Player::render(HDC memDC)
 {
@@ -74,10 +76,10 @@ void Player::render(HDC memDC)
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(pos.y), "DNF_M_18", RGB(0, 255, 255));
 								   
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 45, "카메라 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().x), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().x / 3), "DNF_M_18", RGB(0, 255, 255));
 								   
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 45, "카메라 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y / 3), "DNF_M_18", RGB(0, 255, 255));
 
 		string temp;
 		if (CAMERAMANAGER->getLockX()) temp = "O";
@@ -392,53 +394,26 @@ void Player::applyForce(void)
 	// X축 이동 - 기본 베이스
 	if (CAMERAMANAGER->getLockX() == true)
 	{
+		// 카메라 왼쪽으로 이동 막기
 		if (pos.x - 12 * SCALE_FACTOR + pStatus.velocityX <= CAMERAMANAGER->getCameraRange().left)
 		{
 			pos.x = CAMERAMANAGER->getCameraRange().left + 12 * SCALE_FACTOR;
 			currentState = CharacterState::Idle;
 		}
 
-		else if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().right + 320 * SCALE_FACTOR)
-		{
-			pos.x = CAMERAMANAGER->getCameraRange().right - 12 * SCALE_FACTOR + + 320 * SCALE_FACTOR;
-			currentState = CharacterState::Idle;
-		}
-
-		else
-		{
-			pStatus.hitBox.left += pStatus.velocityX;
-			pStatus.hitBox.right += pStatus.velocityX;
-			pos.x += pStatus.velocityX;
-		}
-
-		/*
-		if (pos.x - 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().left)
-		{
-			pStatus.hitBox.left += pStatus.velocityX;
-			pStatus.hitBox.right += pStatus.velocityX;
-			pos.x += pStatus.velocityX;
-		}
-
-		else
-		{
-			pos.x = CAMERAMANAGER->getCameraRange().left + 12 * SCALE_FACTOR;
-			currentState = CharacterState::Idle;
-		}
-
-		if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX <= CAMERAMANAGER->getCameraRange().right)
-		{
-			pStatus.hitBox.left += pStatus.velocityX;
-			pStatus.hitBox.right += pStatus.velocityX;
-			pos.x += pStatus.velocityX;
-		}
-
-		else
+		// 카메라 오른쪽으로 이동 막기
+		else if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().right)
 		{
 			pos.x = CAMERAMANAGER->getCameraRange().right - 12 * SCALE_FACTOR;
 			currentState = CharacterState::Idle;
 		}
 
-		*/
+		else
+		{
+			pStatus.hitBox.left += pStatus.velocityX;
+			pStatus.hitBox.right += pStatus.velocityX;
+			pos.x += pStatus.velocityX;
+		}
 	}
 
 	else pos.x += pStatus.velocityX;
@@ -453,7 +428,7 @@ void Player::applyForce(void)
 			pStatus.hitBox.bottom += 16;
 		}
 
-		else pos.y += 12;
+		else pos.y += 16;
 	}
 
 	// Y축 이동 - 기본 베이스

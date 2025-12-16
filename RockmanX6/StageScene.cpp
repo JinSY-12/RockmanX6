@@ -140,7 +140,7 @@ void StageScene::stageSettting(BossType bType)
 			mPixelStage = IMAGEMANAGER->findImage("Pixel_Intro");
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
-			player->init(4800 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();

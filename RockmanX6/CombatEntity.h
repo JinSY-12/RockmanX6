@@ -1,4 +1,5 @@
 #pragma once
+#include <Windows.h>
 
 enum class CombatEntityType
 {
@@ -44,6 +45,13 @@ protected:
 	Position hitBoxCenter;
 
 public:
+	virtual HRESULT init(void);
+	virtual HRESULT init(int x, int y);
+	virtual HRESULT init(int x, int y, int location);
+
+	virtual void release(void);
+	virtual void update(void);
+	virtual void render(HDC memDC);
 
 	Position getPos() { return pos; }
 	int getWidth() { return status.width; }

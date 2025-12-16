@@ -3,6 +3,7 @@
 #include "BulletManager.h"
 #include "Player.h"
 
+/*
 HRESULT ObjectBase::init(void)
 {
 	// Do Nothing!
@@ -14,6 +15,13 @@ HRESULT ObjectBase::init(int x, int y)
 	// Do Nothing!
 	return S_OK;
 }
+
+HRESULT ObjectBase::init(int x, int y, int location)
+{
+	// Do Nothing!
+	return S_OK;
+}
+*/
 
 void ObjectBase::release(void)
 {
