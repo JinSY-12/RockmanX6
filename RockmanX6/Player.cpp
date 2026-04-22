@@ -248,8 +248,8 @@ void Player::sfxPlay(void)
 
 		else if (currentState == CharacterState::Idle && previousState == CharacterState::Dash)
 		{
-			soundResult = "SFX_DashEnd";
-			SOUNDMANAGER->play(soundResult, 0.5f);
+			// soundResult = "SFX_DashEnd";
+			// SOUNDMANAGER->play(soundResult, 0.5f);
 		}
 
 		else if (currentState == CharacterState::WallSlide)
@@ -458,6 +458,8 @@ void Player::applyForce(void)
 		if (pStatus.velocityY > 0.0f && !pStatus.isWallSlide && currentState != CharacterState::OverPower) currentState = CharacterState::FallingDown;
 	}
 
+	
+
 #pragma endregion
 	
 }
@@ -640,6 +642,7 @@ void Player::currentAnimChange(void)
 		}
 	}
 
+
 	////////////////////////
 	// มกวม
 	////////////////////////
@@ -654,6 +657,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Burst:
 		case SholderState::LargeBurst:
 			animSpeed = 0.06f;
+			
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "Jump") changeAnimation(pStatus.charName + "JumpBurst", pStatus.player->getFrameX());
@@ -662,6 +666,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Hold:
 		case SholderState::None:
 			animSpeed = 0.06f;
+			
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "JumpBurst") changeAnimation(pStatus.charName + "Jump", pStatus.player->getFrameX());
@@ -680,6 +685,7 @@ void Player::currentAnimChange(void)
 				else
 				{
 					animSpeed = 0.045f;
+
 					animOffset.x = status.lookRight ? 11 * SCALE_FACTOR : -11 * SCALE_FACTOR;
 					animOffset.y = -1 * SCALE_FACTOR;
 					changeAnimation("X_JumpSaber", 0);
@@ -709,6 +715,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Burst:
 		case SholderState::LargeBurst:
 			animSpeed = 0.06f;
+
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "Jump") changeAnimation(pStatus.charName + "JumpBurst", pStatus.player->getFrameX());
@@ -717,6 +724,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Hold:
 		case SholderState::None:
 			animSpeed = 0.06f;
+
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "JumpBurst") changeAnimation(pStatus.charName + "Jump", pStatus.player->getFrameX());
@@ -734,6 +742,7 @@ void Player::currentAnimChange(void)
 				else
 				{
 					animSpeed = 0.045f;
+					
 					animOffset.x = status.lookRight ? 11 * SCALE_FACTOR : -11 * SCALE_FACTOR;
 					animOffset.y = -1 * SCALE_FACTOR;
 					changeAnimation("X_JumpSaber", 0);
@@ -870,6 +879,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Burst:
 		case SholderState::LargeBurst:
 			animSpeed = 0.1f;
+			
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "DashEnd") changeAnimation(pStatus.charName + "DashEndBurst", pStatus.player->getFrameX());
@@ -878,6 +888,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Hold:
 		case SholderState::None:
 			animSpeed = 0.1f;
+			
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "DashEndBurst") changeAnimation(pStatus.charName + "DashEnd", pStatus.player->getFrameX());
@@ -895,6 +906,7 @@ void Player::currentAnimChange(void)
 				else
 				{
 					animSpeed = 0.045f;
+					
 					animOffset.x = status.lookRight ? 27 * SCALE_FACTOR : -27 * SCALE_FACTOR;
 					animOffset.y = 9 * SCALE_FACTOR;
 					changeAnimation("X_Saber", 0);
@@ -939,6 +951,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Burst:
 		case SholderState::LargeBurst:
 			animSpeed = 0.06f;
+						
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "WallSlide") changeAnimation(pStatus.charName + "WallSlideBurst", pStatus.player->getFrameX());
@@ -947,6 +960,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Hold:
 		case SholderState::None:
 			animSpeed = 0.06f;
+
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "WallSlideBurst") changeAnimation(pStatus.charName + "WallSlide", pStatus.player->getFrameX());
@@ -964,6 +978,7 @@ void Player::currentAnimChange(void)
 				else
 				{
 					animSpeed = 0.045f;
+					
 					animOffset.x = status.lookRight ? -28 * SCALE_FACTOR : 28 * SCALE_FACTOR;
 					animOffset.y = 0 * SCALE_FACTOR;
 					changeAnimation("X_WallSlideSaber", 0);
@@ -986,6 +1001,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Burst:
 		case SholderState::LargeBurst:
 			animSpeed = 0.06f;
+			
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "WallKick") changeAnimation(pStatus.charName + "WallKickBurst", pStatus.player->getFrameX());
@@ -994,6 +1010,7 @@ void Player::currentAnimChange(void)
 		case SholderState::Hold:
 		case SholderState::None:
 			animSpeed = 0.06f;
+
 			animOffset.x = 0 * SCALE_FACTOR;
 			animOffset.y = 0 * SCALE_FACTOR;
 			if (previousAnim == pStatus.charName + "WallKickBurst") changeAnimation(pStatus.charName + "WallKick", pStatus.player->getFrameX());
@@ -1095,12 +1112,14 @@ void Player::setOverPower(bool op, BulletSize bullet)
 void Player::reduceHp(int damage)
 {
 	currentState = CharacterState::OverPower;
-
+	
 	status.hp -= damage;
 	status.overpower = true;
 	pStatus.isAttack = false;
 	pStatus.isDash = false;
 	pStatus.isJumpDash = false;
+	pStatus.movable = false;
+
 
 	dashTimer = 0.0f;
 
@@ -1110,8 +1129,6 @@ void Player::reduceHp(int damage)
 		if (random == 0) SOUNDMANAGER->play("Voice_"+ pStatus.charName + "Damaged1");
 		else SOUNDMANAGER->play("Voice_" + pStatus.charName + "Damaged2");
 				
-		pStatus.movable = false;
-		// pStatus.invincible = true;
 		animSpeed = 0.06f;
 
 		if (damage > 5)

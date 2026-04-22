@@ -126,6 +126,8 @@ void CameraManager::update(void)
         cameraMove = (cameraMove == true) ? false : true; 
     }
 
+    // 보스전 카메라 무빙 테스트
+
     if (KEYMANAGER->isOnceKeyDown('1'))
     {
         locationTestX = 5743 * SCALE_FACTOR;
@@ -146,7 +148,7 @@ void CameraManager::update(void)
 
     if (test)
     {
-        if (forceCameraMove(locationTestX, locationTestBottom, locationTestRight, locationTestY, 5, 5))
+        if (forceCameraMove(locationTestX, locationTestBottom, locationTestRight, locationTestY))
         {
             cameraMove = false;
             test = false;
@@ -160,6 +162,7 @@ void CameraManager::update(void)
     // 카메라 테스트
     //////////////////////////
 
+    /*
     if (UIMANAGER->getIsDebugMode() == true)
     {
         cout << "캐릭터 X : " << playerPos.x << endl;
@@ -172,6 +175,7 @@ void CameraManager::update(void)
         cout << "카메라 Right : " << cameraRange.right << endl;
         cout << endl;
     }
+    */
 }
 
 void CameraManager::render(HDC hdc)
@@ -264,14 +268,15 @@ void CameraManager::setMaxCameraRange()
     switch (mBtype)
     {
         // Zone 범위와 camera.x는 화면의 맨 왼쪽 기준입니다.
-        // 그래서 Zone을 정하고 싶은 위치는 (캐릭터 좌표 - 160)을 해주시면 Zone 설정을 할 수 있습니다.
-        // 카메라 고정 값 top은 이미지 위쪽에서 밑으로 내려서 정하면 됩니다.
-        // 카메라 고정 값 bottom은 이미지 위쪽에서 밑으로 내려서 정하면 됩니다.
-        // 카메라 고정 값 left는 왼쪽 끝으로 정하고 싶은 좌표에서 camera.x의 값과 동일하게 하거나 (캐릭터 좌표 - 160)을 하면 고정이 됩니다.
-        // 카메라 고정 값 right는 맵 이미지에서 우측 끝으로 맞추고 싶은 픽셀 값 -320을 하지면 됩니다. 혹은 (캐릭터 좌표 + 160)을 해도 됩니다.
+        // Zone 범위와 camera.y는 캐릭터 바닥에서 위로 WINSIZE_Y/2 만큼입니다. 즉 보이는 화면의 최상단입니다.
+        // (캐릭터 X좌표 - 160)을 해주시면 Zone의 X축 범위를 설정을 할 수 있습니다.
+        // (캐릭터 Y좌표 - 120)을 해주시면 Zone의 Y축 범위를 설정을 할 수 있습니다.
+        // cameraRange left와 right는 포토샵 기준 가로 좌표를 측정해서 입력해주면 됩니다.
+        // cameraRange top과 bottom은 포토샵 기준 세로 좌표를 측정해서 입력해주면 됩니다.
+        // right와 bottom은 체크 방법을 바꿔뒀으니 right와 bottom을 설정하고 싶은 좌표 그대로 입력하시면 됩니다.
 
         case BossType::Intro:            
-            if (camera.x >= 0 * SCALE_FACTOR && camera.x < (1760 - 160) * SCALE_FACTOR)
+            if (camera.x >= 0 * SCALE_FACTOR && camera.x < 1600 * SCALE_FACTOR)
             {
                 cameraRange.top = 672 * SCALE_FACTOR;
                 cameraRange.bottom = mapSize.y;
@@ -281,17 +286,17 @@ void CameraManager::setMaxCameraRange()
                 zoneNum = "Zone 1-1";
             }
 
-            if (camera.x >= (1760 - 160) * SCALE_FACTOR && camera.x < (3530 - 160) * SCALE_FACTOR)
+            if (camera.x >= 1600 * SCALE_FACTOR && camera.x < 3370 * SCALE_FACTOR)
             {
                 cameraRange.top = 672 * SCALE_FACTOR;
                 cameraRange.bottom = mapSize.y;
-                cameraRange.left = (1760 - 160) * SCALE_FACTOR;
+                cameraRange.left = 1600 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
 
                 zoneNum = "Zone 1-2";
             }
             
-            else if (camera.x >= (3530 - 160) * SCALE_FACTOR && camera.x < (4020 - 160) * SCALE_FACTOR)
+            else if (camera.x >= 3370 * SCALE_FACTOR && camera.x < 3860 * SCALE_FACTOR)
             {
                 cameraRange.top = 480 * SCALE_FACTOR;
                 cameraRange.bottom = mapSize.y;
@@ -302,7 +307,7 @@ void CameraManager::setMaxCameraRange()
                 zoneNum = "Zone 2";
             }
 
-            else if (camera.x >= (4020 - 160) * SCALE_FACTOR && camera.x < (5168 - 160) * SCALE_FACTOR && camera.y >= 480 * SCALE_FACTOR)
+            else if (camera.x >= 3860 * SCALE_FACTOR && camera.x < 5008 * SCALE_FACTOR && camera.y >= 480 * SCALE_FACTOR)
             {
                 cameraRange.top = 480 * SCALE_FACTOR;
                 cameraRange.bottom = 720 * SCALE_FACTOR;
@@ -313,26 +318,14 @@ void CameraManager::setMaxCameraRange()
             }
 
             // 여기 위까지 확인 완료
-            else if (camera.x >= (5168 - 160) * SCALE_FACTOR && camera.x < (5376 - 160) * SCALE_FACTOR)
+            else if (camera.x >= 5008 * SCALE_FACTOR && camera.x < 5216 * SCALE_FACTOR)
             {
                 cameraRange.top = 0;
-
-                // Zone6 오르막 구간 정의
-                /*
-                float slopeStartX = (5184 - 160) * SCALE_FACTOR;
-                float slopeEndX = (5376 - 160) * SCALE_FACTOR;
-                float bottomStart = WINSIZE_Y + 533 * SCALE_FACTOR;; // 오르막 시작 bottom
-                float bottomEnd = WINSIZE_Y + 700 * SCALE_FACTOR;  // 오르막 끝 bottom
-
-                float t = (camera.x - slopeStartX) / (slopeEndX - slopeStartX);
-                t *= 1.5f;
-                if (t > 1.0f) t = 1.0f;
-                */
 
                 // 카메라 좌우 범위
                 if (camera.y <= (280 - 120) * SCALE_FACTOR)
                 {
-                    cameraRange.left = (5168 - 160) * SCALE_FACTOR;
+                    cameraRange.left = 5008 * SCALE_FACTOR;
                     cameraRange.right = mapSize.x;
                     cameraRange.bottom = cameraLerpY((5184 - 160) * SCALE_FACTOR, (5376 - 160) * SCALE_FACTOR,
                         450 * SCALE_FACTOR, 270 * SCALE_FACTOR);
@@ -359,13 +352,37 @@ void CameraManager::setMaxCameraRange()
                 }
             }
 
-            else if (camera.x >= (5376 - 160) * SCALE_FACTOR && camera.x < (5600 - 160) * SCALE_FACTOR)
+            else if (camera.x >= 5216 * SCALE_FACTOR && camera.x < 5743 * SCALE_FACTOR)
             {
-                cameraRange.left = 0 * SCALE_FACTOR;
-                cameraRange.right = 5760 * SCALE_FACTOR;
-                cameraRange.bottom = 270 * SCALE_FACTOR;
+                if (!cameraMove)
+                {
+                    cameraRange.top = 0 * SCALE_FACTOR;
+                    cameraRange.left = 0 * SCALE_FACTOR;
+                    cameraRange.right = 5760 * SCALE_FACTOR;
+                    cameraRange.bottom = 270 * SCALE_FACTOR;
+                }
                 
                 zoneNum = "Zone Last";
+            }
+
+            else if (camera.x >= 5743 * SCALE_FACTOR && camera.x < 6063 * SCALE_FACTOR)
+            {
+                cameraRange.top = 0 * SCALE_FACTOR;
+                cameraRange.left = 5743 * SCALE_FACTOR;
+                cameraRange.right = 6063 * SCALE_FACTOR;
+                cameraRange.bottom = 240 * SCALE_FACTOR;
+
+                zoneNum = "Zone Boss Room";
+            }
+
+            else if (camera.x >= 6063 * SCALE_FACTOR && camera.x < mapSize.x)
+            {
+                cameraRange.top = 0 * SCALE_FACTOR;
+                cameraRange.left = 6063 * SCALE_FACTOR;
+                cameraRange.right = mapSize.x;
+                cameraRange.bottom = 240 * SCALE_FACTOR;
+
+                zoneNum = "Zone Battle Boss";
             }
 
             else zoneNum = "Zone Else";
@@ -414,51 +431,48 @@ float CameraManager::cameraLerpY(float slopeStartX, float slopeEndX, float botto
 // 포토샵 가서 원하는 좌표 입력하면 Left는 알아서 움직입니다.
 // Top은 테스트 아직 안해봄ㅋㅋ
 
-bool CameraManager::forceCameraMove(int targetPointX, int targetPointY, int targetRight, int targetTop, int cameraMoveSpeedX, int cameraMoveSpeedY)
+bool CameraManager::forceCameraMove(int targetPointLeft, int targetPointBottom, int targetRight, int targetTop)
 {
-    int offsetY;
-
-    if (camera.x < targetPointX )
+    if (camera.x < targetPointLeft)
     {
         cameraMove = true;
         lerpCompleteX = false;
-        camera.x += cameraMoveSpeedX;
-        cameraRange.left = camera.x + 24 * SCALE_FACTOR;
-        cameraRange.right += cameraMoveSpeedX;
+        camera.x += 5;
+        cameraRange.left = camera.x;
+        cameraRange.right = cameraRange.left + 320 * SCALE_FACTOR;
     }
 
     else
     {
-        cameraRange.left = targetPointX;
-        cameraRange.right = targetRight;
+        cameraMove = false;
         lerpCompleteX = true;
+        cameraRange.left = targetPointLeft;
+        // cameraRange.right = targetRight;
     }
 
     if (moveDir == CameraMoveDir::None)
     {
-        if (camera.y + WINSIZE_Y > targetPointY) moveDir = CameraMoveDir::Up;
-        else if (camera.y + WINSIZE_Y > targetPointY) moveDir = CameraMoveDir::Down;
+        if (camera.y + WINSIZE_Y > targetPointBottom) moveDir = CameraMoveDir::Up;
+        else if (camera.y + WINSIZE_Y > targetPointBottom) moveDir = CameraMoveDir::Down;
         else lerpCompleteY = true;
     }
 
     // 화면이 밑에서 위로 올라가야 하면
     if (moveDir == CameraMoveDir::Up)
     {
-        if (camera.y + WINSIZE_Y > targetPointY)
+        if (camera.y + WINSIZE_Y > targetPointBottom)
         {
-            cout << "밑에서 위로" << endl;
-
             cameraMove = true;
             lerpCompleteY = false;
-            camera.y -= cameraMoveSpeedY;
+            camera.y -= 5;
             cameraRange.bottom -= camera.y + 15 * SCALE_FACTOR;;
-            cameraRange.top -= cameraMoveSpeedY;
+            cameraRange.top -= 5;
         }
 
         else
         {
-            cameraRange.top = targetTop * SCALE_FACTOR;
-            cameraRange.bottom = targetPointY;
+            // cameraRange.top = targetTop * SCALE_FACTOR;
+            cameraRange.bottom = targetPointBottom;
             lerpCompleteY = true;
 
             moveDir = CameraMoveDir::None;
@@ -468,21 +482,19 @@ bool CameraManager::forceCameraMove(int targetPointX, int targetPointY, int targ
     // 화면이 위에서 밑으로 내려갈 때
     else if (moveDir == CameraMoveDir::Down)
     {
-        if (camera.y + WINSIZE_Y < targetPointY)
+        if (camera.y + WINSIZE_Y < targetPointBottom)
         {
-            cout << "위에서 밑으로" << endl;
-
             cameraMove = true;
             lerpCompleteY = false;
-            camera.y += cameraMoveSpeedY;
+            camera.y += 5;
             cameraRange.top = camera.y + 15 * SCALE_FACTOR;
-            cameraRange.bottom += cameraMoveSpeedY;
+            cameraRange.bottom += 5;
         }
 
         else
         {
-            cameraRange.top = targetTop * SCALE_FACTOR;
-            cameraRange.bottom = targetPointY;
+            // cameraRange.top = targetTop * SCALE_FACTOR;
+            cameraRange.bottom = targetPointBottom;
             lerpCompleteY = true;
 
             moveDir = CameraMoveDir::None;

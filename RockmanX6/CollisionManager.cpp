@@ -45,6 +45,7 @@ void CollisionManager::checkPlayerVsEnemy(void)
 	for (auto& enemy : ememies->getEnemy())
 	{
 		RECT temp;
+		// cout << "적 위치 : " << enemy->getEnemyHitBox().left << endl;;
 
 		if (IntersectRect(&temp, &player->getSaberRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && player->getCanHit())
 		{
@@ -86,9 +87,13 @@ void CollisionManager::checkPlayerVsEnemy(void)
 
 void CollisionManager::checkPlayerVsObject(void)
 {
+	// 공격 가능 오브젝트와 플레이어 공격범위 판정
+	
 	for (auto& object : objects->getObject())
 	{
 		RECT temp;
+		
+		// cout << "오브젝트 위치 : " << object->getObjectHitbox().left << endl;;
 
 		if (IntersectRect(&temp, &player->getSaberRect(), &object->getObjectHitbox()) && !object->getOverPower() && player->getCanHit())
 		{
@@ -156,7 +161,7 @@ void CollisionManager::checkBulletVsEnemy(void)
 	for (auto& object : objects->getObject())
 	{
 		RECT temp;
-
+		
 		for (auto& bullet : bullets->getBullet())
 		{
 			if (IntersectRect(&temp, &bullet->getBulletRect(), &object->getObjectHitbox()) && !object->getIsDead())

@@ -335,6 +335,7 @@ void TitleScene::addImage(void)
 	
 	IMAGEMANAGER->addImage("Object_Block", "Resources/Image/Object/Object_Block.bmp", 64 * SCALE_FACTOR, 64 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("Object_Block_Pixel", "Resources/Image/Object/Object_Block_Pixel.bmp", 64 * SCALE_FACTOR, 64 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("Object_BossGate", "Resources/Image/Object/Object_BossGate.bmp", 390 * SCALE_FACTOR, 128 * SCALE_FACTOR, 13, 2, true, MAGENTA);
 
 	//////////////////////////////////
 	// HUD

@@ -276,6 +276,9 @@
     <ClInclude Include="CombatEntity.h">
       <Filter>소스 파일\Player\PlayerBase\Player</Filter>
     </ClInclude>
+    <ClInclude Include="BossGate.h">
+      <Filter>소스 파일\Object\ObjectList</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameNode.cpp">
@@ -397,6 +400,9 @@
     </ClCompile>
     <ClCompile Include="CombatEntity.cpp">
       <Filter>소스 파일\Player\PlayerBase\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="BossGate.cpp">
+      <Filter>소스 파일\Object\ObjectList</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

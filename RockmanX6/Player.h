@@ -282,8 +282,6 @@ protected:
 	ShootEvent shootEvent;
 
 public:
-	// virtual HRESULT init(void);
-	// virtual HRESULT init(int x, int y);
 	void render(HDC memDC) override;
 
 	// 캐릭터 공통 조작

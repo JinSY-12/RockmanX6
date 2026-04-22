@@ -21,7 +21,6 @@ private:
 	string stagBGM;
 	RECT mZone;
 	RECT floor;
-	
 
 	typedef vector<RECT> vFloor;
 	typedef vector<RECT>::iterator viFloor;

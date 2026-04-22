@@ -23,12 +23,14 @@ HRESULT Block::init(int x, int y)
     status.height = oStatus.oImage->getHeight();
     
     oStatus.oHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width, status.height);
+
     oStatus.worldRect = oStatus.oHitBox;
     
     pos.x = x;
     pos.y = oStatus.worldRect.bottom;
 
     status.dead = false;
+    status.overpower = false;
     
     return S_OK;
 }
@@ -41,36 +43,17 @@ void Block::release(void)
 void Block::update(void)
 {
     setObjectHitbox();
-    // checkBulletCollision();
-    // checkPlayerAttCollision();
+
     checkDead();
 }
 
-/*
-void Block::checkPlayerAttCollision(void)
+void Block::render(HDC hdc)
 {
-    RECT temp;
-    if (IntersectRect(&temp, &oPlayer->getSaberRect(), &oStatus.oHitBox) && oPlayer->getCanHit() )
-    {
-        oStatus.hp -= oPlayer->getSaberDamage();
-        oPlayer->setAnimDelay(true);
-        
-        ("SFX_SaberHit", 0.5f);
-    }
-    
-    vector<Bullet*>& bullets = oBManager->getBullet();
+    oStatus.oImage->render(hdc, oStatus.oHitBox.left, oStatus.oHitBox.top);
 
-    for (auto it = bullets.begin(); it != bullets.end();)
+    if (UIMANAGER->getIsDebugMode())
     {
-        if (IntersectRect(&temp, &(*it)->getBulletRect(), &oStatus.oHitBox))
-        {
-			EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
-            SOUNDMANAGER->play("SFX_Block", 0.5f);
-            it = bullets.erase(it);
-        }
-
-        else ++it;
+        DrawRectMakeColor(hdc, oStatus.oHitBox, RGB(255, 255, 0), 2);
     }
-    
 }
-*/
+

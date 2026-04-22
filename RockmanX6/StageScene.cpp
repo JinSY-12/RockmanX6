@@ -140,8 +140,8 @@ void StageScene::stageSettting(BossType bType)
 			mPixelStage = IMAGEMANAGER->findImage("Pixel_Intro");
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
-			player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
-			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();
 			enemySettting(bType);
@@ -171,16 +171,18 @@ void StageScene::enemySettting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
-		//eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		//eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		//eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
-		//eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
 
-		//eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 726 * SCALE_FACTOR);
-		//eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 726 * SCALE_FACTOR);
-
-		//eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 845 * SCALE_FACTOR);
-		//eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 845 * SCALE_FACTOR);
+		// 세팅 시작
+		eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+		   
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 726 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 726 * SCALE_FACTOR);
+		   
+		eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 845 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 845 * SCALE_FACTOR);
 		break;
 
 		// 커맨드 얀마크
@@ -199,12 +201,22 @@ void StageScene::objectSetting(BossType bType)
 	{
 		// 인트로
 	case BossType::Intro:
-		// 첫줄 오브젝트 테스트용도
+
+		// 오브젝트 테스트 용도
 		// oManager.spawnObject(ObjectType::Block, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		//oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR);
-		//oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR);
-		//oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR);
-		//oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 158 * SCALE_FACTOR);
+		// oManager.spawnObject(ObjectType::BossGate, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 128 * SCALE_FACTOR);
+				
+		// 세팅 시작
+		// oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR);
+		// oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR);
+		// oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR);
+		// oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 158 * SCALE_FACTOR);
+		
+		// 보스 게이트
+
+		// oManager.spawnObject(ObjectType::BossGate, 5729 * SCALE_FACTOR, mStage->getHeight() - 75 * SCALE_FACTOR);
+
 		break;
 
 		// 커맨드 얀마크
@@ -529,13 +541,10 @@ void StageScene::stageCollision(void)
 		}
 	}
 
-	// for (auto& floor : _vFloor)
 	for (auto* enemy : eManager.getEnemy())
 	{
 		bool leftTouch = false;
 		bool rightTouch = false;
-
-		// for (auto* enemy : eManager.getEnemy())
 
 		for (auto& floor : _vFloor)
 		{
@@ -560,21 +569,48 @@ void StageScene::stageCollision(void)
 	// 오브젝트와의 벽판정
 	for (auto* obj : oManager.getObject())
 	{
-		if (player->getPlayerLeft() - 4 < obj->getObjectRect().right && player->getPlayerRight() > obj->getObjectRect().right
-			&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
+		switch (obj->getObjectType())
 		{
-			player->setLeftCollision(true, obj->getObjectRect().right);
-			break;
-		}
+		case ObjectType::BossGate:
+			if (player->getPlayerRight() + 4 > obj->getObjectRect().left && player->getPlayerLeft() < obj->getObjectRect().left
+				&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
+			{
+				
+				if (obj->getOjbectIsUsed() == false) obj->animOncePlay(true);
+				// if (!CAMERAMANAGER->getIsCamaraMove()) player->setRightCollision(true, obj->getObjectRect().left);
 
-		if (player->getPlayerRight() + 4 > obj->getObjectRect().left && player->getPlayerLeft() < obj->getObjectRect().left
-			&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
-		{
-			player->setRightCollision(true, obj->getObjectRect().left);
+				break;
+			}
+
+			if (player->getPlayerLeft() - 4 < obj->getObjectRect().right && player->getPlayerRight() > obj->getObjectRect().right
+				&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
+			{
+				if (!CAMERAMANAGER->getIsCamaraMove()) player->setLeftCollision(true, obj->getObjectRect().right);
+				break;
+			}
+
 			break;
+
+		default:
+			if (player->getPlayerLeft() - 4 < obj->getObjectRect().right && player->getPlayerRight() > obj->getObjectRect().right
+				&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
+			{
+				player->setLeftCollision(true, obj->getObjectRect().right);
+				break;
+			}
+
+			if (player->getPlayerRight() + 4 > obj->getObjectRect().left && player->getPlayerLeft() < obj->getObjectRect().left
+				&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
+			{
+				player->setRightCollision(true, obj->getObjectRect().left);
+				break;
+			}
+			break;
+			
 		}
+		
 	}
-
+	
 	// 벽과 총알 충돌 판정 = 총알이 벽 관통이 안되게
 	for (int i = 0 ; i < _vFloor.size(); i++)
 	{

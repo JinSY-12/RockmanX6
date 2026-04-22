@@ -1,11 +1,7 @@
 #pragma once
-// #include "GameNode.h"
 #include "BulletType.h"
 #include "ObjectType.h"
 #include "CombatEntity.h"
-
-class BulletManager;
-class Player;
 
 class ObjectBase : public CombatEntity
 {
@@ -36,32 +32,26 @@ public:
 	ObjectPos oPos;
 	ObjectState oStatus;
 
-	BulletManager* oBManager;
-	Player* oPlayer;
+	bool animPlay;
+	bool isUsed;
 
+	int oLocationX;
+	int oLocationY;
 
 public:
-	// virtual HRESULT init(void);
-	// virtual HRESULT init(int x, int y);
-	// virtual HRESULT init(int x, int y, int location);
 	virtual void release(void);
 	virtual void update(void);
 	virtual void render(HDC hdc);
 
-	virtual void setObjectHitbox(void);
-
-	// 공격, 피격 체크
-	inline void settingBulletManager(BulletManager* bullet) { oBManager = bullet; }
-	inline void settingPlayer(Player* p) { oPlayer = p; }
-
-	virtual void checkPlayerAttCollision(void);
-	virtual void checkBulletCollision(void);
-	virtual void checkWallCollision(void);
-	
+	void setObjectHitbox(void);
+	//virtual void setObjectHitbox(void);
+			
 	// getter,setter
 	inline RECT getObjectRect(void) { return oStatus.worldRect; }
 	inline RECT getObjectHitbox(void) { return oStatus.oHitBox; }
 	inline ObjectPos getObjectPos(void) { return oPos; }
+	inline bool getOjbectIsUsed(void) { return isUsed; }
+
 
 	inline int getObjectWidth(void) { return oStatus.width; }
 	inline int getObjectHeight(void) { return oStatus.height; }
@@ -69,9 +59,10 @@ public:
 	ObjectType getObjectType(void) { return oStatus.oType; }
 
 	inline void reduceHp(int damage) { status.hp -= damage; }
-
+	
 	inline bool getIsDead(void) { return status.dead; }
 	void checkDead(void);
-	
+
+	virtual void animOncePlay(bool play);
 };
 

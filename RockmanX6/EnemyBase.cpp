@@ -3,17 +3,6 @@
 #include "BulletManager.h"
 #include "Player.h"
 
-/*
-HRESULT EnemyBase::init(void)
-{
-	return S_OK;
-}
-
-HRESULT EnemyBase::init(int x, int y)
-{
-	return S_OK;
-}
-*/
 void EnemyBase::release(void)
 {
 	// Do nothing!

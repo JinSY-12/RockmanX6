@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
+    <ClInclude Include="BossGate.h" />
     <ClInclude Include="BossType.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
@@ -183,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="BossGate.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="CameraManager.cpp" />

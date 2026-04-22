@@ -66,8 +66,6 @@ protected:
 	Player* player;
 
 public:
-	// virtual HRESULT init(void);
-	// virtual HRESULT init(int x, int y);
 	virtual void release(void);
 	virtual void update(void);
 	virtual void render(HDC hdc);

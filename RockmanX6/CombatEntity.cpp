@@ -11,7 +11,7 @@ HRESULT CombatEntity::init(int x, int y)
     return S_OK;
 }
 
-HRESULT CombatEntity::init(int x, int y, int location)
+HRESULT CombatEntity::init(int x, int y, int locationX, int locationY)
 {
     return S_OK;
 }

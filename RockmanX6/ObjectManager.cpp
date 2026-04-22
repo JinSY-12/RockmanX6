@@ -47,8 +47,12 @@ void ObjectManager::spawnObject(ObjectType oType, int x, int y)
 	case ObjectType::Block:
 		_object = new Block;
 		_object->init(x, y);
-		_object->settingBulletManager(_bManager);
-		_object->settingPlayer(_player);
+		_vObject.push_back(_object);
+		cout << _vObject.size() << endl;
+		break;
+	case ObjectType::BossGate:
+		_object = new BossGate;
+		_object->init(x, y, (x + 14) * SCALE_FACTOR, 240 * SCALE_FACTOR);
 		_vObject.push_back(_object);
 		break;
 	}

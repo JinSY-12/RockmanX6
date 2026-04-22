@@ -2,5 +2,6 @@
 
 enum class ObjectType
 {
-	Block
+	Block,
+	BossGate
 };

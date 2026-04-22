@@ -3,6 +3,7 @@
 #include "ObjectType.h"
 #include "ObjectBase.h"
 #include "Block.h"
+#include "BossGate.h"
 
 class Player;
 class Bullet;

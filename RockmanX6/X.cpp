@@ -236,10 +236,12 @@ void X::update(void)
 
 			if (!pStatus.isJumpDash)
 			{
-				if (pStatus.isDash && currentState == CharacterState::Dash)
+				if (pStatus.isDash)
 				{
-					currentState = CharacterState::DashEnd;
 					pStatus.isDash = false;
+
+					if (currentState == CharacterState::Dash)
+						currentState = CharacterState::DashEnd;
 				}
 			}
 
@@ -356,7 +358,35 @@ void X::update(void)
 	{
 		applyForce();
 		currentAnimChange();
-		pStatus.player->play(animSpeed);
+		
+		if (CAMERAMANAGER->getIsCamaraMove())
+		{
+			pStatus.movable = false;
+			pStatus.velocityX = 1.0f;
+
+			if (currentState == CharacterState::JumpUp || currentState == CharacterState::Climb
+				|| currentState == CharacterState::FallingDown || currentState == CharacterState::DashEnd
+				|| currentState == CharacterState::Idle)
+			{
+				cout << "카메라 이동중 애니메이션 일시정지" << endl;
+				// pStatus.player->pause();
+			}
+
+			else
+			{
+				pStatus.player->play(animSpeed);
+			}
+		}
+
+		else
+		{
+			if (!pStatus.movable) pStatus.isDash = false;
+			if (currentState == CharacterState::Dash) currentState = CharacterState::Idle;
+
+			pStatus.movable = true;
+			pStatus.player->play(animSpeed);
+		}
+
 		attackHandEffect->play(effectAnimSpeed);
 		bursterEffectAlphaDown();
 		frameCheck();

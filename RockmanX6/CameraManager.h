@@ -138,12 +138,27 @@ public:
 	void bossRoomOffest(void);
 
 	bool getIsAutoMove() { return isAutoMove; }
-
+	inline bool getIsCamaraMove() { return cameraMove; }
+	
 	string getZoneNum() { return zoneNum; }
 
 	float cameraLerpY(float slopeStartX, float slopeEndX, float bottomStart, float bottomEnd);
 
-	bool forceCameraMove(int targetPointX, int targetPointY, int targetRight, int targetTop, int cameraMoveSpeedX, int cameraMoveSpeedY);
+	bool forceCameraMove(int targetPointLeft, int targetPointBottom, int targetRight, int targetTop);
+
+	int getCameraX() { return camera.x; }
+
+	inline void bossCameraMove(int left, int bottom, int right, int top)
+	{
+		locationTestX = left;
+		locationTestRight = right;
+
+		locationTestY = top;
+		locationTestBottom = bottom;
+
+		test = true;
+	}
+
 
 	CameraManager() {}
 	~CameraManager() {}

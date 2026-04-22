@@ -89,24 +89,6 @@ void DamageManager::onEvent(const Event& event)
 				}
 			}
 
-			else if (damage->target->getEntityType() == CombatEntityType::Object)
-			{
-				ObjectBase* obejct = static_cast<ObjectBase*>(damage->target);
-				int offset;
-				switch (obejct->getObjectType())
-				{
-				case ObjectType::Block:					
-					offset = bullet->getBulletDir() ? damage->target->getWidth()/2 : -(damage->target->getWidth()/2);
-					EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, damage->target->getPos().x - offset, bullet->getBulletPosY() , damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
-					
-					SOUNDMANAGER->play("SFX_Block", 0.5f);
-					bullet->setBulletFire(false);
-					break;
-				default:
-					break;
-				}
-			}
-
 			else if (damage->target->getEntityType() == CombatEntityType::Player)
 			{
 				Player* player = static_cast<Player*>(damage->target);
@@ -121,6 +103,33 @@ void DamageManager::onEvent(const Event& event)
 						EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
 						SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
 						break;
+				}
+			}
+
+			else if (damage->target->getEntityType() == CombatEntityType::Object)
+			{
+				ObjectBase* obejct = static_cast<ObjectBase*>(damage->target);
+				int offset;
+				switch (obejct->getObjectType())
+				{
+				case ObjectType::Block:
+					offset = bullet->getBulletDir() ? damage->target->getWidth() / 2 : -(damage->target->getWidth() / 2);
+					EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
+
+					SOUNDMANAGER->play("SFX_Block", 0.5f);
+					bullet->setBulletFire(false);
+					break;
+
+				case ObjectType::BossGate:
+					offset = bullet->getBulletDir() ? damage->target->getWidth() / 2 : -(damage->target->getWidth() / 2);
+					EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
+
+					SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.5f);
+					bullet->setBulletFire(false);
+					break;
+
+				default:
+					break;
 				}
 			}
 			break;
