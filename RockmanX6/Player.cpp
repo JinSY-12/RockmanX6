@@ -432,7 +432,7 @@ void Player::applyForce(void)
 	}
 
 	// Y축 이동 - 기본 베이스
-	else if (!pStatus.isOnGround)
+	else if (!pStatus.isOnGround && !CAMERAMANAGER->getIsCamaraMove())
 	{
 		pStatus.isDash = false;
 

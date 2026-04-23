@@ -59,7 +59,7 @@ void BossGate::update(void)
     case DoorState::Opening:
         oStatus.oImage->play(0.05f);
 
-        if (oStatus.oImage->getFrameX() >= oStatus.oImage->getMaxFrameX())
+		if (oStatus.oImage->getFrameX() >= oStatus.oImage->getMaxFrameX())
             state = DoorState::Opened;
         break;
 
@@ -69,11 +69,14 @@ void BossGate::update(void)
             openClose = true;
             oStatus.oImage->setFrameX(0);
             state = DoorState::Closing;
+            SOUNDMANAGER->play("SFX_DoorClose", 0.5f);
         }
         break;
 
     case DoorState::Closing:
         oStatus.oImage->play(0.05f);
+
+        
 
         if (oStatus.oImage->getFrameX() >= oStatus.oImage->getMaxFrameX())
             state = DoorState::Closed;
@@ -96,7 +99,11 @@ void BossGate::render(HDC hdc)
 
 void BossGate::animOncePlay(bool play)
 {
-    if (!isUsed) state = DoorState::Opening;
+    if (!isUsed)
+    {
+        state = DoorState::Opening;
+        SOUNDMANAGER->play("SFX_DoorOpen", 0.5f);
+    }
     isUsed = play;
 
     CAMERAMANAGER->bossCameraMove(camera.left, camera.bottom, camera.right, camera.top);

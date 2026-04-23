@@ -97,12 +97,11 @@ void CollisionManager::checkPlayerVsObject(void)
 
 		if (IntersectRect(&temp, &player->getSaberRect(), &object->getObjectHitbox()) && !object->getOverPower() && player->getCanHit())
 		{
-			player->setAnimDelay(true);
-
 			switch (object->getObjectType())
 			{
 			case ObjectType::Block:
 				// Æ¨±â´Â ÀÌÆåÆ®
+				player->setAnimDelay(true);
 				damageEvent.attacker = player;
 				damageEvent.target = object;
 				damageEvent.dType = DamageType::Saber;

@@ -393,7 +393,9 @@ void TitleScene::addSound(void)
 	
 	// 인게임 효과음
 	SOUNDMANAGER->addSound("SFX_Ready", "Resources/Sound/SFX/SFX_Ready.wav", false, false);
-	
+	SOUNDMANAGER->addSound("SFX_DoorOpen", "Resources/Sound/SFX/SFX_DoorOpen.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_DoorClose", "Resources/Sound/SFX/SFX_DoorClose.wav", false, false);
+
 	// 전투 효과음
 	SOUNDMANAGER->addSound("SFX_SmallExplosion", "Resources/Sound/SFX/Effect/SFX_SmallExplosion.wav", false, false);
 
