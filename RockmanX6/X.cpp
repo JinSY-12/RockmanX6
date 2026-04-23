@@ -22,6 +22,8 @@ HRESULT X::init(int x, int y)
 	// 캐릭터 소환 - 게임 시작
 	spawn(x, y);
 
+	cameraMoveDone = false;
+
 	return S_OK;
 }
 
@@ -361,28 +363,29 @@ void X::update(void)
 		
 		if (CAMERAMANAGER->getIsCamaraMove())
 		{
+			cameraMoveDone = true;
 			pStatus.movable = false;
 			pStatus.velocityX = 1.0f;
 
 			if (currentState == CharacterState::JumpUp || currentState == CharacterState::Climb
 				|| currentState == CharacterState::FallingDown || currentState == CharacterState::DashEnd
-				|| currentState == CharacterState::Idle)
-			{
-				cout << "카메라 이동중 애니메이션 일시정지" << endl;
-			}
-
-			else
-			{
-				pStatus.player->play(animSpeed);
-			}
+				|| currentState == CharacterState::Idle);
+			
+			else pStatus.player->play(animSpeed);
 		}
 
 		else
 		{
-			if (!pStatus.movable) pStatus.isDash = false;
-			if (currentState == CharacterState::Dash) currentState = CharacterState::Idle;
-
-			pStatus.movable = true;
+			if (cameraMoveDone)
+			{
+				if (currentState == CharacterState::Dash)
+				{
+					pStatus.isDash = false;
+					currentState = CharacterState::Idle;
+				}
+				pStatus.movable = true;
+				cameraMoveDone = false;
+			}
 			pStatus.player->play(animSpeed);
 		}
 
@@ -977,10 +980,15 @@ void X::specialAttack(void)
 	{
 		attState = SholderState::Special;
 
-		if (pStatus.isOnGround) pStatus.movable = false;
+		if (pStatus.isOnGround)
+		{
+			pStatus.movable = false;
+			currentState = CharacterState::Idle;
+			pStatus.isDash = false;
+		}
 		pStatus.isAttack = true;
 
-		pStatus.velocityX = 0;
+		pStatus.velocityX = 0.0f;
 
 		hideAfterimage = true;
 	}

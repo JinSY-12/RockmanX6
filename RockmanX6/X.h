@@ -13,6 +13,9 @@ private:
 	bool normalBurstAble;
 	bool chargeBurstDelay;
 
+	// ÄÆ¾À È®ÀÎ¿ë º¯¼ö
+	bool cameraMoveDone;
+
 public:
 	HRESULT init(void) override;
 	HRESULT init(int x, int y) override;
