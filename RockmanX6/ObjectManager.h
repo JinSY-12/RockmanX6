@@ -31,7 +31,8 @@ public:
 	void update(void);
 	void render(void);
 
-	void spawnObject(ObjectType oType, int x, int y);
+	void spawnObject(ObjectType oType, int x, int y, int width, int top, int height);
+	
 
 	void setttingPlayer(Player* player) { _player = player; }
 	void setttingBulletManager(BulletManager* bManager) { _bManager = bManager; }

@@ -358,7 +358,7 @@ void CameraManager::setMaxCameraRange()
                 {
                     cameraRange.top = 0 * SCALE_FACTOR;
                     cameraRange.left = 0 * SCALE_FACTOR;
-                    cameraRange.right = 5760 * SCALE_FACTOR;
+                    cameraRange.right = 5743 * SCALE_FACTOR;
                     cameraRange.bottom = 270 * SCALE_FACTOR;
                 }
                 
@@ -439,7 +439,7 @@ bool CameraManager::forceCameraMove(int targetPointLeft, int targetPointBottom, 
         lerpCompleteX = false;
         camera.x += 5;
         cameraRange.left = camera.x;
-        cameraRange.right = cameraRange.left + 320 * SCALE_FACTOR;
+        cameraRange.right = targetRight;
     }
 
     else
@@ -447,7 +447,7 @@ bool CameraManager::forceCameraMove(int targetPointLeft, int targetPointBottom, 
         cameraMove = false;
         lerpCompleteX = true;
         cameraRange.left = targetPointLeft;
-        // cameraRange.right = targetRight;
+        cameraRange.right = targetRight;
     }
 
     if (moveDir == CameraMoveDir::None)

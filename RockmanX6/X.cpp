@@ -369,7 +369,6 @@ void X::update(void)
 				|| currentState == CharacterState::Idle)
 			{
 				cout << "카메라 이동중 애니메이션 일시정지" << endl;
-				// pStatus.player->pause();
 			}
 
 			else

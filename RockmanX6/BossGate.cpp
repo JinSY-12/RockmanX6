@@ -2,7 +2,7 @@
 #include "BossGate.h"
 
 
-HRESULT BossGate::init(int x, int y, int locationX, int locationY)
+HRESULT BossGate::init(int x, int y, int width, int top, int height)
 {
     status.type = CombatEntityType::Object;
     oStatus.oType = ObjectType::BossGate;
@@ -16,7 +16,7 @@ HRESULT BossGate::init(int x, int y, int locationX, int locationY)
     status.width = oStatus.oImage->getFrameWidth();
     status.height = oStatus.oImage->getFrameHeight();
 
-    oStatus.oHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width, status.height);
+    oStatus.oHitBox = RectMakeCenter(x, y + status.height / 2, status.width, status.height);
     oStatus.worldRect = oStatus.oHitBox;
 
     pos.x = x;
@@ -26,18 +26,16 @@ HRESULT BossGate::init(int x, int y, int locationX, int locationY)
 	// right는 Gate통과 후 화면의 끝 부분
     // top은 Gate통과 후 화면의 천장 부분
     // top은 Gate통과 후 화면의 바닥 부분
-    left = x + 14 * SCALE_FACTOR;
-	right = left + 320 * SCALE_FACTOR;
-    top = 0;
-    bottom = 240 * SCALE_FACTOR;
+    
+    camera.left = x;
+    camera.right = camera.left + width;
+    camera.top = top;
+    camera.bottom = top + height;
 
     state = DoorState::Closed;
 
     status.dead = false;
     status.overpower = false;
-
-	oLocationX = locationX;
-	oLocationY = locationY;
 
 	closeTimer = 0.0f;
 
@@ -101,5 +99,5 @@ void BossGate::animOncePlay(bool play)
     if (!isUsed) state = DoorState::Opening;
     isUsed = play;
 
-    CAMERAMANAGER->bossCameraMove(left, bottom, right, top);
+    CAMERAMANAGER->bossCameraMove(camera.left, camera.bottom, camera.right, camera.top);
  }

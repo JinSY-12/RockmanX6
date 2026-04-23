@@ -16,6 +16,11 @@ HRESULT CombatEntity::init(int x, int y, int locationX, int locationY)
     return S_OK;
 }
 
+HRESULT CombatEntity::init(int x, int y, int width, int top, int height)
+{
+    return S_OK;
+}
+
 void CombatEntity::release(void)
 {
     // Do Nothing!!

@@ -35,8 +35,8 @@ public:
 	bool animPlay;
 	bool isUsed;
 
-	int oLocationX;
-	int oLocationY;
+	// int oLocationX;
+	// int oLocationY;
 
 public:
 	virtual void release(void);

@@ -140,8 +140,8 @@ void StageScene::stageSettting(BossType bType)
 			mPixelStage = IMAGEMANAGER->findImage("Pixel_Intro");
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
-			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
-			player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();
 			enemySettting(bType);
@@ -205,7 +205,8 @@ void StageScene::objectSetting(BossType bType)
 		// 오브젝트 테스트 용도
 		// oManager.spawnObject(ObjectType::Block, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR);
 		// oManager.spawnObject(ObjectType::BossGate, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 128 * SCALE_FACTOR);
+		oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 128 * SCALE_FACTOR, 320 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
+		oManager.spawnObject(ObjectType::BossGate, 6063 * SCALE_FACTOR, 128 * SCALE_FACTOR, 400 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
 				
 		// 세팅 시작
 		// oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR);

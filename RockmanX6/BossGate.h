@@ -12,18 +12,21 @@ private:
 		Closed
 	}state;
 
-
-	int left;
-	int right;
-	int top;
-	int bottom;
+	struct Camera
+	{
+		int left;
+		int right;
+		int top;
+		int bottom;
+	}camera;
+	
 
 	bool openClose;
 
 	float closeTimer;
 
 public:
-	HRESULT init(int x, int y, int locationX, int locationY) override;
+	HRESULT init(int x, int y, int width, int top, int height) override;
 
 	void release(void) override;
 	void update(void) override;

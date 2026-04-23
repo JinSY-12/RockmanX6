@@ -402,7 +402,7 @@ void Player::applyForce(void)
 		}
 
 		// 카메라 오른쪽으로 이동 막기
-		else if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().right)
+		else if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().right && !CAMERAMANAGER->getIsCamaraMove())
 		{
 			pos.x = CAMERAMANAGER->getCameraRange().right - 12 * SCALE_FACTOR;
 			currentState = CharacterState::Idle;
@@ -457,8 +457,6 @@ void Player::applyForce(void)
 		if (currentState == CharacterState::JumpUp)	if (pStatus.velocityY > -7.0f) pStatus.isJumpUp = false;
 		if (pStatus.velocityY > 0.0f && !pStatus.isWallSlide && currentState != CharacterState::OverPower) currentState = CharacterState::FallingDown;
 	}
-
-	
 
 #pragma endregion
 	
