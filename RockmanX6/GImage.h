@@ -88,6 +88,8 @@ public:
     BYTE* getPixelData();
 
     void play(float frameUpdateSec);
+    void reversePlay(float frameUpdateSec);
+    
     inline void resume(void) { aniPlaying = true; }
     inline void pause(void) { aniPlaying = false; }
 

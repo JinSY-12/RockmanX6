@@ -2,29 +2,6 @@
 #include "Player.h"
 #include "BulletManager.h"
 
-/*
-HRESULT Player::init(void)
-{
-	// Do Nothing!!
-	return S_OK;
-}
-
-HRESULT Player::init(int x, int y)
-{
-	return S_OK;
-}
-
-void Player::release(void)
-{
-	// Do Nothing!!
-}
-
-void Player::update(void)
-{
-	// Do Nothing!!
-}
-*/
-
 void Player::render(HDC memDC)
 {
 	pStatus.player->frameAlphaRender(memDC, hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
@@ -58,7 +35,7 @@ void Player::render(HDC memDC)
 		else temp1 = "X";
 
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100 + 20, temp1, "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100 + 20, printBodyState(), "DNF_M_18", RGB(0, 255, 255));
 								   
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100 + 45, "스피드", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityX), "DNF_M_18", RGB(0, 255, 255));
@@ -115,6 +92,18 @@ void Player::render(HDC memDC)
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 45, "대시 점프 중", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 500, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
 
+		if (ladderAble) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 580, WINSIZE_Y / 100, "사다리 가능", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 580, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+
+		if (pStatus.isOnLadder) temp = "O";
+		else temp = "X";
+
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 580, WINSIZE_Y / 100 + 45, "사다리 매달림", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 580, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
+
 		// 히트박스 출력
 		DrawRectMakeColor(memDC, pStatus.hitBox, RGB(255, 0, 0), 2);
 		DrawRectMakeColor(memDC, pStatus.floorCheck, RGB(0, 0, 255), 2);
@@ -125,7 +114,7 @@ void Player::render(HDC memDC)
 
 void Player::move(bool direction)
 {
-	if (pStatus.movable)
+	if (pStatus.movable && !pStatus.isOnLadder)
 	{
 		if (pStatus.isJumpDash)
 		{
@@ -191,7 +180,7 @@ void Player::jump(void)
 void Player::dash(bool direction)
 {
 	pStatus.velocityX = 0.0f;
-	
+
 	isMoving = false;
 
 	if (direction == true && !pStatus.touchRight)
@@ -334,6 +323,8 @@ void Player::wallDrop(void)
 		}
 		else pos.x += fall;
 			//charPos.x += fall;
+
+		pStatus.isWallSlide = false;
 	}
 }
 
@@ -358,6 +349,18 @@ void Player::wallKick(void)
 	}
 
 	else pStatus.velocityX = status.lookRight ? -5.0f : 5.0f;
+
+	pStatus.isWallSlide = false;
+}
+
+void Player::ladderClimb(void)
+{
+	if (ladderAble)
+	{
+		// 사다리 타기 실행
+	}
+
+	else ;
 }
 
 void Player::attack(void)
@@ -432,16 +435,19 @@ void Player::applyForce(void)
 	}
 
 	// Y축 이동 - 기본 베이스
-	else if (!pStatus.isOnGround && !CAMERAMANAGER->getIsCamaraMove())
+	else if (!pStatus.isOnGround && !CAMERAMANAGER->getIsCamaraMove() )
 	{
 		pStatus.isDash = false;
 
-		// 중력 가속도 추가
-		if (!pStatus.isWallKick) pStatus.velocityY += progress.gravityAccel;
+		if (!pStatus.isOnLadder)
+		{
+			// 중력 가속도 추가
+			if (!pStatus.isWallKick) pStatus.velocityY += progress.gravityAccel;
 
-		// 최대 낙하 속도 제한
-		if (pStatus.velocityY > pStatus.maxFallSpeed)
-			pStatus.velocityY = pStatus.maxFallSpeed;
+			// 최대 낙하 속도 제한
+			if (pStatus.velocityY > pStatus.maxFallSpeed)
+				pStatus.velocityY = pStatus.maxFallSpeed;
+		}
 
 		// 기본 중력
 		if (CAMERAMANAGER->getLockY() == true)
@@ -454,8 +460,11 @@ void Player::applyForce(void)
 		else pos.y += pStatus.velocityY;
 		
 		// 공중에서 상태 변경
-		if (currentState == CharacterState::JumpUp)	if (pStatus.velocityY > -7.0f) pStatus.isJumpUp = false;
-		if (pStatus.velocityY > 0.0f && !pStatus.isWallSlide && currentState != CharacterState::OverPower) currentState = CharacterState::FallingDown;
+		if (!pStatus.isOnLadder)
+		{
+			if (currentState == CharacterState::JumpUp)	if (pStatus.velocityY > -7.0f) pStatus.isJumpUp = false;
+			if (pStatus.velocityY > 0.0f && !pStatus.isWallSlide && currentState != CharacterState::OverPower) currentState = CharacterState::FallingDown;
+		}
 	}
 
 #pragma endregion
@@ -1031,6 +1040,37 @@ void Player::currentAnimChange(void)
 	}
 
 	////////////////////////
+	// 사다리 타기
+	////////////////////////
+
+	else if (currentState == CharacterState::LadderStart)
+	{
+		animSpeed = 0.1f;
+		animOffset.x = 0 * SCALE_FACTOR;
+		animOffset.y = 0 * SCALE_FACTOR;
+
+		changeAnimation(pStatus.charName + "LadderStart", 0);
+
+		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+		{
+			currentState = CharacterState::LadderLoop;
+		}
+	}
+
+	else if (currentState == CharacterState::LadderLoop)
+	{
+		inputEnabled = true;
+		animSpeed = 0.1f;
+		animOffset.x = 0 * SCALE_FACTOR;
+		animOffset.y = 12 * SCALE_FACTOR;
+
+		changeAnimation(pStatus.charName + "LadderLoop", 0);
+		pStatus.player->pause();
+
+	}
+
+
+	////////////////////////
 	// 데미지 애니메이션 종료
 	////////////////////////
 
@@ -1195,13 +1235,14 @@ string Player::printBodyState(void)
 	else if (currentState == CharacterState::Dash) result = "대시";
 	else if (currentState == CharacterState::DashEnd) result = "대시 종료";
 	else if (currentState == CharacterState::Land) result = "착지";
-	else if (currentState == CharacterState::Climb) result = "사다리 타기";
 	else if (currentState == CharacterState::Crouch) result = "앉기";
 	else if (currentState == CharacterState::Warp) result = "워프";
 	else if (currentState == CharacterState::WallSlide) result = "벽타기";
 	else if (currentState == CharacterState::WallKick) result = "벽차기";
 	else if (currentState == CharacterState::Dead) result = "사망";
-	
+	else if (currentState == CharacterState::LadderStart) result = "사다리 타기";
+	else if (currentState == CharacterState::LadderLoop) result = "사다리 타는중";
+		
 	return result;
 }
 

@@ -26,6 +26,12 @@ void ObjectBase::setObjectHitbox(void)
 
 	oStatus.oHitBox.top = oStatus.worldRect.top - CAMERAMANAGER->getCameraPos().y;
 	oStatus.oHitBox.bottom = oStatus.worldRect.bottom - CAMERAMANAGER->getCameraPos().y;
+
+	oStatus.subRect.left = oStatus.worldRect.left - CAMERAMANAGER->getCameraPos().x;
+	oStatus.subRect.right = oStatus.worldRect.right - CAMERAMANAGER->getCameraPos().x;
+
+	oStatus.subRect.top = oStatus.oHitBox.top;
+	oStatus.subRect.bottom = oStatus.subRect.top + 3 * SCALE_FACTOR;
 }
 
 void ObjectBase::checkDead(void)

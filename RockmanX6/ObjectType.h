@@ -3,5 +3,6 @@
 enum class ObjectType
 {
 	Block,
-	BossGate
+	BossGate,
+	Ladder
 };

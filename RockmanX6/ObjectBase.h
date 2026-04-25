@@ -22,6 +22,7 @@ public:
 
 		RECT oHitBox;
 		RECT worldRect;
+		RECT subRect;
 
 		int width;
 		int height;

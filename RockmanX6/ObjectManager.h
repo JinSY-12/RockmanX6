@@ -4,6 +4,7 @@
 #include "ObjectBase.h"
 #include "Block.h"
 #include "BossGate.h"
+#include "Ladder.h"
 
 class Player;
 class Bullet;

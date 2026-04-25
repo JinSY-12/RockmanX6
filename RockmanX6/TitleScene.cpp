@@ -196,7 +196,8 @@ void TitleScene::addImage(void)
 	//// 배경 스테이지 ////
 	// 인트로 스테이지
 	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
-	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel2.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
+	// IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
 
 	//////////////////////////////////
 	// 공통 이펙트
@@ -261,6 +262,10 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_Saber", "Resources/Image/Player/X/X_Saber.bmp", 1695 * SCALE_FACTOR, 144 * SCALE_FACTOR, 15, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_JumpSaber", "Resources/Image/Player/X/X_JumpSaber.bmp", 800 * SCALE_FACTOR, 128 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_WallSlideSaber", "Resources/Image/Player/X/X_WallSlideSaber.bmp", 920 * SCALE_FACTOR, 120 * SCALE_FACTOR, 10, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("X_LadderStart", "Resources/Image/Player/X/X_LadderStart.bmp", 102 * SCALE_FACTOR, 134 * SCALE_FACTOR, 3, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_LadderLoop", "Resources/Image/Player/X/X_LadderLoop.bmp", 336 * SCALE_FACTOR, 136 * SCALE_FACTOR, 8, 2, true, MAGENTA);
+	
 
 	// 엑스 웨폰
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/Bullet/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
@@ -334,8 +339,10 @@ void TitleScene::addImage(void)
 	//////////////////////////////////
 	
 	IMAGEMANAGER->addImage("Object_Block", "Resources/Image/Object/Object_Block.bmp", 64 * SCALE_FACTOR, 64 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Object_Ladder", "Resources/Image/Object/Object_Ladder.bmp", 38 * SCALE_FACTOR, 124 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("Object_Block_Pixel", "Resources/Image/Object/Object_Block_Pixel.bmp", 64 * SCALE_FACTOR, 64 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("Object_BossGate", "Resources/Image/Object/Object_BossGate.bmp", 390 * SCALE_FACTOR, 128 * SCALE_FACTOR, 13, 2, true, MAGENTA);
+	
 
 	//////////////////////////////////
 	// HUD

@@ -155,6 +155,7 @@
     <ClInclude Include="ImageManager.h" />
     <ClInclude Include="Junkroid.h" />
     <ClInclude Include="KeyManager.h" />
+    <ClInclude Include="Ladder.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MetaWheel.h" />
     <ClInclude Include="MovieScene.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="Junkroid.cpp" />
     <ClCompile Include="KeyManager.cpp" />
+    <ClCompile Include="Ladder.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MetaWheel.cpp" />
     <ClCompile Include="MovieScene.cpp" />

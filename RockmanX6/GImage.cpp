@@ -385,6 +385,26 @@ void GImage::play(float frameUpdateSec)
     }
 }
 
+void GImage::reversePlay(float frameUpdateSec)
+{
+    if (aniPlaying)
+    {
+        _imageInfo->elpasedSec += TIMEMANAGER->getElapsedTime();
+
+        if (_imageInfo->elpasedSec >= frameUpdateSec)
+        {
+            _imageInfo->currentFrameX--;
+
+            if (_imageInfo->currentFrameX < 0)
+            {
+                _imageInfo->currentFrameX = _imageInfo->maxFrameX;
+            }
+
+            _imageInfo->elpasedSec -= frameUpdateSec;
+        }
+    }
+}
+
 void GImage::render(HDC hdc)
 {
     if (_isTrans)

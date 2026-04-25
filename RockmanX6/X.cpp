@@ -22,8 +22,6 @@ HRESULT X::init(int x, int y)
 	// 캐릭터 소환 - 게임 시작
 	spawn(x, y);
 
-	cameraMoveDone = false;
-
 	return S_OK;
 }
 
@@ -349,9 +347,57 @@ void X::update(void)
 			specialAttack();
 		}
 
+#pragma region Ladder
+
+		if (KEYMANAGER->isOnceKeyDown(VK_DOWN) && ladderAble && pStatus.isOnGround
+			&& !pStatus.isOnLadder && !pStatus.isWallSlide)
+		{
+			inputEnabled = false;
+			pos.y += 100.0f;
+			pStatus.hitBox.top += 100.0f;
+			pStatus.hitBox.bottom += 100.0f;
+			pStatus.isOnLadder = true;
+			currentState = CharacterState::LadderStart;
+		}
+
+		if (KEYMANAGER->isOnceKeyDown(VK_UP) && ladderAble && !pStatus.isOnLadder && !pStatus.isWallSlide)
+		{
+			
+			if (pStatus.isOnGround)
+			{
+				pos.y -= 4.0f;
+				pStatus.hitBox.top -= 4.0f;
+				pStatus.hitBox.bottom -= 4.0f;
+			}
+
+			currentState = CharacterState::LadderLoop;
+			pStatus.isOnLadder = true;
+		}
+
+		if (KEYMANAGER->isStayKeyDown(VK_DOWN) && pStatus.isOnLadder && !pStatus.isWallSlide && inputEnabled)
+		{
+			pStatus.velocityY = 4.0f;
+			pStatus.player->resume();
+			pStatus.player->play(animSpeed);
+		}
+
+		if (KEYMANAGER->isStayKeyDown(VK_UP) && pStatus.isOnLadder && !pStatus.isWallSlide && inputEnabled)
+		{
+			pStatus.velocityY = -4.0f;
+			pStatus.player->resume();
+			pStatus.player->reversePlay(animSpeed);
+		}
+
+		if ((KEYMANAGER->isOnceKeyUp(VK_DOWN) || KEYMANAGER->isOnceKeyUp(VK_UP)) && pStatus.isOnLadder)
+		{
+			pStatus.velocityY = 0.0f;
+			pStatus.player->pause();
+		}
+		
+
 #pragma endregion
 	}
-
+#pragma endregion
 #pragma endregion
 
 #pragma region Animation Change + SFX Sound Play
@@ -409,7 +455,8 @@ void X::jump(void)
 	if (pStatus.movable)
 	{
 		if (pStatus.isOnGround || pStatus.touchLeft || pStatus.touchRight) Player::jump();
-		else; // 호버링
+		else if (!pStatus.isOnGround && pStatus.isOnLadder) pStatus.isOnLadder = false;
+		else cout << "점프 여기임" <<endl; // 호버링
 	}
 }
 
@@ -893,10 +940,13 @@ void X::spawn(int x, int y)
 	pStatus.isDash = false;
 	pStatus.isWallKick = false;
 	pStatus.isWallSlide = false;
+	pStatus.isOnLadder = false;
 	colorType = 0;
 	status.dead = false;
 	pStatus.movable = true;
 	pStatus.isOnTop = false;
+	ladderAble = false;
+	cameraMoveDone = false;
 
 	// 입력 초기화
 	inputEnabled = false;

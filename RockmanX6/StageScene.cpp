@@ -140,7 +140,11 @@ void StageScene::stageSettting(BossType bType)
 			mPixelStage = IMAGEMANAGER->findImage("Pixel_Intro");
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
-			player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// 시작점
+			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// 사다리 테스트
+			player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// 보스 게이트 테스트
 			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
 			player->setStageGravity(gravity);
 			rectSetting();
@@ -173,16 +177,16 @@ void StageScene::enemySettting(BossType bType)
 	case BossType::Intro:
 
 		// 세팅 시작
-		eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
-		
-		eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 726 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 726 * SCALE_FACTOR);
-		   
-		eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 845 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 845 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
+		// 
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 726 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 726 * SCALE_FACTOR);
+		//    
+		// eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 845 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 845 * SCALE_FACTOR);
 		break;
 
 		// 커맨드 얀마크
@@ -205,16 +209,16 @@ void StageScene::objectSetting(BossType bType)
 		// 오브젝트 테스트 용도
 		// oManager.spawnObject(ObjectType::Block, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR, 0, 0, 0);
 		// oManager.spawnObject(ObjectType::BossGate, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR, 0, 0, 0);
-		
+		oManager.spawnObject(ObjectType::Ladder, 1989 * SCALE_FACTOR, 786 * SCALE_FACTOR, 0, 0, 0);
 		// 세팅 시작
-		oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR, 0, 0, 0);
-		oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR, 0, 0, 0);
-		oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR, 0, 0, 0);
-		oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 158 * SCALE_FACTOR, 0, 0, 0);
-		
-		// 보스 게이트
-		oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 128 * SCALE_FACTOR, 320 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
-		oManager.spawnObject(ObjectType::BossGate, 6063 * SCALE_FACTOR, 128 * SCALE_FACTOR, 400 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
+		// oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR, 0, 0, 0);
+		// oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR, 0, 0, 0);
+		// oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR, 0, 0, 0);
+		// oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 158 * SCALE_FACTOR, 0, 0, 0);
+		// 
+		// // 보스 게이트
+		// oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 128 * SCALE_FACTOR, 320 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
+		// oManager.spawnObject(ObjectType::BossGate, 6063 * SCALE_FACTOR, 128 * SCALE_FACTOR, 400 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
 		break;
 
 		// 커맨드 얀마크
@@ -452,7 +456,8 @@ void StageScene::stageCollision(void)
 	player->setRightCollision(false, 0);
 	player->setLeftCollision(false, 0);
 	player->setTopCollision(false, 0);
-
+	player->setLadderAble(false);
+	
 	// 바닥 체크
 	for (int row = player->getPlayerBottom() + 5; row >= player->getPlayerBottom(); row--)
 	{
@@ -468,6 +473,16 @@ void StageScene::stageCollision(void)
 					player->setIsOnGround(true, row);
 					break;
 				}
+
+				else if (color == RGB(0, 0, 255))
+				{
+					if (!player->getIsOnLadder())
+					{
+						if (player->getVelocityY() < 0) player->setIsOnGround(false, row);
+						else player->setIsOnGround(true, row);
+					}
+					break;
+				}
 			}
 		}
 
@@ -481,6 +496,16 @@ void StageScene::stageCollision(void)
 				if (color == RGB(255, 0, 0))
 				{
 					player->setIsOnGround(true, row);
+					break;
+				}
+
+				else if (color == RGB(0, 0, 255))
+				{
+					if (!player->getIsOnLadder())
+					{
+						if (player->getVelocityY() < 0) player->setIsOnGround(false, row);
+						else player->setIsOnGround(true, row);
+					}
 					break;
 				}
 			}
@@ -573,10 +598,7 @@ void StageScene::stageCollision(void)
 			if (player->getPlayerRight() + 4 > obj->getObjectRect().left && player->getPlayerLeft() < obj->getObjectRect().left
 				&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
 			{
-				
 				if (obj->getOjbectIsUsed() == false) obj->animOncePlay(true);
-				// if (!CAMERAMANAGER->getIsCamaraMove()) player->setRightCollision(true, obj->getObjectRect().left);
-
 				break;
 			}
 
@@ -586,7 +608,11 @@ void StageScene::stageCollision(void)
 				if (!CAMERAMANAGER->getIsCamaraMove()) player->setLeftCollision(true, obj->getObjectRect().right);
 				break;
 			}
+			break;
 
+		case ObjectType::Ladder:
+			RECT temp;
+			if (IntersectRect(&temp, &player->getPlayerHitBox(), &obj->getObjectHitbox())) player->setLadderAble(true);
 			break;
 
 		default:

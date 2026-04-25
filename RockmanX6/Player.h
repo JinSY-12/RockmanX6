@@ -84,7 +84,9 @@ protected:
 		WallSlide,
 		WallKick,
 		Dead,
-		OverPower
+		OverPower,
+		LadderStart,
+		LadderLoop
 	};
 
 	struct PlayerPalette
@@ -127,6 +129,7 @@ protected:
 		// bool lookRight;
 		bool isOnGround;
 		bool isOnTop;
+		bool isOnLadder;
 
 		bool touchLeft;
 		bool touchRight;
@@ -224,10 +227,12 @@ protected:
 	bool pressLeft;
 	bool pressRight;
 	bool lastKeyIsRight;
-
+	
 	// 점프 관련
 	float wallkickTimer;
 	float wallkickMaxTime;
+	bool ladderAble;
+	bool ladderEnd;
 
 	// 대시 관련
 	float dashTimer;
@@ -294,7 +299,8 @@ public:
 	void wallSlide(void);
 	void wallDrop(void);
 	void wallKick(void);
-	
+	void ladderClimb(void);
+
 	// 캐릭터 공통 상태값
 	void applyForce(void);
 	void sfxPlay(void);
@@ -328,6 +334,9 @@ public:
 	inline bool getCanHit(void) { return canHit; }
 	inline int getPlayerHitBoxWidth(void) { return status.hitBoxWidth; }
 	Progress getProgress(void) { return progress; }
+	inline bool getIsOnLadder() { return pStatus.isOnLadder; }
+	inline float getVelocityX() { return pStatus.velocityX; }
+	inline float getVelocityY() { return pStatus.velocityY; }
 
 	void setOverPower(bool op, BulletSize bullet);
 	void setAnimDelay(bool delay) { animDelay = delay; }
@@ -391,6 +400,8 @@ public:
 			}
 
 			hideAfterimage = false;
+
+			pStatus.isOnLadder = false;
 		}
 	}
 	inline void setTopCollision(bool top, int bottomline)
@@ -412,7 +423,8 @@ public:
 		}
 	}
 	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
-	
+	inline void setLadderAble(bool able) { ladderAble = able; }
+
 	// 스탯 관련
 	void reduceHp(int damage);
 	

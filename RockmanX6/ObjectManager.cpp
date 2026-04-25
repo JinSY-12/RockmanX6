@@ -53,9 +53,14 @@ void ObjectManager::spawnObject(ObjectType oType, int x, int y, int width, int t
 	case ObjectType::BossGate:
 		_object = new BossGate;
 		_object->init(x, y, width, top, height);
-		// _object->init(x, y, (x + 14) * SCALE_FACTOR, 240 * SCALE_FACTOR);
 		_vObject.push_back(_object);
 		break;
+	case ObjectType::Ladder:
+		_object = new Ladder;
+		_object->init(x, y);
+		_vObject.push_back(_object);
+		break;
+
 	}
 }
 

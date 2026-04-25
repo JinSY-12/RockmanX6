@@ -279,6 +279,9 @@
     <ClInclude Include="BossGate.h">
       <Filter>소스 파일\Object\ObjectList</Filter>
     </ClInclude>
+    <ClInclude Include="Ladder.h">
+      <Filter>소스 파일\Object\ObjectList</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameNode.cpp">
@@ -402,6 +405,9 @@
       <Filter>소스 파일\Player\PlayerBase\Player</Filter>
     </ClCompile>
     <ClCompile Include="BossGate.cpp">
+      <Filter>소스 파일\Object\ObjectList</Filter>
+    </ClCompile>
+    <ClCompile Include="Ladder.cpp">
       <Filter>소스 파일\Object\ObjectList</Filter>
     </ClCompile>
   </ItemGroup>
