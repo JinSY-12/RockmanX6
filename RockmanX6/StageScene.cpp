@@ -209,16 +209,19 @@ void StageScene::objectSetting(BossType bType)
 		// 오브젝트 테스트 용도
 		// oManager.spawnObject(ObjectType::Block, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR, 0, 0, 0);
 		// oManager.spawnObject(ObjectType::BossGate, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR, 0, 0, 0);
-		oManager.spawnObject(ObjectType::Ladder, 1989 * SCALE_FACTOR, 786 * SCALE_FACTOR, 0, 0, 0);
+		
 		// 세팅 시작
 		// oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR, 0, 0, 0);
 		// oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR, 0, 0, 0);
 		// oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR, 0, 0, 0);
 		// oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 158 * SCALE_FACTOR, 0, 0, 0);
-		// 
-		// // 보스 게이트
-		// oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 128 * SCALE_FACTOR, 320 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
-		// oManager.spawnObject(ObjectType::BossGate, 6063 * SCALE_FACTOR, 128 * SCALE_FACTOR, 400 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
+		
+		// 보스 게이트
+		oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 128 * SCALE_FACTOR, 320 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
+		oManager.spawnObject(ObjectType::BossGate, 6063 * SCALE_FACTOR, 128 * SCALE_FACTOR, 400 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
+		
+		// 사다리
+		oManager.spawnObject(ObjectType::Ladder, 1989 * SCALE_FACTOR, 786 * SCALE_FACTOR, 0, 0, 0);
 		break;
 
 		// 커맨드 얀마크
@@ -613,8 +616,8 @@ void StageScene::stageCollision(void)
 
 		case ObjectType::Ladder:
 			RECT temp;
-			if (IntersectRect(&temp, &player->getPlayerHitBox(), &obj->getObjectHitbox())) player->setLadderAble(true);
-			if (IntersectRect(&temp, &player->getPlayerHitBox(), &obj->getSubHitbox())) player->setLadderEnd(true); // 플레이어 사다리 위에서 기상
+			if (IntersectRect(&temp, &player->getSubRect(), &obj->getObjectHitbox())) player->setLadderAble(true);
+			if (IntersectRect(&temp, &player->getSubRect(), &obj->getSubHitbox())) player->setLadderEnd(true); // 플레이어 사다리 위에서 기상
 			break;
 
 		default:

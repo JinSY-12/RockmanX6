@@ -107,6 +107,7 @@ void Player::render(HDC memDC)
 		// 히트박스 출력
 		DrawRectMakeColor(memDC, pStatus.hitBox, RGB(255, 0, 0), 2);
 		DrawRectMakeColor(memDC, pStatus.floorCheck, RGB(0, 0, 255), 2);
+		DrawRectMakeColor(memDC, pStatus.subRect, RGB(255, 0, 255), 2);
 		// if(canHit) DrawRectMakeColor(memDC(), pStatus.saberHitBox, RGB(255, 0, 255), 4);
 	}
 	

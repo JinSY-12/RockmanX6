@@ -349,53 +349,72 @@ void X::update(void)
 
 #pragma region Ladder
 
-		if (KEYMANAGER->isOnceKeyDown(VK_DOWN) && ladderAble && pStatus.isOnGround
-			&& !pStatus.isOnLadder && !pStatus.isWallSlide)
+		if (KEYMANAGER->isStayKeyDown(VK_DOWN) && !pStatus.isWallSlide && inputEnabled && ladderAble)
 		{
-			inputEnabled = false;
-			pos.y += 100.0f;
-			pStatus.hitBox.top += 100.0f;
-			pStatus.hitBox.bottom += 100.0f;
-			pStatus.isOnLadder = true;
-			currentState = CharacterState::LadderStart;
-		}
-
-		if (KEYMANAGER->isOnceKeyDown(VK_UP) && ladderAble && !pStatus.isOnLadder && !pStatus.isWallSlide)
-		{
-			if (!ladderEnd)
+			if (pStatus.isOnLadder)
 			{
-				if (pStatus.isOnGround)
-				{
-					pos.y -= 4.0f;
-					pStatus.hitBox.top -= 4.0f;
-					pStatus.hitBox.bottom -= 4.0f;
-				}
-				currentState = CharacterState::LadderLoop;
-				pStatus.isOnLadder = true;
-			}			
-		}
-
-		if (KEYMANAGER->isStayKeyDown(VK_DOWN) && pStatus.isOnLadder && !pStatus.isWallSlide && inputEnabled)
-		{
-			pStatus.velocityY = 4.0f;
-			pStatus.player->resume();
-			pStatus.player->play(animSpeed);
-		}
-
-		if (KEYMANAGER->isStayKeyDown(VK_UP) && pStatus.isOnLadder && !pStatus.isWallSlide && inputEnabled)
-		{
-			if (ladderEnd)
-			{
-				inputEnabled = false;
-				pStatus.velocityY = 0.0f;
-				currentState = CharacterState::LadderEnd;
+				pStatus.velocityX = 0.0f;
+				pStatus.velocityY = 4.0f;
+				pStatus.player->resume();
+				pStatus.player->play(animSpeed);
 			}
-			
+
 			else
 			{
-				pStatus.velocityY = -4.0f;
-				pStatus.player->resume();
-				pStatus.player->reversePlay(animSpeed);
+				if (ladderEnd)
+				{
+					pStatus.velocityX = 0.0f;
+					inputEnabled = false;
+					pos.y += 100.0f;
+					pStatus.hitBox.top += 100.0f;
+					pStatus.hitBox.bottom += 100.0f;
+					pStatus.isOnLadder = true;
+					currentState = CharacterState::LadderStart;
+				}
+			}
+			
+		}
+
+		if (KEYMANAGER->isStayKeyDown(VK_UP)&& !pStatus.isWallSlide && inputEnabled && ladderAble)
+		{
+			// 매달려 있을 때
+			if (pStatus.isOnLadder)
+			{
+				pStatus.velocityX = 0.0f;
+
+				if (ladderEnd)
+				{
+					inputEnabled = false;
+					pStatus.velocityY = 0.0f;
+					currentState = CharacterState::LadderEnd;
+				}
+
+				else
+				{
+					pStatus.velocityY = -4.0f;
+
+					pStatus.player->resume();
+					pStatus.player->play(animSpeed);
+				}
+			}
+
+			// 매달리지 않을 때
+			else
+			{
+				if (!ladderEnd)
+				{
+					pStatus.velocityX = 0.0f;
+
+					if (pStatus.isOnGround)
+					{
+						pos.y -= 4.0f;
+						pStatus.hitBox.top -= 4.0f;
+						pStatus.hitBox.bottom -= 4.0f;
+					}
+
+					currentState = CharacterState::LadderLoop;
+					pStatus.isOnLadder = true;
+				}
 			}
 		}
 
@@ -662,7 +681,7 @@ void X::setHitBox(void)
 	}
 
 	pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - status.hitBoxWidth / 2 + 5, pStatus.hitBox.bottom, status.hitBoxWidth - 10, 5);
-	// pStatus.floorCheck = RectMake((pStatus.hitBox.left + pStatus.hitBox.right) / 2 - 5 * SCALE_FACTOR, pStatus.hitBox.bottom, 10 * SCALE_FACTOR, 5);
+	pStatus.subRect = RectMakeCenter((pStatus.hitBox.left + pStatus.hitBox.right) / 2, (pStatus.hitBox.top + pStatus.hitBox.bottom) / 2, 5 * SCALE_FACTOR, status.hitBoxHeight);
 	
 	if (status.lookRight)
 	{
@@ -917,7 +936,8 @@ void X::spawn(int x, int y)
 	pStatus.hitBox = RectMakeCenter(pos.x, 0 - status.hitBoxHeight / 2, status.hitBoxWidth, status.hitBoxHeight);
 	pStatus.floorCheck = RectMakeCenter(pos.x, pos.y, status.hitBoxWidth, 4);
 	pStatus.saberHitBox = RectMake(pStatus.hitBox.right + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
-
+	pStatus.subRect = RectMakeCenter(pos.x, 0 - status.hitBoxHeight / 2, 5 * SCALE_FACTOR, status.hitBoxHeight);
+	
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom - status.hitBoxHeight;
 

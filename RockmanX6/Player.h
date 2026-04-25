@@ -112,6 +112,7 @@ protected:
 		RECT hitBox;
 		RECT saberHitBox;
 		RECT floorCheck;
+		RECT subRect;
 
 		string charName;
 		int firePointX;
@@ -327,6 +328,7 @@ public:
 	// ÁÂÇ¥ ¹× ÆÇÁ¤
 	RECT getPlayerHitBox(void) { return pStatus.hitBox; }
 	RECT getSaberRect(void) { return pStatus.saberHitBox; }
+	RECT getSubRect(void) { return pStatus.subRect; }
 	inline int getPlayerCenter(void) { return pos.x; }
 	inline int getPlayerTop(void) { return pos.y - status.hitBoxHeight; }
 	inline int getPlayerBottom(void) { return pos.y; }
@@ -338,6 +340,8 @@ public:
 	inline bool getIsOnLadder() { return pStatus.isOnLadder; }
 	inline float getVelocityX() { return pStatus.velocityX; }
 	inline float getVelocityY() { return pStatus.velocityY; }
+
+	
 
 	void setOverPower(bool op, BulletSize bullet);
 	void setAnimDelay(bool delay) { animDelay = delay; }
