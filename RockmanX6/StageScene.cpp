@@ -457,6 +457,7 @@ void StageScene::stageCollision(void)
 	player->setLeftCollision(false, 0);
 	player->setTopCollision(false, 0);
 	player->setLadderAble(false);
+	player->setLadderEnd(false);
 	
 	// 바닥 체크
 	for (int row = player->getPlayerBottom() + 5; row >= player->getPlayerBottom(); row--)
@@ -613,6 +614,7 @@ void StageScene::stageCollision(void)
 		case ObjectType::Ladder:
 			RECT temp;
 			if (IntersectRect(&temp, &player->getPlayerHitBox(), &obj->getObjectHitbox())) player->setLadderAble(true);
+			if (IntersectRect(&temp, &player->getPlayerHitBox(), &obj->getSubHitbox())) player->setLadderEnd(true); // 플레이어 사다리 위에서 기상
 			break;
 
 		default:

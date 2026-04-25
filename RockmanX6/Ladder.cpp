@@ -21,7 +21,7 @@ HRESULT Ladder::init(int x, int y)
     oStatus.subRect.left = oStatus.oHitBox.left;
     oStatus.subRect.right = oStatus.oHitBox.right;
     oStatus.subRect.top = oStatus.subRect.top;
-    oStatus.subRect.bottom = oStatus.oHitBox.top + 3 * SCALE_FACTOR;
+    oStatus.subRect.bottom = oStatus.oHitBox.top + 5 * SCALE_FACTOR;
 
     oStatus.worldRect = oStatus.oHitBox;
 

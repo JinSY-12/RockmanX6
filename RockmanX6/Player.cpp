@@ -1048,6 +1048,7 @@ void Player::currentAnimChange(void)
 		animSpeed = 0.1f;
 		animOffset.x = 0 * SCALE_FACTOR;
 		animOffset.y = 0 * SCALE_FACTOR;
+		
 
 		changeAnimation(pStatus.charName + "LadderStart", 0);
 
@@ -1066,7 +1067,33 @@ void Player::currentAnimChange(void)
 
 		changeAnimation(pStatus.charName + "LadderLoop", 0);
 		pStatus.player->pause();
+	}
 
+	else if (currentState == CharacterState::LadderEnd)
+	{
+		animSpeed = 0.1f;
+		animOffset.x = 0 * SCALE_FACTOR;
+		animOffset.y = 0 * SCALE_FACTOR;
+		
+		changeAnimation(pStatus.charName + "LadderEnd", 0);
+
+		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+		{
+			currentState = CharacterState::Idle;
+			inputEnabled = true;
+			ladderEnd = false;
+			pStatus.isOnLadder = false;
+
+			// 사다리 상단에 도착하면 바닥에 닿게 보정 해줘야하는데
+			// 애니메이션이 바뀌기 전에 RECT부터 움직여서 꼼수로
+			// 애니메이션이 바뀌기 전에 이미지를 내려버림
+			// ㄴ> 어처피 상단 도착 애니메이션이 다시 나오면 보정 또 들어가서 상관없음
+			animOffset.y = 30 * SCALE_FACTOR;
+
+			pos.y -= 90.0f;
+			pStatus.hitBox.top -= 90.0f;
+			pStatus.hitBox.bottom -= 90.0f;
+		}
 	}
 
 
@@ -1216,6 +1243,11 @@ void Player::changeAnimation(const string& animName, int frame)
 		pStatus.player->setFrameX(frame);
 
 		sfxPlay();
+
+		if (previousAnim == (pStatus.charName + "LadderEnd") )
+		{
+
+		}
 	}
 }
 
@@ -1266,6 +1298,12 @@ void Player::setHitBox(void)
 void Player::multiHitControl(void)
 {
 	// Do Nothing!
+}
+
+void Player::ladderUpper()
+{
+	currentState = CharacterState::LadderStart;
+	ladderEnd = true;
 }
 
 ShootEvent Player::makeShootEvent(BulletType bType)

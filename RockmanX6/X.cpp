@@ -362,16 +362,17 @@ void X::update(void)
 
 		if (KEYMANAGER->isOnceKeyDown(VK_UP) && ladderAble && !pStatus.isOnLadder && !pStatus.isWallSlide)
 		{
-			
-			if (pStatus.isOnGround)
+			if (!ladderEnd)
 			{
-				pos.y -= 4.0f;
-				pStatus.hitBox.top -= 4.0f;
-				pStatus.hitBox.bottom -= 4.0f;
-			}
-
-			currentState = CharacterState::LadderLoop;
-			pStatus.isOnLadder = true;
+				if (pStatus.isOnGround)
+				{
+					pos.y -= 4.0f;
+					pStatus.hitBox.top -= 4.0f;
+					pStatus.hitBox.bottom -= 4.0f;
+				}
+				currentState = CharacterState::LadderLoop;
+				pStatus.isOnLadder = true;
+			}			
 		}
 
 		if (KEYMANAGER->isStayKeyDown(VK_DOWN) && pStatus.isOnLadder && !pStatus.isWallSlide && inputEnabled)
@@ -383,9 +384,19 @@ void X::update(void)
 
 		if (KEYMANAGER->isStayKeyDown(VK_UP) && pStatus.isOnLadder && !pStatus.isWallSlide && inputEnabled)
 		{
-			pStatus.velocityY = -4.0f;
-			pStatus.player->resume();
-			pStatus.player->reversePlay(animSpeed);
+			if (ladderEnd)
+			{
+				inputEnabled = false;
+				pStatus.velocityY = 0.0f;
+				currentState = CharacterState::LadderEnd;
+			}
+			
+			else
+			{
+				pStatus.velocityY = -4.0f;
+				pStatus.player->resume();
+				pStatus.player->reversePlay(animSpeed);
+			}
 		}
 
 		if ((KEYMANAGER->isOnceKeyUp(VK_DOWN) || KEYMANAGER->isOnceKeyUp(VK_UP)) && pStatus.isOnLadder)
@@ -946,6 +957,7 @@ void X::spawn(int x, int y)
 	pStatus.movable = true;
 	pStatus.isOnTop = false;
 	ladderAble = false;
+	ladderEnd = false;
 	cameraMoveDone = false;
 
 	// 입력 초기화

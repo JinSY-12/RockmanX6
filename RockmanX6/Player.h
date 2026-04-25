@@ -86,7 +86,8 @@ protected:
 		Dead,
 		OverPower,
 		LadderStart,
-		LadderLoop
+		LadderLoop,
+		LadderEnd
 	};
 
 	struct PlayerPalette
@@ -424,7 +425,8 @@ public:
 	}
 	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
 	inline void setLadderAble(bool able) { ladderAble = able; }
-
+	inline void setLadderEnd(bool able) { ladderEnd = able; }
+	
 	// ½ºÅÈ °ü·Ã
 	void reduceHp(int damage);
 	
@@ -477,6 +479,8 @@ public:
 	}
 	virtual void coolDownControl(void);
 	virtual void multiHitControl(void);
+
+	void ladderUpper();
 
 	virtual ShootEvent makeShootEvent(BulletType bType);
 	
