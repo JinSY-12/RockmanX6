@@ -266,6 +266,7 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_LadderStart", "Resources/Image/Player/X/X_LadderStart.bmp", 102 * SCALE_FACTOR, 134 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_LadderLoop", "Resources/Image/Player/X/X_LadderLoop.bmp", 336 * SCALE_FACTOR, 136 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_LadderEnd", "Resources/Image/Player/X/X_LadderEnd.bmp", 102 * SCALE_FACTOR, 134 * SCALE_FACTOR, 3, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_LadderBurst", "Resources/Image/Player/X/X_LadderBurst.bmp", 120 * SCALE_FACTOR, 138 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 
 	// ¿¢½º ¿þÆù
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/Bullet/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);

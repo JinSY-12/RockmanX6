@@ -31,7 +31,7 @@ void Player::render(HDC memDC)
 	{
 		// 캐릭터 좌표
 		string temp1;
-		if (pStatus.isWallKick) temp1 = "O";
+		if (pStatus.isDash) temp1 = "O";
 		else temp1 = "X";
 
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50, WINSIZE_Y / 100, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
@@ -120,7 +120,7 @@ void Player::move(bool direction)
 		if (pStatus.isJumpDash)
 		{
 			if (status.lookRight && !pStatus.touchRight) pStatus.velocityX = dashSpeed;
-			else if(!status.lookRight && !pStatus.touchLeft) pStatus.velocityX = -dashSpeed;
+			else if (!status.lookRight && !pStatus.touchLeft) pStatus.velocityX = -dashSpeed;
 			// 이동 막기 - 테스트용
 			// pStatus.velocityX = 0;
 		}
@@ -1050,7 +1050,6 @@ void Player::currentAnimChange(void)
 		animOffset.x = 0 * SCALE_FACTOR;
 		animOffset.y = 0 * SCALE_FACTOR;
 		
-
 		changeAnimation(pStatus.charName + "LadderStart", 0);
 
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
@@ -1063,11 +1062,42 @@ void Player::currentAnimChange(void)
 	{
 		inputEnabled = true;
 		animSpeed = 0.1f;
-		animOffset.x = 0 * SCALE_FACTOR;
+		
 		animOffset.y = 12 * SCALE_FACTOR;
 
-		changeAnimation(pStatus.charName + "LadderLoop", 0);
-		pStatus.player->pause();
+		switch (attState)
+		{
+		case SholderState::Burst:
+		case SholderState::LargeBurst:
+			animSpeed = 0.06f;
+
+			pStatus.firePointY = 13 * SCALE_FACTOR;
+
+			if(status.lookRight) animOffset.x = 5 * SCALE_FACTOR;
+			else animOffset.x = -5 * SCALE_FACTOR;
+
+			if (previousAnim == pStatus.charName + "LadderLoop") changeAnimation(pStatus.charName + "LadderBurst", 0);
+			else changeAnimation(pStatus.charName + "LadderBurst", 0);
+
+			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+			{
+				pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
+			}
+			break;
+
+		case SholderState::Hold:
+		case SholderState::None:
+
+			animSpeed = 0.06f;
+			animOffset.x = 0 * SCALE_FACTOR;
+			
+			if (previousAnim == pStatus.charName + "LadderBurst") changeAnimation(pStatus.charName + "LadderLoop", 0);
+			else changeAnimation(pStatus.charName + "LadderLoop", 0);
+
+			pStatus.player->pause();
+
+			break;
+		}
 	}
 
 	else if (currentState == CharacterState::LadderEnd)
@@ -1143,6 +1173,7 @@ void Player::currentAnimChange(void)
 			else if (currentState == CharacterState::WallKick) attState = SholderState::None;
 			else if (currentState == CharacterState::Dash) attState = SholderState::None;
 			else if (currentState == CharacterState::DashEnd) attState = SholderState::None;
+			else if (currentState == CharacterState::LadderLoop) attState = SholderState::None;
 			else if (currentState == CharacterState::Idle) attState = SholderState::Hold;
 		}
 	}
@@ -1244,11 +1275,6 @@ void Player::changeAnimation(const string& animName, int frame)
 		pStatus.player->setFrameX(frame);
 
 		sfxPlay();
-
-		if (previousAnim == (pStatus.charName + "LadderEnd") )
-		{
-
-		}
 	}
 }
 

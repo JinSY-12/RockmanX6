@@ -200,7 +200,7 @@ void X::update(void)
 			dash(status.lookRight);
 		}
 
-		if (KEYMANAGER->isStayKeyDown('Z') && pStatus.movable)
+		if (KEYMANAGER->isStayKeyDown('Z') && pStatus.movable && !pStatus.isOnLadder)
 		{
 			dashTimer += 0.1f;
 
@@ -348,12 +348,13 @@ void X::update(void)
 		}
 
 #pragma region Ladder
-
-		if (KEYMANAGER->isStayKeyDown(VK_DOWN) && !pStatus.isWallSlide && inputEnabled && ladderAble)
+		
+		if (KEYMANAGER->isStayKeyDown(VK_DOWN) && !pStatus.isWallSlide && inputEnabled && ladderAble && !pStatus.isDash && !pStatus.isJumpDash)
 		{
+			pStatus.velocityX = 0.0f;
+
 			if (pStatus.isOnLadder)
 			{
-				pStatus.velocityX = 0.0f;
 				pStatus.velocityY = 4.0f;
 				pStatus.player->resume();
 				pStatus.player->play(animSpeed);
@@ -362,8 +363,7 @@ void X::update(void)
 			else
 			{
 				if (ladderEnd)
-				{
-					pStatus.velocityX = 0.0f;
+				{					
 					inputEnabled = false;
 					pos.y += 100.0f;
 					pStatus.hitBox.top += 100.0f;
@@ -372,16 +372,15 @@ void X::update(void)
 					currentState = CharacterState::LadderStart;
 				}
 			}
-			
 		}
 
-		if (KEYMANAGER->isStayKeyDown(VK_UP)&& !pStatus.isWallSlide && inputEnabled && ladderAble)
+		if (KEYMANAGER->isStayKeyDown(VK_UP) && !pStatus.isWallSlide && inputEnabled && ladderAble)
 		{
+			pStatus.velocityX = 0.0f;
+
 			// 매달려 있을 때
 			if (pStatus.isOnLadder)
 			{
-				pStatus.velocityX = 0.0f;
-
 				if (ladderEnd)
 				{
 					inputEnabled = false;
@@ -401,19 +400,22 @@ void X::update(void)
 			// 매달리지 않을 때
 			else
 			{
-				if (!ladderEnd)
+				if (attState != SholderState::Special)
 				{
-					pStatus.velocityX = 0.0f;
-
-					if (pStatus.isOnGround)
+					if (!ladderEnd)
 					{
-						pos.y -= 4.0f;
-						pStatus.hitBox.top -= 4.0f;
-						pStatus.hitBox.bottom -= 4.0f;
-					}
+						pStatus.velocityX = 0.0f;
 
-					currentState = CharacterState::LadderLoop;
-					pStatus.isOnLadder = true;
+						if (pStatus.isOnGround)
+						{
+							pos.y -= 4.0f;
+							pStatus.hitBox.top -= 4.0f;
+							pStatus.hitBox.bottom -= 4.0f;
+						}
+
+						currentState = CharacterState::LadderLoop;
+						pStatus.isOnLadder = true;
+					}
 				}
 			}
 		}
@@ -423,7 +425,6 @@ void X::update(void)
 			pStatus.velocityY = 0.0f;
 			pStatus.player->pause();
 		}
-		
 
 #pragma endregion
 	}
@@ -1068,10 +1069,14 @@ void X::specialAttack(void)
 			currentState = CharacterState::Idle;
 			pStatus.isDash = false;
 		}
+
+		if (pStatus.isOnLadder)
+		{
+			pStatus.isOnLadder = false;
+		}
+
 		pStatus.isAttack = true;
-
 		pStatus.velocityX = 0.0f;
-
 		hideAfterimage = true;
 	}
 }
