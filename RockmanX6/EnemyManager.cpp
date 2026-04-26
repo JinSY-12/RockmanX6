@@ -50,7 +50,8 @@ void EnemyManager::checkDead(void)
 		else ++enemy;
 	}
 }
-void EnemyManager::spawnEnemy(EnemyType eType, int x, int y)
+
+void EnemyManager::spawnEnemy(EnemyType eType, int x, int y, int sub)
 {
 	switch (eType)
 	{
@@ -64,6 +65,14 @@ void EnemyManager::spawnEnemy(EnemyType eType, int x, int y)
 	case EnemyType::MetaWheel:
 		_enemy = new MetaWheel;
 		_enemy->init(x, y);
+		_enemy->settingBulletManager(_bManager);
+		_enemy->settingPlayer(_player);
+		_vEnemy.push_back(_enemy);
+		break;
+
+	case EnemyType::MetaDridler:
+		_enemy = new MetaDridler;
+		_enemy->init(x, y, 0, sub);
 		_enemy->settingBulletManager(_bManager);
 		_enemy->settingPlayer(_player);
 		_vEnemy.push_back(_enemy);
@@ -85,7 +94,6 @@ void EnemyManager::playExplodeEffect(EnemyType eType, int x, int y, int width, i
 		EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, x, y, width, height, look);
 		EFFECTMANAGER->SpawnFragments(eType, x, y);
 		break;
-	
 	}
 }
 
@@ -94,7 +102,6 @@ void EnemyManager::playExplodeSound(EnemyType eType)
 	switch(eType)
 	{
 	case EnemyType::MetaDridler:
-		// SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
 	default:
 		SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
 		break;

@@ -34,9 +34,12 @@ public:
 
 	void spawnObject(ObjectType oType, int x, int y, int width, int top, int height);
 	
+	void checkObjectDead(void);
 
 	void setttingPlayer(Player* player) { _player = player; }
 	void setttingBulletManager(BulletManager* bManager) { _bManager = bManager; }
+
+	void playObjectExplodeEffect(ObjectType oType, int x, int y, int width, int height, int look);
 
 	vector<ObjectBase*>& getObject() { return _vObject; }
 };

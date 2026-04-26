@@ -477,10 +477,7 @@ public:
 
 	void changeAnimation(const string& animName, int frame);
 
-	inline float lerp(float start, float end, float time)
-	{
-		return start + (end - start) * time;
-	}
+	
 	virtual void coolDownControl(void);
 	virtual void multiHitControl(void);
 

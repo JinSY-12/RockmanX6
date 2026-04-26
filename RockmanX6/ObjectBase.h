@@ -45,18 +45,15 @@ public:
 	virtual void render(HDC hdc);
 
 	void setObjectHitbox(void);
-	// virtual void setObjectHitbox(void);
 			
 	// getter,setter
 	inline RECT getObjectRect(void) { return oStatus.worldRect; }
 	inline RECT getObjectHitbox(void) { return oStatus.oHitBox; }
 	inline RECT getSubHitbox(void) { return oStatus.subRect; }
-	inline ObjectPos getObjectPos(void) { return oPos; }
 	inline bool getOjbectIsUsed(void) { return isUsed; }
 
-
-	inline int getObjectWidth(void) { return oStatus.width; }
-	inline int getObjectHeight(void) { return oStatus.height; }
+	inline int getObjectWidth(void) { return status.width; }
+	inline int getObjectHeight(void) { return status.height; }
 
 	ObjectType getObjectType(void) { return oStatus.oType; }
 

@@ -141,11 +141,12 @@ void StageScene::stageSettting(BossType bType)
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
 			// 시작점
-			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 사다리 테스트
-			player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 보스 게이트 테스트
-			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			//player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+
 			player->setStageGravity(gravity);
 			rectSetting();
 			enemySettting(bType);
@@ -176,17 +177,38 @@ void StageScene::enemySettting(BossType bType)
 		// 인트로
 	case BossType::Intro:
 
+		// 적 테스트 용도
+		
+		int up;
+		up = 50;
+
+		
 		// 세팅 시작
-		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 825 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 795 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 795 * SCALE_FACTOR);
-		// 
-		// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 726 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 726 * SCALE_FACTOR);
-		//    
-		// eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 845 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 845 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR, 0);
+		eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR, 0);
+		eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR, 0);
+		eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR, 0);
+		
+		eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR, 0);
+		eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR, 0);
+		   
+		eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR, 0);
+		eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR, 0);
+		
+		eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, (620 - up) * SCALE_FACTOR, 0);
+		
+		eManager.spawnEnemy(EnemyType::MetaDridler, 4352 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 670 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::MetaDridler, 4640 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::MetaDridler, 4864 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::MetaDridler, 4930 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+		
+		eManager.spawnEnemy(EnemyType::MetaDridler, (5312 + 4) * SCALE_FACTOR, (320 - up) * SCALE_FACTOR, 480 * SCALE_FACTOR);
+													
+		eManager.spawnEnemy(EnemyType::MetaDridler, (5056 + 4) * SCALE_FACTOR, (110 - up) * SCALE_FACTOR, 270 * SCALE_FACTOR);
+													
+		eManager.spawnEnemy(EnemyType::MetaDridler, (5168 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 250 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::MetaDridler, (5280 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 220 * SCALE_FACTOR);
+		eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
 		break;
 
 		// 커맨드 얀마크
@@ -211,10 +233,10 @@ void StageScene::objectSetting(BossType bType)
 		// oManager.spawnObject(ObjectType::BossGate, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR, 0, 0, 0);
 		
 		// 세팅 시작
-		// oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR, 0, 0, 0);
-		// oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR, 0, 0, 0);
-		// oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR, 0, 0, 0);
-		// oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 158 * SCALE_FACTOR, 0, 0, 0);
+		oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 718 * SCALE_FACTOR, 0, 0, 0);
+		oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 815 * SCALE_FACTOR, 0, 0, 0);
+		oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 528 * SCALE_FACTOR, 0, 0, 0);
+		oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 158 * SCALE_FACTOR, 0, 0, 0);
 		
 		// 보스 게이트
 		oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 128 * SCALE_FACTOR, 320 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);

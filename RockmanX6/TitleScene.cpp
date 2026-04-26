@@ -320,6 +320,12 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("Enemy_Junkroid", "Resources/Image/Enemy/Minion/Enemy_Junkroid.bmp", 396 * SCALE_FACTOR, 122 * SCALE_FACTOR, 6, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("Enemy_MetaWheel", "Resources/Image/Enemy/Minion/Enemy_MetaWheel.bmp", 560 * SCALE_FACTOR, 140 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("Enemy_DridlerIdle", "Resources/Image/Enemy/Minion/Enemy_DridlerIdle.bmp", 292 * SCALE_FACTOR, 204 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("Enemy_DridlerUp", "Resources/Image/Enemy/Minion/Enemy_DridlerUp.bmp", 432 * SCALE_FACTOR, 252 * SCALE_FACTOR, 6, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("Enemy_DridlerDown", "Resources/Image/Enemy/Minion/Enemy_DridlerDown.bmp", 432 * SCALE_FACTOR, 204 * SCALE_FACTOR, 6, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("Enemy_DridlerDrill", "Resources/Image/Enemy/Minion/Enemy_DridlerDrill.bmp", 160 * SCALE_FACTOR, 126 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+
 	//////////////////////////////////
 	// Àû±º ¿þÆÝ
 	//////////////////////////////////

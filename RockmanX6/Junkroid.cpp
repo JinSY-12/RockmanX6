@@ -2,7 +2,7 @@
 #include "Junkroid.h"
 #include "BulletManager.h"
 #include "Player.h"
-#include "MetaWheel.h"
+#include "MetaDridler.h"
 
 HRESULT Junkroid::init(void)
 {
@@ -11,6 +11,8 @@ HRESULT Junkroid::init(void)
 
 HRESULT Junkroid::init(int x, int y)
 {
+	cout << "Junkroid Spawned" << endl;
+
     status.type = CombatEntityType::Enemy;
     eType = EnemyType::Junkroid;
 

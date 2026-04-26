@@ -30,16 +30,9 @@ HRESULT MetaWheel::init(int x, int y)
     status.overpower = false;
     status.dead = false;
 
-    fPos.x = 0 * SCALE_FACTOR;
-    fPos.y = IMAGEMANAGER->findImage("SFX_JunkBullet")->getFrameHeight();
-
-    eStatus.animOffsetX = 0 * SCALE_FACTOR;
-    eStatus.animOffsetY = 0 * SCALE_FACTOR;
-
     eStatus.eHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width, status.height);
     eStatus.worldRect = eStatus.eHitBox;
     eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2, y + eStatus.sightHeight, eStatus.sightWidth, eStatus.sightHeight);
-
 
     pos.x = x;
     pos.y = eStatus.worldRect.bottom;

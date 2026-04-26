@@ -45,16 +45,16 @@ void CollisionManager::checkPlayerVsEnemy(void)
 	for (auto& enemy : ememies->getEnemy())
 	{
 		RECT temp;
-		// cout << "Àû À§Ä¡ : " << enemy->getEnemyHitBox().left << endl;;
 
-		if (IntersectRect(&temp, &player->getSaberRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && player->getCanHit())
+		if (IntersectRect(&temp, &player->getSaberRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && player->getCanHit()
+			|| IntersectRect(&temp, &player->getSaberRect(), &enemy->getEnemysubHitBox()) && !enemy->getOverPower() && player->getCanHit())
 		{
 			player->setAnimDelay(true);
 
 			switch (enemy->getEnemyType())
 			{
 			case EnemyType::MetaDridler:
-				// Æ¨±â´Â ÀÌÆåÆ®
+				EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, enemy->getEnemyPos().x, enemy->getEnemyPos().y, enemy->getWidth(), enemy->getHeight(), player->getLookRight());
 				SOUNDMANAGER->play("SFX_Block", 0.5f);
 				break;
 
@@ -73,7 +73,8 @@ void CollisionManager::checkPlayerVsEnemy(void)
 	{
 		RECT temp;
 
-		if (IntersectRect(&temp, &player->getPlayerHitBox(), &enemy->getEnemyHitBox()) && !player->getOverPower())
+		if (IntersectRect(&temp, &player->getPlayerHitBox(), &enemy->getEnemyHitBox()) && !player->getOverPower()
+			|| IntersectRect(&temp, &player->getPlayerHitBox(), &enemy->getEnemysubHitBox()) && !player->getOverPower())
 		{
 			damageEvent.attacker = enemy;
 			damageEvent.target = player;
@@ -144,15 +145,25 @@ void CollisionManager::checkBulletVsEnemy(void)
 
 		for (auto& bullet : bullets->getBullet())
 		{
-			if (IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && !enemy->getIsDead())
+			if (IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && !enemy->getIsDead()
+				|| IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemysubHitBox()) && !enemy->getOverPower() && !enemy->getIsDead())
 			{
-				damageEvent.attacker = player;
-				damageEvent.target = enemy;
-				damageEvent.bType = bullet->getBulletType();
-				damageEvent.damage = bullet->getBulletDamage();
-				damageEvent.bullet = bullet;
-				EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
-				break;
+				switch (enemy->getEnemyType())
+				{
+					case EnemyType::MetaDridler:
+						EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, bullet->getBulletPosX(), bullet->getBulletPosY(), bullet->getBulletWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
+						SOUNDMANAGER->play("SFX_Block", 0.5f);
+						bullet->setBulletFire(false);
+						break;
+					default:
+						damageEvent.attacker = player;
+						damageEvent.target = enemy;
+						damageEvent.bType = bullet->getBulletType();
+						damageEvent.damage = bullet->getBulletDamage();
+						damageEvent.bullet = bullet;
+						EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
+						break;
+				}
 			}
 		}
 	}
@@ -170,7 +181,7 @@ void CollisionManager::checkBulletVsEnemy(void)
 				damageEvent.bType = bullet->getBulletType();
 				damageEvent.damage = bullet->getBulletDamage();
 				damageEvent.bullet = bullet;
-				EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
+				EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent});
 				break;
 			}
 		}

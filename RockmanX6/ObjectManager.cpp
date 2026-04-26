@@ -14,22 +14,15 @@ void ObjectManager::release(void)
 
 void ObjectManager::update(void)
 {
-	for (auto object = _vObject.begin(); object != _vObject.end();)
+	for (auto object = _vObject.begin(); object != _vObject.end();++object)
 	{
-		if ((*object)->getIsDead())
-		{
-			SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
-			EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, (*object)->getObjectPos().x, (*object)->getObjectPos().y, (*object)->getObjectWidth(), (*object)->getObjectHeight(), 0);
-			object = _vObject.erase(object);
-		}
-
-		else
-		{
-			(*object)->update();
-			++object;
-		}
+		(*object)->update();
 	}
 
+	if (_vObject.size() > 0)
+	{
+		checkObjectDead();
+	}
 }
 
 void ObjectManager::render(void)
@@ -48,7 +41,6 @@ void ObjectManager::spawnObject(ObjectType oType, int x, int y, int width, int t
 		_object = new Block;
 		_object->init(x, y);
 		_vObject.push_back(_object);
-		cout << _vObject.size() << endl;
 		break;
 	case ObjectType::BossGate:
 		_object = new BossGate;
@@ -60,8 +52,37 @@ void ObjectManager::spawnObject(ObjectType oType, int x, int y, int width, int t
 		_object->init(x, y);
 		_vObject.push_back(_object);
 		break;
-
 	}
+}
+
+void ObjectManager::checkObjectDead(void)
+{
+	for (auto object = _vObject.begin(); object != _vObject.end();)
+	{
+		if ((*object)->getIsDead())
+		{
+			playObjectExplodeEffect((*object)->getObjectType(), (*object)->getPos().x, (*object)->getPos().y,
+				(*object)->getObjectWidth(), (*object)->getObjectHeight(), 0);
+			SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
+
+			object = _vObject.erase(object);
+		}
+
+		else ++object;
+	}
+}
+
+void ObjectManager::playObjectExplodeEffect(ObjectType oType, int x, int y, int width, int height, int look)
+{
+	switch (oType)
+	{
+	case ObjectType::Block:
+		EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, x, y, width, height, look);
+		break;
+	default:
+		break;
+	}
+
 }
 
 

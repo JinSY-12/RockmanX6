@@ -84,7 +84,6 @@ void DamageManager::onEvent(const Event& event)
 						EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
 						bullet->setBulletFire(false);
 					}
-
 					break;
 				}
 			}

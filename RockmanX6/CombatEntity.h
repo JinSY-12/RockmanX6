@@ -65,5 +65,10 @@ public:
 
 	float getPhyscialDamage() { return status.physicalDamage; }
 	CombatEntityType getEntityType() const { return status.type; }
+
+	inline float lerp(float start, float end, float time)
+	{
+		return start + (end - start) * time;
+	}
 };
 

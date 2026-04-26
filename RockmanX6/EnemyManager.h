@@ -4,6 +4,7 @@
 #include "EnemyBase.h"
 #include "Junkroid.h"
 #include "MetaWheel.h"
+#include "MetaDridler.h"
 #include "EffectType.h"
 
 class Player;
@@ -45,7 +46,7 @@ public:
 	
 	void checkDead(void);
 
-	void spawnEnemy(EnemyType eType, int x, int y);
+	void spawnEnemy(EnemyType eType, int x, int y, int sub);
 	void spawnBoss(BossType bType, int x, int y);
 
 	void setttingPlayer(Player* player) { _player = player; }

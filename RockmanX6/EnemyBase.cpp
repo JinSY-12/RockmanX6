@@ -12,16 +12,21 @@ void EnemyBase::update(void)
 {
 	// Do nothing!
 }
-
-
 void EnemyBase::render(HDC hdc)
 {
-	eStatus.eImage->frameRender(hdc, eStatus.eHitBox.left, eStatus.eHitBox.top - eStatus.animOffsetY
+	if (eType == EnemyType::MetaDridler)
+	{
+		eStatus.ePartsImage->frameRender(hdc, eStatus.subHitBox.left - eStatus.subOffsetX, eStatus.subHitBox.top - eStatus.subOffsetY
+			, eStatus.ePartsImage->getFrameX(), status.lookRight);
+	}
+
+	eStatus.eImage->frameRender(hdc, eStatus.eHitBox.left - eStatus.animOffsetX, eStatus.eHitBox.top - eStatus.animOffsetY
 		, eStatus.eImage->getFrameX(), status.lookRight);
 
 	if (UIMANAGER->getIsDebugMode())
 	{
 		DrawRectMakeColor(hdc, eStatus.eHitBox, RGB(0, 255, 255), 2);
+		DrawRectMakeColor(hdc, eStatus.subHitBox, RGB(0, 255, 255), 2);
 		DrawRectMakeColor(hdc, eStatus.attSight, RGB(255, 0, 255), 2);
 	}
 }

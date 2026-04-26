@@ -11,8 +11,6 @@ public:
 	void release(void) override;
 	void update(void) override;
 
-	void animChange();
-
 	void attack(void) override;
 
 	void checkPlayerCollision(void)	override;

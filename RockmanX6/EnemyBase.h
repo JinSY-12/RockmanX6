@@ -1,5 +1,4 @@
 #pragma once
-// #include "GameNode.h"
 #include "BulletType.h"
 #include "CombatEntity.h"
 
@@ -26,10 +25,12 @@ protected:
 	struct EnemyStatus
 	{
 		GImage* eImage;
+		GImage* ePartsImage;
 
 		RECT eHitBox;
 		RECT worldRect;
 		RECT attSight;
+		RECT subHitBox;
 
 		int sightWidth;
 		int sightHeight;
@@ -54,6 +55,9 @@ protected:
 
 		int animOffsetX;
 		int animOffsetY;
+
+		int subOffsetX;
+		int subOffsetY;
 	};
 
 	EnemyState eState;
@@ -91,6 +95,7 @@ public:
 	RECT getEnemySight() { return eStatus.attSight; }
 	RECT getEnemyHitBox() { return eStatus.eHitBox; }
 	RECT getEnemyWorldRect() { return eStatus.worldRect; }
+	RECT getEnemysubHitBox() { return eStatus.subHitBox; }
 
 	bool getAttAble(void) { return eStatus.attackAble; }
 	
