@@ -19,11 +19,10 @@ void DamageManager::onEvent(const Event& event)
 				{
 					int rnd = RND->getInt(4);
 					SOUNDMANAGER->play("SFX_SaberHit", 0.5f);
-	
 					static const EffectType saberEffects[4] = {
 						EffectType::SaberHit_1, EffectType::SaberHit_2, EffectType::SaberHit_3,	EffectType::SaberHit_4 };
-	
-					EFFECTMANAGER->spawnEffect(saberEffects[rnd], damage->target->getPos().x, damage->target->getPos().y, damage->target->getWidth(), damage->target->getHeight(), damage->target->getLookRight());
+					
+					EFFECTMANAGER->spawnEffect(saberEffects[rnd], damage->target->getPos().x, damage->target->getPos().y, damage->target->getWidth(), damage->target->getHeight(), damage->target->getLookRight());					
 				}
 			}
 			// player To Object

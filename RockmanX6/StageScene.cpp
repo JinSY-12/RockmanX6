@@ -39,7 +39,7 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	stageSettting(bType);
 
 	// 스테이지 시작 준비
-	SOUNDMANAGER->play(stagBGM, 0.5f);
+	// SOUNDMANAGER->play(stagBGM, 0.5f);
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
 	noticeAniSpeed = 1;
@@ -141,11 +141,11 @@ void StageScene::stageSettting(BossType bType)
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
 			// 시작점
-			player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 사다리 테스트
 			// player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 보스 게이트 테스트
-			//player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
 
 			player->setStageGravity(gravity);
 			rectSetting();

@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
+    <ClInclude Include="BossBase.h" />
     <ClInclude Include="BossGate.h" />
     <ClInclude Include="BossType.h" />
     <ClInclude Include="Bullet.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="GameNode.h" />
     <ClInclude Include="GImage.h" />
+    <ClInclude Include="HighMax.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="HunterBaseScene.h" />
     <ClInclude Include="IEventListener.h" />
@@ -186,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="BossBase.cpp" />
     <ClCompile Include="BossGate.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
@@ -202,6 +205,7 @@
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="GameNode.cpp" />
     <ClCompile Include="GImage.cpp" />
+    <ClCompile Include="HighMax.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="HunterBaseScene.cpp" />
     <ClCompile Include="IEventListener.cpp" />

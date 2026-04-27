@@ -54,7 +54,7 @@ void CollisionManager::checkPlayerVsEnemy(void)
 			switch (enemy->getEnemyType())
 			{
 			case EnemyType::MetaDridler:
-				EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, enemy->getEnemyPos().x, enemy->getEnemyPos().y, enemy->getWidth(), enemy->getHeight(), player->getLookRight());
+				EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, enemy->getEnemyPos().x, player->getPos().y, enemy->getWidth(), enemy->getHeight(), player->getLookRight());
 				SOUNDMANAGER->play("SFX_Block", 0.5f);
 				break;
 

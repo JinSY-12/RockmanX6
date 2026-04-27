@@ -285,6 +285,12 @@
     <ClInclude Include="MetaDridler.h">
       <Filter>소스 파일\Enemy\Minion</Filter>
     </ClInclude>
+    <ClInclude Include="HighMax.h">
+      <Filter>소스 파일\Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossBase.h">
+      <Filter>소스 파일\Enemy\EnemyBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameNode.cpp">
@@ -415,6 +421,12 @@
     </ClCompile>
     <ClCompile Include="MetaDridler.cpp">
       <Filter>소스 파일\Enemy\Minion</Filter>
+    </ClCompile>
+    <ClCompile Include="HighMax.cpp">
+      <Filter>소스 파일\Enemy\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossBase.cpp">
+      <Filter>소스 파일\Enemy\EnemyBase</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

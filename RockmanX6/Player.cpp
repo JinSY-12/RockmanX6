@@ -1134,6 +1134,9 @@ void Player::currentAnimChange(void)
 
 	if (currentState == CharacterState::OverPower)
 	{
+		animOffset.x = 0 * SCALE_FACTOR;
+		animOffset.y = 0 * SCALE_FACTOR;
+
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 		{
 			pStatus.invincible = true;

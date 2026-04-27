@@ -57,7 +57,6 @@ HRESULT MetaDridler::init(int x, int y, int locationX, int locationY)
     eStatus.moveSpeed = 3.0f;
     eStatus.updownSpeed = 3.0f;
 
-    // destinationY = 960 * SCALE_FACTOR;
     destinationY = locationY;
 
     raadyTime = 10.0f;
@@ -232,13 +231,12 @@ void MetaDridler::setEnemyHitbox(void)
 
 	// 공격 범위 설정
     // 판정 테스트
-    eStatus.attSight.left = eStatus.eHitBox.left;
-    eStatus.attSight.right = eStatus.attSight.left + status.width;
-
+    // eStatus.attSight.left = eStatus.eHitBox.left;
+    // eStatus.attSight.right = eStatus.attSight.left + status.width;
 
     // 원래 판정
-    // eStatus.attSight.left = eStatus.eHitBox.left - status.width * 2;
-    // eStatus.attSight.right = eStatus.attSight.left + status.width * 5;
+    eStatus.attSight.left = eStatus.eHitBox.left - status.width;
+    eStatus.attSight.right = eStatus.attSight.left + status.width * 3;
 
     eStatus.attSight.top = eStatus.eHitBox.bottom - 10 * SCALE_FACTOR;
     eStatus.attSight.bottom = eStatus.attSight.top + status.height * 3;
