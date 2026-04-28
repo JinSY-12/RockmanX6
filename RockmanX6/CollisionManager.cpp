@@ -6,11 +6,6 @@
 #include "ObjectManager.h"
 
 
-HRESULT CollisionManager::init(void)
-{
-    return S_OK;
-}
-
 void CollisionManager::release(void)
 {
 
@@ -21,94 +16,11 @@ void CollisionManager::update(void)
 	checkCollisions();
 }
 
-void CollisionManager::render(void)
-{
-
-}
-
-
-
 void CollisionManager::checkCollisions(void)
 {
 	checkContact();
 	checkSaberCollision();
 	checkBulletCollision();
-}
-
-void CollisionManager::checkPlayerVsEnemy(void)
-{
-	for (auto& enemy : ememies->getEnemy())
-	{
-		RECT temp;
-
-		if (IntersectRect(&temp, &player->getSaberRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && player->getCanHit()
-			|| IntersectRect(&temp, &player->getSaberRect(), &enemy->getEnemysubHitBox()) && !enemy->getOverPower() && player->getCanHit())
-		{
-			player->setAnimDelay(true);
-
-			switch (enemy->getEnemyType())
-			{
-			case EnemyType::MetaDridler:
-				EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, enemy->getEnemyPos().x, player->getPos().y, enemy->getWidth(), enemy->getHeight(), player->getLookRight());
-				SOUNDMANAGER->play("SFX_Block", 0.5f);
-				break;
-
-			default:
-				damageEvent.attacker = player;
-				damageEvent.target = enemy;
-				damageEvent.dType = DamageType::Saber;
-				damageEvent.damage = damageEvent.attacker->getPhyscialDamage();
-				EVENTMANAGER->dispatchEvents({EventType::TouchDamage, &damageEvent});
-				break;
-			}
-		}
-	}
-
-	for (auto& enemy : ememies->getEnemy())
-	{
-		RECT temp;
-
-		if (IntersectRect(&temp, &player->getPlayerHitBox(), &enemy->getEnemyHitBox()) && !player->getOverPower()
-			|| IntersectRect(&temp, &player->getPlayerHitBox(), &enemy->getEnemysubHitBox()) && !player->getOverPower())
-		{
-			damageEvent.attacker = enemy;
-			damageEvent.target = player;
-			damageEvent.dType = DamageType::Touch;
-			damageEvent.damage = damageEvent.attacker->getPhyscialDamage();
-			EVENTMANAGER->dispatchEvents({ EventType::TouchDamage, &damageEvent });
-			break;
-		}
-	}
-}
-
-void CollisionManager::checkPlayerVsObject(void)
-{
-	// 공격 가능 오브젝트와 플레이어 공격범위 판정
-	
-	for (auto& object : objects->getObject())
-	{
-		RECT temp;
-		
-		if (IntersectRect(&temp, &player->getSaberRect(), &object->getObjectHitbox()) && !object->getOverPower() && player->getCanHit())
-		{
-			switch (object->getObjectType())
-			{
-			case ObjectType::Block:
-				// 튕기는 이펙트
-				player->setAnimDelay(true);
-				damageEvent.attacker = player;
-				damageEvent.target = object;
-				damageEvent.dType = DamageType::Saber;
-				damageEvent.damage = damageEvent.attacker->getPhyscialDamage();
-				EVENTMANAGER->dispatchEvents({ EventType::TouchDamage, &damageEvent });
-				break;
-
-			default:
-				
-				break;
-			}
-		}
-	}
 }
 
 void CollisionManager::checkContact(void)

@@ -19,16 +19,10 @@ private:
 	DamageEvent damageEvent;
 
 public:
-	HRESULT init(void) override;
 	void release(void) override;
 	void update(void) override;
-	void render(void) override;
 
 	void checkCollisions(void);
-
-	void checkPlayerVsEnemy(void);
-	void checkPlayerVsObject(void);
-		
 	void checkContact(void);
 	void checkSaberCollision(void);
 	void checkBulletCollision(void);

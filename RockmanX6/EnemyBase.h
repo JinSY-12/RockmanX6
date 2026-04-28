@@ -69,6 +69,8 @@ protected:
 
 	ShootEvent shootEvent;
 
+	Vector2 diff;
+
 public:
 	virtual void release(void);
 	virtual void update(void);
@@ -90,6 +92,8 @@ public:
 	inline void changeDirection(bool dir) { status.lookRight = dir; }
 	void chasePlayer(float angle);
 	void changeDirection(void);
+
+	Vector2 getDiffPlayer(void);
 
 	// getter, setter
 	RECT getEnemySight() { return eStatus.attSight; }

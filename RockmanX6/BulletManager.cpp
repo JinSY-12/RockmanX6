@@ -66,45 +66,6 @@ void BulletManager::render(void)
 	
 void BulletManager::fire(BulletType type, int x, int y, bool direct, float velocityX, float velocityY)
 {
-	/*
-	switch (type)
-	{
-		// 버스터
-		case BulletType::Burster:
-			bullet = new Burster;
-			bullet->init(type, x, y, direct);
-			_vBullet.push_back(bullet);
-			break;
-		case BulletType::ChargeBurst1:
-			bullet = new Burster;
-			bullet->init(type, x, y, direct);
-			_vBullet.push_back(bullet);
-			break;
-		case BulletType::ChargeBurst2:
-			bullet = new Burster;
-			bullet->init(type, x, y, direct);
-			_vBullet.push_back(bullet);
-			break;
-		// 제로 버스터 추가 예정
-		//case BulletType::ZeroBurster:
-		//	break;
-		
-		// 적 총알
-		case BulletType::JunkBullet:
-			bullet = new JunkBullet;
-			bullet->init(type, x, y, direct);
-			_vEnemyBullet.push_back(bullet);
-			break;
-		case BulletType::SiegeShoot:
-			bullet = new SiegeShoot;
-			bullet->init(type, x, y, direct, velocityX, velocityY);
-			_vEnemyBullet.push_back(bullet);
-			break;
-		defalut:
-			break;
-	}
-	*/
-
 	switch (type)
 	{
 		// 버스터
@@ -114,13 +75,9 @@ void BulletManager::fire(BulletType type, int x, int y, bool direct, float veloc
 		break;
 	case BulletType::ChargeBurst1:
 		bullet = new Burster;
-		//bullet->init(type, x, y, direct, velocityX, velocityY);
-		//_vBullet.push_back(bullet);
 		break;
 	case BulletType::ChargeBurst2:
 		bullet = new Burster;
-		// bullet->init(type, x, y, direct, velocityX, velocityY);
-		//_vBullet.push_back(bullet);
 		break;
 		// 제로 버스터 추가 예정
 		//case BulletType::ZeroBurster:
@@ -129,13 +86,9 @@ void BulletManager::fire(BulletType type, int x, int y, bool direct, float veloc
 		// 적 총알
 	case BulletType::JunkBullet:
 		bullet = new JunkBullet;
-		//bullet->init(type, x, y, direct);
-		//_vEnemyBullet.push_back(bullet);
 		break;
 	case BulletType::SiegeShoot:
 		bullet = new SiegeShoot;
-		//bullet->init(type, x, y, direct, velocityX, velocityY);
-		//_vEnemyBullet.push_back(bullet);
 		break;
 	defalut:
 		break;

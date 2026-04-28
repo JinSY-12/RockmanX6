@@ -4,15 +4,8 @@
 #include "Player.h"
 #include "MetaDridler.h"
 
-HRESULT Junkroid::init(void)
-{
-    return S_OK;
-}
-
 HRESULT Junkroid::init(int x, int y)
 {
-	cout << "Junkroid Spawned" << endl;
-
     status.type = CombatEntityType::Enemy;
     eType = EnemyType::Junkroid;
 
@@ -73,8 +66,8 @@ void Junkroid::update(void)
 {
     eStatus.eImage->play(0.05f);
 
-    pattern();
     changeDirection();
+    pattern();
     setEnemyHitbox();
     animChange();
     checkPlayerCollision();
@@ -105,11 +98,13 @@ void Junkroid::attack(void)
 
     ShootEvent shootEvent;
 
-    shootEvent.bType = BulletType::JunkBullet;
+    shootEvent.bType = BulletType::SiegeShoot;
     shootEvent.x = (eStatus.worldRect.left + eStatus.worldRect.right) / 2;
     shootEvent.y = eStatus.worldRect.top + fPos.y;
     shootEvent.direct = status.lookRight;
-    
+    shootEvent.velocityX = normalize(getDiffPlayer()).x;
+    shootEvent.velocityY = normalize(getDiffPlayer()).y;
+
     EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
 
 }

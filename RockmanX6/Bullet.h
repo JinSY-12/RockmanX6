@@ -31,6 +31,7 @@ public:
 
 		bool rightDirect;
 		bool isFire;
+		bool fireStart = true;
 		bool pierce;
 
 		float bulletSpeed;
@@ -42,8 +43,7 @@ public:
 	BulletStatus bStatus;
 
 public:
-
-	virtual HRESULT init(void);
+;
 	virtual HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX = 0.0f, float velocityY = 0.0f);
 	virtual void release(void);
 	virtual void update(void);
@@ -74,11 +74,7 @@ private:
 
 public:
 
-	HRESULT init(void);
 	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
-	void release(void);
-	void update(void) override;
-	void render(void) override;
 
 	Burster() {
 		bStatus.isFire = false;
@@ -94,12 +90,7 @@ private:
 
 
 public:
-
-	HRESULT init(void);
 	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
-	void release(void);
-	void update(void) override;
-	void render(void) override;
 
 	JunkBullet() {
 		bStatus.isFire = false;
@@ -118,7 +109,6 @@ public:
 
 	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
 	void update(void) override;
-	void render(void) override;
 
 	SiegeShoot() {
 		bStatus.isFire = false;
