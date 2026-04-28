@@ -331,6 +331,8 @@ void TitleScene::addImage(void)
 	//////////////////////////////////
 
 	IMAGEMANAGER->addFrameImage("SFX_JunkBullet", "Resources/Image/Enemy/Bullet/Minion/SFX_JunkBullet.bmp", 16 * SCALE_FACTOR, 32 * SCALE_FACTOR, 1, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_SiegeShootFire", "Resources/Image/Enemy/Bullet/Boss/SFX_SiegeShootFire.bmp", 60 * SCALE_FACTOR, 60 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_SiegeShootLoop", "Resources/Image/Enemy/Bullet/Boss/SFX_SiegeShootLoop.bmp", 240 * SCALE_FACTOR, 60 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 
 	//////////////////////////////////
 	//  ÆÄÆí

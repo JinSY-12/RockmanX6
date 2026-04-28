@@ -1,5 +1,12 @@
 #pragma once
 
+enum class BulletFaction
+{
+	Player,
+	Enemy,
+	Object
+};
+
 // 플레이어 총알 종류
 enum class BulletType
 {
@@ -7,13 +14,8 @@ enum class BulletType
 	ChargeBurst1,
 	ChargeBurst2,
 	FalconBurst2,
-	JunkBullet
-};
-
-// 적군 총알 종류
-enum class EnemyBulletType
-{
-	JunkBullet
+	JunkBullet,
+	SiegeShoot
 };
 
 // 경직 관련

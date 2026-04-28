@@ -513,6 +513,7 @@ void X::attack(void)
 		bursterEffectAlpha = 255;
 		attackHandEffect->setFrameX(0);
 		effectAnimSpeed = 0.05f;
+		
 
 		burstloop = true;
 		lastShootTime = now;
@@ -1234,6 +1235,6 @@ ShootEvent X::makeShootEvent(BulletType bType)
 		? pos.x + status.hitBoxWidth / 2 + (busterPos.x + pStatus.firePointX) : pos.x - status.hitBoxWidth / 2 - (busterPos.x + pStatus.firePointX);
 	shootEvent.y = pos.y - status.hitBoxHeight + pStatus.firePointY;
 	shootEvent.direct = status.lookRight != (currentState == CharacterState::WallSlide);
-
+	
 	return shootEvent;
 }

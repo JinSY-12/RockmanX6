@@ -109,7 +109,7 @@ void Junkroid::attack(void)
     shootEvent.x = (eStatus.worldRect.left + eStatus.worldRect.right) / 2;
     shootEvent.y = eStatus.worldRect.top + fPos.y;
     shootEvent.direct = status.lookRight;
-
+    
     EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
 
 }

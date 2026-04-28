@@ -4,6 +4,8 @@
 
 #define BOSS_PATTERN_MAXLIST 5
 
+class Player;
+
 class BossBase : public CombatEntity
 {
 
@@ -28,10 +30,17 @@ protected:
 		RECT bWorldRect;	
 	};
 
-	bool isPattern;
+protected:
+	Player* player;
+	ShootEvent shootEvent;
 
+	bool isPattern;
 	int parrternList[BOSS_PATTERN_MAXLIST];
 
+public:
+	virtual void bossAppearance();
 
+	inline void settingPlayer(Player* p) { player = p; }
+	virtual ShootEvent makeShootEvent(BulletType bType);
 };
 

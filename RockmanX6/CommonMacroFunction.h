@@ -74,3 +74,22 @@ inline void DrawTextColor(HDC hdc, const std::string& text, int x, int y, COLORR
 	// 글자 위치 출력
 	TextOutA(hdc, x, y, text.c_str(), (int)text.length());
 }
+
+struct Vector2
+{
+	float x, y;
+};
+
+// 벡터 길이 연산 함수
+inline float length(const Vector2& v)
+{
+	return sqrt(v.x * v.x + v.y * v.y);
+}
+
+// 단위 벡터 계산 함수
+inline Vector2 normalize(const Vector2& v)
+{
+	float len = length(v);
+	if (len == 0) return { 0, 0 };
+	return { v.x / len, v.y / len };
+}

@@ -30,14 +30,9 @@ void CollisionManager::render(void)
 
 void CollisionManager::checkCollisions(void)
 {
-	checkPlayerVsEnemy();
-	checkPlayerVsObject();
-	checkPlayerVsBullet();
-
-	checkBulletVsEnemy();
-	checkBulletVsObject();
-
-	checkEnemyVsBullet();
+	checkContact();
+	checkSaberCollision();
+	checkBulletCollision();
 }
 
 void CollisionManager::checkPlayerVsEnemy(void)
@@ -94,8 +89,6 @@ void CollisionManager::checkPlayerVsObject(void)
 	{
 		RECT temp;
 		
-		// cout << "오브젝트 위치 : " << object->getObjectHitbox().left << endl;;
-
 		if (IntersectRect(&temp, &player->getSaberRect(), &object->getObjectHitbox()) && !object->getOverPower() && player->getCanHit())
 		{
 			switch (object->getObjectType())
@@ -118,83 +111,150 @@ void CollisionManager::checkPlayerVsObject(void)
 	}
 }
 
-void CollisionManager::checkPlayerVsBullet(void)
+void CollisionManager::checkContact(void)
 {
-	RECT temp;
-
-	for (auto& bullet : bullets->getEnemyBullet())
+	// 플레이어와 적이 서로 닿아있는지 판정
+	for (auto& enemy : ememies->getEnemy())
 	{
-		if (IntersectRect(&temp, &bullet->getBulletRect(), &player->getPlayerHitBox()) && !player->getOverPower() && !player->getIsDead())
+		RECT temp;
+
+		if (IntersectRect(&temp, &player->getPlayerHitBox(), &enemy->getEnemyHitBox()) && !player->getOverPower()
+			|| IntersectRect(&temp, &player->getPlayerHitBox(), &enemy->getEnemysubHitBox()) && !player->getOverPower())
 		{
-			damageEvent.attacker = player;
+			damageEvent.attacker = enemy;
 			damageEvent.target = player;
-			damageEvent.bType = bullet->getBulletType();
-			damageEvent.damage = bullet->getBulletDamage();
-			damageEvent.bullet = bullet;
-			EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
+			damageEvent.dType = DamageType::Touch;
+			damageEvent.damage = damageEvent.attacker->getPhyscialDamage();
+			EVENTMANAGER->dispatchEvents({ EventType::TouchDamage, &damageEvent });
 			break;
 		}
 	}
 }
 
-void CollisionManager::checkBulletVsEnemy(void)
+void CollisionManager::checkSaberCollision(void)
 {
+	// 플레이어의 세이버 공격이 대상에게 닿았는지 판정
+
+	// 세이버 vs 적
 	for (auto& enemy : ememies->getEnemy())
 	{
 		RECT temp;
 
-		for (auto& bullet : bullets->getBullet())
+		if (IntersectRect(&temp, &player->getSaberRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && player->getCanHit()
+			|| IntersectRect(&temp, &player->getSaberRect(), &enemy->getEnemysubHitBox()) && !enemy->getOverPower() && player->getCanHit())
 		{
-			if (IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && !enemy->getIsDead()
-				|| IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemysubHitBox()) && !enemy->getOverPower() && !enemy->getIsDead())
+			player->setAnimDelay(true);
+
+			switch (enemy->getEnemyType())
 			{
-				switch (enemy->getEnemyType())
+			case EnemyType::MetaDridler:
+				EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, enemy->getEnemyPos().x, player->getPos().y, enemy->getWidth(), enemy->getHeight(), player->getLookRight());
+				SOUNDMANAGER->play("SFX_Block", 0.5f);
+				break;
+
+			default:
+				damageEvent.attacker = player;
+				damageEvent.target = enemy;
+				damageEvent.dType = DamageType::Saber;
+				damageEvent.damage = damageEvent.attacker->getPhyscialDamage();
+				EVENTMANAGER->dispatchEvents({ EventType::TouchDamage, &damageEvent });
+				break;
+			}
+		}
+	}
+
+	// 세이버 vs 오브젝트
+	for (auto& object : objects->getObject())
+	{
+		RECT temp;
+
+		if (IntersectRect(&temp, &player->getSaberRect(), &object->getObjectHitbox()) && !object->getOverPower() && player->getCanHit())
+		{
+			switch (object->getObjectType())
+			{
+			case ObjectType::Block:
+				// 튕기는 이펙트
+				player->setAnimDelay(true);
+				damageEvent.attacker = player;
+				damageEvent.target = object;
+				damageEvent.dType = DamageType::Saber;
+				damageEvent.damage = damageEvent.attacker->getPhyscialDamage();
+				EVENTMANAGER->dispatchEvents({ EventType::TouchDamage, &damageEvent });
+				break;
+
+			default:
+
+				break;
+			}
+		}
+	}
+}
+
+void CollisionManager::checkBulletCollision(void)
+{
+	// 모든 총알의 충돌을 체크
+	// 총알을 발사한 주체가 누구인지에 따라서 따로 판정 체크
+
+	RECT temp;
+
+	for (auto& bullet : bullets->getBullet())
+	{
+		if (bullet->getBulletFaction() == BulletFaction::Enemy)
+		{
+			if (IntersectRect(&temp, &bullet->getBulletRect(), &player->getPlayerHitBox()) && !player->getOverPower() && !player->getIsDead())
+			{
+				damageEvent.target = player;
+				damageEvent.bType = bullet->getBulletType();
+				damageEvent.damage = bullet->getBulletDamage();
+				damageEvent.bullet = bullet;
+				EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
+				break;
+			}
+		}
+
+		else if (bullet->getBulletFaction() == BulletFaction::Player)
+		{
+			for (auto& enemy : ememies->getEnemy())
+			{
+				if (IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && !enemy->getIsDead()
+					|| IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemysubHitBox()) && !enemy->getOverPower() && !enemy->getIsDead())
 				{
+					switch (enemy->getEnemyType())
+					{
 					case EnemyType::MetaDridler:
 						EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, bullet->getBulletPosX(), bullet->getBulletPosY(), bullet->getBulletWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
 						SOUNDMANAGER->play("SFX_Block", 0.5f);
 						bullet->setBulletFire(false);
 						break;
 					default:
-						damageEvent.attacker = player;
 						damageEvent.target = enemy;
 						damageEvent.bType = bullet->getBulletType();
 						damageEvent.damage = bullet->getBulletDamage();
 						damageEvent.bullet = bullet;
 						EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
 						break;
+					}
 				}
 			}
 		}
-	}
-
-	for (auto& object : objects->getObject())
-	{
-		RECT temp;
 		
-		for (auto& bullet : bullets->getBullet())
+		for (auto& object : objects->getObject())
 		{
-			if (IntersectRect(&temp, &bullet->getBulletRect(), &object->getObjectHitbox()) && !object->getIsDead())
+			RECT temp;
+
+			for (auto& bullet : bullets->getBullet())
 			{
-				damageEvent.attacker = player;
-				damageEvent.target = object;
-				damageEvent.bType = bullet->getBulletType();
-				damageEvent.damage = bullet->getBulletDamage();
-				damageEvent.bullet = bullet;
-				EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent});
-				break;
+				if (IntersectRect(&temp, &bullet->getBulletRect(), &object->getObjectHitbox()) && !object->getIsDead())
+				{
+					damageEvent.attacker = player;
+					damageEvent.target = object;
+					damageEvent.bType = bullet->getBulletType();
+					damageEvent.damage = bullet->getBulletDamage();
+					damageEvent.bullet = bullet;
+					EVENTMANAGER->dispatchEvents({ EventType::BulletDamage, &damageEvent });
+					break;
+				}
 			}
-		}
+		}		
 	}
-
-}
-
-void CollisionManager::checkBulletVsObject(void)
-{
-
-}
-
-void CollisionManager::checkEnemyVsBullet(void)
-{
-
 }

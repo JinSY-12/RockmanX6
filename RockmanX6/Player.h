@@ -1,12 +1,9 @@
 #pragma once
-// #include "GameNode.h"
 #include "CombatEntity.h"
 #include "EffectType.h"
 #include "BulletType.h"
 #include "SoundType.h"
 #include "Event.h"
-
-class BulletManager;
 
 class Player : public CombatEntity
 {
@@ -34,13 +31,6 @@ protected:
 #pragma endregion
 
 #pragma region PlayerStruct
-	/*
-	struct CharcterPos
-	{
-		int x;
-		int y;
-	};
-	*/
 	struct Anim
 	{
 		int x;
@@ -102,7 +92,7 @@ protected:
 		COLORREF lowDamaged;
 		COLORREF highDamaged;
 	};
-	
+
 	// 캐릭터 메인 설정값
 	struct PlayerStatus
 	{
@@ -125,7 +115,7 @@ protected:
 		float dashSpeed;
 		float jumpPower;
 		float velocityX;
-		
+
 		// 상태값
 		bool invincible;
 		// bool lookRight;
@@ -135,7 +125,7 @@ protected:
 
 		bool touchLeft;
 		bool touchRight;
-		
+
 		// 점프 관련
 		float velocityY;
 		float maxFallSpeed;
@@ -222,14 +212,12 @@ protected:
 	// 사운드 관련
 	string soundResult;
 
-	BulletManager* bManager;
-
 	// 키 입력 관련
 	bool multiInput;
 	bool pressLeft;
 	bool pressRight;
 	bool lastKeyIsRight;
-	
+
 	// 점프 관련
 	float wallkickTimer;
 	float wallkickMaxTime;
@@ -242,7 +230,7 @@ protected:
 	float dashSpeed;
 	bool pressDash;
 	bool aniDash;
-	
+
 	float afterImageTimer;
 	float afterImageInterval;
 	bool hideAfterimage;
@@ -307,7 +295,6 @@ public:
 	void applyForce(void);
 	void sfxPlay(void);
 	void soundPlay(string soundName);
-	void setBulletManager(BulletManager* manager) { bManager = manager; };
 
 	// 캐릭터 스폰
 	virtual void spawn(int x, int y);
@@ -333,7 +320,7 @@ public:
 	inline int getPlayerTop(void) { return pos.y - status.hitBoxHeight; }
 	inline int getPlayerBottom(void) { return pos.y; }
 	inline int getPlayerLeft(void) { return pos.x - status.hitBoxWidth / 2; }
-	inline int getPlayerRight(void) { return pos.x + status.hitBoxWidth /2; }
+	inline int getPlayerRight(void) { return pos.x + status.hitBoxWidth / 2; }
 	inline bool getCanHit(void) { return canHit; }
 	inline int getPlayerHitBoxWidth(void) { return status.hitBoxWidth; }
 	Progress getProgress(void) { return progress; }
@@ -341,7 +328,6 @@ public:
 	inline float getVelocityX() { return pStatus.velocityX; }
 	inline float getVelocityY() { return pStatus.velocityY; }
 
-	
 
 	void setOverPower(bool op, BulletSize bullet);
 	void setAnimDelay(bool delay) { animDelay = delay; }
@@ -377,7 +363,7 @@ public:
 			int right = rightline - CAMERAMANAGER->getCameraPos().x;
 			pStatus.hitBox.right = right;
 			pStatus.hitBox.left = pStatus.hitBox.right - status.hitBoxWidth;
-			
+
 			pStatus.velocityX = 0.0f;
 
 			pStatus.isWallKick = false;
@@ -387,7 +373,7 @@ public:
 	inline void setIsOnGround(bool OnGround, int topline)
 	{
 		pStatus.isOnGround = OnGround;
-		
+
 		if (pStatus.isOnGround == true)
 		{
 			pos.y = topline - 2;
@@ -415,10 +401,10 @@ public:
 
 		if (top == true)
 		{
-			pos.y = bottomline + 3  + status.hitBoxHeight;
+			pos.y = bottomline + 3 + status.hitBoxHeight;
 
 			int top = bottomline - CAMERAMANAGER->getCameraPos().y;
-			pStatus.hitBox.top = top + 3 ;
+			pStatus.hitBox.top = top + 3;
 			pStatus.hitBox.bottom = pStatus.hitBox.top + status.hitBoxHeight;
 
 			pStatus.velocityY = 0.0f;
@@ -430,10 +416,10 @@ public:
 	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
 	inline void setLadderAble(bool able) { ladderAble = able; }
 	inline void setLadderEnd(bool able) { ladderEnd = able; }
-	
+
 	// 스탯 관련
 	void reduceHp(int damage);
-	
+
 	inline void reduceMp(int damage) { status.mp -= damage; }
 	inline void invincibleTimerUpdate()
 	{
@@ -445,7 +431,7 @@ public:
 				// 무적 시작 + 이동 가능
 				pStatus.invincibleTimer += 0.1f;
 
-				if (static_cast<int>(pStatus.invincibleTimer * 10) % 5  == 0)
+				if (static_cast<int>(pStatus.invincibleTimer * 10) % 5 == 0)
 				{
 					charAlpha = (charAlpha >= 200) ? 50 : 200;
 				}
@@ -459,7 +445,7 @@ public:
 					pStatus.invincibleTimer = 0.0f;
 				}
 			}
-		}		
+		}
 	}
 
 	inline void isDead(void)
@@ -476,14 +462,12 @@ public:
 	virtual void colorChange(void);
 
 	void changeAnimation(const string& animName, int frame);
+	virtual ShootEvent makeShootEvent(BulletType bType);
 
-	
 	virtual void coolDownControl(void);
 	virtual void multiHitControl(void);
 
 	void ladderUpper();
 
-	virtual ShootEvent makeShootEvent(BulletType bType);
-	
 };
 

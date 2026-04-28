@@ -164,3 +164,9 @@ void EnemyBase::enemyInvincibleTimerUpdate(void)
 		eStatus.invincibleTimer += 0.1f;
 	}
 }
+
+ShootEvent EnemyBase::makeShootEvent(BulletType bType)
+{
+	// Do Nothing!!
+	return ShootEvent();
+}

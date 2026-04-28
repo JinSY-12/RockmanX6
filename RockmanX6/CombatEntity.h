@@ -1,6 +1,8 @@
 #pragma once
 #include <Windows.h>
 
+class BulletManager;
+
 enum class CombatEntityType
 {
 	Player,
@@ -44,6 +46,9 @@ protected:
 	Position pos;
 	Position hitBoxCenter;
 
+	BulletManager* bManager;
+
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -65,6 +70,8 @@ public:
 
 	float getPhyscialDamage() { return status.physicalDamage; }
 	CombatEntityType getEntityType() const { return status.type; }
+	
+	void settingBulletManager(BulletManager* bullet) { bManager = bullet; }
 
 	inline float lerp(float start, float end, float time)
 	{

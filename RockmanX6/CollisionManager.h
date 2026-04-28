@@ -28,12 +28,10 @@ public:
 
 	void checkPlayerVsEnemy(void);
 	void checkPlayerVsObject(void);
-	void checkPlayerVsBullet(void);
-
-	void checkBulletVsEnemy(void);
-	void checkBulletVsObject(void);
-	
-	void checkEnemyVsBullet(void);
+		
+	void checkContact(void);
+	void checkSaberCollision(void);
+	void checkBulletCollision(void);
 
 	void settingManager(Player* pl, EnemyManager* enemy, BulletManager* bullet, ObjectManager* object)
 	{

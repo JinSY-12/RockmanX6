@@ -10,7 +10,7 @@ void BulletManager::onEvent(const Event& event)
 	case EventType::ShootBulltet:
 	{
 		ShootEvent* shootData = static_cast<ShootEvent*>(event.data);
-		fire(shootData->bType, shootData->x, shootData->y, shootData->direct);
+		fire(shootData->bType, shootData->x, shootData->y, shootData->direct, shootData->velocityX, shootData->velocityY);
 	}
 		break;
 	case EventType::BulletErase:
@@ -64,54 +64,84 @@ void BulletManager::render(void)
 	}
 }
 	
-void BulletManager::fire(BulletType pType, int x, int y, bool direct)
+void BulletManager::fire(BulletType type, int x, int y, bool direct, float velocityX, float velocityY)
 {
-	switch (pType)
+	/*
+	switch (type)
 	{
 		// 버스터
 		case BulletType::Burster:
 			bullet = new Burster;
-			bullet->init(pType, x, y, direct);
+			bullet->init(type, x, y, direct);
 			_vBullet.push_back(bullet);
 			break;
 		case BulletType::ChargeBurst1:
 			bullet = new Burster;
-			bullet->init(pType, x, y, direct);
+			bullet->init(type, x, y, direct);
 			_vBullet.push_back(bullet);
 			break;
 		case BulletType::ChargeBurst2:
 			bullet = new Burster;
-			bullet->init(pType, x, y, direct);
+			bullet->init(type, x, y, direct);
 			_vBullet.push_back(bullet);
 			break;
 		// 제로 버스터 추가 예정
 		//case BulletType::ZeroBurster:
 		//	break;
+		
 		// 적 총알
 		case BulletType::JunkBullet:
 			bullet = new JunkBullet;
-			bullet->init(pType, x, y, direct);
+			bullet->init(type, x, y, direct);
+			_vEnemyBullet.push_back(bullet);
+			break;
+		case BulletType::SiegeShoot:
+			bullet = new SiegeShoot;
+			bullet->init(type, x, y, direct, velocityX, velocityY);
 			_vEnemyBullet.push_back(bullet);
 			break;
 		defalut:
 			break;
 	}
-}
+	*/
 
-void BulletManager::fire(EnemyBulletType eType, int x, int y, bool direct)
-{
-	switch (eType)
+	switch (type)
 	{
-		
-	case EnemyBulletType::JunkBullet:
-		bullet = new JunkBullet;
-		bullet->init(eType, x, y, direct);
-		_vEnemyBullet.push_back(bullet);
+		// 버스터
+	case BulletType::Burster:
+		bullet = new Burster;
+
 		break;
-	
+	case BulletType::ChargeBurst1:
+		bullet = new Burster;
+		//bullet->init(type, x, y, direct, velocityX, velocityY);
+		//_vBullet.push_back(bullet);
+		break;
+	case BulletType::ChargeBurst2:
+		bullet = new Burster;
+		// bullet->init(type, x, y, direct, velocityX, velocityY);
+		//_vBullet.push_back(bullet);
+		break;
+		// 제로 버스터 추가 예정
+		//case BulletType::ZeroBurster:
+		//	break;
+
+		// 적 총알
+	case BulletType::JunkBullet:
+		bullet = new JunkBullet;
+		//bullet->init(type, x, y, direct);
+		//_vEnemyBullet.push_back(bullet);
+		break;
+	case BulletType::SiegeShoot:
+		bullet = new SiegeShoot;
+		//bullet->init(type, x, y, direct, velocityX, velocityY);
+		//_vEnemyBullet.push_back(bullet);
+		break;
 	defalut:
 		break;
 	}
+	bullet->init(type, x, y, direct, velocityX, velocityY);
+	_vBullet.push_back(bullet);
 }
 
 void BulletManager::checkPlayerCollision()

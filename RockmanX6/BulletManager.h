@@ -34,8 +34,8 @@ public:
 	void update(void);
 	void render(void);
 
-	void fire(BulletType pType, int x, int y, bool direct);
-	void fire(EnemyBulletType eType, int x, int y, bool direct);
+	// 직선 공격
+	void fire(BulletType type, int x, int y, bool direct, float velocityX, float velocityY);
 
 	vector<Bullet*>& getBullet() { return _vBullet; }
 	vector<Bullet*>& getEnemyBullet() { return _vEnemyBullet; }

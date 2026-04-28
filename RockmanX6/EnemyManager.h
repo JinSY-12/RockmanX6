@@ -2,6 +2,8 @@
 #include "GameNode.h"
 #include "BossType.h"
 #include "EnemyBase.h"
+#include "BossBase.h"
+#include "HighMax.h"
 #include "Junkroid.h"
 #include "MetaWheel.h"
 #include "MetaDridler.h"
@@ -31,6 +33,7 @@ private:
 	
 	Player* _player;
 	EnemyBase* _enemy;
+	BossBase* _boss;
 	BulletManager* _bManager;
 
 	string Map;

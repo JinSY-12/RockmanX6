@@ -7,10 +7,12 @@ class Bullet : public GameNode
 private:
 
 public:
+	
+
 	struct BulletStatus
 	{
 		GImage* shape;
-
+		BulletFaction faction;
 		BulletSize type;
 		RECT hitBox;
 		BulletType bType;
@@ -24,11 +26,14 @@ public:
 		int width;
 		int height;
 
-		float speed;
+		float velocityX;
+		float velocityY;
 
 		bool rightDirect;
 		bool isFire;
 		bool pierce;
+
+		float bulletSpeed;
 
 		int demage;
 	};
@@ -39,8 +44,7 @@ public:
 public:
 
 	virtual HRESULT init(void);
-	virtual HRESULT init(BulletType type, int x, int y, bool isRight);
-	virtual HRESULT init(EnemyBulletType type, int x, int y, bool isRight);
+	virtual HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX = 0.0f, float velocityY = 0.0f);
 	virtual void release(void);
 	virtual void update(void);
 	virtual void render(void);
@@ -54,12 +58,13 @@ public:
 
 	int getBulletWidth(void) { return bStatus.width; }
 	int getBulletHeight(void) { return bStatus.height; }
+	
+	BulletFaction getBulletFaction(void) { return bStatus.faction; }
 
 	bool getBulletDir(void) { return bStatus.rightDirect; }
 	void setBulletFire(bool fire) { bStatus.isFire = fire; }
 
 	BulletType getBulletType(void) { return bStatus.bType; }
-	// EnemyBulletType getEnemyBulletType(void) { return bStatus.eBType; }
 };
 
 
@@ -70,12 +75,15 @@ private:
 public:
 
 	HRESULT init(void);
-	HRESULT init(BulletType type, int x, int y, bool isRight);
+	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
 	void release(void);
-	void update(void);
+	void update(void) override;
 	void render(void) override;
 
-	Burster() { bStatus.isFire = false; }
+	Burster() {
+		bStatus.isFire = false;
+		bStatus.bulletSpeed = 25.0f;
+	}
 	~Burster() { }
 };
 
@@ -84,14 +92,37 @@ class JunkBullet : public Bullet
 {
 private:
 
+
 public:
 
 	HRESULT init(void);
-	HRESULT init(BulletType type, int x, int y, bool isRight);
+	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
 	void release(void);
-	void update(void);
+	void update(void) override;
 	void render(void) override;
 
-	JunkBullet() { bStatus.isFire = false; }
+	JunkBullet() {
+		bStatus.isFire = false;
+		bStatus.bulletSpeed = 5.0f;
+	}
 	~JunkBullet() { }
+};
+
+
+class SiegeShoot : public Bullet
+{
+private:
+	bool fireStart;
+
+public:
+
+	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
+	void update(void) override;
+	void render(void) override;
+
+	SiegeShoot() {
+		bStatus.isFire = false;
+		bStatus.bulletSpeed = 10.0f;
+	}
+	~SiegeShoot() {}
 };

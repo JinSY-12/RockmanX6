@@ -2,7 +2,6 @@
 #include "BulletType.h"
 #include "CombatEntity.h"
 
-class BulletManager;
 class Player;
 
 class EnemyBase : public CombatEntity
@@ -66,8 +65,9 @@ protected:
 	
 	EnemyType eType;
 
-	BulletManager* bManager;
 	Player* player;
+
+	ShootEvent shootEvent;
 
 public:
 	virtual void release(void);
@@ -106,12 +106,13 @@ public:
 	void setEnemyRightTouch(bool touch) { eStatus.touchRightWall = touch; }
 
 	// 공격, 피격 관련
-	inline void settingBulletManager(BulletManager* bullet) { bManager = bullet; }
 	inline void settingPlayer(Player* p) { player = p; }
 
 	virtual void checkPlayerCollision(void);
 	virtual void checkBulletCollision(void);
 
 	void enemyInvincibleTimerUpdate(void);
-};
 
+	virtual ShootEvent makeShootEvent(BulletType bType);
+
+};

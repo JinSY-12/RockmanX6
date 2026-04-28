@@ -82,7 +82,6 @@ void EnemyManager::spawnEnemy(EnemyType eType, int x, int y, int sub)
 
 void EnemyManager::spawnBoss(BossType bType, int x, int y)
 {
-
 }
 
 void EnemyManager::playExplodeEffect(EnemyType eType, int x, int y, int width, int height, int look)

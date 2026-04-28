@@ -21,7 +21,7 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 
 	cManager.settingManager(player.get(), &eManager, &bManager, &oManager);
 
-	player->setBulletManager(&bManager);
+	player->settingBulletManager(&bManager);
 
 	// 콜리전 매니저가 추가되면 삭제
 	eManager.setttingPlayer(player.get());
@@ -141,11 +141,11 @@ void StageScene::stageSettting(BossType bType)
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
 			// 시작점
-			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 사다리 테스트
 			// player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 보스 게이트 테스트
-			player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
 
 			player->setStageGravity(gravity);
 			rectSetting();
@@ -292,6 +292,8 @@ bool StageScene::noticeAnim(void)
 	/////////////////////////////////
 	// Warning 파트
 	/////////////////////////////////
+
+
 
 	return false;
 }

@@ -37,6 +37,8 @@ struct ShootEvent
 	BulletType bType;
 	int x;
 	int y;
+	float velocityX = 0.0f;
+	float velocityY = 0.0f;
 	bool direct;
 };
 
