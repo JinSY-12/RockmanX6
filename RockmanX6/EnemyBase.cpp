@@ -90,7 +90,7 @@ void EnemyBase::isDead(void)
 
 void EnemyBase::changeDirection(void)
 {
-	float angle = atan2f(getDiffPlayer().y, getDiffPlayer().x) * 180 / PI;
+	float angle = atan2f(getDiffPlayer(this->getCenterX(), this->getCenterY()).y, getDiffPlayer(this->getCenterX(), this->getCenterY()).x) * 180 / PI;
 
 	if (eState == EnemyState::Idle)
 	{
@@ -171,10 +171,10 @@ ShootEvent EnemyBase::makeShootEvent(BulletType bType)
 	return ShootEvent();
 }
 
-Vector2 EnemyBase::getDiffPlayer(void)
+Vector2 EnemyBase::getDiffPlayer(int firePointX, int firePointY)
 {
-	diff = { static_cast<float>(player->getPos().x - this->pos.x),
-						 static_cast<float>(player->getPos().y - this->pos.y) };
+	diff = { static_cast<float>(player->getCenterX() - firePointX),
+						 static_cast<float>(player->getCenterY() - firePointY) };
 
 	return diff;
 }

@@ -30,6 +30,8 @@ public:
         int     frameWidth;             // 1 프레임 가로 크기
         int     frameHeight;            // 1 프레임 가로 크기
         BYTE    loadType;               // 
+        bool    playOnce;
+        bool    changeReady;
 
 
         tagImage()
@@ -65,10 +67,12 @@ private:
     LPIMAGE_INFO    _blendImage;
 
     bool aniPlaying;
+    
 
     COLORREF* mPixels;
 
     BYTE* bmPixels = nullptr; // raw pixel 저장용
+
 
 public:
 
@@ -76,7 +80,7 @@ public:
     HRESULT init(const DWORD resId, int width, int height, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
     HRESULT init(const char* fileName, int width, int height, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
     HRESULT init(const char* fileName, float x, float y, int width, int height, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
-    HRESULT init(const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
+    HRESULT init(const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0), bool playOnce = false);
     HRESULT init(const char* fileName, float x, float y, int width, int height, int maxFrameX, int maxFrameY, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
     HRESULT initForAlphaBlend(void);
     HRESULT initFromHBITMAP(HBITMAP hBmp, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor);
@@ -217,6 +221,8 @@ public:
         if (_imageInfo->hBit) DeleteObject(_imageInfo->hBit);
         _imageInfo->hBit = hBmp;
     }
+
+	inline bool getChangeReady(void) { return _imageInfo->changeReady; }
 
     inline GImage* cloneImage()
     {

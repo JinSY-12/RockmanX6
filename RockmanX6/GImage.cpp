@@ -115,7 +115,6 @@ HRESULT GImage::init(const char* fileName, int width, int height, bool isTrans, 
     return S_OK;
 }
 
-
 HRESULT GImage::init(const char* fileName, float x, float y, int width, int height, bool isTrans, COLORREF transColor)
 {
     aniPlaying = true;
@@ -156,7 +155,7 @@ HRESULT GImage::init(const char* fileName, float x, float y, int width, int heig
     return S_OK;
 }
 
-HRESULT GImage::init(const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor)
+HRESULT GImage::init(const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor, bool playOnce)
 {
     aniPlaying = true;
 
@@ -179,7 +178,8 @@ HRESULT GImage::init(const char* fileName, int width, int height, int maxFrameX,
     _imageInfo->maxFrameY = maxFrameY - 1;
     _imageInfo->frameWidth = width / maxFrameX;          // 1프레임의 대한 넓이
     _imageInfo->frameHeight = height / maxFrameY;        // 1프레임의 대한 높이
-
+	_imageInfo->playOnce = playOnce;
+	_imageInfo->changeReady = false;
 
     int len = strlen(fileName);
 
@@ -377,7 +377,12 @@ void GImage::play(float frameUpdateSec)
 
             if (_imageInfo->currentFrameX > _imageInfo->maxFrameX)
             {
-                _imageInfo->currentFrameX = 0;
+                if (_imageInfo->playOnce)
+                {
+                    _imageInfo->currentFrameX = _imageInfo->maxFrameX;
+                    _imageInfo->changeReady = true;
+                }
+                else _imageInfo->currentFrameX = 0;
             }
 
             _imageInfo->elpasedSec -= frameUpdateSec;

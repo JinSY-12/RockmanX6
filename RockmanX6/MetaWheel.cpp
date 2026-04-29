@@ -62,8 +62,6 @@ void MetaWheel::update(void)
 {
     setEnemyHitbox();
     checkPlayerCollision();
-    // checkPlayerAttCollision();
-    // checkBulletCollision();
     enemyInvincibleTimerUpdate();
     isDead();
 

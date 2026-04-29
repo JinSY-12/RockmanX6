@@ -20,16 +20,16 @@ private:
 	typedef vector<EnemyBase*> vEnemyBase;
 	typedef vector<EnemyBase*>::iterator viEnemyBase;
 
-	// typedef vector<BossBase*> vBossBase;
-	// typedef vector<BossBase*>::iterator viBossBase;
+	typedef vector<BossBase*> vBossBase;
+	typedef vector<BossBase*>::iterator viBossBase;
 
 private:
 	
 	vEnemyBase _vEnemy;
 	viEnemyBase _viEnemy;
 
-	// vBossBase _vBoss;
-	// viBossBase _viBoss;
+	vBossBase _vBoss;
+	viBossBase _viBoss;
 	
 	Player* _player;
 	EnemyBase* _enemy;
@@ -49,7 +49,7 @@ public:
 	
 	void checkDead(void);
 
-	void spawnEnemy(EnemyType eType, int x, int y, int sub);
+	void spawnEnemy(EnemyType eType, int x, int y, int sub = 0);
 	void spawnBoss(BossType bType, int x, int y);
 
 	void setttingPlayer(Player* player) { _player = player; }

@@ -60,6 +60,8 @@ public:
 	virtual void render(HDC memDC);
 
 	Position getPos() { return pos; }
+	int getCenterX() { return pos.x + (status.width / 2); }
+	int getCenterY() { return pos.y - (status.height / 2); }
 	int getWidth() { return status.width; }
 	int getHeight() { return status.height; }
 	bool getLookRight() { return status.lookRight; }

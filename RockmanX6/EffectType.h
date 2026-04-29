@@ -13,5 +13,6 @@ enum class EffectType
 	SaberHit_1,
 	SaberHit_2,
 	SaberHit_3,
-	SaberHit_4
+	SaberHit_4,
+	None
 };

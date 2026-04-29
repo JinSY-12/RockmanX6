@@ -7,8 +7,6 @@ class Bullet : public GameNode
 private:
 
 public:
-	
-
 	struct BulletStatus
 	{
 		GImage* shape;
@@ -16,6 +14,8 @@ public:
 		BulletSize type;
 		RECT hitBox;
 		BulletType bType;
+
+		string soundName;
 
 		struct Pos
 		{
@@ -33,8 +33,13 @@ public:
 		bool isFire;
 		bool fireStart = true;
 		bool pierce;
-
+		float animSpeed;
 		float bulletSpeed;
+
+		bool wallTouch = false;
+
+		int animOffsetX = 0;
+		int animOffsetY = 0;
 
 		int demage;
 	};
@@ -64,6 +69,9 @@ public:
 	bool getBulletDir(void) { return bStatus.rightDirect; }
 	void setBulletFire(bool fire) { bStatus.isFire = fire; }
 
+	bool getWallTouch(void) { return bStatus.wallTouch; }
+	void setWallTouch(bool touch) { bStatus.wallTouch = touch; }
+
 	BulletType getBulletType(void) { return bStatus.bType; }
 };
 
@@ -78,6 +86,7 @@ public:
 
 	Burster() {
 		bStatus.isFire = false;
+		bStatus.animSpeed = 0.05f;
 		bStatus.bulletSpeed = 25.0f;
 	}
 	~Burster() { }
@@ -94,6 +103,7 @@ public:
 
 	JunkBullet() {
 		bStatus.isFire = false;
+		bStatus.animSpeed = 0.05f;
 		bStatus.bulletSpeed = 5.0f;
 	}
 	~JunkBullet() { }
@@ -112,7 +122,27 @@ public:
 
 	SiegeShoot() {
 		bStatus.isFire = false;
+		bStatus.animSpeed = 0.1f;
 		bStatus.bulletSpeed = 10.0f;
 	}
 	~SiegeShoot() {}
+};
+
+class DeathBall1 : public Bullet
+{
+
+private:
+	int fireStartPointY;
+
+public:
+	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
+	void update(void) override;
+
+	DeathBall1()
+	{
+		bStatus.isFire = false;
+		bStatus.animSpeed = 0.1f;
+		bStatus.bulletSpeed = 5.0f;
+	}
+	~DeathBall1() {}
 };

@@ -15,7 +15,8 @@ enum class BulletType
 	ChargeBurst2,
 	FalconBurst2,
 	JunkBullet,
-	SiegeShoot
+	SiegeShoot,
+	DeathBall1
 };
 
 // 경직 관련

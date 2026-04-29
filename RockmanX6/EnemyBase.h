@@ -93,7 +93,7 @@ public:
 	void chasePlayer(float angle);
 	void changeDirection(void);
 
-	Vector2 getDiffPlayer(void);
+	Vector2 getDiffPlayer(int firePointX, int firePointY);
 
 	// getter, setter
 	RECT getEnemySight() { return eStatus.attSight; }

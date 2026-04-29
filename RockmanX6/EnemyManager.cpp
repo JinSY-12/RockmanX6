@@ -21,10 +21,17 @@ void EnemyManager::update(void)
 		(*enemy)->update();
 	}
 
+	for (auto boss = _vBoss.begin(); boss != _vBoss.end(); ++boss)
+	{
+		(*boss)->update();
+	}
+
 	if (_vEnemy.size() > 0)
 	{
 		checkDead();
 	}
+
+	
 }
 
 void EnemyManager::render(void)
@@ -32,6 +39,11 @@ void EnemyManager::render(void)
 	for (auto enemy = _vEnemy.begin(); enemy != _vEnemy.end(); ++enemy)
 	{
 		(*enemy)->render(getMemDC());
+	}
+
+	for (auto boss = _vBoss.begin(); boss != _vBoss.end(); ++boss)
+	{
+		(*boss)->render(getMemDC());
 	}
 }
 
@@ -82,6 +94,17 @@ void EnemyManager::spawnEnemy(EnemyType eType, int x, int y, int sub)
 
 void EnemyManager::spawnBoss(BossType bType, int x, int y)
 {
+	switch (bType)
+	{
+	case BossType::Intro:
+		_boss = new HighMax;
+		_boss->init(x, y);
+		_boss->settingBulletManager(_bManager);
+		_boss->settingPlayer(_player);
+		_vBoss.push_back(_boss);
+		break;
+	}
+
 }
 
 void EnemyManager::playExplodeEffect(EnemyType eType, int x, int y, int width, int height, int look)

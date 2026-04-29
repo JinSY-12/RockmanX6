@@ -2,7 +2,6 @@
 #include "Junkroid.h"
 #include "BulletManager.h"
 #include "Player.h"
-#include "MetaDridler.h"
 
 HRESULT Junkroid::init(int x, int y)
 {
@@ -20,7 +19,8 @@ HRESULT Junkroid::init(int x, int y)
     status.height = eStatus.eImage->getFrameHeight() - 10 * SCALE_FACTOR;
 
     eStatus.sightWidth = status.width * 2;
-    eStatus.sightHeight = status.height - 16 * SCALE_FACTOR;
+    eStatus.sightHeight = status.height * 3;
+    // eStatus.sightHeight = status.height - 16 * SCALE_FACTOR;
 
     eState = EnemyState::Idle;
     status.overpower = false;
@@ -98,12 +98,12 @@ void Junkroid::attack(void)
 
     ShootEvent shootEvent;
 
-    shootEvent.bType = BulletType::SiegeShoot;
+    shootEvent.bType = BulletType::JunkBullet;
     shootEvent.x = (eStatus.worldRect.left + eStatus.worldRect.right) / 2;
     shootEvent.y = eStatus.worldRect.top + fPos.y;
     shootEvent.direct = status.lookRight;
-    shootEvent.velocityX = normalize(getDiffPlayer()).x;
-    shootEvent.velocityY = normalize(getDiffPlayer()).y;
+    shootEvent.velocityX = normalize(getDiffPlayer(shootEvent.x, shootEvent.y)).x;
+    shootEvent.velocityY = normalize(getDiffPlayer(shootEvent.x, shootEvent.y)).y;
 
     EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
 

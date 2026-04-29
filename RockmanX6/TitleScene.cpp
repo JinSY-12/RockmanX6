@@ -313,6 +313,15 @@ void TitleScene::addImage(void)
 	// 보스
 	//////////////////////////////////
 
+	IMAGEMANAGER->addFrameImage("HighMax_Idle", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxIdle.bmp", 696 * SCALE_FACTOR, 236 * SCALE_FACTOR, 8, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("HighMax_Move", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxMove.bmp", 87 * SCALE_FACTOR, 220 * SCALE_FACTOR, 1, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("HighMax_AttReady", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxAttReady.bmp", 210 * SCALE_FACTOR, 220 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("HighMax_RightReady", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxRightReady.bmp", 210 * SCALE_FACTOR, 220 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("HighMax_RightAtt", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxRightAtt.bmp", 315 * SCALE_FACTOR, 220 * SCALE_FACTOR, 3, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("HighMax_LeftReady", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxLeftReady.bmp", 210 * SCALE_FACTOR, 220 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("HighMax_LeftAtt", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxLeftAtt.bmp", 315 * SCALE_FACTOR, 220 * SCALE_FACTOR, 3, 2, true, MAGENTA);
+
 	//////////////////////////////////
 	// 미니언
 	//////////////////////////////////
@@ -331,7 +340,7 @@ void TitleScene::addImage(void)
 	//////////////////////////////////
 
 	IMAGEMANAGER->addFrameImage("SFX_JunkBullet", "Resources/Image/Enemy/Bullet/Minion/SFX_JunkBullet.bmp", 16 * SCALE_FACTOR, 32 * SCALE_FACTOR, 1, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("SFX_SiegeShootFire", "Resources/Image/Enemy/Bullet/Boss/SFX_SiegeShootFire.bmp", 60 * SCALE_FACTOR, 60 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_SiegeShootFire", "Resources/Image/Enemy/Bullet/Boss/SFX_SiegeShootFire.bmp", 60 * SCALE_FACTOR, 60 * SCALE_FACTOR, 2, 2, true, MAGENTA, true);
 	IMAGEMANAGER->addFrameImage("SFX_SiegeShootLoop", "Resources/Image/Enemy/Bullet/Boss/SFX_SiegeShootLoop.bmp", 240 * SCALE_FACTOR, 60 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 
 	//////////////////////////////////
@@ -437,7 +446,7 @@ void TitleScene::addSound(void)
 	//////////////////////////////////
 
 	//////////////////////////////////
-	// 곹옹 효과음
+	// 공통 효과음
 	//////////////////////////////////
 
 	SOUNDMANAGER->addSound("SFX_DashStart", "Resources/Sound/SFX/Character/SFX_DashStart.wav", false, false);
@@ -503,7 +512,7 @@ void TitleScene::addSound(void)
 	// 적 사운드
 	//////////////////////////////////
 
-
+	SOUNDMANAGER->addSound("SFX_SiegeShootFire", "Resources/Sound/SFX/Enemy/SFX_SiegeShootFire.wav", false, false);
 
 }
 

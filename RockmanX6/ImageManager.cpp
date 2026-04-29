@@ -72,7 +72,7 @@ GImage* ImageManager::addImage(string strKey, const char* fileName, float x, flo
 	return img;
 }
 
-GImage* ImageManager::addFrameImage(string strKey, const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor)
+GImage* ImageManager::addFrameImage(string strKey, const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor, bool playOnce)
 {
 	GImage* img = findImage(strKey);
 
@@ -80,7 +80,7 @@ GImage* ImageManager::addFrameImage(string strKey, const char* fileName, int wid
 
 	img = new GImage;
 
-	if (FAILED(img->init(fileName, width, height, maxFrameX, maxFrameY, isTrans, transColor)))
+	if (FAILED(img->init(fileName, width, height, maxFrameX, maxFrameY, isTrans, transColor, playOnce)))
 	{
 		SAFE_DELETE(img);
 		return NULL;

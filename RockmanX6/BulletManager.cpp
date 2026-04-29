@@ -47,8 +47,6 @@ void BulletManager::update(void)
 
 		else ++enemyBullets;
 	}
-
-	// if(_vEnemyBullet.size() > 0) checkPlayerCollision();
 }
 
 void BulletManager::render(void)
@@ -68,10 +66,9 @@ void BulletManager::fire(BulletType type, int x, int y, bool direct, float veloc
 {
 	switch (type)
 	{
-		// 버스터
+	// X 버스터
 	case BulletType::Burster:
 		bullet = new Burster;
-
 		break;
 	case BulletType::ChargeBurst1:
 		bullet = new Burster;
@@ -79,18 +76,16 @@ void BulletManager::fire(BulletType type, int x, int y, bool direct, float veloc
 	case BulletType::ChargeBurst2:
 		bullet = new Burster;
 		break;
-		// 제로 버스터 추가 예정
-		//case BulletType::ZeroBurster:
-		//	break;
-
-		// 적 총알
+	// 적 총알
 	case BulletType::JunkBullet:
 		bullet = new JunkBullet;
 		break;
 	case BulletType::SiegeShoot:
 		bullet = new SiegeShoot;
 		break;
-	defalut:
+	case BulletType::DeathBall1:
+		bullet = new DeathBall1;
+	default:
 		break;
 	}
 	bullet->init(type, x, y, direct, velocityX, velocityY);

@@ -84,12 +84,6 @@ void StageScene::update(void)
 		cManager.update();
 
 		EFFECTMANAGER->update();
-
-		if (KEYMANAGER->isOnceKeyDown('N'))
-		{
-			if (IMAGEMANAGER->findImage("Stage_Intro") == nullptr) cout << "!!!" << endl;
-			else cout << "Yes" << endl;
-		}
 	}
 }
 
@@ -140,8 +134,11 @@ void StageScene::stageSettting(BossType bType)
 			mPixelStage = IMAGEMANAGER->findImage("Pixel_Intro");
 			gravity = 0.6f;
 			stagBGM = "BGM_Stage_Intro";
+
+			// 빠른 적군 대전 테스트
+			player->init(WINSIZE_X / 3, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 시작점
-			player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 사다리 테스트
 			// player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 보스 게이트 테스트
@@ -178,24 +175,24 @@ void StageScene::enemySettting(BossType bType)
 	case BossType::Intro:
 
 		// 적 테스트 용도
-		
 		int up;
 		up = 50;
 
-		
+		eManager.spawnBoss(BossType::Intro, WINSIZE_X / 2, (905 - up) * SCALE_FACTOR);
+
 		// 세팅 시작
-		eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR, 0);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR, 0);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR, 0);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR, 0);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
 		// 
-		// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR, 0);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR, 0);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
 		//    
-		// eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR, 0);
-		// eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR, 0);
+		// eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
 		// 
-		// eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, (620 - up) * SCALE_FACTOR, 0);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, (620 - up) * SCALE_FACTOR);
 		// 
 		// eManager.spawnEnemy(EnemyType::MetaDridler, 4352 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 670 * SCALE_FACTOR);
 		// eManager.spawnEnemy(EnemyType::MetaDridler, 4640 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
@@ -208,6 +205,8 @@ void StageScene::enemySettting(BossType bType)
 		// 											
 		// eManager.spawnEnemy(EnemyType::MetaDridler, (5168 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 250 * SCALE_FACTOR);
 		// eManager.spawnEnemy(EnemyType::MetaDridler, (5280 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 220 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
+
 		// eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
 		break;
 
@@ -685,11 +684,44 @@ void StageScene::stageCollision(void)
 			if (IntersectRect(&temp, &(*it)->getBulletRect(), &(*floor))
 				&& (*it)->getBulletType() != BulletType::FalconBurst2)
 			{
-				SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.3f);
-				if((*it)->getBulletType() == BulletType::ChargeBurst2) EFFECTMANAGER->spawnEffect(EffectType::BursterHit_2, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
-				else EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, (*it)->getBulletPosX(), (*it)->getBulletPosY(), (*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+				EffectType etype;
+				string soundName;
 
-				bulletHit = true;
+				switch ((*it)->getBulletType())
+				{
+				case BulletType::ChargeBurst2:
+					etype = EffectType::BursterHit_2;
+					soundName = "SFX_X_Burster1Hit";
+					break;
+				case BulletType::ChargeBurst1:
+				case BulletType::Burster:
+					etype = EffectType::BursterHit_1;
+					soundName = "SFX_X_Burster1Hit";
+					break;
+				case BulletType::JunkBullet:
+					etype = EffectType::SmallEnemyBomb;
+					soundName = "SFX_SmallExplosion";
+					break;
+				case BulletType::SiegeShoot:
+					etype = EffectType::WallKick;
+					soundName = "None";
+					break;
+				case BulletType::DeathBall1:
+					etype = EffectType::None;
+					soundName = "None";
+					(*it)->setWallTouch(true);
+					break;
+					
+				default:
+					etype = EffectType::BursterHit_1;
+					soundName = "None";
+					break;
+				}
+
+				SOUNDMANAGER->play(soundName, 0.3f);
+				//EFFECTMANAGER->spawnEffect(etype, (*it)->getBulletPosX(), (*it)->getBulletPosY(),
+					//(*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+				if((*it)->getWallTouch() == false) bulletHit = true;
 				break;
 			}
 		}
@@ -698,6 +730,7 @@ void StageScene::stageCollision(void)
 		else  ++it;
 	}
 
+	/*
 	// 벽과 적 총알 충돌 판정 = 총알이 벽 관통이 안되게
 	vector<Bullet*>& enemyBullets = bManager.getEnemyBullet();
 
@@ -721,5 +754,7 @@ void StageScene::stageCollision(void)
 		if (bulletHit) it = enemyBullets.erase(it);
 		else  ++it;
 	}
+	*/
+
 }
 
