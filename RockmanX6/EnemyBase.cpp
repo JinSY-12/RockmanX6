@@ -165,10 +165,27 @@ void EnemyBase::enemyInvincibleTimerUpdate(void)
 	}
 }
 
-ShootEvent EnemyBase::makeShootEvent(BulletType bType)
+void EnemyBase::makeShootEvent(BulletType bType)
 {
 	// Do Nothing!!
-	return ShootEvent();
+
+	ShootEvent shootEvent;
+	shootEvent.bType = bType;
+	shootEvent.direct = status.lookRight;
+
+	switch (bType)
+	{
+	case BulletType::JunkBullet:
+		shootEvent.x = (eStatus.worldRect.left + eStatus.worldRect.right) / 2;
+		shootEvent.y = eStatus.worldRect.top + fPos.y;
+		break;
+	}
+	
+	shootEvent.velocityX = normalize(getDiffPlayer(shootEvent.x, shootEvent.y)).x;
+	shootEvent.velocityY = normalize(getDiffPlayer(shootEvent.x, shootEvent.y)).y;
+
+	EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
+
 }
 
 Vector2 EnemyBase::getDiffPlayer(int firePointX, int firePointY)

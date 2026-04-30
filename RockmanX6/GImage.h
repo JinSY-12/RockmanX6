@@ -30,8 +30,7 @@ public:
         int     frameWidth;             // 1 프레임 가로 크기
         int     frameHeight;            // 1 프레임 가로 크기
         BYTE    loadType;               // 
-        bool    playOnce;
-        bool    changeReady;
+        
 
 
         tagImage()
@@ -67,7 +66,8 @@ private:
     LPIMAGE_INFO    _blendImage;
 
     bool aniPlaying;
-    
+    bool oncePlay;
+    bool changeReady;
 
     COLORREF* mPixels;
 
@@ -222,7 +222,8 @@ public:
         _imageInfo->hBit = hBmp;
     }
 
-	inline bool getChangeReady(void) { return _imageInfo->changeReady; }
+	inline bool getChangeReady(void) { return changeReady; }
+    inline void setChangeReady(bool ready) { changeReady = ready; }
 
     inline GImage* cloneImage()
     {
@@ -240,7 +241,10 @@ public:
         clone->_blendFunc = _blendFunc;
         clone->_blendImage = _blendImage;        
         clone->aniPlaying = aniPlaying;
-
+        
+        clone->oncePlay = oncePlay;
+        clone->changeReady = changeReady;
+        
         return clone;
     }
 

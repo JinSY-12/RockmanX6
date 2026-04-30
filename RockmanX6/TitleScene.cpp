@@ -315,12 +315,16 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addFrameImage("HighMax_Idle", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxIdle.bmp", 696 * SCALE_FACTOR, 236 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("HighMax_Move", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxMove.bmp", 87 * SCALE_FACTOR, 220 * SCALE_FACTOR, 1, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("HighMax_AttReady", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxAttReady.bmp", 210 * SCALE_FACTOR, 220 * SCALE_FACTOR, 2, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("HighMax_RightReady", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxRightReady.bmp", 210 * SCALE_FACTOR, 220 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("HighMax_AttReady", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxAttReady.bmp", 210 * SCALE_FACTOR, 220 * SCALE_FACTOR, 2, 2, true, MAGENTA, true);
+	IMAGEMANAGER->addFrameImage("HighMax_RightReady", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxRightReady.bmp", 210 * SCALE_FACTOR, 220 * SCALE_FACTOR, 2, 2, true, MAGENTA, true);
 	IMAGEMANAGER->addFrameImage("HighMax_RightAtt", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxRightAtt.bmp", 315 * SCALE_FACTOR, 220 * SCALE_FACTOR, 3, 2, true, MAGENTA);
-
-	IMAGEMANAGER->addFrameImage("HighMax_LeftReady", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxLeftReady.bmp", 210 * SCALE_FACTOR, 220 * SCALE_FACTOR, 2, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("HighMax_LeftReady", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxLeftReady.bmp", 210 * SCALE_FACTOR, 220 * SCALE_FACTOR, 2, 2, true, MAGENTA, true);
 	IMAGEMANAGER->addFrameImage("HighMax_LeftAtt", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxLeftAtt.bmp", 315 * SCALE_FACTOR, 220 * SCALE_FACTOR, 3, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("HighMax_DeathBallShoot", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxDeathBallShoot.bmp", 618 * SCALE_FACTOR, 220 * SCALE_FACTOR, 6, 2, true, MAGENTA, true);
+	IMAGEMANAGER->addFrameImage("HighMax_DeathBallShootIdle", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxDeathBallShootIdle.bmp", 824 * SCALE_FACTOR, 236 * SCALE_FACTOR, 8, 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("SFX_DeathBallCharge", "Resources/Image/SFX/SFX_DeathBallCharge.bmp", 2310 * SCALE_FACTOR, 52 * SCALE_FACTOR, 21, 2, true, MAGENTA, true);
 
 	//////////////////////////////////
 	// 미니언
@@ -512,8 +516,21 @@ void TitleScene::addSound(void)
 	// 적 사운드
 	//////////////////////////////////
 
-	SOUNDMANAGER->addSound("SFX_SiegeShootFire", "Resources/Sound/SFX/Enemy/SFX_SiegeShootFire.wav", false, false);
+	//////////////////////////////////
+	// 보스 보이스
+	//////////////////////////////////
 
+	SOUNDMANAGER->addSound("Voice_DeathBall", "Resources/Sound/Voice/Enemy/Voice_DeathBall.wav", false, false);
+
+	//////////////////////////////////
+	// 효과음
+	//////////////////////////////////
+	SOUNDMANAGER->addSound("SFX_DeathBall", "Resources/Sound/SFX/Enemy/SFX_DeathBall.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_DeathBallCharge", "Resources/Sound/SFX/Enemy/SFX_DeathBallCharge.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_SiegeShootFire", "Resources/Sound/SFX/Enemy/SFX_SiegeShootFire.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_RingSound", "Resources/Sound/SFX/Enemy/SFX_RingSound.wav", false, false);
+
+	
 }
 
 void TitleScene::settingScene(void)

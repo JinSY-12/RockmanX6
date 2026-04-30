@@ -16,11 +16,19 @@ protected:
 		Move,
 		Return,
 		Dodge,
+		AttReady,
 		RightReady,
 		RightAtt,
 		LeftReady,
 		LeftAtt,
-		DeathBallAtt1
+		DeathBallShoot,
+		DeathBallShootIdle
+	};
+
+	enum class AnimDirection
+	{
+		Forward,
+		Backward
 	};
 
 	struct FirePointOffset
@@ -32,19 +40,29 @@ protected:
 	struct BossStatus
 	{
 		GImage* bImage;
+		GImage* effectImage;
 
 		RECT bHitBox;
 		RECT bWorldRect;
+		RECT effectRect;
 
 		bool overPower;
+
+		int offsetX;
+		int offsetY;
+
+		bool effectOn;
 	};
+
 
 protected:
 	Player* player;
 	ShootEvent shootEvent;
 	BossStatus bStatus;
+	BossState bState;
 
 	BossType btype;
+	AnimDirection animDir;
 
 	Vector2 diff;
 
@@ -62,6 +80,6 @@ public:
 	Vector2 getDiffPlayer(int firePointX, int firePointY);
 
 	inline void settingPlayer(Player* p) { player = p; }
-	virtual ShootEvent makeShootEvent(BulletType bType);
+	void makeShootEvent(BulletType bType);
 };
 

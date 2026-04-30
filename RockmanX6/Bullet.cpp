@@ -30,8 +30,8 @@ void Bullet::update(void)
 
 void Bullet::render(void)
 {
-	// bStatus.shape->frameRender(getMemDC(), bStatus.hitBox.left - bStatus.animOffsetX,
-		// bStatus.hitBox.top - bStatus.animOffsetY, bStatus.shape->getFrameX(), bStatus.rightDirect);
+	//bStatus.shape->frameRender(getMemDC(), bStatus.hitBox.left - bStatus.animOffsetX,
+		//bStatus.hitBox.top - bStatus.animOffsetY, bStatus.shape->getFrameX(), bStatus.rightDirect);
 
 	if (UIMANAGER->getIsDebugMode() == true)
 		DrawRectMakeColor(getMemDC(), bStatus.hitBox, RGB(0, 255, 0), 2);
@@ -163,8 +163,8 @@ void SiegeShoot::update(void)
 
 	if(!fireStart)
 	{
-		bStatus.pos.x += bStatus.velocityX * 0.3f;
-		bStatus.pos.y += bStatus.velocityY * 0.3f;
+		bStatus.pos.x += bStatus.velocityX;
+		bStatus.pos.y += bStatus.velocityY;
 		bStatus.animSpeed = 0.06f;
 	}
 	
@@ -216,7 +216,7 @@ HRESULT DeathBall1::init(BulletType type, int x, int y, bool isRight, float velo
 
 	bStatus.isFire = true;
 
-	bStatus.soundName = "SFX_SiegeShootFire";
+	bStatus.soundName = "SFX_DeathBall";
 	SOUNDMANAGER->play(bStatus.soundName, 0.3f);
 
 	cout << "데스볼 소환!" << endl;
@@ -257,4 +257,6 @@ void DeathBall1::update(void)
 
 	if (bStatus.hitBox.left > WINSIZE_X) bStatus.isFire = false;
 	else if (bStatus.hitBox.right < 0) bStatus.isFire = false;
+
+	if(bStatus.isFire == false) SOUNDMANAGER->stop("SFX_DeathBall");
 }

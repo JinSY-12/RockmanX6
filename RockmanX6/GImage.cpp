@@ -158,6 +158,8 @@ HRESULT GImage::init(const char* fileName, float x, float y, int width, int heig
 HRESULT GImage::init(const char* fileName, int width, int height, int maxFrameX, int maxFrameY, bool isTrans, COLORREF transColor, bool playOnce)
 {
     aniPlaying = true;
+    oncePlay = playOnce;
+    changeReady = false;
 
     if (_imageInfo != nullptr) this->release();
 
@@ -178,9 +180,7 @@ HRESULT GImage::init(const char* fileName, int width, int height, int maxFrameX,
     _imageInfo->maxFrameY = maxFrameY - 1;
     _imageInfo->frameWidth = width / maxFrameX;          // 1프레임의 대한 넓이
     _imageInfo->frameHeight = height / maxFrameY;        // 1프레임의 대한 높이
-	_imageInfo->playOnce = playOnce;
-	_imageInfo->changeReady = false;
-
+	
     int len = strlen(fileName);
 
     _fileName = new char[len + 1];
@@ -377,12 +377,13 @@ void GImage::play(float frameUpdateSec)
 
             if (_imageInfo->currentFrameX > _imageInfo->maxFrameX)
             {
-                if (_imageInfo->playOnce)
+                if (oncePlay)
                 {
                     _imageInfo->currentFrameX = _imageInfo->maxFrameX;
-                    _imageInfo->changeReady = true;
+                    changeReady = true;
                 }
-                else _imageInfo->currentFrameX = 0;
+                else
+                    _imageInfo->currentFrameX = 0;
             }
 
             _imageInfo->elpasedSec -= frameUpdateSec;
@@ -402,7 +403,16 @@ void GImage::reversePlay(float frameUpdateSec)
 
             if (_imageInfo->currentFrameX < 0)
             {
-                _imageInfo->currentFrameX = _imageInfo->maxFrameX;
+                if (oncePlay)
+                {
+                    _imageInfo->currentFrameX = 0;
+                    changeReady = true;
+                }
+
+                else
+                {
+                    _imageInfo->currentFrameX = _imageInfo->maxFrameX;
+                }
             }
 
             _imageInfo->elpasedSec -= frameUpdateSec;

@@ -123,7 +123,7 @@ public:
 	SiegeShoot() {
 		bStatus.isFire = false;
 		bStatus.animSpeed = 0.1f;
-		bStatus.bulletSpeed = 10.0f;
+		bStatus.bulletSpeed = 17;
 	}
 	~SiegeShoot() {}
 };

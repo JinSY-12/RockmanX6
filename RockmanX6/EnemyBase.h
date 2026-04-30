@@ -117,6 +117,6 @@ public:
 
 	void enemyInvincibleTimerUpdate(void);
 
-	virtual ShootEvent makeShootEvent(BulletType bType);
+	void makeShootEvent(BulletType bType);
 
 };

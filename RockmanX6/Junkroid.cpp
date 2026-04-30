@@ -96,16 +96,7 @@ void Junkroid::attack(void)
 {
     eState = EnemyState::Attack;
 
-    ShootEvent shootEvent;
-
-    shootEvent.bType = BulletType::JunkBullet;
-    shootEvent.x = (eStatus.worldRect.left + eStatus.worldRect.right) / 2;
-    shootEvent.y = eStatus.worldRect.top + fPos.y;
-    shootEvent.direct = status.lookRight;
-    shootEvent.velocityX = normalize(getDiffPlayer(shootEvent.x, shootEvent.y)).x;
-    shootEvent.velocityY = normalize(getDiffPlayer(shootEvent.x, shootEvent.y)).y;
-
-    EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
+    makeShootEvent(BulletType::JunkBullet);
 
 }
 
