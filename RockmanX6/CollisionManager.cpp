@@ -111,6 +111,7 @@ void CollisionManager::checkBulletCollision(void)
 
 	for (auto& bullet : bullets->getBullet())
 	{
+		// 적이 플레이어 공격
 		if (bullet->getBulletFaction() == BulletFaction::Enemy)
 		{
 			if (IntersectRect(&temp, &bullet->getBulletRect(), &player->getPlayerHitBox()) && !player->getOverPower() && !player->getIsDead())
@@ -124,6 +125,7 @@ void CollisionManager::checkBulletCollision(void)
 			}
 		}
 
+		// 플레이어가 적을 공격
 		else if (bullet->getBulletFaction() == BulletFaction::Player)
 		{
 			for (auto& enemy : ememies->getEnemy())

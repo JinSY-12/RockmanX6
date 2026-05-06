@@ -18,6 +18,29 @@ HRESULT UiManager::init(void)
 
 void UiManager::update(void)
 {
+	if (_vUi.size() == 0) isUiMode = false;
+	else isUiMode = true;
+
+	for (auto UIs = _vUi.begin(); UIs != _vUi.end();)
+	{
+		(*UIs)->update();
+		
+		if ((*UIs)->getUiDead() == true)
+		{
+			UIs = _vUi.erase(UIs);
+		}
+
+		else ++UIs;
+	}
+
+	// UI가 isDead이면 삭제하면서 UI 업데이트 돌리기
+	
+
+	// 텍스트 출력 관련
+	// 이것도 Dialogue 클래스를 만들었으니 저기서 해결하게 수정해야됨
+	// 일단 지우지 말것
+
+	/*
 	if (isUiMode == true)
 	{
 		if ((KEYMANAGER->isOnceKeyDown('X') || KEYMANAGER->isOnceKeyDown('C')))
@@ -50,9 +73,11 @@ void UiManager::update(void)
 
 	if (KEYMANAGER->isOnceKeyDown(VK_TAB)) isDebugMode = !isDebugMode;
 	
-	if (progressBar != nullptr) progressBar->update();
+	// if (progressBar != nullptr) progressBar->update();
 
 	_textIcon->play(0.5f);
+	*/
+
 }
 
 void UiManager::release(void)
@@ -62,6 +87,7 @@ void UiManager::release(void)
 
 void UiManager::render(HDC hdc)
 {
+	/*
 	if (isUiMode == true)
 	{
 		//TIMEMANAGER->getWorldTime() - mTextDelay 조절 하는 걸로 대화 연타 속도 조절 가능
@@ -78,33 +104,26 @@ void UiManager::render(HDC hdc)
 			_textIcon->frameRender(hdc, WINSIZE_X / 2 - IMAGEMANAGER->findImage("Next")->getFrameWidth() / 2, WINSIZE_Y / 20 * 19);
 		}
 	}
+	*/
 
-	if (progressBar != nullptr) progressBar->render(hdc);
+	for (auto UIs = _vUi.begin(); UIs != _vUi.end(); ++UIs)
+	{
+		(*UIs)->render(hdc);
+	}
+
+	// if (progressBar != nullptr) progressBar->render(hdc);
 }
 
-void UiManager::SettingProgressBar(PlayerType pType, BossType bType)
+void UiManager::addUi(UiType uType)
 {
-	progressBar = new ProgressBar;
-	progressBar->init(pType, bType);
-}
-
-
-void UiManager::setMaxHp(int maxHp)
-{
-	progressBar->setFirstMaxHP(maxHp);
-}
-
-void UiManager::setCurrentPlayerStatus(int hp, int weapon, int maxHp, int life)
-{
-	progressBar->setCurrentHp(hp);
-	progressBar->setMaxHP(maxHp);
-	progressBar->setCurrentWeaponGauge(weapon);
-	progressBar->setCurrentLife(life);
-}
-
-void UiManager::setLife(int currentlife)
-{
-	progressBar->setCurrentHp(currentlife);
+	switch(uType)
+	{
+	case UiType::Ready:
+		Ui = new AlertUI;
+		Ui->init(uType);
+		_vUi.push_back(Ui);
+		break;
+	}
 }
 
 void UiManager::printEvent(int eventNum)

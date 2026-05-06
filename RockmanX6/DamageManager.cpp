@@ -57,6 +57,7 @@ void DamageManager::onEvent(const Event& event)
 			Bullet* bullet = static_cast<Bullet*>(damage->bullet);
 			int offset;
 
+			// 플레이어가 적을 공격
 			if (damage->target->getEntityType() == CombatEntityType::Enemy)
 			{
 				EnemyBase* enemy = static_cast<EnemyBase*>(damage->target);
@@ -87,12 +88,12 @@ void DamageManager::onEvent(const Event& event)
 				}
 			}
 
+			// 적이 플레이어를 공격
 			else if (damage->target->getEntityType() == CombatEntityType::Player)
 			{
 				Player* player = static_cast<Player*>(damage->target);
 				player->reduceHp(damage->damage);
-				bullet->setBulletFire(false);
-
+				
 				int offset;
 				switch (bullet->getBulletType())
 				{
@@ -100,6 +101,9 @@ void DamageManager::onEvent(const Event& event)
 						offset = bullet->getBulletDir() ? damage->target->getWidth() / 2 : -(damage->target->getWidth() / 2);
 						EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
 						SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
+						bullet->setBulletFire(false);
+						break;
+					default:
 						break;
 				}
 			}
@@ -120,10 +124,12 @@ void DamageManager::onEvent(const Event& event)
 
 				case ObjectType::BossGate:
 					offset = bullet->getBulletDir() ? damage->target->getWidth() / 2 : -(damage->target->getWidth() / 2);
-					EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
+					if (bullet->getBulletType() != BulletType::DeathBall1) {
 
-					SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.5f);
-					bullet->setBulletFire(false);
+						EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
+						SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.5f);
+						bullet->setBulletFire(false);
+					}					
 					break;
 
 				default:

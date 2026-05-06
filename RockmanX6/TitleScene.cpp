@@ -148,6 +148,8 @@ void TitleScene::addImage(void)
 		IMAGEMANAGER->addImage("Ready" + voiceNum, filePath.c_str(), 320 * 3, 38 * 3, true, MAGENTA);
 	}
 
+	IMAGEMANAGER->addFrameImage("Ui_Ready", "Resources/Image/Logo/Ui_Ready.bmp", 9920 * SCALE_FACTOR, 38 * SCALE_FACTOR, 31, 1, true, MAGENTA, true);
+
 	//////////////////////////////////
 	// 카메라 관련
 	//////////////////////////////////
@@ -195,9 +197,9 @@ void TitleScene::addImage(void)
 
 	//// 배경 스테이지 ////
 	// 인트로 스테이지
-	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
-	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel2.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
-	// IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
+	//IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6464 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6415 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro2.bmp", 6415 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
 
 	//////////////////////////////////
 	// 공통 이펙트
@@ -346,6 +348,8 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("SFX_JunkBullet", "Resources/Image/Enemy/Bullet/Minion/SFX_JunkBullet.bmp", 16 * SCALE_FACTOR, 32 * SCALE_FACTOR, 1, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("SFX_SiegeShootFire", "Resources/Image/Enemy/Bullet/Boss/SFX_SiegeShootFire.bmp", 60 * SCALE_FACTOR, 60 * SCALE_FACTOR, 2, 2, true, MAGENTA, true);
 	IMAGEMANAGER->addFrameImage("SFX_SiegeShootLoop", "Resources/Image/Enemy/Bullet/Boss/SFX_SiegeShootLoop.bmp", 240 * SCALE_FACTOR, 60 * SCALE_FACTOR, 8, 2, true, MAGENTA);
+	
+	IMAGEMANAGER->addFrameImage("SFX_DeathBall", "Resources/Image/Enemy/Bullet/Boss/SFX_DeathBall.bmp", 784 * SCALE_FACTOR, 192 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 
 	//////////////////////////////////
 	//  파편

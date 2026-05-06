@@ -1,12 +1,24 @@
 #pragma once
 #include "SingletonBase.h"
-#include "ProgressBar.h"
 #include "PlayerType.h"
 #include "BossType.h"
+
+#include "UiType.h"
+#include "UiBase.h"
+#include "AlertUI.h"
+#include "ProgressBar.h"
 
 class UiManager : public SingletonBase<UiManager>
 {
 private:
+	struct PlayerInfo
+	{
+		int hp;
+		int maxHp;
+		int mp;
+		int life;
+	};
+
 	GImage* _hud;
 	GImage* _number;
 	GImage* _heart;
@@ -14,7 +26,7 @@ private:
 	GImage* _dialogue;
 	GImage* _textIcon;
 
-	ProgressBar* progressBar;
+	UiBase* Ui;
 
 	bool isUiMode;
 	bool nextAlbe;
@@ -29,6 +41,16 @@ private:
 	int charType;
 	int bossType;
 
+	typedef vector<UiBase*> vUiVector;
+	typedef vector<UiBase*>::iterator viUiVector;
+		
+private:
+	vUiVector _vUi;
+	
+	PlayerType player;
+	BossType boss;
+
+	PlayerInfo pInfo;
 
 public:
 	HRESULT init(void);
@@ -36,7 +58,12 @@ public:
 	void release(void);
 	void render(HDC hdc);
 
-	void SettingProgressBar(PlayerType pType, BossType bType);
+	void addUi(UiType uType);
+	
+	inline void SettingProgressBar(PlayerType pType, BossType bType) {
+		player = pType;
+		boss = bType;
+	}
 
 	inline int isCurrentLine() { return mCurrentLine; }
 
@@ -49,11 +76,7 @@ public:
 
 	inline bool getIsDebugMode(void) { return isDebugMode; }
 
-	inline void playStart() { progressBar->setVisible(true); }
-
-	void setMaxHp(int maxHp);
-	void setCurrentPlayerStatus(int hp, int mp, int maxHp, int life);
-	void setLife(int currentlife);
+	// inline void playStart() { progressBar->setVisible(true); }
 
 	void printEvent(int eventNum);
 };

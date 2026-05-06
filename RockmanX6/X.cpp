@@ -16,7 +16,6 @@ HRESULT X::init(int x, int y)
 	status.maxHp = 30.0;
 	status.maxMp = 10.0;
 	
-	UIMANAGER->setMaxHp(static_cast<int>(status.maxHp));
 	maxDashTime = 3.5f;
 	
 	// 캐릭터 소환 - 게임 시작
@@ -43,6 +42,7 @@ void X::update(void)
 	// 게임 시작시 스테이지에 소환 되는 상황
 	if (currentState == CharacterState::Warp)
 	{
+		hpBar.setVisible(true);
 		// 하늘에서 내려오고 있을 때 - 스프라이트 보면 애니메이션이 동작 안함
 		// if (pStatus.hitBox.bottom <= WINSIZE_Y)
 		if (pStatus.isOnGround == false)
@@ -476,7 +476,8 @@ void X::update(void)
 	isDead();
 	invincibleTimerUpdate();
 
-	UIMANAGER->setCurrentPlayerStatus(status.hp, status.mp, status.maxHp, progress.life);
+	hpBar.updatePlayerInfop(status.hp, status.maxHp, status.mp, progress.life);
+	hpBar.update();
 
 #pragma endregion
 }
@@ -487,7 +488,7 @@ void X::jump(void)
 	{
 		if (pStatus.isOnGround || pStatus.touchLeft || pStatus.touchRight) Player::jump();
 		else if (!pStatus.isOnGround && pStatus.isOnLadder) pStatus.isOnLadder = false;
-		else cout << "점프 여기임" <<endl; // 호버링
+		else;// 호버링
 	}
 }
 
@@ -957,7 +958,8 @@ void X::spawn(int x, int y)
 	pStatus.touchRight = false;
 	pStatus.wallKickRight = true;
 	progress.life = 2;
-	UIMANAGER->setMaxHp(status.maxHp);
+	hpBar.init(PlayerType::X);
+	hpBar.setPlayerInfo(static_cast<int>(status.hp), static_cast<int>(status.maxHp), static_cast<int>(status.mp), 2);
 	status.physicalDamage = 1;
 
 	////////////////////

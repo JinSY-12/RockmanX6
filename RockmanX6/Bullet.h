@@ -84,7 +84,8 @@ public:
 
 	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
 
-	Burster() {
+	Burster()
+	{
 		bStatus.isFire = false;
 		bStatus.animSpeed = 0.05f;
 		bStatus.bulletSpeed = 25.0f;
@@ -101,7 +102,8 @@ private:
 public:
 	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
 
-	JunkBullet() {
+	JunkBullet()
+	{
 		bStatus.isFire = false;
 		bStatus.animSpeed = 0.05f;
 		bStatus.bulletSpeed = 5.0f;
@@ -120,10 +122,11 @@ public:
 	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
 	void update(void) override;
 
-	SiegeShoot() {
+	SiegeShoot()
+	{
 		bStatus.isFire = false;
 		bStatus.animSpeed = 0.1f;
-		bStatus.bulletSpeed = 17;
+		bStatus.bulletSpeed = 20.0f;
 	}
 	~SiegeShoot() {}
 };
@@ -132,6 +135,7 @@ class DeathBall1 : public Bullet
 {
 
 private:
+	int fireStartPointX;
 	int fireStartPointY;
 
 public:
@@ -141,8 +145,8 @@ public:
 	DeathBall1()
 	{
 		bStatus.isFire = false;
-		bStatus.animSpeed = 0.1f;
-		bStatus.bulletSpeed = 5.0f;
+		bStatus.animSpeed = 0.04f;
+		bStatus.bulletSpeed = 8.0f;
 	}
 	~DeathBall1() {}
 };

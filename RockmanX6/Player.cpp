@@ -4,6 +4,8 @@
 
 void Player::render(HDC memDC)
 {
+	hpBar.render(memDC);
+
 	pStatus.player->frameAlphaRender(memDC, hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
 		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
 		pStatus.player->getFrameX(), status.lookRight, charAlpha);

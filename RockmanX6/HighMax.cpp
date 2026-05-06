@@ -21,7 +21,7 @@ HRESULT HighMax::init(int x, int y)
 	status.height = bStatus.bImage->getFrameHeight();
 
 	bStatus.overPower = false;
-	status.lookRight = false;
+	status.lookRight = true;
 
 	bStatus.bHitBox = bStatus.bWorldRect = RectMakeCenter(x + status.width /2, y - status.height / 2, status.width, status.height);
 	
@@ -36,12 +36,13 @@ HRESULT HighMax::init(int x, int y)
 
 	animDir = AnimDirection::Forward;
 
-	patternTest = false;
 	SiegeSecondAtt = false;
 	prevFrame = -1;
 	timer = 0.0f;
-
 	bStatus.effectOn = false;
+
+	patternTest = false;
+	patternTest2 = false;
 
 	return S_OK;
 }
@@ -52,7 +53,7 @@ void HighMax::update(void)
 	{
 	case BossState::Idle:
 		animSpeed = 0.06f;
-		// bStatus.bImage->play(animSpeed);
+//		bStatus.bImage->play(animSpeed);
 		break;
 	}
 
@@ -68,6 +69,7 @@ void HighMax::update(void)
 		bState = BossState::AttReady;
 		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
 		patternTest = true;
+		patternTest2 = false;
 		// siegeShoot();
 	}
 
@@ -78,17 +80,27 @@ void HighMax::update(void)
 		bState = BossState::DeathBallShoot;
 		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_DeathBallShoot")->cloneImage();
 		SOUNDMANAGER->play("Voice_DeathBall", 0.3f);
-		patternTest = true;
+		patternTest = false;
+		patternTest2 = true;
 		// deathBall();
 	}
 
-	if (patternTest)
+	if (patternTest && !patternTest2)
 	{
-		deathBall();
+		siegeShoot();
+	}
+
+	else
+	{
+		bStatus.bImage->play(animSpeed);
+		if (patternTest2 && !patternTest)
+		{
+			deathBall();
+		}
 	}
 	
+	
 	setBossHitbox();
-
 }
 
 void HighMax::bossAppearance(void)
@@ -230,7 +242,6 @@ void HighMax::siegeShoot(void)
 			{
 				bStatus.bImage->play(animSpeed);
 
-
 				if (prevFrame != bStatus.bImage->getFrameX())
 				{
 					if (bStatus.bImage->getFrameX() == 1)
@@ -261,8 +272,18 @@ void HighMax::siegeShoot(void)
 	// 애니메이션 위치 보정
 	if (bState != BossState::Idle)
 	{
-		bStatus.offsetX = 12 * SCALE_FACTOR;
-		bStatus.offsetY = -4 * SCALE_FACTOR;
+		if (!status.lookRight)
+		{
+			bStatus.offsetX = 12 * SCALE_FACTOR;
+			bStatus.offsetY = -4 * SCALE_FACTOR;
+		}
+
+		else
+		{
+			bStatus.offsetX = 6 * SCALE_FACTOR;
+			bStatus.offsetY = -4 * SCALE_FACTOR;
+		}
+		
 	}
 
 	else
@@ -275,7 +296,6 @@ void HighMax::siegeShoot(void)
 void HighMax::deathBall(void)
 {
 	animSpeed = 0.05f;
-	bStatus.bImage->play(animSpeed);
 	if(bStatus.effectOn) bStatus.effectImage->play(0.03f);
 
 	switch(bState)
@@ -287,7 +307,6 @@ void HighMax::deathBall(void)
 			{
 				bStatus.effectOn = true;
 				bStatus.effectImage = IMAGEMANAGER->findImage("SFX_DeathBallCharge")->cloneImage();
-				//SOUNDMANAGER->play("SFX_DeathBallCharge", 0.3f);
 			}
 		}
 		prevFrame = bStatus.bImage->getFrameX();
@@ -304,30 +323,24 @@ void HighMax::deathBall(void)
 			bState = BossState::DeathBallShootIdle;
 			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_DeathBallShootIdle")->cloneImage();
 		}
-		else
-		{
-			cout << bStatus.effectImage->getChangeReady() <<endl;
-		}
 
 		break;
 
 	case BossState::DeathBallShootIdle:
 
-		if (timer <= 5.0f)
-		{
-			timer += 0.01f;
-		}
+		if (timer <= 3.0f) timer += 0.01f;
 
 		else
 		{
 			bStatus.bImage->setFrameX(0);
 			bState = BossState::Idle;
-			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle");
+			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle")->cloneImage();
 		}
 		break;
 
 	case BossState::Idle:
 		timer = 0.0f;
+		animSpeed = 0.06f;
 		patternTest = false;
 		break;
 	}
@@ -335,8 +348,37 @@ void HighMax::deathBall(void)
 	// 애니메이션 위치 보정
 	if (bState != BossState::Idle)
 	{
-		bStatus.offsetX = 2 * SCALE_FACTOR;
-		bStatus.offsetY = -4 * SCALE_FACTOR;
+		if (bState == BossState::DeathBallShootIdle)
+		{
+			if (!status.lookRight)
+			{
+				bStatus.offsetX = 10 * SCALE_FACTOR;
+				bStatus.offsetY = -4 * SCALE_FACTOR;
+			}
+
+			else
+			{
+				bStatus.offsetX = 18 * SCALE_FACTOR;
+				bStatus.offsetY = -4 * SCALE_FACTOR;
+			}
+		}
+
+		else
+		{
+			if (!status.lookRight)
+			{
+				bStatus.offsetX = 2 * SCALE_FACTOR;
+				bStatus.offsetY = -4 * SCALE_FACTOR;
+			}
+
+			else
+			{
+				bStatus.offsetX = 10 * SCALE_FACTOR;
+				bStatus.offsetY = -4 * SCALE_FACTOR;
+			}
+		}
+		
+		
 	}
 
 	else
@@ -346,7 +388,62 @@ void HighMax::deathBall(void)
 	}
 }
 
+void HighMax::deathRush(void)
+{
+	switch (bState)
+	{
+	case BossState::AttReady:
+		if (bStatus.bImage->getChangeReady())
+		{
+			if (animDir == AnimDirection::Forward)
+			{
+				bStatus.bImage->setChangeReady(false);
+				bState = BossState::RightReady;
+				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_RightReady")->cloneImage();
+			}
+
+			else
+			{
+				bStatus.bImage->setChangeReady(false);
+				bState = BossState::Idle;
+				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle")->cloneImage();
+			}
+		}
+		break;
+	case BossState::RightReady:
+		if (bStatus.bImage->getChangeReady())
+		{
+			if (animDir == AnimDirection::Forward)
+			{
+				bStatus.bImage->setChangeReady(false);
+				bState = BossState::RightReady;
+				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_RightReady")->cloneImage();
+			}
+
+			else
+			{
+				bStatus.bImage->setChangeReady(false);
+				bState = BossState::AttReady;
+				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
+			}
+		}
+		break;
+	case BossState::LeftReady:
+		break;
+	case BossState::RightAtt:
+		break;
+	case BossState::Idle:
+		break;
+
+	}
+}
+
 void HighMax::patternShoot(void)
+{
+
+}
+
+void HighMax::movetoPoint()
 {
 
 }
@@ -358,6 +455,12 @@ void HighMax::stateReset(void)
 	IMAGEMANAGER->findImage("HighMax_RightReady")->setChangeReady(false);
 	IMAGEMANAGER->findImage("HighMax_LeftReady")->setChangeReady(false);
 	prevFrame = -1;
+	animSpeed = 0.06f;
+
+	bStatus.offsetX = 0 * SCALE_FACTOR;
+	bStatus.offsetY = 0 * SCALE_FACTOR;
+
+	animDir = AnimDirection::Forward;
 
 	// 보스 상태값 관련 리셋
 	SiegeSecondAtt = false;

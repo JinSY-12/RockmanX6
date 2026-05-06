@@ -29,8 +29,8 @@ private:
 	
 
 public:
-	HRESULT init(void);
-	HRESULT init(PlayerType pType, BossType bType);
+	HRESULT init(PlayerType pType);
+	HRESULT init(BossType bType);
 	void release(void);
 	void update(void);
 	void render(HDC hdc);
@@ -51,6 +51,9 @@ public:
 	void setCurrentHp(int hp) { currentHp = hp; }
 	void setCurrentLife(int life) { currentLife = life; }
 	
+	void setPlayerInfo(int hp, int maxHp, int weapon, int life);
+	void updatePlayerInfop(int hp, int maxHp, int weapon, int life);
+
 	void reduecHp(int damage) { currentHp -= damage; }
 
 	ProgressBar() { gameStart = false; }

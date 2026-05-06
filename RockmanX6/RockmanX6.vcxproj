@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AlertUI.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BossBase.h" />
     <ClInclude Include="BossGate.h" />
@@ -181,12 +182,15 @@
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="UiBase.h" />
     <ClInclude Include="UiManager.h" />
+    <ClInclude Include="UiType.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="X.h" />
     <ClInclude Include="Zero.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AlertUI.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BossBase.cpp" />
     <ClCompile Include="BossGate.cpp" />
@@ -231,6 +235,7 @@
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="UiBase.cpp" />
     <ClCompile Include="UiManager.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WinMain.cpp" />

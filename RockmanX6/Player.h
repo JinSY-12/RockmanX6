@@ -4,6 +4,7 @@
 #include "BulletType.h"
 #include "SoundType.h"
 #include "Event.h"
+#include "ProgressBar.h"
 
 class Player : public CombatEntity
 {
@@ -171,6 +172,7 @@ protected:
 	SholderState attState;
 
 	Progress progress;
+	ProgressBar hpBar;
 
 	PlayerPalette playerColor[15];
 

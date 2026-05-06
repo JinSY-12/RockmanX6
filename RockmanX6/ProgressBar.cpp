@@ -1,31 +1,37 @@
 #include "Stdafx.h"
 #include "ProgressBar.h"
 
-HRESULT ProgressBar::init(void)
+HRESULT ProgressBar::init(PlayerType pType)
 {
-    // Do Nothing!
-
-    return S_OK;
-}
-
-HRESULT ProgressBar::init(PlayerType pType, BossType bType)
-{
-    // 체력바 기본 세팅
     progressBar = IMAGEMANAGER->findImage("HUD_HpBar");
     progressHead = IMAGEMANAGER->findImage("HUD_HpBarHead");
     mainGaugeBar = IMAGEMANAGER->findImage("HUD_GreenBar");
     subGaugeBar = IMAGEMANAGER->findImage("HUD_RedBar");
     weaponNumber = IMAGEMANAGER->findImage("HUD_Number");
 
-    // 캐릭터에 맞는 캐릭터 아이콘 세팅
     switch (pType)
     {
     case PlayerType::X:
+    case PlayerType::Palcon:
+    case PlayerType::Blade:
+    case PlayerType::Shadow:
         playerLogo = IMAGEMANAGER->findImage("HUD_ProgressBar_X");
         break;
     }
 
-    // 보스에 맞는 보스 아이콘 세팅
+    gameStart = false;
+
+    return S_OK;
+}
+
+HRESULT ProgressBar::init(BossType bType)
+{
+    progressBar = IMAGEMANAGER->findImage("HUD_HpBar");
+    progressHead = IMAGEMANAGER->findImage("HUD_HpBarHead");
+    mainGaugeBar = IMAGEMANAGER->findImage("HUD_GreenBar");
+    subGaugeBar = IMAGEMANAGER->findImage("HUD_RedBar");
+    weaponNumber = IMAGEMANAGER->findImage("HUD_Number");
+
     switch (bType)
     {
     case BossType::Intro:
@@ -33,8 +39,6 @@ HRESULT ProgressBar::init(PlayerType pType, BossType bType)
     case BossType::CommanYanmark:
         break;
     }
-    
-    gameStart = false;    
 
     return S_OK;
 }
@@ -50,7 +54,7 @@ void ProgressBar::update(void)
 
 void ProgressBar::render(HDC hdc)
 {
-    if (charType != -1 && gameStart == true)
+    if (gameStart == true)
     {
         playerLogo->render(hdc, WINSIZE_X / 100 * 3, WINSIZE_Y / 100 * 34);
         progressBar->render(hdc, WINSIZE_X / 100 * 3 + 7 * SCALE_FACTOR , WINSIZE_Y / 100 * 14 - ((int)currentMaxHp - 49) * SCALE_FACTOR,  0, 0, progressBar->getWidth(), ((int)currentMaxHp -2) * SCALE_FACTOR);
@@ -69,4 +73,19 @@ void ProgressBar::setCharacter(int character, int boss)
 {
     // 대충 플레이어의 스텟을 들고 올것
     // 최대 체력, 목숩 갯수 등등
+}
+
+void ProgressBar::setPlayerInfo(int hp, int maxHp, int weapon, int life)
+{
+    currentHp = prevHp = currentMaxHp = maxHp;
+    currentWeaponGauge = weapon;
+    currentLife = life;
+}
+
+void ProgressBar::updatePlayerInfop(int hp, int maxHp, int weapon, int life)
+{
+    currentHp = hp;
+    currentMaxHp = maxHp;
+    currentWeaponGauge = weapon;
+    currentLife = life;
 }

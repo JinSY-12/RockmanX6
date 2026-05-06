@@ -35,7 +35,6 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	// 얘네는 생성과 관리만 할 예정임
 
 	// 스테이지 세팅
-	UIMANAGER->SettingProgressBar(pType, bType);
 	stageSettting(bType);
 
 	// 스테이지 시작 준비
@@ -58,6 +57,7 @@ void StageScene::release(void)
 
 void StageScene::update(void)
 {
+	/*
 	// 페이드 아웃 끝
 	if (TIMEMANAGER->getWorldTime() - readyTimer >= 1.f)
 	{
@@ -66,13 +66,14 @@ void StageScene::update(void)
 		else
 		{
 			playAble = true;
-			UIMANAGER->playStart();
+			// UIMANAGER->playStart();
 		}
 	}
-
+	*/
+	
 	stageCollision();
 
-	if (playAble == true)
+	if (UIMANAGER->getIsUiMode() == false)
 	{
 		// 플레이어는 이미 천장에 소환 되어 있다
 		// 레디 로고 이후에 플레이어의 동작 시작으로 하늘에서 내려오는 연출
@@ -101,8 +102,10 @@ void StageScene::render(void)
 
 	EFFECTMANAGER->render(getMemDC());
 
-	if(noticeStart)	mReadyLogo->render(getMemDC(), (WINSIZE_X - mReadyLogo->getWidth()) / 2,
+	
+	if (noticeStart) mReadyLogo->render(getMemDC(), (WINSIZE_X - mReadyLogo->getWidth()) / 2,
 		(WINSIZE_Y - mReadyLogo->getHeight()) / 2);
+	
 
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
@@ -136,18 +139,22 @@ void StageScene::stageSettting(BossType bType)
 			stagBGM = "BGM_Stage_Intro";
 
 			// 빠른 적군 대전 테스트
-			player->init(WINSIZE_X / 3, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(WINSIZE_X / 3, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 시작점
 			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 사다리 테스트
 			// player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
 			// 보스 게이트 테스트
 			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// 보스 테스트
+			player->init(5590 * SCALE_FACTOR, 50 * SCALE_FACTOR);
 
 			player->setStageGravity(gravity);
 			rectSetting();
 			enemySettting(bType);
 			objectSetting(bType);
+
+			UIMANAGER->addUi(UiType::Ready);
 			break;
 
 		// 커맨드 얀마크
@@ -178,7 +185,8 @@ void StageScene::enemySettting(BossType bType)
 		int up;
 		up = 50;
 
-		eManager.spawnBoss(BossType::Intro, WINSIZE_X / 2, (905 - up) * SCALE_FACTOR);
+		// eManager.spawnBoss(BossType::Intro, 6310 * SCALE_FACTOR, (180 - up) * SCALE_FACTOR);
+		eManager.spawnBoss(BossType::Intro, 6090 * SCALE_FACTOR, (180 - up) * SCALE_FACTOR);
 
 		// 세팅 시작
 		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
@@ -658,9 +666,7 @@ void StageScene::stageCollision(void)
 				break;
 			}
 			break;
-			
 		}
-		
 	}
 	
 	// 벽과 총알 충돌 판정 = 총알이 벽 관통이 안되게
@@ -692,36 +698,40 @@ void StageScene::stageCollision(void)
 				case BulletType::ChargeBurst2:
 					etype = EffectType::BursterHit_2;
 					soundName = "SFX_X_Burster1Hit";
+					bulletHit = true;
 					break;
 				case BulletType::ChargeBurst1:
 				case BulletType::Burster:
 					etype = EffectType::BursterHit_1;
 					soundName = "SFX_X_Burster1Hit";
+					bulletHit = true;
 					break;
 				case BulletType::JunkBullet:
 					etype = EffectType::SmallEnemyBomb;
 					soundName = "SFX_SmallExplosion";
+					bulletHit = true;
 					break;
 				case BulletType::SiegeShoot:
 					etype = EffectType::WallKick;
 					soundName = "None";
+					bulletHit = true;
 					break;
 				case BulletType::DeathBall1:
 					etype = EffectType::None;
 					soundName = "None";
-					(*it)->setWallTouch(true);
+					bulletHit = false;
 					break;
-					
 				default:
 					etype = EffectType::BursterHit_1;
 					soundName = "None";
+					bulletHit = true;
 					break;
 				}
 
-				SOUNDMANAGER->play(soundName, 0.3f);
-				//EFFECTMANAGER->spawnEffect(etype, (*it)->getBulletPosX(), (*it)->getBulletPosY(),
-					//(*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
-				if((*it)->getWallTouch() == false) bulletHit = true;
+				SOUNDMANAGER->play(soundName, 0.2f);
+				EFFECTMANAGER->spawnEffect(etype, (*it)->getBulletPosX(), (*it)->getBulletPosY(),
+					(*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
+				
 				break;
 			}
 		}

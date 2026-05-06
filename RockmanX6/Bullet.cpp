@@ -24,14 +24,16 @@ void Bullet::update(void)
 	bStatus.hitBox.top = bStatus.pos.y - bStatus.shape->getFrameHeight() / 2 - CAMERAMANAGER->getCameraPos().y;
 	bStatus.hitBox.bottom = bStatus.pos.y + bStatus.shape->getFrameHeight() / 2 - CAMERAMANAGER->getCameraPos().y;
 
-	if (bStatus.hitBox.left > WINSIZE_X) bStatus.isFire = false;
-	else if (bStatus.hitBox.right < 0) bStatus.isFire = false;
+	if(bStatus.hitBox.left > WINSIZE_X + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.right < 0 + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.top > WINSIZE_Y + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.bottom < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 }
 
 void Bullet::render(void)
 {
-	//bStatus.shape->frameRender(getMemDC(), bStatus.hitBox.left - bStatus.animOffsetX,
-		//bStatus.hitBox.top - bStatus.animOffsetY, bStatus.shape->getFrameX(), bStatus.rightDirect);
+	bStatus.shape->frameRender(getMemDC(), bStatus.hitBox.left - bStatus.animOffsetX,
+		bStatus.hitBox.top - bStatus.animOffsetY, bStatus.shape->getFrameX(), bStatus.rightDirect);
 
 	if (UIMANAGER->getIsDebugMode() == true)
 		DrawRectMakeColor(getMemDC(), bStatus.hitBox, RGB(0, 255, 0), 2);
@@ -174,8 +176,10 @@ void SiegeShoot::update(void)
 	bStatus.hitBox.top = bStatus.pos.y - bStatus.height / 2 - CAMERAMANAGER->getCameraPos().y;
 	bStatus.hitBox.bottom = bStatus.pos.y + bStatus.height / 2 - CAMERAMANAGER->getCameraPos().y;
 
-	if (bStatus.hitBox.left > WINSIZE_X) bStatus.isFire = false;
-	else if (bStatus.hitBox.right < 0) bStatus.isFire = false;
+	if (bStatus.hitBox.left > WINSIZE_X + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.right < 0 + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.top > WINSIZE_Y + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.bottom < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 
 	if (bStatus.shape->getChangeReady())
 	{
@@ -187,22 +191,22 @@ void SiegeShoot::update(void)
 HRESULT DeathBall1::init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY)
 {
 	bStatus.shape = new GImage;
-	// bStatus.shape = IMAGEMANAGER->findImage("SFX_DeathBall")->cloneImage();
+	bStatus.shape = IMAGEMANAGER->findImage("SFX_DeathBall")->cloneImage();
 	bStatus.demage = 4;
 
 	bStatus.type = BulletSize::Large;
 	bStatus.bType = BulletType::DeathBall1;
 	bStatus.faction = BulletFaction::Enemy;
 
-	bStatus.width = 30 * SCALE_FACTOR;
-	bStatus.height = 30 * SCALE_FACTOR;
+	// bStatus.width = 30 * SCALE_FACTOR;
+	// bStatus.height = 30 * SCALE_FACTOR;
 
-	// bStatus.width = bStatus.shape->getFrameWidth();
-	// bStatus.height = bStatus.shape->getFrameHeight();
+	bStatus.width = bStatus.shape->getFrameWidth();
+	bStatus.height = bStatus.shape->getFrameHeight();
 
 	bStatus.rightDirect = isRight;
 
-	bStatus.pos.x = x;
+	bStatus.pos.x = fireStartPointX =  x;
 	bStatus.pos.y = fireStartPointY = y;
 
 	bStatus.velocityX = bStatus.bulletSpeed;
@@ -219,24 +223,29 @@ HRESULT DeathBall1::init(BulletType type, int x, int y, bool isRight, float velo
 	bStatus.soundName = "SFX_DeathBall";
 	SOUNDMANAGER->play(bStatus.soundName, 0.3f);
 
-	cout << "데스볼 소환!" << endl;
-
 	return S_OK;
 }
 
 void DeathBall1::update(void)
 {
-	// 벽에 닿으면 위로 상승
-	if (bStatus.wallTouch)
+	bStatus.shape->play(bStatus.animSpeed);
+	
+	// 옆 벽에 닿으면 위로 상승
+	if(bStatus.pos.x - fireStartPointX <= -240.0f * SCALE_FACTOR && !bStatus.rightDirect)
+	{
+		bStatus.pos.y -= bStatus.velocityY;
+	}
+	
+	else if (bStatus.pos.x - fireStartPointX >= 240.0f * SCALE_FACTOR && bStatus.rightDirect)
 	{
 		bStatus.pos.y -= bStatus.velocityY;
 	}
 
-	// 벽이 아니면 내려갔다가 반대쪽으로 이동
+	// 옆 벽이 아니면 내려갔다가 반대쪽으로 이동
 	else
 	{
 		// 하강 이동
-		if (bStatus.pos.y - fireStartPointY >= 0.0f && bStatus.pos.y - fireStartPointY <= 80.0f)
+		if (bStatus.pos.y - fireStartPointY >= 0.0f && bStatus.pos.y - fireStartPointY <= 75.0f * SCALE_FACTOR)
 		{
 			bStatus.pos.y += bStatus.velocityY;
 		}
@@ -255,8 +264,10 @@ void DeathBall1::update(void)
 	bStatus.hitBox.top = bStatus.pos.y - bStatus.height / 2 - CAMERAMANAGER->getCameraPos().y;
 	bStatus.hitBox.bottom = bStatus.pos.y + bStatus.height / 2 - CAMERAMANAGER->getCameraPos().y;
 
-	if (bStatus.hitBox.left > WINSIZE_X) bStatus.isFire = false;
-	else if (bStatus.hitBox.right < 0) bStatus.isFire = false;
+	if (bStatus.hitBox.left > WINSIZE_X + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.right < 0 + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.top > WINSIZE_Y + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.bottom < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 
 	if(bStatus.isFire == false) SOUNDMANAGER->stop("SFX_DeathBall");
 }

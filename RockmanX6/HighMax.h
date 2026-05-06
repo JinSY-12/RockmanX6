@@ -13,6 +13,7 @@ private:
 
 	// 패턴 만들기전 테스트용 변수
 	bool patternTest;
+	bool patternTest2;
 
 	float timer;
 
@@ -32,7 +33,10 @@ public:
 	// 패턴 2번 - 벽을 타며 움직이는 데스볼 발사
 	void deathBall(void);
 	
+	void deathRush(void);
 	void patternShoot(void);
+
+	void movetoPoint();
 
 	void stateReset(void);
 };

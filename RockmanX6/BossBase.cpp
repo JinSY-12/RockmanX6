@@ -31,22 +31,14 @@ void BossBase::render(HDC hdc)
 		else if (bState == BossState::LeftReady) temp = "LeftReady";
 		else if (bState == BossState::LeftAtt) temp = "LeftAtt";
 		
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.9 * WINSIZE_Y, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.9 * WINSIZE_Y + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
-		if(animDir == AnimDirection::Forward) temp = "Forward";
-		else temp = "Backward";
+		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 50, "보스 X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 70, to_string(pos.x), "DNF_M_18", RGB(0, 255, 255));
 
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 + 100 , 0.9 * WINSIZE_Y, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 + 100, 0.9 * WINSIZE_Y + 20, temp, "DNF_M_18", RGB(0, 255, 255));
-
-		if (bStatus.bImage->getChangeReady()) temp = "O";
-		else temp = "X";
-
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 + 200, 0.9 * WINSIZE_Y, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 + 200, 0.9 * WINSIZE_Y + 20, temp, "DNF_M_18", RGB(0, 255, 255));
-
-
+		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 + 80, 0.85 * WINSIZE_Y + 50, "보스 Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 + 80, 0.85 * WINSIZE_Y + 70, to_string(pos.y), "DNF_M_18", RGB(0, 255, 255));
 	}
 }
 
