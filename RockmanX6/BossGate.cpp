@@ -2,7 +2,7 @@
 #include "BossGate.h"
 
 
-HRESULT BossGate::init(int x, int y, int width, int top, int height)
+HRESULT BossGate::init(int x, int y, int width, int top, int height, bool boss)
 {
     status.type = CombatEntityType::Object;
     oStatus.oType = ObjectType::BossGate;
@@ -37,11 +37,9 @@ HRESULT BossGate::init(int x, int y, int width, int top, int height)
     status.dead = false;
     status.overpower = false;
 
-	closeTimer = 0.0f;
-
     animPlay = false;
     isUsed = false;
-    openClose = false;
+    bossRoom = boss;
 
     return S_OK;
 }
@@ -59,37 +57,41 @@ void BossGate::update(void)
     case DoorState::Opening:
         oStatus.oImage->play(0.05f);
 
-		if (oStatus.oImage->getFrameX() >= oStatus.oImage->getMaxFrameX())
+		if (oStatus.oImage->getChangeReady())
+        {
+            oStatus.oImage->setChangeReady(false);
             state = DoorState::Opened;
+        }
         break;
 
     case DoorState::Opened:
         if (CAMERAMANAGER->getIsCamaraMove() == false)
         {
-            openClose = true;
-            oStatus.oImage->setFrameX(0);
             state = DoorState::Closing;
             SOUNDMANAGER->play("SFX_DoorClose", 0.5f);
+            
         }
         break;
 
     case DoorState::Closing:
-        oStatus.oImage->play(0.05f);
-
-        
-
-        if (oStatus.oImage->getFrameX() >= oStatus.oImage->getMaxFrameX())
+        oStatus.oImage->reversePlay(0.05f);
+        if(oStatus.oImage->getChangeReady())
+        {
+            if (bossRoom) UIMANAGER->addUi(UiType::Warning);
+            oStatus.oImage->setChangeReady(false);
             state = DoorState::Closed;
+        }
         break;
 
     case DoorState::Closed:
+        
         break;
     }
 }
 
 void BossGate::render(HDC hdc)
 {
-    oStatus.oImage->frameRender(hdc, oStatus.oHitBox.left, oStatus.oHitBox.top, oStatus.oImage->getFrameX(), openClose);
+    oStatus.oImage->frameRender(hdc, oStatus.oHitBox.left, oStatus.oHitBox.top, oStatus.oImage->getFrameX(), 0);
 
     if (UIMANAGER->getIsDebugMode())
     {

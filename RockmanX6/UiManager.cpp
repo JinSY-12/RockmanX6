@@ -12,15 +12,13 @@ HRESULT UiManager::init(void)
 	charType = -1;
 	bossType - -1;
 	isDebugMode = false;
+	isUiPrint = false;
 
 	return S_OK;
 }
 
 void UiManager::update(void)
 {
-	if (_vUi.size() == 0) isUiMode = false;
-	else isUiMode = true;
-
 	for (auto UIs = _vUi.begin(); UIs != _vUi.end();)
 	{
 		(*UIs)->update();
@@ -28,10 +26,12 @@ void UiManager::update(void)
 		if ((*UIs)->getUiDead() == true)
 		{
 			UIs = _vUi.erase(UIs);
+			if (_vUi.size() == 0) isUiPrint = false;
 		}
 
 		else ++UIs;
 	}
+
 
 	// UI가 isDead이면 삭제하면서 UI 업데이트 돌리기
 	
@@ -71,13 +71,13 @@ void UiManager::update(void)
 	if (!isUiMode) CAMERAMANAGER->padeOut(3.0f);
 	// if (CAMERAMANAGER->isPadeOutComplete());
 
-	if (KEYMANAGER->isOnceKeyDown(VK_TAB)) isDebugMode = !isDebugMode;
+	
 	
 	// if (progressBar != nullptr) progressBar->update();
 
 	_textIcon->play(0.5f);
 	*/
-
+	if (KEYMANAGER->isOnceKeyDown(VK_TAB)) isDebugMode = !isDebugMode;
 }
 
 void UiManager::release(void)
@@ -110,15 +110,21 @@ void UiManager::render(HDC hdc)
 	{
 		(*UIs)->render(hdc);
 	}
-
-	// if (progressBar != nullptr) progressBar->render(hdc);
 }
 
 void UiManager::addUi(UiType uType)
 {
+	isUiPrint = true;
+
 	switch(uType)
 	{
 	case UiType::Ready:
+		Ui = new AlertUI;
+		Ui->init(uType);
+		_vUi.push_back(Ui);
+		break;
+
+	case UiType::Warning:
 		Ui = new AlertUI;
 		Ui->init(uType);
 		_vUi.push_back(Ui);

@@ -29,6 +29,7 @@ private:
 	UiBase* Ui;
 
 	bool isUiMode;
+	bool isUiPrint;
 	bool nextAlbe;
 
 	int mEventNum;
@@ -67,7 +68,11 @@ public:
 
 	inline int isCurrentLine() { return mCurrentLine; }
 
+	void setIsUiMode(bool mode) { isUiMode = mode; }
+	void setIsUiPrint(bool print) { isUiPrint = print; }
+
 	bool getIsUiMode() { return isUiMode; }
+	bool getIsUiPrint() { return isUiPrint; }
 	void changeUiMode() { isUiMode = !isUiMode; }
 
 	inline void chageIsUiMode(void) { isUiMode = (isUiMode) ? false : true; }

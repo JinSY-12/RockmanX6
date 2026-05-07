@@ -86,6 +86,9 @@ private:
 	bool lerpCompleteX;
 	bool lerpCompleteY;
 
+	bool cameraMoveEnd;
+	float timer;
+
 	bool test;
 
 	int locationTestX;
@@ -139,7 +142,8 @@ public:
 
 	bool getIsAutoMove() { return isAutoMove; }
 	inline bool getIsCamaraMove() { return cameraMove; }
-	
+	inline bool getCameraMoveEnd() { return cameraMoveEnd; }
+
 	string getZoneNum() { return zoneNum; }
 
 	float cameraLerpY(float slopeStartX, float slopeEndX, float bottomStart, float bottomEnd);
@@ -157,6 +161,7 @@ public:
 		locationTestBottom = bottom;
 
 		test = true;
+		cameraMove = true;
 	}
 
 

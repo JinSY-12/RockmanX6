@@ -33,6 +33,11 @@ void X::update(void)
 {
 	CAMERAMANAGER->setPlayerPos(pos.x, pos.y - status.hitBoxHeight / 2);
 
+	bool allowInput = !(CAMERAMANAGER->getIsCamaraMove() || !CAMERAMANAGER->getCameraMoveEnd() || UIMANAGER->getIsUiPrint());
+	// 입력 처리 블록은 pStatus.movable 대신 allowInput을 사용해도 되고,
+	// 일관성을 위해 pStatus.movable도 미리 설정
+	pStatus.movable = allowInput;
+		
 #pragma region WarpIn
 
 	/////////////////////////////////
@@ -48,13 +53,14 @@ void X::update(void)
 		if (pStatus.isOnGround == false)
 		{
 			pStatus.player->pause();
-			
 			inputEnabled = false;
 		}
 
 		// 땅에 도착
 		else
 		{
+			pStatus.isWarp = false;
+
 			pStatus.player->resume();
 			// 등장 애니메이션
 			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
@@ -437,7 +443,7 @@ void X::update(void)
 	{
 		applyForce();
 		currentAnimChange();
-		
+
 		if (CAMERAMANAGER->getIsCamaraMove())
 		{
 			cameraMoveDone = true;
@@ -447,7 +453,7 @@ void X::update(void)
 			if (currentState == CharacterState::JumpUp || currentState == CharacterState::Climb
 				|| currentState == CharacterState::FallingDown || currentState == CharacterState::DashEnd
 				|| currentState == CharacterState::Idle);
-			
+
 			else pStatus.player->play(animSpeed);
 		}
 
@@ -455,14 +461,30 @@ void X::update(void)
 		{
 			if (cameraMoveDone)
 			{
-				if (currentState == CharacterState::Dash)
+				pStatus.velocityX = 0.0f;
+
+				pStatus.isDash = false;
+				pStatus.isJumpDash = false;
+				currentState = CharacterState::Idle;
+
+				if (CAMERAMANAGER->getCameraMoveEnd())
 				{
-					pStatus.isDash = false;
-					currentState = CharacterState::Idle;
+					// pStatus.movable = true;
+					cameraMoveDone = false;
 				}
-				pStatus.movable = true;
-				cameraMoveDone = false;
 			}
+
+			else
+			{
+				if (UIMANAGER->getIsUiPrint())
+				{
+					pStatus.velocityX = 0.0f;
+					// pStatus.movable = false;
+					if(currentState != CharacterState::Warp) currentState = CharacterState::Idle;
+				}
+				// else pStatus.movable = true;
+			}
+
 			pStatus.player->play(animSpeed);
 		}
 
@@ -931,9 +953,7 @@ void X::spawn(int x, int y)
 	// x는 센터, y는 바닥 기준 좌표
 	pos.x = x;
 	pos.y = y;
-
-	// charPos.x = x;
-	// charPos.y = y;
+	
 	status.type = CombatEntityType::Player;
 
 	pStatus.hitBox = RectMakeCenter(pos.x, 0 - status.hitBoxHeight / 2, status.hitBoxWidth, status.hitBoxHeight);
@@ -961,6 +981,7 @@ void X::spawn(int x, int y)
 	hpBar.init(PlayerType::X);
 	hpBar.setPlayerInfo(static_cast<int>(status.hp), static_cast<int>(status.maxHp), static_cast<int>(status.mp), 2);
 	status.physicalDamage = 1;
+	pStatus.isWarp = true;
 
 	////////////////////
 	// 상태 초기화
@@ -983,6 +1004,7 @@ void X::spawn(int x, int y)
 	ladderAble = false;
 	ladderEnd = false;
 	cameraMoveDone = false;
+	warpSoundOnce = false;
 
 	// 입력 초기화
 	inputEnabled = false;

@@ -8,12 +8,12 @@ private:
 	GImage* alertImage;
 
 	bool noticeStart;
-	float readyTimer;
-	bool playOnce;
-
 	bool playAble;
 
-	bool soundOnce;
+	float readyTimer;
+
+	int prevFrame;
+	int nextSprite;
 
 	Position uiPos;
 

@@ -106,10 +106,18 @@ void Player::render(HDC memDC)
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 580, WINSIZE_Y / 100 + 45, "사다리 매달림", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 580, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
 
+		if (pStatus.movable) temp = "가능";
+		else temp = "불가능";
+
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100, "움직임", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
+
 		// 히트박스 출력
 		DrawRectMakeColor(memDC, pStatus.hitBox, RGB(255, 0, 0), 2);
 		DrawRectMakeColor(memDC, pStatus.floorCheck, RGB(0, 0, 255), 2);
 		DrawRectMakeColor(memDC, pStatus.subRect, RGB(255, 0, 255), 2);
+
+		// 세이버 범위
 		// if(canHit) DrawRectMakeColor(memDC(), pStatus.saberHitBox, RGB(255, 0, 255), 4);
 	}
 	
@@ -213,13 +221,7 @@ void Player::sfxPlay(void)
 
 	if (previousState != currentState)
 	{
-		if (currentState == CharacterState::Warp)
-		{
-			soundResult = "SFX_" + pStatus.charName + "WarpIn";
-			SOUNDMANAGER->play(soundResult, 0.5f);
-		}
-
-		else if (currentState == CharacterState::JumpUp)
+		if (currentState == CharacterState::JumpUp)
 		{
 			int random = RND->getInt(4);
 			if (random == 0);
@@ -404,14 +406,18 @@ void Player::applyForce(void)
 		if (pos.x - 12 * SCALE_FACTOR + pStatus.velocityX <= CAMERAMANAGER->getCameraRange().left)
 		{
 			pos.x = CAMERAMANAGER->getCameraRange().left + 12 * SCALE_FACTOR;
-			currentState = CharacterState::Idle;
+			if(pStatus.isOnGround) currentState = CharacterState::Idle;
+			pStatus.isDash = false;
+			pStatus.isJumpDash = false;
 		}
 
 		// 카메라 오른쪽으로 이동 막기
 		else if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().right && !CAMERAMANAGER->getIsCamaraMove())
 		{
 			pos.x = CAMERAMANAGER->getCameraRange().right - 12 * SCALE_FACTOR;
-			currentState = CharacterState::Idle;
+			if (pStatus.isOnGround) currentState = CharacterState::Idle;
+			pStatus.isDash = false;
+			pStatus.isJumpDash = false;
 		}
 
 		else
@@ -427,14 +433,24 @@ void Player::applyForce(void)
 	// 워프 - 존나 빠르게
 	if (!pStatus.isOnGround && currentState == CharacterState::Warp)
 	{
-		if (CAMERAMANAGER->getLockY() == true)
+		if (!UIMANAGER->getIsUiPrint())
 		{
-			pos.y += 16;
-			pStatus.hitBox.top += 16;
-			pStatus.hitBox.bottom += 16;
-		}
+			if (!warpSoundOnce)
+			{
+				soundResult = "SFX_" + pStatus.charName + "WarpIn";
+				SOUNDMANAGER->play(soundResult, 0.5f);
+				warpSoundOnce = true;
+			}
 
-		else pos.y += 16;
+			if (CAMERAMANAGER->getLockY() == true)
+			{
+				pos.y += 16;
+				pStatus.hitBox.top += 16;
+				pStatus.hitBox.bottom += 16;
+			}
+
+			else pos.y += 16;
+		}
 	}
 
 	// Y축 이동 - 기본 베이스

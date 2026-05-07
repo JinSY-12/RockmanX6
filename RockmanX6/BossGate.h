@@ -19,14 +19,11 @@ private:
 		int top;
 		int bottom;
 	}camera;
-	
 
-	bool openClose;
-
-	float closeTimer;
+	bool bossRoom;
 
 public:
-	HRESULT init(int x, int y, int width, int top, int height) override;
+	HRESULT init(int x, int y, int width, int top, int height, bool boss) override;
 
 	void release(void) override;
 	void update(void) override;

@@ -49,40 +49,42 @@ HRESULT HighMax::init(int x, int y)
 
 void HighMax::update(void)
 {
-	switch (bState)
+	if (!UIMANAGER->getIsUiPrint())
 	{
-	case BossState::Idle:
-		animSpeed = 0.06f;
-//		bStatus.bImage->play(animSpeed);
-		break;
-	}
+		switch (bState)
+		{
+		case BossState::Idle:
+			animSpeed = 0.06f;
+			break;
+		}
 
-	if (KEYMANAGER->isOnceKeyDown('B'))
-	{
-		cout << "등장" << endl;
-	}
+		if (KEYMANAGER->isOnceKeyDown('B'))
+		{
+			cout << "등장" << endl;
+		}
 
-	if (KEYMANAGER->isOnceKeyDown('N'))
-	{
-		cout << "시즈샷" << endl;
+		if (KEYMANAGER->isOnceKeyDown('N'))
+		{
+			cout << "시즈샷" << endl;
 
-		bState = BossState::AttReady;
-		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
-		patternTest = true;
-		patternTest2 = false;
-		// siegeShoot();
-	}
+			bState = BossState::AttReady;
+			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
+			patternTest = true;
+			patternTest2 = false;
+			// siegeShoot();
+		}
 
-	if (KEYMANAGER->isOnceKeyDown('M'))
-	{
-		cout << "데스볼" << endl;
+		if (KEYMANAGER->isOnceKeyDown('M'))
+		{
+			cout << "데스볼" << endl;
 
-		bState = BossState::DeathBallShoot;
-		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_DeathBallShoot")->cloneImage();
-		SOUNDMANAGER->play("Voice_DeathBall", 0.3f);
-		patternTest = false;
-		patternTest2 = true;
-		// deathBall();
+			bState = BossState::DeathBallShoot;
+			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_DeathBallShoot")->cloneImage();
+			SOUNDMANAGER->play("Voice_DeathBall", 0.3f);
+			patternTest = false;
+			patternTest2 = true;
+			// deathBall();
+		}
 	}
 
 	if (patternTest && !patternTest2)
@@ -98,8 +100,7 @@ void HighMax::update(void)
 			deathBall();
 		}
 	}
-	
-	
+
 	setBossHitbox();
 }
 

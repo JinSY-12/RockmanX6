@@ -119,7 +119,7 @@ protected:
 
 		// 상태값
 		bool invincible;
-		// bool lookRight;
+		bool isWarp;
 		bool isOnGround;
 		bool isOnTop;
 		bool isOnLadder;
@@ -213,6 +213,7 @@ protected:
 
 	// 사운드 관련
 	string soundResult;
+	bool warpSoundOnce;
 
 	// 키 입력 관련
 	bool multiInput;
@@ -329,7 +330,7 @@ public:
 	inline bool getIsOnLadder() { return pStatus.isOnLadder; }
 	inline float getVelocityX() { return pStatus.velocityX; }
 	inline float getVelocityY() { return pStatus.velocityY; }
-
+	inline bool getIsWarp() { return pStatus.isWarp; }
 
 	void setOverPower(bool op, BulletSize bullet);
 	void setAnimDelay(bool delay) { animDelay = delay; }

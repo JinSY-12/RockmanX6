@@ -32,7 +32,7 @@ public:
 	void update(void);
 	void render(void);
 
-	void spawnObject(ObjectType oType, int x, int y, int width, int top, int height);
+	void spawnObject(ObjectType oType, int x, int y, int width, int top, int height, bool boss = false);
 	
 	void checkObjectDead(void);
 

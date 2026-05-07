@@ -54,6 +54,7 @@ public:
 	virtual HRESULT init(int x, int y);
 	virtual HRESULT init(int x, int y, int locationX, int locationY);
 	virtual HRESULT init(int x, int y, int width, int top, int height);
+	virtual HRESULT init(int x, int y, int width, int top, int height, bool bossRoom);
 
 	virtual void release(void);
 	virtual void update(void);

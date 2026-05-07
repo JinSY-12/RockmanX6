@@ -40,8 +40,8 @@ void MainGame::update(void)
 	GameNode::update();
 
 	CAMERAMANAGER->update();
-	SCENEMANAGER->update();
 	UIMANAGER->update();
+	SCENEMANAGER->update();
 }
 
 void MainGame::render(void)

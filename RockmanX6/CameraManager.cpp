@@ -30,9 +30,12 @@ HRESULT CameraManager::init(void)
     test = false;
     locationTestX = 0;
     locationTestRight = 0;
+    cameraMoveEnd = true;
 
     locationTestY = 0;
     locationTestBottom = 0;
+
+    timer = 0.0f;
 
     moveDir = None;
 
@@ -150,11 +153,21 @@ void CameraManager::update(void)
     {
         if (forceCameraMove(locationTestX, locationTestBottom, locationTestRight, locationTestY))
         {
-            cameraMove = false;
             test = false;
+            timer = TIMEMANAGER->getWorldTime();
+            cameraMove = false;
+            cameraMoveEnd = false;
         }
     }
 
+    if (!cameraMoveEnd)
+    {
+        if (TIMEMANAGER->getWorldTime() - timer >= 1.0f)
+        {
+            cameraMoveEnd = true;
+        }
+    }
+    
     setMaxCameraRange();
     cameraOffset();
 
@@ -184,6 +197,7 @@ void CameraManager::render(HDC hdc)
     _whiteImage->alphaRender(hdc, _whiteAlpha);
 }
 
+#pragma region 카메라 효과
 void CameraManager::padeIn(float padeTime)
 {
     _blackAlpha = 255.0f;
@@ -215,6 +229,7 @@ void CameraManager::whiteOut(float padeTime)
     _isPadeResult = false;
     _isWhitePadeOut = true;
 }
+#pragma endregion
 
 void CameraManager::cameraOffset(void)
 {
@@ -222,12 +237,10 @@ void CameraManager::cameraOffset(void)
     {
         camera.x = playerPos.x - WINSIZE_X / 2;
         camera.y = playerPos.y - WINSIZE_Y / 2;
-    
-    
+
     /////////////////////////
     // 카메라 x좌표 고정
     /////////////////////////
-
         if (camera.x <= cameraRange.left)
         {
             camera.x = cameraRange.left;
@@ -242,11 +255,9 @@ void CameraManager::cameraOffset(void)
 
         else cameraLockX = false;
     
-    
     /////////////////////////
     // 카메라 y좌표 고정
     /////////////////////////
-
         if (camera.y <= cameraRange.top)
         {
             camera.y = cameraRange.top;
@@ -258,8 +269,8 @@ void CameraManager::cameraOffset(void)
             camera.y = cameraRange.bottom - WINSIZE_Y;
             cameraLockY = true;
         }
-
-         else cameraLockY = false;
+        
+        else cameraLockY = false;
     }
 }
 
@@ -435,7 +446,7 @@ bool CameraManager::forceCameraMove(int targetPointLeft, int targetPointBottom, 
 {
     if (camera.x < targetPointLeft)
     {
-        cameraMove = true;
+        // cameraMove = true;
         lerpCompleteX = false;
         camera.x += 5;
         cameraRange.left = camera.x;
@@ -444,7 +455,7 @@ bool CameraManager::forceCameraMove(int targetPointLeft, int targetPointBottom, 
 
     else
     {
-        cameraMove = false;
+        // cameraMove = false;
         lerpCompleteX = true;
         cameraRange.left = targetPointLeft;
         cameraRange.right = targetRight;
@@ -462,7 +473,7 @@ bool CameraManager::forceCameraMove(int targetPointLeft, int targetPointBottom, 
     {
         if (camera.y + WINSIZE_Y > targetPointBottom)
         {
-            cameraMove = true;
+            // cameraMove = true;
             lerpCompleteY = false;
             camera.y -= 5;
             cameraRange.bottom -= camera.y + 15 * SCALE_FACTOR;;
@@ -484,7 +495,7 @@ bool CameraManager::forceCameraMove(int targetPointLeft, int targetPointBottom, 
     {
         if (camera.y + WINSIZE_Y < targetPointBottom)
         {
-            cameraMove = true;
+            // cameraMove = true;
             lerpCompleteY = false;
             camera.y += 5;
             cameraRange.top = camera.y + 15 * SCALE_FACTOR;

@@ -12,16 +12,24 @@ HRESULT AlertUI::init(UiType type)
 		uiPos.y = (WINSIZE_Y - alertImage->getFrameHeight()) / 2;
 		
 		readyTimer = TIMEMANAGER->getWorldTime();
-		uType = type;
+		noticeStart = false;
 
 		break;
 
 	case UiType::Warning:
 		// 워닝 이미지 추가
+		alertImage = IMAGEMANAGER->findImage("Ui_Warning0");
+		uiPos.x = (WINSIZE_X - alertImage->getFrameWidth()) / 2;
+		uiPos.y = WINSIZE_Y / 8;
+
+		SOUNDMANAGER->play("SFX_Warning", 0.5f);
+		nextSprite = 0;
+
+		noticeStart = true;
 		break;
 	}
 
-	playOnce = false;
+	uType = type;
 	uiDead = false;
 	return S_OK;
 }
@@ -44,46 +52,55 @@ void AlertUI::update()
 		Warning();
 		break;
 	}
-	
 }
 
 
 void AlertUI::render(HDC hdc)
 {
-	alertImage->frameRender(hdc, uiPos.x, uiPos.y, alertImage->getFrameX(), 0);
-	// if(isUiMode) 
+	if (noticeStart) alertImage->frameRender(hdc, uiPos.x, uiPos.y, alertImage->getFrameX(), 0);
 }
 
 void AlertUI::Ready(void)
 {
-	if (!playOnce)
+	// 정지
+	if (TIMEMANAGER->getWorldTime() - readyTimer >= 1.5f)
 	{
-		if (TIMEMANAGER->getWorldTime() - readyTimer >= 1.5f)
-		{
-			alertImage->play(0.025f);
-		}
-
-		if (alertImage->getFrameX() == 3)
-		{
-			SOUNDMANAGER->play("SFX_Ready", 0.5f);
-			readyTimer = TIMEMANAGER->getWorldTime();
-			playOnce = true;
-		}
+		alertImage->play(0.025f);
+		noticeStart = true;
 	}
 
-	else
+	// 각 프레임마다 효과 추가
+	if (prevFrame != alertImage->getFrameX())
 	{
-		if (TIMEMANAGER->getWorldTime() - readyTimer >= 1.5f)
-		{
-			alertImage->play(0.025f);
-		}
+		if (alertImage->getFrameX() == 3) SOUNDMANAGER->play("SFX_Ready", 0.5f);
+		else if (alertImage->getFrameX() == 7) readyTimer = TIMEMANAGER->getWorldTime();		
 	}
 
-	// 이미지 애니메이션 쫘라락
+	// 애니메이션 끝나면 삭제 처리 요청
 	if (alertImage->getChangeReady()) uiDead = true;
+	
+	// 프레임 변화 확인용
+	prevFrame = alertImage->getFrameX();
 }
 
 void AlertUI::Warning()
 {
-	uiDead = true;
+	alertImage->play(0.04f);
+
+	if (alertImage->getChangeReady())
+	{
+		alertImage->setChangeReady(false);
+		alertImage->setFrameX(0);
+		if (nextSprite < 3)
+		{
+			nextSprite++;
+			alertImage = IMAGEMANAGER->findImage("Ui_Warning" + to_string(nextSprite));
+		}
+
+		else
+		{
+			uiDead = true;
+			nextSprite = 0;
+		}
+	}
 }

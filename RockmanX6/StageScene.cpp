@@ -102,10 +102,10 @@ void StageScene::render(void)
 
 	EFFECTMANAGER->render(getMemDC());
 
-	
+	/*
 	if (noticeStart) mReadyLogo->render(getMemDC(), (WINSIZE_X - mReadyLogo->getWidth()) / 2,
 		(WINSIZE_Y - mReadyLogo->getHeight()) / 2);
-	
+	*/
 
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
@@ -139,22 +139,26 @@ void StageScene::stageSettting(BossType bType)
 			stagBGM = "BGM_Stage_Intro";
 
 			// 빠른 적군 대전 테스트
-			// player->init(WINSIZE_X / 3, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(WINSIZE_X / 3, mStage->getHeight() - 290 * SCALE_FACTOR);
 			// 시작점
-			// player->init(WINSIZE_X / 2, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(WINSIZE_X / 2, mStage->getHeight() - 290 * SCALE_FACTOR);
 			// 사다리 테스트
-			// player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 290 * SCALE_FACTOR);
 			// 보스 게이트 테스트
-			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 287 * SCALE_FACTOR);
+			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 290 * SCALE_FACTOR);
 			// 보스 테스트
-			player->init(5590 * SCALE_FACTOR, 50 * SCALE_FACTOR);
+			player->init(5900 * SCALE_FACTOR, 0 * SCALE_FACTOR);
+			CAMERAMANAGER->fixPos(5744 * SCALE_FACTOR, 0);
 
 			player->setStageGravity(gravity);
+
+			UIMANAGER->addUi(UiType::Ready);
+
 			rectSetting();
 			enemySettting(bType);
 			objectSetting(bType);
 
-			UIMANAGER->addUi(UiType::Ready);
+			// UIMANAGER->addUi(UiType::Warning);
 			break;
 
 		// 커맨드 얀마크
@@ -247,7 +251,7 @@ void StageScene::objectSetting(BossType bType)
 		
 		// 보스 게이트
 		oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 128 * SCALE_FACTOR, 320 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
-		oManager.spawnObject(ObjectType::BossGate, 6063 * SCALE_FACTOR, 128 * SCALE_FACTOR, 400 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR);
+		oManager.spawnObject(ObjectType::BossGate, 6063 * SCALE_FACTOR, 128 * SCALE_FACTOR, 400 * SCALE_FACTOR, 0, 240 * SCALE_FACTOR, true);
 		
 		// 사다리
 		oManager.spawnObject(ObjectType::Ladder, 1989 * SCALE_FACTOR, 786 * SCALE_FACTOR, 0, 0, 0);
@@ -509,6 +513,12 @@ void StageScene::stageCollision(void)
 					break;
 				}
 
+				else if (color == RGB(255, 255, 0) && player->getIsWarp() == false)
+				{
+					player->setIsOnGround(true, row);
+					break;
+				}
+				
 				else if (color == RGB(0, 0, 255))
 				{
 					if (!player->getIsOnLadder())
@@ -529,6 +539,12 @@ void StageScene::stageCollision(void)
 				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
 
 				if (color == RGB(255, 0, 0))
+				{
+					player->setIsOnGround(true, row);
+					break;
+				}
+
+				else if (color == RGB(255, 255, 0) && player->getIsWarp() == false)
 				{
 					player->setIsOnGround(true, row);
 					break;
@@ -557,7 +573,7 @@ void StageScene::stageCollision(void)
 				// 컬러 비교
 				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
 
-				if (color == RGB(255, 0, 0))
+				if (color == RGB(255, 0, 0) || color == RGB(255, 255, 0))
 				{
 					player->setTopCollision(true, row);
 					break;
@@ -572,7 +588,7 @@ void StageScene::stageCollision(void)
 				// 컬러 비교
 				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
 
-				if (color == RGB(255, 0, 0))
+				if (color == RGB(255, 0, 0) || color == RGB(255, 255, 0))
 				{
 					player->setTopCollision(true, row);
 					break;

@@ -33,7 +33,7 @@ void ObjectManager::render(void)
 	}
 }
 
-void ObjectManager::spawnObject(ObjectType oType, int x, int y, int width, int top, int height)
+void ObjectManager::spawnObject(ObjectType oType, int x, int y, int width, int top, int height, bool boss)
 {
 	switch(oType)
 	{
@@ -44,7 +44,7 @@ void ObjectManager::spawnObject(ObjectType oType, int x, int y, int width, int t
 		break;
 	case ObjectType::BossGate:
 		_object = new BossGate;
-		_object->init(x, y, width, top, height);
+		_object->init(x, y, width, top, height, boss);
 		_vObject.push_back(_object);
 		break;
 	case ObjectType::Ladder:
