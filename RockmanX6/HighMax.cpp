@@ -21,7 +21,7 @@ HRESULT HighMax::init(int x, int y)
 	status.height = bStatus.bImage->getFrameHeight();
 
 	bStatus.overPower = false;
-	status.lookRight = true;
+	status.lookRight = false;
 
 	bStatus.bHitBox = bStatus.bWorldRect = RectMakeCenter(x + status.width /2, y - status.height / 2, status.width, status.height);
 	
@@ -106,6 +106,8 @@ void HighMax::update(void)
 
 void HighMax::bossAppearance(void)
 {
+
+
 
 }
 

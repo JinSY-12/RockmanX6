@@ -68,81 +68,111 @@ void EffectManager::spawnEffect(EffectType eType, int x, int y, int width, int h
 {
 	effect.direct = direct;
 	effect.alpha = 255;
+	
+	int imgWidth;
+	int imgHeight;
 
 	switch (eType)
 	{
 	case EffectType::SmallEnemyBomb:
 		effect.image = IMAGEMANAGER->findImage("SFX_Explosion")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = direct ? 0 * SCALE_FACTOR : 0 * SCALE_FACTOR;
 		effect.offsetY = 0 * SCALE_FACTOR;
 		effect.aniSpeed = 0.05f;
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::DashStartDust:
 		effect.image = IMAGEMANAGER->findImage("SFX_DashBoost")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = direct ? 0 * SCALE_FACTOR : 0 * SCALE_FACTOR;
 		effect.offsetY = 0 * SCALE_FACTOR;
 		effect.aniSpeed = 0.05f;
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::WallKick:
 		effect.image = IMAGEMANAGER->findImage("SFX_WallKick")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = 7 * SCALE_FACTOR;
 		effect.offsetY = -8 * SCALE_FACTOR;
 		effect.aniSpeed = 0.05f;
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::BursterBlock:
 		effect.image = IMAGEMANAGER->findImage("SFX_BursterBlock")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = 3 * SCALE_FACTOR;
 		effect.offsetY = -9 * SCALE_FACTOR;
 		effect.aniSpeed = 0.03f;
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::BursterHit_1:
 		effect.image = IMAGEMANAGER->findImage("SFX_BursterHit_1")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = 6 * SCALE_FACTOR;
 		effect.offsetY = -5 * SCALE_FACTOR;
 		effect.aniSpeed = 0.03f;
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::BursterHit_2:
 		effect.image = IMAGEMANAGER->findImage("SFX_BursterHit_2")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = 7 * SCALE_FACTOR;
 		effect.offsetY = -18 * SCALE_FACTOR;
 		effect.aniSpeed = 0.03f;
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::SaberHit_1:
 		effect.image = IMAGEMANAGER->findImage("SFX_SaberHit_1")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = 0 * SCALE_FACTOR;
 		effect.offsetY = 0 * SCALE_FACTOR;
 		effect.aniSpeed = 0.08f;
 		effect.direct = 0;
 		effect.alpha = 150;
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::SaberHit_2:
 		effect.image = IMAGEMANAGER->findImage("SFX_SaberHit_1")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = 0 * SCALE_FACTOR;
 		effect.offsetY = 0 * SCALE_FACTOR;
 		effect.aniSpeed = 0.08f;
 		effect.alpha = 150;
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::SaberHit_3:
 		effect.image = IMAGEMANAGER->findImage("SFX_SaberHit_2")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = 0 * SCALE_FACTOR;
 		effect.offsetY = 0 * SCALE_FACTOR;
 		effect.aniSpeed = 0.08f;
 		effect.direct = 1;
 		effect.alpha = 150;
+		_vEffect.push_back(effect);
 		break;
 	case EffectType::SaberHit_4:
 		effect.image = IMAGEMANAGER->findImage("SFX_SaberHit_3")->cloneImage();
+		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
+		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = 0 * SCALE_FACTOR;
 		effect.offsetY = 0 * SCALE_FACTOR;
 		effect.aniSpeed = 0.08f;
 		effect.alpha = 150;
+		_vEffect.push_back(effect);
+		break;
+	case EffectType::None:
 		break;
 	}
-	
-	effect.x = x + (width - effect.image->getFrameWidth()) / 2;
-	effect.y = y - (height + effect.image->getFrameHeight()) / 2;
-
-	_vEffect.push_back(effect);
 }
 
 void EffectManager::SpawnFragments(EnemyType type, int x, int y)

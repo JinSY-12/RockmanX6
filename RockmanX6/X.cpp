@@ -33,9 +33,8 @@ void X::update(void)
 {
 	CAMERAMANAGER->setPlayerPos(pos.x, pos.y - status.hitBoxHeight / 2);
 
-	bool allowInput = !(CAMERAMANAGER->getIsCamaraMove() || !CAMERAMANAGER->getCameraMoveEnd() || UIMANAGER->getIsUiPrint());
-	// 입력 처리 블록은 pStatus.movable 대신 allowInput을 사용해도 되고,
-	// 일관성을 위해 pStatus.movable도 미리 설정
+	bool allowInput = !(CAMERAMANAGER->getIsCamaraMove() || !CAMERAMANAGER->getCameraMoveEnd()
+		|| UIMANAGER->getIsUiPrint() || (attState == SholderState::Special && currentState == CharacterState::Idle));
 	pStatus.movable = allowInput;
 		
 #pragma region WarpIn
@@ -469,7 +468,6 @@ void X::update(void)
 
 				if (CAMERAMANAGER->getCameraMoveEnd())
 				{
-					// pStatus.movable = true;
 					cameraMoveDone = false;
 				}
 			}
@@ -479,10 +477,8 @@ void X::update(void)
 				if (UIMANAGER->getIsUiPrint())
 				{
 					pStatus.velocityX = 0.0f;
-					// pStatus.movable = false;
 					if(currentState != CharacterState::Warp) currentState = CharacterState::Idle;
 				}
-				// else pStatus.movable = true;
 			}
 
 			pStatus.player->play(animSpeed);
@@ -1084,9 +1080,10 @@ void X::spawn(int x, int y)
 
 void X::specialAttack(void)
 {
-	if (!pStatus.isAttack && pStatus.movable)
+	if (!pStatus.isAttack)// && pStatus.movable)
 	{
 		attState = SholderState::Special;
+		pStatus.movable = false;
 
 		if (pStatus.isOnGround)
 		{

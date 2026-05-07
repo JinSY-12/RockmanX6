@@ -190,8 +190,8 @@ void StageScene::enemySettting(BossType bType)
 		int up;
 		up = 50;
 
-		// eManager.spawnBoss(BossType::Intro, 6310 * SCALE_FACTOR, (180 - up) * SCALE_FACTOR);
-		eManager.spawnBoss(BossType::Intro, 6090 * SCALE_FACTOR, (180 - up) * SCALE_FACTOR);
+		eManager.spawnBoss(BossType::Intro, 6310 * SCALE_FACTOR, (180 - up) * SCALE_FACTOR);
+		// eManager.spawnBoss(BossType::Intro, 6090 * SCALE_FACTOR, (180 - up) * SCALE_FACTOR);
 
 		// 세팅 시작
 		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
