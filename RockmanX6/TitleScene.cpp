@@ -193,7 +193,7 @@ void TitleScene::addImage(void)
 	//// 배경 스테이지 ////
 	// 인트로 스테이지
 	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6415 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
-	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel2.bmp", 6415 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6415 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
 
 	//////////////////////////////////
 	// 공통 이펙트

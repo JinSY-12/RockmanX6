@@ -147,6 +147,7 @@ void StageScene::stageSettting(BossType bType)
 			// 보스 게이트 테스트
 			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 290 * SCALE_FACTOR);
 			// 보스 테스트
+			// player->init(5590 * SCALE_FACTOR, 0 * SCALE_FACTOR);
 			player->init(5900 * SCALE_FACTOR, 0 * SCALE_FACTOR);
 			CAMERAMANAGER->fixPos(5744 * SCALE_FACTOR, 0);
 
@@ -458,7 +459,7 @@ void StageScene::rectSetting(void)
 	temp = floor.right;
 
 	// 33
-	floor = RectMake(temp + 128 * SCALE_FACTOR, mStage->getHeight() - 494 * SCALE_FACTOR, 304 * SCALE_FACTOR, 52 * SCALE_FACTOR);
+	floor = RectMake(temp + 128 * SCALE_FACTOR, mStage->getHeight() - 494 * SCALE_FACTOR, 304 * SCALE_FACTOR, 65 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
 	// 34
@@ -475,6 +476,32 @@ void StageScene::rectSetting(void)
 	
 	// 37
 	floor = RectMake(floor.right, mStage->getHeight() - 729 * SCALE_FACTOR, 64 * SCALE_FACTOR, 489 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	// 38
+	floor = RectMake(floor.right + 16 * SCALE_FACTOR, 0 * SCALE_FACTOR, 64 * SCALE_FACTOR, 158 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	// 39
+	floor = RectMake(floor.right + 160 * SCALE_FACTOR, mStage->getHeight() - 765 * SCALE_FACTOR, 48 * SCALE_FACTOR, 40 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	// 40
+	floor = RectMake(floor.right + 336 * SCALE_FACTOR, 0 * SCALE_FACTOR, 14 * SCALE_FACTOR, 125 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	// 41
+	floor = RectMake(floor.right + 321 * SCALE_FACTOR, 0 * SCALE_FACTOR, 16 * SCALE_FACTOR, 200 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	// 42
+	floor = RectMake(5120 * SCALE_FACTOR, 66 * SCALE_FACTOR, 48 * SCALE_FACTOR, 60 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right + 64 * SCALE_FACTOR, 66 * SCALE_FACTOR, 48 * SCALE_FACTOR, 60 * SCALE_FACTOR);
+	_vFloor.push_back(floor);
+
+	floor = RectMake(floor.right + 64 * SCALE_FACTOR, 66 * SCALE_FACTOR, 48 * SCALE_FACTOR, 60 * SCALE_FACTOR);
 	_vFloor.push_back(floor);
 
 	// -5 끝부분 다듬기 여기까지
@@ -755,32 +782,5 @@ void StageScene::stageCollision(void)
 		if (bulletHit) it = bullets.erase(it);
 		else  ++it;
 	}
-
-	/*
-	// 벽과 적 총알 충돌 판정 = 총알이 벽 관통이 안되게
-	vector<Bullet*>& enemyBullets = bManager.getEnemyBullet();
-
-	for (auto it = enemyBullets.begin(); it != enemyBullets.end();)
-	{
-		bool bulletHit = false;
-
-		for (auto floor = _vCheckFloor.begin(); floor != _vCheckFloor.end(); ++floor)
-		{
-			RECT temp;
-			if (IntersectRect(&temp, &(*it)->getBulletRect(), &(*floor)))
-			{
-				SOUNDMANAGER->play("SFX_SmallExplosion", 0.3f);
-				EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, (*it)->getBulletPosX(), (*it)->getBulletPosY()
-					, (*it)->getBulletWidth(), (*it)->getBulletHeight(), 0);
-				bulletHit = true;
-				break;
-			}
-		}
-
-		if (bulletHit) it = enemyBullets.erase(it);
-		else  ++it;
-	}
-	*/
-
 }
 

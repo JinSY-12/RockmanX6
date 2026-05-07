@@ -25,7 +25,7 @@ void Bullet::update(void)
 	bStatus.hitBox.bottom = bStatus.pos.y + bStatus.shape->getFrameHeight() / 2 - CAMERAMANAGER->getCameraPos().y;
 
 	if(bStatus.hitBox.left > WINSIZE_X + 30 * SCALE_FACTOR) bStatus.isFire = false;
-	else if (bStatus.hitBox.right < 0 + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.right < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 	else if (bStatus.hitBox.top > WINSIZE_Y + 30 * SCALE_FACTOR) bStatus.isFire = false;
 	else if (bStatus.hitBox.bottom < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 }
@@ -177,7 +177,7 @@ void SiegeShoot::update(void)
 	bStatus.hitBox.bottom = bStatus.pos.y + bStatus.height / 2 - CAMERAMANAGER->getCameraPos().y;
 
 	if (bStatus.hitBox.left > WINSIZE_X + 30 * SCALE_FACTOR) bStatus.isFire = false;
-	else if (bStatus.hitBox.right < 0 + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.right < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 	else if (bStatus.hitBox.top > WINSIZE_Y + 30 * SCALE_FACTOR) bStatus.isFire = false;
 	else if (bStatus.hitBox.bottom < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 
@@ -265,7 +265,7 @@ void DeathBall1::update(void)
 	bStatus.hitBox.bottom = bStatus.pos.y + bStatus.height / 2 - CAMERAMANAGER->getCameraPos().y;
 
 	if (bStatus.hitBox.left > WINSIZE_X + 30 * SCALE_FACTOR) bStatus.isFire = false;
-	else if (bStatus.hitBox.right < 0 + 30 * SCALE_FACTOR) bStatus.isFire = false;
+	else if (bStatus.hitBox.right < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 	else if (bStatus.hitBox.top > WINSIZE_Y + 30 * SCALE_FACTOR) bStatus.isFire = false;
 	else if (bStatus.hitBox.bottom < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 

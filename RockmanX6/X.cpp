@@ -47,7 +47,7 @@ void X::update(void)
 	// 게임 시작시 스테이지에 소환 되는 상황
 	if (currentState == CharacterState::Warp)
 	{
-		hpBar.setVisible(true);
+		
 		// 하늘에서 내려오고 있을 때 - 스프라이트 보면 애니메이션이 동작 안함
 		// if (pStatus.hitBox.bottom <= WINSIZE_Y)
 		if (pStatus.isOnGround == false)

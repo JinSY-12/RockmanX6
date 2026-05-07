@@ -439,6 +439,7 @@ void Player::applyForce(void)
 			{
 				soundResult = "SFX_" + pStatus.charName + "WarpIn";
 				SOUNDMANAGER->play(soundResult, 0.5f);
+				hpBar.setVisible(true);
 				warpSoundOnce = true;
 			}
 

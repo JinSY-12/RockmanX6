@@ -118,7 +118,7 @@ void DamageManager::onEvent(const Event& event)
 					offset = bullet->getBulletDir() ? damage->target->getWidth() / 2 : -(damage->target->getWidth() / 2);
 					EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
 
-					SOUNDMANAGER->play("SFX_Block", 0.5f);
+					SOUNDMANAGER->play("SFX_Block", 0.3f);
 					bullet->setBulletFire(false);
 					break;
 
@@ -127,7 +127,7 @@ void DamageManager::onEvent(const Event& event)
 					if (bullet->getBulletType() != BulletType::DeathBall1) {
 
 						EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
-						SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.5f);
+						SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.3f);
 						bullet->setBulletFire(false);
 					}					
 					break;
