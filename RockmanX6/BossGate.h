@@ -20,8 +20,6 @@ private:
 		int bottom;
 	}camera;
 
-	bool bossRoom;
-
 public:
 	HRESULT init(int x, int y, int width, int top, int height, bool boss) override;
 

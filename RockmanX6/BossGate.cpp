@@ -77,7 +77,7 @@ void BossGate::update(void)
         oStatus.oImage->reversePlay(0.05f);
         if(oStatus.oImage->getChangeReady())
         {
-            if (bossRoom) UIMANAGER->addUi(UiType::Warning);
+            // if (bossRoom) UIMANAGER->addUi(UiType::Warning);
             oStatus.oImage->setChangeReady(false);
             state = DoorState::Closed;
         }

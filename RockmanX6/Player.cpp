@@ -4,13 +4,15 @@
 
 void Player::render(HDC memDC)
 {
-	hpBar.render(memDC);
+	
 
 	pStatus.player->frameAlphaRender(memDC, hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
 		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
 		pStatus.player->getFrameX(), status.lookRight, charAlpha);
 
 	afterImageControl();
+
+	hpBar.render(memDC);
 
 	if (chargeEffect != nullptr) chargeEffect->frameAlphaRender(memDC, hitBoxCenter.x - chargeEffect->getFrameWidth() / 2 + 3 * SCALE_FACTOR,
 		hitBoxCenter.y - chargeEffect->getFrameHeight() + 10 * SCALE_FACTOR,

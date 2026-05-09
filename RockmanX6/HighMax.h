@@ -4,6 +4,14 @@
 class HighMax : public BossBase
 {
 private:
+	enum class AttPattern
+	{
+		Idle,
+		SiegeShoot,
+		DeathBallShoot,
+		DeathBallRush
+	};
+
 	// 공격 체크용 변수
 	int attTimes;
 	bool SiegeSecondAtt;
@@ -18,7 +26,7 @@ private:
 	float timer;
 
 private:
-	
+	AttPattern attPattern;
 
 public:
 	HRESULT init(int x, int y) override;
@@ -26,6 +34,7 @@ public:
 	void update(void) override;
 
 	void bossAppearance(void) override;
+	void offsetFix(void) override;
 
 	// 패턴 1번 - 총알을 캐릭터를 향해 4회씩 3세트 발사
 	void siegeShoot(void);
@@ -39,5 +48,9 @@ public:
 	void movetoPoint();
 
 	void stateReset(void);
+
+	void changeAnim(BossState bossState) override;
+
+	void readyPattern(void) override;
 };
 

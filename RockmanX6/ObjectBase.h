@@ -36,6 +36,8 @@ public:
 	bool animPlay;
 	bool isUsed;
 
+	bool bossRoom;
+
 public:
 	virtual void release(void);
 	virtual void update(void);
@@ -53,6 +55,7 @@ public:
 	inline int getObjectHeight(void) { return status.height; }
 
 	ObjectType getObjectType(void) { return oStatus.oType; }
+	inline bool getBossRoom() { return bossRoom; }
 
 	inline void reduceHp(int damage) { status.hp -= damage; }
 	

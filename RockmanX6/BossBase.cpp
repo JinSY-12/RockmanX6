@@ -15,7 +15,7 @@ void BossBase::render(HDC hdc)
 
 	if (bStatus.effectImage != nullptr && bStatus.effectOn == true)
 	{
-		bStatus.effectImage->frameRender(hdc, bStatus.bHitBox.left, bStatus.bHitBox.top,
+		bStatus.effectImage->frameRender(hdc, bStatus.bHitBox.left - bStatus.effectOffsetX, bStatus.bHitBox.top - bStatus.effectOffsetY,
 			bStatus.effectImage->getFrameX(), status.lookRight);
 	}
 
@@ -44,17 +44,22 @@ void BossBase::render(HDC hdc)
 
 void BossBase::setBossHitbox(void)
 {
-	bStatus.bHitBox.left = bStatus.bWorldRect.left - CAMERAMANAGER->getCameraPos().x;
-	bStatus.bHitBox.right = bStatus.bWorldRect.right - CAMERAMANAGER->getCameraPos().x;
+	bStatus.bHitBox.left = pos.x - CAMERAMANAGER->getCameraPos().x;
+	bStatus.bHitBox.right = bStatus.bHitBox.left + status.width;
 
-	bStatus.bHitBox.top = bStatus.bWorldRect.top - CAMERAMANAGER->getCameraPos().y;
-	bStatus.bHitBox.bottom = bStatus.bWorldRect.bottom - CAMERAMANAGER->getCameraPos().y;
+	bStatus.bHitBox.bottom = pos.y - CAMERAMANAGER->getCameraPos().y;
+	bStatus.bHitBox.top = bStatus.bHitBox.bottom - status.height;
 
 	bStatus.effectRect.left = bStatus.bHitBox.left;
 	bStatus.effectRect.right = bStatus.bHitBox.left + bStatus.effectImage->getFrameWidth();
 
 	bStatus.effectRect.top = bStatus.bHitBox.top;
 	bStatus.effectRect.bottom = bStatus.bHitBox.top + bStatus.effectImage->getFrameHeight();
+}
+
+void BossBase::offsetFix(void)
+{
+	// Do Nothing!
 }
 
 void BossBase::makeShootEvent(BulletType bType)
@@ -65,8 +70,9 @@ void BossBase::makeShootEvent(BulletType bType)
 	switch (bType)
 	{
 	case BulletType::SiegeShoot:
-		shootEvent.x = pos.x;
-		shootEvent.y = pos.y - status.height;
+		if(!status.lookRight) shootEvent.x = pos.x - bStatus.effectOffsetX;
+		else shootEvent.x = pos.x - bStatus.effectOffsetX;
+		shootEvent.y = pos.y - status.height - bStatus.effectOffsetY;
 		break;
 	case BulletType::DeathBall1:
 		shootEvent.x = pos.x + status.width / 2;
@@ -78,6 +84,16 @@ void BossBase::makeShootEvent(BulletType bType)
 	shootEvent.velocityY = normalize(getDiffPlayer(pos.x, shootEvent.y)).y;
 
 	EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
+}
+
+void BossBase::changeAnim(BossState bossState)
+{
+	// Do Nothing!
+}
+
+void BossBase::readyPattern(void)
+{
+	// Do Nothing!
 }
 
 Vector2 BossBase::getDiffPlayer(int firePointX, int firePointY)

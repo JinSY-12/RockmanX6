@@ -398,11 +398,12 @@ void TitleScene::addSound(void)
 	// 인트로 스테이지
 	SOUNDMANAGER->addSound("BGM_Stage_Intro", "Resources/Sound/BGM/BGM_Stage_Intro.wav", true, true);
 	SOUNDMANAGER->addSound("BGM_VS_Intro", "Resources/Sound/BGM/BGM_VS_Intro.wav", true, true);
+	SOUNDMANAGER->addSound("BGM_VS_HighMax", "Resources/Sound/BGM/BGM_VS_HighMax.wav", true, true);
 
 	// 커맨드 얀마크
 	SOUNDMANAGER->addSound("BGM_Stage_CommandYanmark", "Resources/Sound/BGM/BGM_Stage_CommandYanmark.wav", true, true);
 	SOUNDMANAGER->addSound("BGM_VS_Boss", "Resources/Sound/BGM/BGM_VS_Boss.wav", true, true);
-	
+		
 
 	//////////////////////////////////
 	// 효과음

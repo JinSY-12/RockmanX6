@@ -146,7 +146,7 @@ public:
 	{
 		bStatus.isFire = false;
 		bStatus.animSpeed = 0.04f;
-		bStatus.bulletSpeed = 8.0f;
+		bStatus.bulletSpeed = 10.0f;
 	}
 	~DeathBall1() {}
 };

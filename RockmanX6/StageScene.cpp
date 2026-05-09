@@ -27,8 +27,6 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	eManager.setttingPlayer(player.get());
 	eManager.setttingBulletManager(&bManager);
 	
-	//bManager.settingPlayer(player.get());
-
 	oManager.setttingPlayer(player.get());
 	oManager.setttingBulletManager(&bManager);
 	// 콜리전 매니저가 추가되면 여기까지 삭제
@@ -56,21 +54,7 @@ void StageScene::release(void)
 }
 
 void StageScene::update(void)
-{
-	/*
-	// 페이드 아웃 끝
-	if (TIMEMANAGER->getWorldTime() - readyTimer >= 1.f)
-	{
-		noticeStart = true;
-		if (noticeAnim() == false);
-		else
-		{
-			playAble = true;
-			// UIMANAGER->playStart();
-		}
-	}
-	*/
-	
+{	
 	stageCollision();
 
 	if (UIMANAGER->getIsUiMode() == false)
@@ -101,11 +85,6 @@ void StageScene::render(void)
 	player->render(getMemDC());
 
 	EFFECTMANAGER->render(getMemDC());
-
-	/*
-	if (noticeStart) mReadyLogo->render(getMemDC(), (WINSIZE_X - mReadyLogo->getWidth()) / 2,
-		(WINSIZE_Y - mReadyLogo->getHeight()) / 2);
-	*/
 
 	if (UIMANAGER->getIsDebugMode() == true)
 	{
@@ -159,7 +138,6 @@ void StageScene::stageSettting(BossType bType)
 			enemySettting(bType);
 			objectSetting(bType);
 
-			// UIMANAGER->addUi(UiType::Warning);
 			break;
 
 		// 커맨드 얀마크
@@ -190,8 +168,9 @@ void StageScene::enemySettting(BossType bType)
 		int up;
 		up = 50;
 
-		eManager.spawnBoss(BossType::Intro, 6310 * SCALE_FACTOR, (180 - up) * SCALE_FACTOR);
-		// eManager.spawnBoss(BossType::Intro, 6090 * SCALE_FACTOR, (180 - up) * SCALE_FACTOR);
+		// eManager.spawnBoss(BossType::Intro, 6310 * SCALE_FACTOR, (30 - up) * SCALE_FACTOR);
+		// eManager.spawnBoss(BossType::Intro, 6310 * SCALE_FACTOR, (180 - up) * SCALE_FACTOR);
+		// eManager.spawnBoss(BossType::Intro, 6090 * SCALE_FACTOR, (30 - up) * SCALE_FACTOR);
 
 		// 세팅 시작
 		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
@@ -557,7 +536,7 @@ void StageScene::stageCollision(void)
 				}
 			}
 		}
-
+		
 		else
 		{
 			for (int line = player->getPlayerCenter() + player->getPlayerHitBoxWidth() / 3 - 3 * SCALE_FACTOR; line >= player->getPlayerCenter() - player->getPlayerHitBoxWidth() / 3 + 3 * SCALE_FACTOR; line--)
@@ -676,7 +655,16 @@ void StageScene::stageCollision(void)
 			if (player->getPlayerRight() + 4 > obj->getObjectRect().left && player->getPlayerLeft() < obj->getObjectRect().left
 				&& player->getPlayerBottom() > obj->getObjectRect().top && player->getPlayerTop() < obj->getObjectRect().bottom)
 			{
-				if (obj->getOjbectIsUsed() == false) obj->animOncePlay(true);
+				if (obj->getOjbectIsUsed() == false)
+				{
+					if (obj->getBossRoom() == true)
+					{
+						// eManager.spawnBoss(BossType::Intro, 6110 * SCALE_FACTOR, -20 * SCALE_FACTOR);
+						eManager.spawnBoss(BossType::Intro, 6340 * SCALE_FACTOR, -20 * SCALE_FACTOR);
+						SOUNDMANAGER->stop(stagBGM);
+					}
+					obj->animOncePlay(true);
+				}
 				break;
 			}
 
