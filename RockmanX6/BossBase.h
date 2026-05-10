@@ -86,6 +86,9 @@ protected:
 	float patternTimer;
 	float pattenrCoolDown;
 	bool phase2; // 2페이즈로 패턴 타이머와 애니메이션 속도 빠르게
+	
+	// test
+	bool attCycle;
 
 public:
 	virtual void render(HDC hdc);

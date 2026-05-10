@@ -9,7 +9,8 @@ private:
 		Idle,
 		SiegeShoot,
 		DeathBallShoot,
-		DeathBallRush
+		DeathBallRush,
+		Dodge
 	};
 
 	// 공격 체크용 변수
@@ -33,24 +34,23 @@ public:
 
 	void update(void) override;
 
-	void bossAppearance(void) override;
-	void offsetFix(void) override;
-
+	// 패턴 0번 - 보스 등장
 	// 패턴 1번 - 총알을 캐릭터를 향해 4회씩 3세트 발사
-	void siegeShoot(void);
-
 	// 패턴 2번 - 벽을 타며 움직이는 데스볼 발사
+	void bossAppearance(void) override;
+	void dodge();
+	void siegeShoot(void);
 	void deathBall(void);
-	
 	void deathRush(void);
-	void patternShoot(void);
-
-	void movetoPoint();
-
-	void stateReset(void);
-
-	void changeAnim(BossState bossState) override;
 
 	void readyPattern(void) override;
+	
+	// 연출 기능
+	void movetoPoint();
+	void changeAnim(BossState bossState) override;
+
+	// 상태 기능
+	void offsetFix(void) override;
+	void stateReset(void);
 };
 

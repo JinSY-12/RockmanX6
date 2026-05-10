@@ -659,7 +659,9 @@ void StageScene::stageCollision(void)
 				{
 					if (obj->getBossRoom() == true)
 					{
+						// ¿ÞÂÊ
 						// eManager.spawnBoss(BossType::Intro, 6110 * SCALE_FACTOR, -20 * SCALE_FACTOR);
+						// ¿À¸¥ÂÊ
 						eManager.spawnBoss(BossType::Intro, 6340 * SCALE_FACTOR, -20 * SCALE_FACTOR);
 						SOUNDMANAGER->stop(stagBGM);
 					}

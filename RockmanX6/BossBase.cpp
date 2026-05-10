@@ -71,7 +71,7 @@ void BossBase::makeShootEvent(BulletType bType)
 	{
 	case BulletType::SiegeShoot:
 		if(!status.lookRight) shootEvent.x = pos.x - bStatus.effectOffsetX;
-		else shootEvent.x = pos.x - bStatus.effectOffsetX;
+		else shootEvent.x = pos.x + status.width + bStatus.effectOffsetX;
 		shootEvent.y = pos.y - status.height - bStatus.effectOffsetY;
 		break;
 	case BulletType::DeathBall1:
