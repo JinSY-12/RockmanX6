@@ -30,6 +30,7 @@ private:
 
 	bool isUiMode;
 	bool isUiPrint;
+	bool playerFreeze;
 	bool nextAlbe;
 
 	int mEventNum;
@@ -70,10 +71,13 @@ public:
 
 	void setIsUiMode(bool mode) { isUiMode = mode; }
 	void setIsUiPrint(bool print) { isUiPrint = print; }
+	void setFreeze(bool stop) { playerFreeze = stop; }
 
-	bool getIsUiMode() { return isUiMode; }
-	bool getIsUiPrint() { return isUiPrint; }
-	void changeUiMode() { isUiMode = !isUiMode; }
+	bool getIsUiMode(void) { return isUiMode; }
+	bool getIsUiPrint(void) { return isUiPrint; }
+	bool getFreeze(void) { return playerFreeze; }
+	
+	void changeUiMode(void) { isUiMode = !isUiMode; }
 
 	inline void chageIsUiMode(void) { isUiMode = (isUiMode) ? false : true; }
 

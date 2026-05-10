@@ -131,6 +131,7 @@ void HighMax::bossAppearance(void)
 		if (!musciStart)
 		{
 			pos.y += 1 * SCALE_FACTOR;
+			UIMANAGER->setFreeze(true);
 		}
 
 		else pos.y += 3 * SCALE_FACTOR;
@@ -157,6 +158,7 @@ void HighMax::bossAppearance(void)
 		if (!musciStart)
 		{
 			musciStart = true;
+			UIMANAGER->setFreeze(false);
 			SOUNDMANAGER->play(BossBGM, 0.3f);
 		}
 	}
@@ -353,8 +355,6 @@ void HighMax::siegeShoot(void)
 			SiegeSecondAtt = false;
 			break;
 	}
-
-	// 애니메이션 위치 보정
 }
 
 void HighMax::deathBall(void)
@@ -459,40 +459,28 @@ void HighMax::deathRush(void)
 	case BossState::AttReady:
 		if (bStatus.bImage->getChangeReady())
 		{
-			if (animDir == AnimDirection::Forward)
-			{
-				bStatus.bImage->setChangeReady(false);
-				bState = BossState::RightReady;
-				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_RightReady")->cloneImage();
-			}
-
-			else
-			{
-				bStatus.bImage->setChangeReady(false);
-				bState = BossState::Idle;
-				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle")->cloneImage();
-			}
+			bStatus.bImage->setChangeReady(false);
+			bState = BossState::RightReady;
+			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_RightReady")->cloneImage();
 		}
 		break;
 	case BossState::RightReady:
 		if (bStatus.bImage->getChangeReady())
 		{
-			if (animDir == AnimDirection::Forward)
-			{
-				bStatus.bImage->setChangeReady(false);
-				bState = BossState::RightReady;
-				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_RightReady")->cloneImage();
-			}
-
-			else
-			{
-				bStatus.bImage->setChangeReady(false);
-				bState = BossState::AttReady;
-				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
-			}
+			bStatus.bImage->setChangeReady(false);
+			bState = BossState::RightReady;
+			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_LeftReady")->cloneImage();
 		}
 		break;
 	case BossState::LeftReady:
+		// 이펙트 시작
+		// 데스볼 커지면 내려가기
+		// 내려가서 돌진하다가 RightAtt모션으로 변경
+		if (bStatus.bImage->getChangeReady())
+		{
+			
+		}
+
 		break;
 	case BossState::RightAtt:
 		break;

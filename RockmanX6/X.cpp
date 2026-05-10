@@ -34,9 +34,12 @@ void X::update(void)
 	CAMERAMANAGER->setPlayerPos(pos.x, pos.y - status.hitBoxHeight / 2);
 
 	bool allowInput = !(CAMERAMANAGER->getIsCamaraMove() || !CAMERAMANAGER->getCameraMoveEnd()
-		|| UIMANAGER->getIsUiPrint() || (attState == SholderState::Special && currentState == CharacterState::Idle));
-	pStatus.movable = allowInput;
+		|| UIMANAGER->getIsUiPrint() || UIMANAGER->getFreeze()
+		|| currentState == CharacterState::Warp);
+	inputEnabled = allowInput;
 		
+
+	cout << "입력 가능 : " << inputEnabled << endl;
 #pragma region WarpIn
 
 	/////////////////////////////////
@@ -1080,10 +1083,10 @@ void X::spawn(int x, int y)
 
 void X::specialAttack(void)
 {
-	if (!pStatus.isAttack)// && pStatus.movable)
+	if (!pStatus.isAttack) // && pStatus.movable)
 	{
 		attState = SholderState::Special;
-		pStatus.movable = false;
+		// pStatus.movable = false;
 
 		if (pStatus.isOnGround)
 		{
