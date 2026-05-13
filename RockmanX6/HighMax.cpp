@@ -42,6 +42,7 @@ HRESULT HighMax::init(int x, int y)
 
 	animDir = AnimDirection::Forward;
 	attPattern = AttPattern::Idle;
+	effPattern = EffectState::BallCharge;
 
 	SiegeSecondAtt = false;
 	prevFrame = -1;
@@ -53,12 +54,17 @@ HRESULT HighMax::init(int x, int y)
 	appearanceDone = false;
 	musciStart = false;
 	attCycle = false;
+	bStatus.effectOnTop = true;
+	rushStart = false;
 
 	pattenrCoolDown = 2.0f;
 
 	// 패턴을 바로 발동하게 테스트용 Bool값이라서 패턴 발동이 완성되면 지울것
 	patternTest = false;
 	patternTest2 = false;
+
+	// 등장 모션을 위한 캐릭터 움직임 잠금
+	UIMANAGER->setFreeze(true);
 
 	return S_OK;
 }
@@ -68,7 +74,7 @@ void HighMax::update(void)
 	bool allowInput = !(CAMERAMANAGER->getIsCamaraMove() || !CAMERAMANAGER->getCameraMoveEnd()
 		|| UIMANAGER->getIsUiPrint());
 	bStatus.movable = allowInput;
-
+	
 	if (allowInput)
 	{
 		if (appearanceDone)
@@ -81,10 +87,12 @@ void HighMax::update(void)
 
 			else
 			{
+				if (bStatus.effectOn) bStatus.effectImage->play(0.03f);
+
 				switch (attPattern)
 				{
 				case AttPattern::Idle:
-					bStatus.bImage->play(animSpeed);
+					bStatus.bImage->play(0.08f);
 					break;
 				case AttPattern::SiegeShoot:
 					siegeShoot();
@@ -92,6 +100,9 @@ void HighMax::update(void)
 				case AttPattern::DeathBallShoot:
 					bStatus.bImage->play(animSpeed);
 					deathBall();
+					break;
+				case AttPattern::DeathRush:
+					deathRush();
 					break;
 				case AttPattern::Dodge:
 					dodge();
@@ -120,33 +131,37 @@ void HighMax::update(void)
 		phase2 = !phase2;
 	}
 
-	setBossHitbox();
 	offsetFix();
+	setBossHitbox();
 }
 
 void HighMax::bossAppearance(void)
 {
+	// 주석
+	// if (pos.y < 830 * SCALE_FACTOR)
 	if (pos.y < 110 * SCALE_FACTOR)
 	{
-		if (!musciStart)
+		if (!musciStart) pos.y += 1 * SCALE_FACTOR;
+		else
 		{
-			pos.y += 1 * SCALE_FACTOR;
-			UIMANAGER->setFreeze(true);
+			if (!phase2) pos.y += 3 * SCALE_FACTOR;
+			else pos.y += 4 * SCALE_FACTOR;
 		}
-
-		else pos.y += 3 * SCALE_FACTOR;
 	}
 	else
 	{
+		// pos.y = 830 * SCALE_FACTOR;
 		pos.y = 110 * SCALE_FACTOR;
 		isPattern = true;
 		appearanceDone = true;
+		// 첫패턴 무조건 시즈볼
 
-		// 시즈볼 테스트
+		/*
+		// 시즈볼
 		bState = BossState::AttReady;
 		attPattern = AttPattern::SiegeShoot;
 		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
-		
+		*/
 		/*
 		// 데스볼 테스트
 		bState = BossState::DeathBallShoot;
@@ -154,6 +169,13 @@ void HighMax::bossAppearance(void)
 		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_DeathBallShoot")->cloneImage();
 		SOUNDMANAGER->play("Voice_DeathBall", 0.3f);
 		*/
+
+		
+		// 데스 러시 테스트
+		bState = BossState::AttReady;
+		attPattern = AttPattern::DeathRush;
+		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
+		
 
 		if (!musciStart)
 		{
@@ -216,6 +238,7 @@ void HighMax::siegeShoot(void)
 
 				if (bStatus.bImage->getChangeReady())
 				{
+					animSpeed = 0.08f;
 					bStatus.bImage->setChangeReady(false);
 					bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle");
 					animDir = AnimDirection::Forward;
@@ -274,7 +297,7 @@ void HighMax::siegeShoot(void)
 			if (animDir == AnimDirection::Forward)
 			{
 				bStatus.bImage->play(animSpeed);
-				///////////////////
+
 				if (prevFrame != bStatus.bImage->getFrameX())
 				{
 					if (bStatus.bImage->getFrameX() == 1)
@@ -351,6 +374,7 @@ void HighMax::siegeShoot(void)
 			break;
 
 		case BossState::Idle:
+			animSpeed = 0.08f;
 			patternTest = false;
 			SiegeSecondAtt = false;
 			break;
@@ -359,25 +383,26 @@ void HighMax::siegeShoot(void)
 
 void HighMax::deathBall(void)
 {
-	if (!phase2) animSpeed = 0.05f;
-	else animSpeed = 0.03f;
-
-	if(bStatus.effectOn) bStatus.effectImage->play(0.03f);
+	bStatus.effectOnTop = true;
 
 	switch(bState)
 	{
 	case BossState::DeathBallShoot:
+		if (!phase2) animSpeed = 0.05f;
+		else animSpeed = 0.03f;
+
 		if (prevFrame != bStatus.bImage->getFrameX())
 		{
 			if (bStatus.bImage->getFrameX() == 3)
 			{
 				bStatus.effectOn = true;
 				bStatus.effectImage = IMAGEMANAGER->findImage("SFX_DeathBallCharge")->cloneImage();
+				effPattern = EffectState::BallCharge;
 			}
 		}
 		prevFrame = bStatus.bImage->getFrameX();
 
-		if (bStatus.effectImage->getChangeReady() && bStatus.effectOn)
+		if (bStatus.effectImage->getChangeReady() && effPattern == EffectState::BallCharge)
 		{
 			SOUNDMANAGER->play("SFX_RingSound", 0.3f);
 			bStatus.effectOn = false;
@@ -394,12 +419,12 @@ void HighMax::deathBall(void)
 		break;
 
 	case BossState::DeathBallShootIdle:
+		animSpeed = 0.05f;
+
 		if (!phase2)
 		{
-			if (timer <= 2.5f) timer += 0.01f;
-			else
+			if(timerClock(2.5f))
 			{
-				timer = 0.0f;
 				bStatus.bImage->setFrameX(0);
 				bState = BossState::Idle;
 				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle")->cloneImage();
@@ -407,10 +432,8 @@ void HighMax::deathBall(void)
 		}
 		else
 		{
-			if (timer <= 2.0f) timer += 0.01f;
-			else
+			if (timerClock(2.0f))
 			{
-				timer = 0.0f;
 				bStatus.bImage->setFrameX(0);
 				bState = BossState::Idle;
 				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle")->cloneImage();
@@ -419,17 +442,15 @@ void HighMax::deathBall(void)
 		break;
 
 	case BossState::Idle:
+		animSpeed = 0.08f;
 		
 		int rnd = rand() % 3;
 
 		// 패턴 이후 재정비
 		if (rnd > 0)
 		{
-			if (timer <= 1.0f) timer += 0.01f;
-			else
+			if (timerClock(1.0f))
 			{
-				animSpeed = 0.06f;
-				timer = 0.0f;
 				isPattern = true;
 				attPattern = AttPattern::Dodge;
 				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move")->cloneImage();
@@ -439,10 +460,8 @@ void HighMax::deathBall(void)
 		// 패턴 이후 다시 공격
 		else
 		{
-			if (timer <= 1.0f) timer += 0.01f;
-			else
+			if (timerClock(1.0f))
 			{
-				animSpeed = 0.06f;
 				isPattern = false;
 				patternTimer = TIMEMANAGER->getWorldTime();
 			}
@@ -454,9 +473,13 @@ void HighMax::deathBall(void)
 
 void HighMax::deathRush(void)
 {
+	if (!phase2) animSpeed = 0.06;
+	else animSpeed = 0.04;
+
 	switch (bState)
 	{
 	case BossState::AttReady:
+		bStatus.bImage->play(animSpeed);
 		if (bStatus.bImage->getChangeReady())
 		{
 			bStatus.bImage->setChangeReady(false);
@@ -465,28 +488,134 @@ void HighMax::deathRush(void)
 		}
 		break;
 	case BossState::RightReady:
+		bStatus.bImage->play(animSpeed);
 		if (bStatus.bImage->getChangeReady())
 		{
 			bStatus.bImage->setChangeReady(false);
-			bState = BossState::RightReady;
+			bState = BossState::LeftReady;
 			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_LeftReady")->cloneImage();
+			bStatus.effectImage = IMAGEMANAGER->findImage("SFX_RushCharge")->cloneImage();
 		}
 		break;
 	case BossState::LeftReady:
-		// 이펙트 시작
-		// 데스볼 커지면 내려가기
-		// 내려가서 돌진하다가 RightAtt모션으로 변경
-		if (bStatus.bImage->getChangeReady())
+		bStatus.bImage->play(animSpeed);
+
+		bStatus.effectOnTop = false;
+		bStatus.effectOn = true;
+		
+		if (bStatus.effectImage->getChangeReady())
 		{
-			
+			effPattern = EffectState::RushBall;
+			bStatus.effectImage->setChangeReady(false);
+			bStatus.effectImage = IMAGEMANAGER->findImage("SFX_RushBall")->cloneImage();
 		}
 
+		if (effPattern == EffectState::RushBall)
+		{
+			if (bStatus.effectImage->getFrameX() >= bStatus.effectImage->getMaxFrameX())
+			{
+				rushStart = true;
+			}
+		}
+
+		if (rushStart == true)
+		{
+			if (pos.y < 160 * SCALE_FACTOR)
+			{
+				if (!phase2) pos.y += 5 * SCALE_FACTOR;
+				else pos.y += 7 * SCALE_FACTOR;
+			}
+			else
+			{
+				pos.y = 160 * SCALE_FACTOR;
+
+				if (!status.lookRight)
+				{
+					if (pos.x > 6310 * SCALE_FACTOR) pos.x -= 4 * SCALE_FACTOR;
+					else
+					{
+						bState = BossState::RightAtt;
+						bStatus.bImage = IMAGEMANAGER->findImage("HighMax_RightAtt");
+					}
+
+				}
+				
+				else
+				{
+					if (pos.x < 6120 * SCALE_FACTOR) pos.x += 4 * SCALE_FACTOR;
+					else
+					{
+						bState = BossState::RightAtt;
+						bStatus.bImage = IMAGEMANAGER->findImage("HighMax_RightAtt");
+					}
+				}
+			}
+		}
 		break;
 	case BossState::RightAtt:
+		bStatus.effectOnTop = true;
+
+		if (!status.lookRight)
+		{
+			if (pos.x > 6110 * SCALE_FACTOR)
+			{
+				if (!phase2) pos.x -= 6 * SCALE_FACTOR;
+				else pos.x -= 8 * SCALE_FACTOR;
+			}
+
+			else
+			{
+				if (rushStart)
+				{
+					rushStart = false;
+					SOUNDMANAGER->play("SFX_CrushWall", 0.3f);
+				}
+
+				if (timerClock(1.5f))
+				{
+					bStatus.effectOn = false;
+					bState = BossState::Idle;
+					bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle");
+				}
+			}
+		}
+
+		else
+		{
+			if (pos.x < 6330 * SCALE_FACTOR)
+			{
+				if (!phase2) pos.x += 6 * SCALE_FACTOR;
+				else pos.x += 8 * SCALE_FACTOR;
+				
+			}
+			else
+			{
+				if (rushStart)
+				{
+					rushStart = false;
+					SOUNDMANAGER->play("SFX_CrushWall", 0.3f);
+				}
+
+				if (timerClock(1.5f))
+				{
+					bStatus.effectOn = false;
+					bState = BossState::Idle;
+					bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle");
+					
+				}
+			}
+		}
 		break;
 	case BossState::Idle:
+		animSpeed = 0.08f;
+		if (timerClock(1.0f))
+		{
+			animSpeed = 0.06f;
+			isPattern = true;
+			attPattern = AttPattern::Dodge;
+			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move")->cloneImage();
+		}
 		break;
-
 	}
 }
 
@@ -501,7 +630,7 @@ void HighMax::readyPattern(void)
 		int rnd = rand() % 10;
 
 		// 데스볼 샷
-		if (rnd >= 0)
+		if (rnd >= 4)
 		{
 			bState = BossState::DeathBallShoot;
 			attPattern = AttPattern::DeathBallShoot;
@@ -511,18 +640,14 @@ void HighMax::readyPattern(void)
 		}
 
 		// 데스볼 러시
-		/*
-		else if ()
-		{
 
-		}
-
-		// 도망
 		else
 		{
-
+			bState = BossState::AttReady;
+			attPattern = AttPattern::DeathRush;
+			isPattern = true;
+			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
 		}
-		*/
 	}
 }
 
@@ -570,10 +695,23 @@ void HighMax::offsetFix(void)
 		else bStatus.effectOffsetX = 102;
 		bStatus.effectOffsetY = -10;
 		break;
-	case AttPattern::DeathBallRush:
-		if (!status.lookRight) bStatus.effectOffsetX = 0;
-		else bStatus.effectOffsetX = 0;
-		bStatus.effectOffsetY = 0;
+	case AttPattern::DeathRush:
+		// 러시 준비
+		if (bState == BossState::LeftReady)
+		{
+			if (!status.lookRight) bStatus.effectOffsetX = bStatus.effectImage->getFrameWidth()/2 - 15 * SCALE_FACTOR;
+			else bStatus.effectOffsetX = -(status.width - 15 * SCALE_FACTOR - bStatus.effectImage->getFrameWidth() / 2);
+			bStatus.effectOffsetY = bStatus.effectImage->getFrameHeight()/2 - 6 * SCALE_FACTOR;
+		}
+
+		// 러시 시작
+		else
+		{
+			if (!status.lookRight) bStatus.effectOffsetX = bStatus.effectImage->getFrameWidth() / 2 + 30 * SCALE_FACTOR;
+			else bStatus.effectOffsetX = -(status.width + 30 * SCALE_FACTOR - bStatus.effectImage->getFrameWidth() / 2);
+			bStatus.effectOffsetY = bStatus.effectImage->getFrameHeight()/2 - 12 * SCALE_FACTOR;
+		}
+
 		break;
 	case AttPattern::SiegeShoot:
 		bStatus.effectOffsetX = 30 * SCALE_FACTOR;
@@ -654,8 +792,13 @@ void HighMax::stateReset(void)
 
 	// 보스 상태값 관련 리셋
 	SiegeSecondAtt = false;
+	rushStart = false;
 	timer = 0.0f;
 	attTimes = 0.0f;
+
+	// 이펙트 관련 리셋
+	bStatus.effectOn = false;
+
 
 	// 프레임 리셋도 시킬것
 	// 이미지 클론이 필요한지도 테스트 해볼것

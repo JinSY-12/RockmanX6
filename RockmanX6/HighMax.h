@@ -9,13 +9,21 @@ private:
 		Idle,
 		SiegeShoot,
 		DeathBallShoot,
-		DeathBallRush,
+		DeathRush,
 		Dodge
+	};
+
+	enum class EffectState
+	{
+		BallCharge,
+		RushCharge,
+		RushBall
 	};
 
 	// 공격 체크용 변수
 	int attTimes;
 	bool SiegeSecondAtt;
+	bool rushStart;
 
 	// 애니메이션 관련 변수
 	int prevFrame;
@@ -24,10 +32,9 @@ private:
 	bool patternTest;
 	bool patternTest2;
 
-	float timer;
-
 private:
 	AttPattern attPattern;
+	EffectState effPattern;
 
 public:
 	HRESULT init(int x, int y) override;

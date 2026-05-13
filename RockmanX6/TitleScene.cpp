@@ -322,6 +322,10 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addFrameImage("SFX_DeathBallCharge", "Resources/Image/SFX/SFX_DeathBallCharge.bmp", 2310 * SCALE_FACTOR, 52 * SCALE_FACTOR, 21, 2, true, MAGENTA, true);
 
+	IMAGEMANAGER->addFrameImage("SFX_RushCharge", "Resources/Image/Enemy/Bullet/Boss/SFX_RushCharge.bmp", 1176 * SCALE_FACTOR, 112* SCALE_FACTOR, 21, 2, true, MAGENTA, true);
+	IMAGEMANAGER->addFrameImage("SFX_RushBall", "Resources/Image/Enemy/Bullet/Boss/SFX_RushBall.bmp", 784 * SCALE_FACTOR, 192 * SCALE_FACTOR, 8, 2, true, MAGENTA);
+
+
 	//////////////////////////////////
 	// 미니언
 	//////////////////////////////////
@@ -427,6 +431,7 @@ void TitleScene::addSound(void)
 
 	// 전투 효과음
 	SOUNDMANAGER->addSound("SFX_SmallExplosion", "Resources/Sound/SFX/Effect/SFX_SmallExplosion.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_CrushWall", "Resources/Sound/SFX/Effect/SFX_CrushWall.wav", false, false);
 
 	//////////////////////////////////
 	// 컷씬 보이스

@@ -36,10 +36,8 @@ void X::update(void)
 	bool allowInput = !(CAMERAMANAGER->getIsCamaraMove() || !CAMERAMANAGER->getCameraMoveEnd()
 		|| UIMANAGER->getIsUiPrint() || UIMANAGER->getFreeze()
 		|| currentState == CharacterState::Warp);
-	inputEnabled = allowInput;
-		
-
-	cout << "입력 가능 : " << inputEnabled << endl;
+	pStatus.movable = inputEnabled = allowInput;
+	
 #pragma region WarpIn
 
 	/////////////////////////////////
@@ -449,7 +447,6 @@ void X::update(void)
 		if (CAMERAMANAGER->getIsCamaraMove())
 		{
 			cameraMoveDone = true;
-			pStatus.movable = false;
 			pStatus.velocityX = 1.0f;
 
 			if (currentState == CharacterState::JumpUp || currentState == CharacterState::Climb

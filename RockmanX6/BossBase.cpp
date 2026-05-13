@@ -10,18 +10,34 @@ void BossBase::bossAppearance()
 
 void BossBase::render(HDC hdc)
 {
-	bStatus.bImage->frameRender(hdc, bStatus.bHitBox.left - bStatus.offsetX, bStatus.bHitBox.top - bStatus.offsetY
-		, bStatus.bImage->getFrameX(), status.lookRight);
-
-	if (bStatus.effectImage != nullptr && bStatus.effectOn == true)
+	if (bStatus.effectOnTop)
 	{
-		bStatus.effectImage->frameRender(hdc, bStatus.bHitBox.left - bStatus.effectOffsetX, bStatus.bHitBox.top - bStatus.effectOffsetY,
-			bStatus.effectImage->getFrameX(), status.lookRight);
+		bStatus.bImage->frameRender(hdc, bStatus.bHitBox.left - bStatus.offsetX, bStatus.bHitBox.top - bStatus.offsetY
+			, bStatus.bImage->getFrameX(), status.lookRight);
+
+		if (bStatus.effectImage != nullptr && bStatus.effectOn == true)
+		{
+			bStatus.effectImage->frameRender(hdc, bStatus.effectRect.left, bStatus.effectRect.top,
+				bStatus.effectImage->getFrameX(), status.lookRight);
+		}
+	}
+
+	else
+	{
+		if (bStatus.effectImage != nullptr && bStatus.effectOn == true)
+		{
+			bStatus.effectImage->frameRender(hdc, bStatus.effectRect.left, bStatus.effectRect.top,
+				bStatus.effectImage->getFrameX(), status.lookRight);
+		}
+
+		bStatus.bImage->frameRender(hdc, bStatus.bHitBox.left - bStatus.offsetX, bStatus.bHitBox.top - bStatus.offsetY
+			, bStatus.bImage->getFrameX(), status.lookRight);
 	}
 
 	if (UIMANAGER->getIsDebugMode())
 	{
 		DrawRectMakeColor(hdc, bStatus.bHitBox, RGB(0, 255, 255), 2);
+		DrawRectMakeColor(hdc, bStatus.effectRect, RGB(0, 255, 0), 2);
 
 		string temp;
 		if (bState == BossState::Idle) temp = "Idle";
@@ -35,10 +51,10 @@ void BossBase::render(HDC hdc)
 		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
 		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 50, "보스 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 70, to_string(pos.x), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 70, to_string(pos.x / SCALE_FACTOR), "DNF_M_18", RGB(0, 255, 255));
 
 		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 + 80, 0.85 * WINSIZE_Y + 50, "보스 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 + 80, 0.85 * WINSIZE_Y + 70, to_string(pos.y), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 + 80, 0.85 * WINSIZE_Y + 70, to_string(pos.y / SCALE_FACTOR), "DNF_M_18", RGB(0, 255, 255));
 	}
 }
 
@@ -50,11 +66,11 @@ void BossBase::setBossHitbox(void)
 	bStatus.bHitBox.bottom = pos.y - CAMERAMANAGER->getCameraPos().y;
 	bStatus.bHitBox.top = bStatus.bHitBox.bottom - status.height;
 
-	bStatus.effectRect.left = bStatus.bHitBox.left;
-	bStatus.effectRect.right = bStatus.bHitBox.left + bStatus.effectImage->getFrameWidth();
+	bStatus.effectRect.left = bStatus.bHitBox.left - bStatus.effectOffsetX;
+	bStatus.effectRect.right = bStatus.effectRect.left + bStatus.effectImage->getFrameWidth();
 
-	bStatus.effectRect.top = bStatus.bHitBox.top;
-	bStatus.effectRect.bottom = bStatus.bHitBox.top + bStatus.effectImage->getFrameHeight();
+	bStatus.effectRect.top = bStatus.bHitBox.top - bStatus.effectOffsetY;
+	bStatus.effectRect.bottom = bStatus.effectRect.top + bStatus.effectImage->getFrameHeight();
 }
 
 void BossBase::offsetFix(void)
@@ -94,6 +110,19 @@ void BossBase::changeAnim(BossState bossState)
 void BossBase::readyPattern(void)
 {
 	// Do Nothing!
+}
+
+bool BossBase::timerClock(float time)
+{
+	timer += 0.01f;
+
+	if (timer > time)
+	{
+		timer = 0.0f;
+		return true;
+	}
+
+	return false;
 }
 
 Vector2 BossBase::getDiffPlayer(int firePointX, int firePointY)

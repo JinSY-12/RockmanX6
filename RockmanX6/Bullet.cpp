@@ -124,7 +124,7 @@ HRESULT SiegeShoot::init(BulletType type, int x, int y, bool isRight, float velo
 {
 	bStatus.shape = new GImage;
 	bStatus.shape = IMAGEMANAGER->findImage("SFX_SiegeShootFire")->cloneImage();
-	bStatus.demage = 0;
+	bStatus.demage = 2;
 
 	bStatus.type = BulletSize::Large;
 	bStatus.bType = BulletType::SiegeShoot;
