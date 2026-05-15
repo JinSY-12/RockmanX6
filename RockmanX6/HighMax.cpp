@@ -63,6 +63,12 @@ HRESULT HighMax::init(int x, int y)
 	patternTest = false;
 	patternTest2 = false;
 
+	/*
+	appearanceDone = true;
+	bState = BossState::AttReady;
+	attPattern = AttPattern::SiegeShoot;
+	isPattern = true;
+	*/
 	// 등장 모션을 위한 캐릭터 움직임 잠금
 	UIMANAGER->setFreeze(true);
 
@@ -156,12 +162,12 @@ void HighMax::bossAppearance(void)
 		appearanceDone = true;
 		// 첫패턴 무조건 시즈볼
 
-		/*
+	
 		// 시즈볼
 		bState = BossState::AttReady;
 		attPattern = AttPattern::SiegeShoot;
 		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
-		*/
+		
 		/*
 		// 데스볼 테스트
 		bState = BossState::DeathBallShoot;
@@ -170,12 +176,12 @@ void HighMax::bossAppearance(void)
 		SOUNDMANAGER->play("Voice_DeathBall", 0.3f);
 		*/
 
-		
+		/*
 		// 데스 러시 테스트
 		bState = BossState::AttReady;
 		attPattern = AttPattern::DeathRush;
 		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
-		
+		*/
 
 		if (!musciStart)
 		{
@@ -601,7 +607,6 @@ void HighMax::deathRush(void)
 					bStatus.effectOn = false;
 					bState = BossState::Idle;
 					bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle");
-					
 				}
 			}
 		}
@@ -640,7 +645,6 @@ void HighMax::readyPattern(void)
 		}
 
 		// 데스볼 러시
-
 		else
 		{
 			bState = BossState::AttReady;

@@ -63,16 +63,16 @@ void Player::render(HDC memDC)
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y / 3), "DNF_M_18", RGB(0, 255, 255));
 
 		string temp;
-		if (CAMERAMANAGER->getLockX()) temp = "O";
+		if (status.overpower) temp = "O";
 		else temp = "X";
 
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100, "카메라 Lock X", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100, "무적상태", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
-		if (CAMERAMANAGER->getLockY()) temp = "O";
+		if (pStatus.invincible) temp = "O";
 		else temp = "X";
 
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 45, "카메라 Lock Y", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 45, "무적 회복 중", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 320, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
 
 		if (status.lookRight) temp = "우측";
@@ -1158,10 +1158,18 @@ void Player::currentAnimChange(void)
 		animOffset.x = 0 * SCALE_FACTOR;
 		animOffset.y = 0 * SCALE_FACTOR;
 
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+		attState = SholderState::None;
+		pStatus.isAttack = false;
+		hideAfterimage = true;
+
+		if (pStatus.player->getChangeReady())
 		{
+			pStatus.player->setChangeReady(false);
+			pStatus.player->setFrameX(0);
 			pStatus.invincible = true;
 			pStatus.movable = true;
+			actionLock = false;
+			
 			currentState = CharacterState::Idle;
 		}
 	}
@@ -1221,10 +1229,12 @@ void Player::setOverPower(bool op, BulletSize bullet)
 	{
 		case BulletSize::Small:
 			currentAnim = pStatus.charName + "SmallDamaged";
+			// inputEnabled = false;
 			pStatus.movable = false;
 			break;
 		case BulletSize::Large:
 			currentAnim = pStatus.charName + "LargeDamaged";
+			// inputEnabled = false;
 			pStatus.movable = false;
 			break;
 	}
@@ -1235,14 +1245,16 @@ void Player::reduceHp(int damage)
 	currentState = CharacterState::OverPower;
 	
 	status.hp -= damage;
-	status.overpower = true;
+	
 	pStatus.isAttack = false;
 	pStatus.isDash = false;
 	pStatus.isJumpDash = false;
+	status.overpower = true;
 	pStatus.movable = false;
-
-
+	actionLock = true;
 	dashTimer = 0.0f;
+
+	
 
 	if (status.hp > 0)
 	{
@@ -1255,7 +1267,6 @@ void Player::reduceHp(int damage)
 		if (damage > 5)
 		{
 			changeAnimation(pStatus.charName + "LargeDamaged", 0);
-
 			pStatus.velocityX = status.lookRight ? -2.0f : 2.0f;
 			pStatus.velocityY = 0.0f;
 		}
@@ -1263,7 +1274,6 @@ void Player::reduceHp(int damage)
 		else if (damage > 0 && damage <= 5)
 		{
 			changeAnimation(pStatus.charName + "SmallDamaged", 0);
-
 			pStatus.velocityX = status.lookRight ? -3.0f : 3.0f;
 			pStatus.velocityY = 0.0f;
 		}
@@ -1325,6 +1335,7 @@ string Player::printBodyState(void)
 	else if (currentState == CharacterState::Dead) result = "사망";
 	else if (currentState == CharacterState::LadderStart) result = "사다리 타기";
 	else if (currentState == CharacterState::LadderLoop) result = "사다리 타는중";
+	else if (currentState == CharacterState::OverPower) result = "무적 상태";
 		
 	return result;
 }

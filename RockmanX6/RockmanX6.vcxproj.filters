@@ -222,9 +222,6 @@
     <ClInclude Include="Player.h">
       <Filter>소스 파일\Player\PlayerBase\Player</Filter>
     </ClInclude>
-    <ClInclude Include="BossType.h">
-      <Filter>소스 파일\Enemy\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>소스 파일\Player\Weapon\Bullet</Filter>
     </ClInclude>
@@ -305,6 +302,9 @@
     </ClInclude>
     <ClInclude Include="UiType.h">
       <Filter>소스 파일\FrameWork\Manager\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="BossType.h">
+      <Filter>소스 파일\Enemy\EnemyBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

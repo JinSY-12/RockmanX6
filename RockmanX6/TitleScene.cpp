@@ -252,8 +252,8 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_DashEnd", "Resources/Image/Player/X/X_DashEnd.bmp", 264 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_DashEndBurst", "Resources/Image/Player/X/X_DashEndBurst.bmp", 264 * SCALE_FACTOR, 88 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 
-	IMAGEMANAGER->addFrameImage("X_SmallDamaged", "Resources/Image/Player/X/X_SmallDamaged.bmp", 324 * SCALE_FACTOR, 116 * SCALE_FACTOR, 9, 2, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("X_LargeDamaged", "Resources/Image/Player/X/X_LargeDamaged.bmp", 644 * SCALE_FACTOR, 116 * SCALE_FACTOR, 14, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_SmallDamaged", "Resources/Image/Player/X/X_SmallDamaged.bmp", 324 * SCALE_FACTOR, 116 * SCALE_FACTOR, 9, 2, true, MAGENTA, true);
+	IMAGEMANAGER->addFrameImage("X_LargeDamaged", "Resources/Image/Player/X/X_LargeDamaged.bmp", 644 * SCALE_FACTOR, 116 * SCALE_FACTOR, 14, 2, true, MAGENTA, true);
 
 	IMAGEMANAGER->addFrameImage("X_Saber", "Resources/Image/Player/X/X_Saber.bmp", 1695 * SCALE_FACTOR, 144 * SCALE_FACTOR, 15, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_JumpSaber", "Resources/Image/Player/X/X_JumpSaber.bmp", 800 * SCALE_FACTOR, 128 * SCALE_FACTOR, 8, 2, true, MAGENTA);

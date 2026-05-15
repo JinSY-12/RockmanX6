@@ -69,6 +69,7 @@ void DamageManager::onEvent(const Event& event)
 					EFFECTMANAGER->spawnEffect(EffectType::BursterBlock, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
 					break;
 				default:
+					
 					enemy->reduceHp(damage->damage);
 					SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.5f);
 
@@ -91,21 +92,25 @@ void DamageManager::onEvent(const Event& event)
 			// 적이 플레이어를 공격
 			else if (damage->target->getEntityType() == CombatEntityType::Player)
 			{
+				
 				Player* player = static_cast<Player*>(damage->target);
 				player->reduceHp(damage->damage);
 				
 				int offset;
 				switch (bullet->getBulletType())
 				{
+					
 					case BulletType::JunkBullet:
 						offset = bullet->getBulletDir() ? damage->target->getWidth() / 2 : -(damage->target->getWidth() / 2);
 						EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
 						SOUNDMANAGER->play("SFX_SmallExplosion", 0.5f);
 						bullet->setBulletFire(false);
 						break;
+						
 					default:
 						break;
 				}
+			
 			}
 
 			else if (damage->target->getEntityType() == CombatEntityType::Object)

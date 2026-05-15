@@ -184,7 +184,6 @@ protected:
 	CharacterType charType;
 	ArmorType armorType;
 
-	bool inputEnabled;
 	bool isMoving;
 
 	// 애니메이션 관련
@@ -220,6 +219,8 @@ protected:
 	bool pressLeft;
 	bool pressRight;
 	bool lastKeyIsRight;
+	bool inputEnabled;
+	bool actionLock;
 
 	// 점프 관련
 	float wallkickTimer;
@@ -445,6 +446,7 @@ public:
 					charAlpha = 255;
 					status.overpower = false;
 					pStatus.invincible = false;
+					inputEnabled = true;
 					pStatus.invincibleTimer = 0.0f;
 				}
 			}
@@ -456,6 +458,7 @@ public:
 		if (status.hp <= 0)
 		{
 			status.hp = 0;
+			status.overpower = true;
 			pStatus.invincible = true;
 			status.dead = false;
 		}
