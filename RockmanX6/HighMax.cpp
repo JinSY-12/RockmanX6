@@ -5,13 +5,13 @@
 
 HRESULT HighMax::init(int x, int y)
 {
-	status.type = CombatEntityType::Enemy;
+	status.type = CombatEntityType::Boss;
 	btype = BossType::Intro;
 	bState = BossState::Apperance;
 
-	status.maxHp = 4;
+	status.maxHp = 50;
 	status.hp = status.maxHp;
-	status.physicalDamage = 2;
+	status.physicalDamage = 4;
 
 	bStatus.bImage = new GImage;
 	bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move")->cloneImage();
@@ -20,8 +20,9 @@ HRESULT HighMax::init(int x, int y)
 	status.width = 35 * SCALE_FACTOR;
 	status.height = 70 * SCALE_FACTOR;
 
-	bStatus.overPower = false;
+	status.overpower = false;
 	status.lookRight = false;
+	bStatus.effectCollisionOn = false;
 
 	bStatus.bHitBox = RectMakeCenter(x + status.width /2, y - status.height / 2, status.width, status.height);
 	
@@ -44,31 +45,29 @@ HRESULT HighMax::init(int x, int y)
 	attPattern = AttPattern::Idle;
 	effPattern = EffectState::BallCharge;
 
+	bStatus.effectOn = false;
+	bStatus.effectOnTop = true;
+
+	bStatus.invincibleMaxTime = 2.0f;
+
 	SiegeSecondAtt = false;
 	prevFrame = -1;
 	timer = 0.0f;
-	bStatus.effectOn = false;
 	phase2 = false;
 	BossBGM = "BGM_VS_HighMax";
 	isPattern = false;
 	appearanceDone = false;
 	musciStart = false;
 	attCycle = false;
-	bStatus.effectOnTop = true;
 	rushStart = false;
 
+	bossAlpha = 255;
 	pattenrCoolDown = 2.0f;
 
 	// 패턴을 바로 발동하게 테스트용 Bool값이라서 패턴 발동이 완성되면 지울것
 	patternTest = false;
 	patternTest2 = false;
 
-	/*
-	appearanceDone = true;
-	bState = BossState::AttReady;
-	attPattern = AttPattern::SiegeShoot;
-	isPattern = true;
-	*/
 	// 등장 모션을 위한 캐릭터 움직임 잠금
 	UIMANAGER->setFreeze(true);
 
@@ -139,6 +138,7 @@ void HighMax::update(void)
 
 	offsetFix();
 	setBossHitbox();
+	bossInvincibleTimerUpdate();
 }
 
 void HighMax::bossAppearance(void)
@@ -162,12 +162,13 @@ void HighMax::bossAppearance(void)
 		appearanceDone = true;
 		// 첫패턴 무조건 시즈볼
 
-	
+		/*
 		// 시즈볼
 		bState = BossState::AttReady;
 		attPattern = AttPattern::SiegeShoot;
 		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
-		
+		*/
+
 		/*
 		// 데스볼 테스트
 		bState = BossState::DeathBallShoot;
@@ -560,6 +561,7 @@ void HighMax::deathRush(void)
 		break;
 	case BossState::RightAtt:
 		bStatus.effectOnTop = true;
+		bStatus.effectCollisionOn = true;
 
 		if (!status.lookRight)
 		{
@@ -605,6 +607,8 @@ void HighMax::deathRush(void)
 				if (timerClock(1.5f))
 				{
 					bStatus.effectOn = false;
+					bStatus.effectCollisionOn = false;
+
 					bState = BossState::Idle;
 					bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle");
 				}
@@ -802,7 +806,7 @@ void HighMax::stateReset(void)
 
 	// 이펙트 관련 리셋
 	bStatus.effectOn = false;
-
+	bStatus.effectCollisionOn = false;
 
 	// 프레임 리셋도 시킬것
 	// 이미지 클론이 필요한지도 테스트 해볼것

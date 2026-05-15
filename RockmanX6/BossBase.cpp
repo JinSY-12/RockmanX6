@@ -12,8 +12,8 @@ void BossBase::render(HDC hdc)
 {
 	if (bStatus.effectOnTop)
 	{
-		bStatus.bImage->frameRender(hdc, bStatus.bHitBox.left - bStatus.offsetX, bStatus.bHitBox.top - bStatus.offsetY
-			, bStatus.bImage->getFrameX(), status.lookRight);
+		bStatus.bImage->frameAlphaRender(hdc, bStatus.bHitBox.left - bStatus.offsetX, bStatus.bHitBox.top - bStatus.offsetY
+			, bStatus.bImage->getFrameX(), status.lookRight, bossAlpha);
 
 		if (bStatus.effectImage != nullptr && bStatus.effectOn == true)
 		{
@@ -26,8 +26,8 @@ void BossBase::render(HDC hdc)
 	{
 		if (bStatus.effectImage != nullptr && bStatus.effectOn == true)
 		{
-			bStatus.effectImage->frameRender(hdc, bStatus.effectRect.left, bStatus.effectRect.top,
-				bStatus.effectImage->getFrameX(), status.lookRight);
+			bStatus.effectImage->frameAlphaRender(hdc, bStatus.effectRect.left, bStatus.effectRect.top,
+				bStatus.effectImage->getFrameX(), status.lookRight, bossAlpha);
 		}
 
 		bStatus.bImage->frameRender(hdc, bStatus.bHitBox.left - bStatus.offsetX, bStatus.bHitBox.top - bStatus.offsetY
@@ -123,6 +123,26 @@ bool BossBase::timerClock(float time)
 	}
 
 	return false;
+}
+
+void BossBase::bossInvincibleTimerUpdate(void)
+{
+	if (status.overpower)
+	{
+		bStatus.invincibleTimer += 0.1f;
+
+		if (static_cast<int>(bStatus.invincibleTimer * 10) % 5 == 0)
+		{
+			bossAlpha = (bossAlpha >= 200) ? 50 : 200;
+		}
+
+		if (bStatus.invincibleTimer >= bStatus.invincibleMaxTime)
+		{
+			bossAlpha = 255;
+			bStatus.invincibleTimer = 0.0f;
+			status.overpower = false;
+		}
+	}
 }
 
 Vector2 BossBase::getDiffPlayer(int firePointX, int firePointY)

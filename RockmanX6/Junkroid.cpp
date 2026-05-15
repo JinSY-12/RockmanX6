@@ -52,7 +52,6 @@ HRESULT Junkroid::init(int x, int y)
 
     eStatus.moveSpeed = 0.0f;
     eStatus.updownSpeed = 0.0f;
-        
 
     return S_OK;
 }
@@ -97,7 +96,6 @@ void Junkroid::attack(void)
     eState = EnemyState::Attack;
 
     makeShootEvent(BulletType::JunkBullet);
-
 }
 
 void Junkroid::checkPlayerCollision()

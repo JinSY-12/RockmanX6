@@ -12,7 +12,7 @@ class CollisionManager : public GameNode
 {
 private:
 	Player* player;
-	EnemyManager* ememies;
+	EnemyManager* enemies;
 	BulletManager* bullets;
 	ObjectManager* objects;
 
@@ -30,7 +30,7 @@ public:
 	void settingManager(Player* pl, EnemyManager* enemy, BulletManager* bullet, ObjectManager* object)
 	{
 		player = pl;
-		ememies = enemy;
+		enemies = enemy;
 		bullets = bullet;
 		objects = object;
 	};

@@ -162,9 +162,7 @@ void MetaDridler::downAtt(void)
         if (downSpeed < maxDownSpeed) downSpeed += 0.10f;
         else downSpeed = maxDownSpeed;
         
-        eStatus.worldRect.top += downSpeed;
-        eStatus.worldRect.bottom += downSpeed;
-		pos.y += downSpeed;
+        pos.y += downSpeed;
     }
 
     else
@@ -184,8 +182,6 @@ void MetaDridler::upReady(void)
     
     if (pos.y > prevLoacationY)
     {
-        eStatus.worldRect.top -= upSpeed;
-        eStatus.worldRect.bottom -= upSpeed;
         pos.y -= upSpeed;
     }
 
@@ -193,8 +189,7 @@ void MetaDridler::upReady(void)
     {
         eStatus.attackAble = true;
         eStatus.patternTimer = 0.0f;
-		cout << "Pattern End!" << endl;
-        dState = DridlerState::Down;
+		dState = DridlerState::Down;
     }
 }
 
@@ -216,11 +211,11 @@ void MetaDridler::checkPlayerCollision(void)
 void MetaDridler::setEnemyHitbox(void)
 {
 	// 월드 좌표 설정
-    eStatus.eHitBox.left = eStatus.worldRect.left - CAMERAMANAGER->getCameraPos().x;
-    eStatus.eHitBox.right = eStatus.worldRect.right - CAMERAMANAGER->getCameraPos().x;
+    eStatus.eHitBox.left = pos.x - CAMERAMANAGER->getCameraPos().x;
+    eStatus.eHitBox.right = eStatus.eHitBox.left + status.width - CAMERAMANAGER->getCameraPos().x;
 
-    eStatus.eHitBox.top = eStatus.worldRect.top - CAMERAMANAGER->getCameraPos().y;
-    eStatus.eHitBox.bottom = eStatus.worldRect.bottom - CAMERAMANAGER->getCameraPos().y;
+    eStatus.eHitBox.bottom = pos.y - CAMERAMANAGER->getCameraPos().y;
+    eStatus.eHitBox.top = eStatus.eHitBox.bottom - status.height - CAMERAMANAGER->getCameraPos().y;
 
 	// 서브 히트박스 설정
 	eStatus.subHitBox.left = eStatus.eHitBox.left + 17 * SCALE_FACTOR;

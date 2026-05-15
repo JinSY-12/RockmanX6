@@ -29,9 +29,7 @@ void EnemyManager::update(void)
 	if (_vEnemy.size() > 0)
 	{
 		checkDead();
-	}
-
-	
+	}	
 }
 
 void EnemyManager::render(void)

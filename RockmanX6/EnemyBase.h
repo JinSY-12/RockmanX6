@@ -40,7 +40,7 @@ protected:
 		float maxPatternTime;
 		bool attackAble;
 
-		float invincibleTimer;
+		float invincibleTimer = 0.0f;
 		float invincibleMaxTime;
 
 		bool touchLeftWall;

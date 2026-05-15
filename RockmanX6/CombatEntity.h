@@ -7,7 +7,8 @@ enum class CombatEntityType
 {
 	Player,
 	Enemy,
-	Object
+	Object,
+	Boss
 };
 
 class CombatEntity
@@ -68,6 +69,12 @@ public:
 	bool getLookRight() { return status.lookRight; }
 	bool getOverPower() { return status.overpower; }
 	int getCurrentHp() { return status.hp; }
+
+	inline void reduceEnemyHp(int damage)
+	{
+		status.hp -= damage;
+		status.overpower = true;
+	}
 
 	bool getIsDead() { return status.dead; }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "GameNode.h"
+#include "CombatEntity.h"
 #include "BossType.h"
 #include "EnemyBase.h"
 #include "BossBase.h"
@@ -24,7 +25,6 @@ private:
 	typedef vector<BossBase*>::iterator viBossBase;
 
 private:
-	
 	vEnemyBase _vEnemy;
 	viEnemyBase _viEnemy;
 
@@ -62,6 +62,7 @@ public:
 	void playHitSound(BulletType bType);
 
 	vector<EnemyBase*>& getEnemy() { return _vEnemy; }
+	vector<BossBase*>& getBoss() { return _vBoss; }
 
 	EnemyManager() {}
 	~EnemyManager() {}
