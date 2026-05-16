@@ -305,17 +305,17 @@ void CameraManager::setMaxCameraRange()
                 setCheckPoint(160 * SCALE_FACTOR, 672 * SCALE_FACTOR, zoneNumber);
             }
 
-            if (camera.x >= 1600 * SCALE_FACTOR && camera.x < 3370 * SCALE_FACTOR)
+            if (camera.x >= 1965 * SCALE_FACTOR && camera.x < 3370 * SCALE_FACTOR)
             {
                 cameraRange.top = 672 * SCALE_FACTOR;
                 cameraRange.bottom = mapSize.y;
-                cameraRange.left = 1600 * SCALE_FACTOR;
+                cameraRange.left = 1965 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
 
                 zoneNumber = 1;
                 zoneName = "Zone 1-2";
 
-                setCheckPoint(1760 * SCALE_FACTOR, 672 * SCALE_FACTOR, zoneNumber);
+                setCheckPoint(2090 * SCALE_FACTOR, 672 * SCALE_FACTOR, zoneNumber);
             }
             
             else if (camera.x >= 3370 * SCALE_FACTOR && camera.x < 3860 * SCALE_FACTOR)
@@ -339,11 +339,8 @@ void CameraManager::setMaxCameraRange()
 
                 zoneNumber = 3;
                 zoneName = "Zone 3";
-
-                setCheckPoint(4220 * SCALE_FACTOR, 480 * SCALE_FACTOR, zoneNumber);
             }
 
-            // 여기 위까지 확인 완료
             else if (camera.x >= 5008 * SCALE_FACTOR && camera.x < 5216 * SCALE_FACTOR)
             {
                 cameraRange.top = 0;
@@ -372,7 +369,7 @@ void CameraManager::setMaxCameraRange()
 
                 else
                 {
-                    cameraRange.left = 5008 * SCALE_FACTOR;
+                    cameraRange.left = 0 * SCALE_FACTOR;
                     cameraRange.right = 5440 * SCALE_FACTOR;
                     cameraRange.bottom = 720 * SCALE_FACTOR;
 

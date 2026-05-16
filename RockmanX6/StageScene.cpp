@@ -13,6 +13,8 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 		break;
 	}
 
+	stageType = bType;
+
 	EVENTMANAGER->addListener(&bManager);
 	EVENTMANAGER->addListener(&dManager);
 
@@ -31,7 +33,7 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	// 얘네는 생성과 관리만 할 예정임
 
 	// 스테이지 세팅
-	stageSettting(bType);
+	stageSettting();
 
 	// 스테이지 시작 준비
 	SOUNDMANAGER->play(stagBGM, 0.5f);
@@ -122,9 +124,9 @@ void StageScene::render(void)
 	}
 }
 
-void StageScene::stageSettting(BossType bType)
+void StageScene::stageSettting(void)
 {
-	switch(bType)
+	switch(stageType)
 	{
 		// 인트로
 		case BossType::Intro:
@@ -163,8 +165,8 @@ void StageScene::stageSettting(BossType bType)
 			UIMANAGER->addUi(UiType::Ready);
 
 			rectSetting();
-			enemySettting(bType);
-			objectSetting(bType);
+			enemySettting();
+			objectSetting();
 			break;
 
 		// 커맨드 얀마크
@@ -177,16 +179,16 @@ void StageScene::stageSettting(BossType bType)
 			player->setStageGravity(gravity);
 			break;
 
-		defalut:
+		default:
 			break;
 	}
 
 	CAMERAMANAGER->settingMapMaxSize(mStage->getWidth(), mStage->getHeight());
 }
 
-void StageScene::enemySettting(BossType bType)
+void StageScene::enemySettting(void)
 {
-	switch (bType)
+	switch (stageType)
 	{
 		// 인트로
 	case BossType::Intro:
@@ -195,39 +197,41 @@ void StageScene::enemySettting(BossType bType)
 		int up;
 		up = 50;
 
-		// 보스 테스트
 		// 보스 애니메이션 확인용 
 		// eManager.spawnBoss(BossType::Intro, WINSIZE_X / 3 * 2, 830 * SCALE_FACTOR);
 
-
-		// 세팅 시작
-		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
-		// 
-		// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
-		//    
-		// eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
-		// 
-		// eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, (620 - up) * SCALE_FACTOR);
-		// 
-		// eManager.spawnEnemy(EnemyType::MetaDridler, 4352 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 670 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::MetaDridler, 4640 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::MetaDridler, 4864 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::MetaDridler, 4930 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
-		// 
-		// eManager.spawnEnemy(EnemyType::MetaDridler, (5312 + 4) * SCALE_FACTOR, (320 - up) * SCALE_FACTOR, 480 * SCALE_FACTOR);
-		// 											
-		// eManager.spawnEnemy(EnemyType::MetaDridler, (5056 + 4) * SCALE_FACTOR, (110 - up) * SCALE_FACTOR, 270 * SCALE_FACTOR);
-		// 											
-		// eManager.spawnEnemy(EnemyType::MetaDridler, (5168 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 250 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::MetaDridler, (5280 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 220 * SCALE_FACTOR);
-		// eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
-		// 
-		// eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
+		switch (CAMERAMANAGER->getZoneResetNumber())
+		{
+		case 0:
+			eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
+			
+			eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
+		case 1:
+			eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
+			
+			eManager.spawnEnemy(EnemyType::MetaDridler, 4352 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 670 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, 4640 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, 4864 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, 4930 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+		case 4:
+			eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, (620 - up) * SCALE_FACTOR);
+			
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5312 + 4) * SCALE_FACTOR, (320 - up) * SCALE_FACTOR, 480 * SCALE_FACTOR);
+														
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5056 + 4) * SCALE_FACTOR, (110 - up) * SCALE_FACTOR, 270 * SCALE_FACTOR);
+														
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5168 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 250 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5280 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 220 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
+		default:
+			break;
+		}
+		
 		break;
 
 		// 커맨드 얀마크
@@ -240,9 +244,9 @@ void StageScene::enemySettting(BossType bType)
 	}
 }
 
-void StageScene::objectSetting(BossType bType)
+void StageScene::objectSetting(void)
 {
-	switch (bType)
+	switch (stageType)
 	{
 		// 인트로
 	case BossType::Intro:
@@ -826,10 +830,11 @@ void StageScene::stageReset(void)
 	{
 		UIMANAGER->addUi(UiType::Ready);
 		SOUNDMANAGER->play(stagBGM, 0.5f);
-		cout << CAMERAMANAGER->getCheckPoint().x / 3 << endl;
+
 		player->spawn(CAMERAMANAGER->getCheckPoint().x, CAMERAMANAGER->getCheckPoint().y);
 		CAMERAMANAGER->fixPos(CAMERAMANAGER->getCheckPoint().x - WINSIZE_X / 2, CAMERAMANAGER->getCheckPoint().y);
-
+		eManager.enemyReset();
+		enemySettting();
 		CAMERAMANAGER->padeIn(2.0f);
 		stateNow = StageState::Playing;
 	}

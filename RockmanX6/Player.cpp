@@ -87,7 +87,7 @@ void Player::render(HDC memDC)
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 45, "캐릭터 위치", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 65, CAMERAMANAGER->getZoneNum(), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 420, WINSIZE_Y / 100 + 65, CAMERAMANAGER->getZoneName(), "DNF_M_18", RGB(0, 255, 255));
 
 		if (pStatus.isDash) temp = "O";
 		else temp = "X";

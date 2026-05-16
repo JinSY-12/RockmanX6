@@ -51,6 +51,7 @@ public:
 
 	void spawnEnemy(EnemyType eType, int x, int y, int sub = 0);
 	void spawnBoss(BossType bType, int x, int y);
+	void enemyReset();
 
 	void setttingPlayer(Player* player) { _player = player; }
 	void setttingBulletManager(BulletManager* bManager) { _bManager = bManager; }

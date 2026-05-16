@@ -54,6 +54,7 @@ private:
 	CollisionManager cManager;
 	DamageManager dManager;
 
+	BossType stageType;
 	float gravity;
 
 	bool noticeStart;
@@ -78,9 +79,9 @@ public:
 
 	bool noticeAnim(void);
 
-	void stageSettting(BossType bType);
-	void enemySettting(BossType bType);
-	void objectSetting(BossType bType);
+	void stageSettting(void);
+	void enemySettting(void);
+	void objectSetting(void);
 
 	void rectSetting(void);
 	void stageCollision(void);

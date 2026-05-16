@@ -164,7 +164,9 @@ public:
 	inline bool getIsCamaraMove() { return cameraMove; }
 	inline bool getCameraMoveEnd() { return cameraMoveEnd; }
 
-	string getZoneNum() { return zoneName; }
+	string getZoneName() { return zoneName; }
+	int getZoneNumber() { return zoneNumber; }
+	int getZoneResetNumber() { return prevZoneNumber; }
 
 	float cameraLerpY(float slopeStartX, float slopeEndX, float bottomStart, float bottomEnd);
 

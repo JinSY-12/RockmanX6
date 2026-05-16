@@ -105,6 +105,12 @@ void EnemyManager::spawnBoss(BossType bType, int x, int y)
 
 }
 
+void EnemyManager::enemyReset()
+{
+	_vEnemy.clear();
+	_vBoss.clear();
+}
+
 void EnemyManager::playExplodeEffect(EnemyType eType, int x, int y, int width, int height, int look)
 {
 	switch (eType)
