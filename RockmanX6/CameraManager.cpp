@@ -3,7 +3,6 @@
 
 HRESULT CameraManager::init(void)
 {
-
     _blackImage = IMAGEMANAGER->findImage("Black");
     _whiteImage = IMAGEMANAGER->findImage("White");
     _blackAlpha = 0;
@@ -38,6 +37,12 @@ HRESULT CameraManager::init(void)
     timer = 0.0f;
 
     moveDir = None;
+
+    checkPointSave.x = 0;
+    checkPointSave.y = 0;
+
+    zoneNumber = 0;
+    prevZoneNumber = -1;
 
     return S_OK;
 }
@@ -294,7 +299,10 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
                 
-                zoneNum = "Zone 1-1";
+                zoneNumber = 0;
+                zoneName = "Zone 1-1";
+
+                setCheckPoint(160 * SCALE_FACTOR, 672 * SCALE_FACTOR, zoneNumber);
             }
 
             if (camera.x >= 1600 * SCALE_FACTOR && camera.x < 3370 * SCALE_FACTOR)
@@ -304,7 +312,10 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.left = 1600 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
 
-                zoneNum = "Zone 1-2";
+                zoneNumber = 1;
+                zoneName = "Zone 1-2";
+
+                setCheckPoint(1760 * SCALE_FACTOR, 672 * SCALE_FACTOR, zoneNumber);
             }
             
             else if (camera.x >= 3370 * SCALE_FACTOR && camera.x < 3860 * SCALE_FACTOR)
@@ -315,7 +326,8 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
 
-                zoneNum = "Zone 2";
+                zoneNumber = 2;
+                zoneName = "Zone 2";
             }
 
             else if (camera.x >= 3860 * SCALE_FACTOR && camera.x < 5008 * SCALE_FACTOR && camera.y >= 480 * SCALE_FACTOR)
@@ -325,7 +337,10 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = 5400 * SCALE_FACTOR;
 
-                zoneNum = "Zone 3";
+                zoneNumber = 3;
+                zoneName = "Zone 3";
+
+                setCheckPoint(4220 * SCALE_FACTOR, 480 * SCALE_FACTOR, zoneNumber);
             }
 
             // 여기 위까지 확인 완료
@@ -341,7 +356,8 @@ void CameraManager::setMaxCameraRange()
                     cameraRange.bottom = cameraLerpY((5184 - 160) * SCALE_FACTOR, (5376 - 160) * SCALE_FACTOR,
                         450 * SCALE_FACTOR, 270 * SCALE_FACTOR);
 
-                    zoneNum = "Zone 6";
+                    zoneNumber = 6;
+                    zoneName = "Zone 6";
                 }
                 
                 else if (camera.y <= (480 - 120) * SCALE_FACTOR)
@@ -350,7 +366,8 @@ void CameraManager::setMaxCameraRange()
                     cameraRange.right = 5440 * SCALE_FACTOR;
                     cameraRange.bottom = 720 * SCALE_FACTOR;
 
-                    zoneNum = "Zone 5";
+                    zoneNumber = 5;
+                    zoneName = "Zone 5";
                 }
 
                 else
@@ -359,7 +376,10 @@ void CameraManager::setMaxCameraRange()
                     cameraRange.right = 5440 * SCALE_FACTOR;
                     cameraRange.bottom = 720 * SCALE_FACTOR;
 
-                    zoneNum = "Zone 4";
+                    zoneNumber = 4;
+                    zoneName = "Zone 4";
+
+                    setCheckPoint(5080 * SCALE_FACTOR, 480 * SCALE_FACTOR, zoneNumber);
                 }
             }
 
@@ -373,7 +393,9 @@ void CameraManager::setMaxCameraRange()
                     cameraRange.bottom = 270 * SCALE_FACTOR;
                 }
                 
-                zoneNum = "Zone Last";
+                zoneNumber = 98;
+                zoneName = "Zone Last";
+
             }
 
             else if (camera.x >= 5743 * SCALE_FACTOR && camera.x < 6063 * SCALE_FACTOR)
@@ -383,7 +405,10 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.right = 6063 * SCALE_FACTOR;
                 cameraRange.bottom = 240 * SCALE_FACTOR;
 
-                zoneNum = "Zone Boss Room";
+                zoneNumber = 99;
+                zoneName = "Zone Boss Room";
+
+                setCheckPoint(5904 * SCALE_FACTOR, 0 * SCALE_FACTOR, zoneNumber);
             }
 
             else if (camera.x >= 6063 * SCALE_FACTOR && camera.x < mapSize.x)
@@ -393,10 +418,11 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.right = mapSize.x;
                 cameraRange.bottom = 240 * SCALE_FACTOR;
 
-                zoneNum = "Zone Battle Boss";
+                zoneNumber = 100;
+                zoneName = "Zone Battle Boss";
             }
 
-            else zoneNum = "Zone Else";
+            else zoneName = "Zone Else";
 
             // 보스 입장 준비
 

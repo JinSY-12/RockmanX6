@@ -47,7 +47,6 @@ HRESULT Burster::init(BulletType type, int x, int y, bool isRight, float velocit
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster1")->cloneImage();
 		bStatus.faction = BulletFaction::Player;
-		//bStatus.demage = 0;
 		bStatus.demage = 1;
 		bStatus.bType = BulletType::Burster;
 		break;
@@ -56,7 +55,6 @@ HRESULT Burster::init(BulletType type, int x, int y, bool isRight, float velocit
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster2")->cloneImage();
 		bStatus.faction = BulletFaction::Player;
-		//bStatus.demage = 0;
 		bStatus.demage = 2;
 		bStatus.bType = BulletType::ChargeBurst1;
 		break;
@@ -65,7 +63,6 @@ HRESULT Burster::init(BulletType type, int x, int y, bool isRight, float velocit
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster3")->cloneImage();
 		bStatus.faction = BulletFaction::Player;
-		//bStatus.demage = 0;
 		bStatus.demage = 4;
 		bStatus.bType = BulletType::ChargeBurst2;
 		break;
@@ -197,9 +194,6 @@ HRESULT DeathBall1::init(BulletType type, int x, int y, bool isRight, float velo
 	bStatus.type = BulletSize::Large;
 	bStatus.bType = BulletType::DeathBall1;
 	bStatus.faction = BulletFaction::Enemy;
-
-	// bStatus.width = 30 * SCALE_FACTOR;
-	// bStatus.height = 30 * SCALE_FACTOR;
 
 	bStatus.width = bStatus.shape->getFrameWidth();
 	bStatus.height = bStatus.shape->getFrameHeight();

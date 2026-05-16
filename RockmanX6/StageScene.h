@@ -12,9 +12,26 @@
 class StageScene : public GameNode
 {
 private:
+	enum class StageState
+	{
+		Playing,
+		GameOver,
+		Clear
+	};
+
+	struct CheckPoint
+	{
+		int x;
+		int y;
+	};
+
+private:
+	StageState stateNow;
+
 	GImage* mStage;
 	GImage* mPixelStage;
 	GImage* mReadyLogo;
+	CheckPoint checkpoint;
 
 	unique_ptr<Player> player;
 
@@ -46,9 +63,12 @@ private:
 	bool soundOnce;
 
 	// Ready 로고 애니메이션 관련
-	// 수정완료
 	int noticeTest;
 	int noticeAniSpeed;
+
+	bool test;
+
+	float timer;
 
 public:
 	HRESULT init(PlayerType pType, BossType bType);
@@ -65,7 +85,11 @@ public:
 	void rectSetting(void);
 	void stageCollision(void);
 
+	void gameover(void);
+	void stageReset(void);
+
+	bool clockTimer(float time);
+
 	StageScene() {}
 	~StageScene() {}
 };
-

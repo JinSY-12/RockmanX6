@@ -19,8 +19,8 @@ public:
 
 		struct Pos
 		{
-			int x;
-			int y;
+			float x;
+			float y;
 		}pos;
 		
 		int width;

@@ -4,8 +4,6 @@
 
 void Player::render(HDC memDC)
 {
-	
-
 	pStatus.player->frameAlphaRender(memDC, hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
 		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
 		pStatus.player->getFrameX(), status.lookRight, charAlpha);
@@ -51,17 +49,24 @@ void Player::render(HDC memDC)
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 80, WINSIZE_Y / 100 + 65, to_string(pStatus.velocityY), "DNF_M_18", RGB(0, 255, 255));
 								  
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100, "캐릭터 X", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(pos.x), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 20, to_string(pos.x / 3), "DNF_M_18", RGB(0, 255, 255));
 								 
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100, "캐릭터 Y", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(pos.y), "DNF_M_18", RGB(0, 255, 255));
-								   
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 20, to_string(pos.y / 3), "DNF_M_18", RGB(0, 255, 255));
+		
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 45, "LEFT", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(pStatus.hitBox.left / 3), "DNF_M_18", RGB(0, 255, 255));
+
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 45, "BOTTOM", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(pStatus.hitBox.bottom / 3), "DNF_M_18", RGB(0, 255, 255));
+
+		/*
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 45, "카메라 X", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 160, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().x / 3), "DNF_M_18", RGB(0, 255, 255));
 								   
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 45, "카메라 Y", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 240, WINSIZE_Y / 100 + 65, to_string(CAMERAMANAGER->getCameraPos().y / 3), "DNF_M_18", RGB(0, 255, 255));
-
+		*/
 		string temp;
 		if (status.overpower) temp = "O";
 		else temp = "X";

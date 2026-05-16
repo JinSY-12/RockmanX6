@@ -420,6 +420,10 @@ public:
 	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
 	inline void setLadderAble(bool able) { ladderAble = able; }
 	inline void setLadderEnd(bool able) { ladderEnd = able; }
+	inline void resetPlayer(int x, int y)
+	{
+		spawn(x, y);
+	}
 
 	// ½ºÅÈ °ü·Ã
 	void reduceHp(int damage);

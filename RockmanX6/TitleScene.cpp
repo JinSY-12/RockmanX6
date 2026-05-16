@@ -138,7 +138,6 @@ void TitleScene::addImage(void)
 	// 최우선 테스트 용도 -> 잘되면 정리해서 내리세요
 	//////////////////////////////////
 
-
 	IMAGEMANAGER->addFrameImage("Ui_Ready", "Resources/Image/Logo/Ui_Ready.bmp", 8960 * SCALE_FACTOR, 38 * SCALE_FACTOR, 28, 1, true, MAGENTA, true);
 	IMAGEMANAGER->addFrameImage("Ui_Warning0", "Resources/Image/Logo/Ui_Warning0.bmp", 8280 * SCALE_FACTOR, 60 * SCALE_FACTOR, 36, 1, true, MAGENTA, true);
 	IMAGEMANAGER->addFrameImage("Ui_Warning1", "Resources/Image/Logo/Ui_Warning1.bmp", 8970 * SCALE_FACTOR, 60 * SCALE_FACTOR, 39, 1, true, MAGENTA, true);
@@ -193,7 +192,7 @@ void TitleScene::addImage(void)
 	//// 배경 스테이지 ////
 	// 인트로 스테이지
 	IMAGEMANAGER->addImage("Stage_Intro", "Resources/Image/Stage/Stage_Intro.bmp", 6415 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
-	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel.bmp", 6415 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
+	IMAGEMANAGER->addImage("Pixel_Intro", "Resources/Image/Stage/Pixel/Stage_Intro_Pixel2.bmp", 6415 * SCALE_FACTOR, 960 * SCALE_FACTOR, true, MAGENTA);
 
 	//////////////////////////////////
 	// 공통 이펙트

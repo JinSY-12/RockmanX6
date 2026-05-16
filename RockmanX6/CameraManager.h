@@ -40,12 +40,20 @@ private:
 		int right;
 	};
 
+	struct CheckPointSave
+	{
+		int x;
+		int y;
+	};
+
 #pragma endregion
 	
 	// 카메라 좌표
 	CameraPos camera;
 	MapSize mapSize;
 	PlayerPos playerPos;
+	CheckPointSave checkPointSave;
+
 	CameraRange cameraRange;
 	CameraMoveDir moveDir;
 
@@ -80,7 +88,9 @@ private:
 	float lerpSpeed;
 	bool useLerpY;
 
-	string zoneNum;
+	string zoneName;
+	int zoneNumber;
+	int prevZoneNumber;
 
 	bool cameraMove;
 	bool lerpCompleteX;
@@ -117,6 +127,16 @@ public:
 	// 플레이어 위치 체크
 	PlayerPos getPlayerPos(void) { return playerPos; }
 	void setPlayerPos(int x, int y) { playerPos.x = x, playerPos.y = y; }
+	CheckPointSave getCheckPoint() { return checkPointSave; }
+	inline void setCheckPoint(int x, int y, int zone)
+	{
+		if (zoneNumber >= prevZoneNumber)
+		{
+			checkPointSave.x = x;
+			checkPointSave.y = y;
+			prevZoneNumber = zone;
+		}
+	}
 
 	// 내가 사용할 새로운 함수들은 여기에 정립해라
 	
@@ -144,7 +164,7 @@ public:
 	inline bool getIsCamaraMove() { return cameraMove; }
 	inline bool getCameraMoveEnd() { return cameraMoveEnd; }
 
-	string getZoneNum() { return zoneNum; }
+	string getZoneNum() { return zoneName; }
 
 	float cameraLerpY(float slopeStartX, float slopeEndX, float bottomStart, float bottomEnd);
 

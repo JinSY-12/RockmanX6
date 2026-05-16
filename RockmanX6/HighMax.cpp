@@ -162,13 +162,12 @@ void HighMax::bossAppearance(void)
 		appearanceDone = true;
 		// 첫패턴 무조건 시즈볼
 
-		/*
+		
 		// 시즈볼
 		bState = BossState::AttReady;
 		attPattern = AttPattern::SiegeShoot;
 		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
-		*/
-
+		
 		/*
 		// 데스볼 테스트
 		bState = BossState::DeathBallShoot;
@@ -188,7 +187,7 @@ void HighMax::bossAppearance(void)
 		{
 			musciStart = true;
 			UIMANAGER->setFreeze(false);
-			SOUNDMANAGER->play(BossBGM, 0.3f);
+			// SOUNDMANAGER->play(BossBGM, 0.3f);
 		}
 	}
 }

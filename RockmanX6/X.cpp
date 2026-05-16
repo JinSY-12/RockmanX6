@@ -44,7 +44,11 @@ void X::update(void)
 	// 첫 등장 연출 파트
 	/////////////////////////////////
 		
-	
+	if (KEYMANAGER->isOnceKeyDown('P'))
+	{
+		cout << "??" << endl;
+		status.dead = true;
+	}
 
 	// 게임 시작시 스테이지에 소환 되는 상황
 	if (currentState == CharacterState::Warp)
@@ -648,30 +652,12 @@ void X::frameCheck(void)
 
 void X::setHitBox(void)
 {
-	if (CAMERAMANAGER->getLockX() == true)
-	{
-		pStatus.hitBox.left = pos.x - status.hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
-		pStatus.hitBox.right = pos.x + status.hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
-	}
-
-	else
-	{
-		pStatus.hitBox.left = hitBoxCenter.x - (status.hitBoxWidth / 2);
-		pStatus.hitBox.right = hitBoxCenter.x + (status.hitBoxWidth / 2);
-	}
-
-	if (CAMERAMANAGER->getLockY() == true)
-	{
-		pStatus.hitBox.bottom = pos.y - CAMERAMANAGER->getCameraPos().y;
-		pStatus.hitBox.top = pStatus.hitBox.bottom - status.hitBoxHeight;
-	}
+	pStatus.hitBox.left = pos.x - status.hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
+	pStatus.hitBox.right = pos.x + status.hitBoxWidth / 2 - CAMERAMANAGER->getCameraPos().x;
 	
-	else
-	{
-		pStatus.hitBox.bottom = hitBoxCenter.y;
-		pStatus.hitBox.top = hitBoxCenter.y - status.hitBoxHeight;
-	}
-
+	pStatus.hitBox.bottom = pos.y - CAMERAMANAGER->getCameraPos().y;
+	pStatus.hitBox.top = pStatus.hitBox.bottom - status.hitBoxHeight;
+	
 	switch (currentState)
 	{
 	case CharacterState::Warp:

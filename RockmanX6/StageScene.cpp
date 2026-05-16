@@ -17,8 +17,6 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	EVENTMANAGER->addListener(&dManager);
 
 	// 데미지, 애너미 매니저 추가 해야 함
-	// EVENTMANAGER->addListener(&eManager);
-
 	cManager.settingManager(player.get(), &eManager, &bManager, &oManager);
 
 	player->settingBulletManager(&bManager);
@@ -37,6 +35,7 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 
 	// 스테이지 시작 준비
 	SOUNDMANAGER->play(stagBGM, 0.5f);
+
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
 	noticeAniSpeed = 1;
@@ -45,6 +44,8 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 	playAble = false;
 	soundOnce = false;
 
+	test = false;
+	stateNow = StageState::Playing;
 
 	return S_OK;
 }
@@ -55,20 +56,35 @@ void StageScene::release(void)
 
 void StageScene::update(void)
 {	
-	stageCollision();
+	
 
-	if (UIMANAGER->getIsUiMode() == false)
+	switch (stateNow)
 	{
-		// 플레이어는 이미 천장에 소환 되어 있다
-		// 레디 로고 이후에 플레이어의 동작 시작으로 하늘에서 내려오는 연출
-		bManager.update();
-		player->update();
-		eManager.update();
-		oManager.update();
+	case StageState::Playing:
+		stageCollision();
 
-		cManager.update();
+		if (UIMANAGER->getIsUiMode() == false)
+		{
+			// 플레이어는 이미 천장에 소환 되어 있다
+			// 레디 로고 이후에 플레이어의 동작 시작으로 하늘에서 내려오는 연출
+			bManager.update();
+			player->update();
+			eManager.update();
+			oManager.update();
 
-		EFFECTMANAGER->update();
+			cManager.update();
+
+			EFFECTMANAGER->update();
+
+			if(player->getIsDead()) gameover();
+		}
+		break;
+	case StageState::GameOver:
+		stageReset();
+		break;
+	case StageState::Clear:
+
+		break;
 	}
 }
 
@@ -118,17 +134,29 @@ void StageScene::stageSettting(BossType bType)
 			stagBGM = "BGM_Stage_Intro";
 
 			// 빠른 적군 대전 테스트
-			// player->init(WINSIZE_X / 3, mStage->getHeight() - 290 * SCALE_FACTOR);
+			// checkpoint.x = WINSIZE_X / 3;
+			// checkpoint.y = 672 * SCALE_FACTOR;
+			
 			// 시작점
-			// player->init(WINSIZE_X / 2, mStage->getHeight() - 290 * SCALE_FACTOR);
+			checkpoint.x = 160 * SCALE_FACTOR;
+			checkpoint.y = 672 * SCALE_FACTOR;
+			
 			// 사다리 테스트
-			// player->init(1550 * SCALE_FACTOR, mStage->getHeight() - 290 * SCALE_FACTOR);
+			// checkpoint.x = 1760 * SCALE_FACTOR;
+			// checkpoint.y = 672 * SCALE_FACTOR;
+			
 			// 보스 게이트 테스트
-			// player->init(5000 * SCALE_FACTOR, mStage->getHeight() - 290 * SCALE_FACTOR);
+			// checkpoint.x = 5000 * SCALE_FACTOR;
+			// checkpoint.y = 672 * SCALE_FACTOR;
+			
 			// 보스 테스트
-			// player->init(5590 * SCALE_FACTOR, 0 * SCALE_FACTOR);
-			player->init(5900 * SCALE_FACTOR, 0 * SCALE_FACTOR);
-			CAMERAMANAGER->fixPos(5744 * SCALE_FACTOR, 0);
+			// checkpoint.x = 5904 * SCALE_FACTOR;
+			// checkpoint.y = 0 * SCALE_FACTOR;
+
+			CAMERAMANAGER->setCheckPoint(checkpoint.x, checkpoint.y, 0);
+			
+			player->init(checkpoint.x, checkpoint.y);
+			CAMERAMANAGER->fixPos(checkpoint.x - WINSIZE_X / 2, checkpoint.y);
 
 			player->setStageGravity(gravity);
 
@@ -137,7 +165,6 @@ void StageScene::stageSettting(BossType bType)
 			rectSetting();
 			enemySettting(bType);
 			objectSetting(bType);
-
 			break;
 
 		// 커맨드 얀마크
@@ -174,33 +201,33 @@ void StageScene::enemySettting(BossType bType)
 
 
 		// 세팅 시작
-		eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
-		
-		eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
-		   
-		eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
-		
-		eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, (620 - up) * SCALE_FACTOR);
-		
-		eManager.spawnEnemy(EnemyType::MetaDridler, 4352 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 670 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::MetaDridler, 4640 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::MetaDridler, 4864 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::MetaDridler, 4930 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
-		
-		eManager.spawnEnemy(EnemyType::MetaDridler, (5312 + 4) * SCALE_FACTOR, (320 - up) * SCALE_FACTOR, 480 * SCALE_FACTOR);
-													
-		eManager.spawnEnemy(EnemyType::MetaDridler, (5056 + 4) * SCALE_FACTOR, (110 - up) * SCALE_FACTOR, 270 * SCALE_FACTOR);
-													
-		eManager.spawnEnemy(EnemyType::MetaDridler, (5168 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 250 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::MetaDridler, (5280 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 220 * SCALE_FACTOR);
-		eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
-
-		eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
+		// 
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
+		//    
+		// eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
+		// 
+		// eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, (620 - up) * SCALE_FACTOR);
+		// 
+		// eManager.spawnEnemy(EnemyType::MetaDridler, 4352 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 670 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaDridler, 4640 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaDridler, 4864 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaDridler, 4930 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+		// 
+		// eManager.spawnEnemy(EnemyType::MetaDridler, (5312 + 4) * SCALE_FACTOR, (320 - up) * SCALE_FACTOR, 480 * SCALE_FACTOR);
+		// 											
+		// eManager.spawnEnemy(EnemyType::MetaDridler, (5056 + 4) * SCALE_FACTOR, (110 - up) * SCALE_FACTOR, 270 * SCALE_FACTOR);
+		// 											
+		// eManager.spawnEnemy(EnemyType::MetaDridler, (5168 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 250 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaDridler, (5280 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 220 * SCALE_FACTOR);
+		// eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
+		// 
+		// eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
 		break;
 
 		// 커맨드 얀마크
@@ -580,7 +607,7 @@ void StageScene::stageCollision(void)
 				// 컬러 비교
 				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
 
-				if (color == RGB(255, 0, 0) || color == RGB(255, 255, 0))
+				if ((color == RGB(255, 0, 0) || color == RGB(255, 255, 0)) && player->getIsWarp() == false)
 				{
 					player->setTopCollision(true, row);
 					break;
@@ -595,7 +622,7 @@ void StageScene::stageCollision(void)
 				// 컬러 비교
 				COLORREF color = GetPixel(mPixelStage->getMemDC(), line, row);
 
-				if (color == RGB(255, 0, 0) || color == RGB(255, 255, 0))
+				if ((color == RGB(255, 0, 0) || color == RGB(255, 255, 0)) && player->getIsWarp() == false)
 				{
 					player->setTopCollision(true, row);
 					break;
@@ -607,18 +634,21 @@ void StageScene::stageCollision(void)
 	// 스테이지 벽과의 벽판정
 	for (auto& floor : _vFloor)
 	{
-		if(player->getPlayerLeft() - 4 < floor.right && player->getPlayerRight() > floor.right
-			&& player->getPlayerBottom() > floor.top && player->getPlayerTop() < floor.bottom)
+		if (player->getIsWarp() == false)
 		{
-			player->setLeftCollision(true, floor.right);
-			break;
-		}
+			if (player->getPlayerLeft() - 4 < floor.right && player->getPlayerRight() > floor.right
+				&& player->getPlayerBottom() > floor.top && player->getPlayerTop() < floor.bottom)
+			{
+				player->setLeftCollision(true, floor.right);
+				break;
+			}
 
-		if (player->getPlayerRight() + 4 > floor.left && player->getPlayerLeft() < floor.left
-			&& player->getPlayerBottom() > floor.top && player->getPlayerTop() < floor.bottom)
-		{
-			player->setRightCollision(true, floor.left);
-			break;
+			if (player->getPlayerRight() + 4 > floor.left && player->getPlayerLeft() < floor.left
+				&& player->getPlayerBottom() > floor.top && player->getPlayerTop() < floor.bottom)
+			{
+				player->setRightCollision(true, floor.left);
+				break;
+			}
 		}
 	}
 
@@ -775,3 +805,45 @@ void StageScene::stageCollision(void)
 	}
 }
 
+void StageScene::gameover(void)
+{
+	if (!test)
+	{
+		CAMERAMANAGER->padeOut(2.0f);
+		test = true;
+	}
+
+	if (CAMERAMANAGER->isPadeOutComplete()) stateNow = StageState::GameOver;
+}
+
+void StageScene::stageReset(void)
+{
+	// 게임오버 실행하는 변수값도 리셋
+	test = false;
+	SOUNDMANAGER->stop(stagBGM);
+
+	if (clockTimer(1.0f))
+	{
+		UIMANAGER->addUi(UiType::Ready);
+		SOUNDMANAGER->play(stagBGM, 0.5f);
+		cout << CAMERAMANAGER->getCheckPoint().x / 3 << endl;
+		player->spawn(CAMERAMANAGER->getCheckPoint().x, CAMERAMANAGER->getCheckPoint().y);
+		CAMERAMANAGER->fixPos(CAMERAMANAGER->getCheckPoint().x - WINSIZE_X / 2, CAMERAMANAGER->getCheckPoint().y);
+
+		CAMERAMANAGER->padeIn(2.0f);
+		stateNow = StageState::Playing;
+	}
+}
+
+bool StageScene::clockTimer(float time)
+{
+	timer += 0.01f;
+
+	if (timer > time)
+	{
+		timer = 0.0f;
+		return true;
+	}
+
+	return false;
+}
