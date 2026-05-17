@@ -276,6 +276,9 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("SFX_BursterEffect2", "Resources/Image/Player/Effect/X/SFX_Burster2_Effect.bmp", 56 * SCALE_FACTOR, 48 * SCALE_FACTOR, 4, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("SFX_BursterEffect3", "Resources/Image/Player/Effect/X/SFX_Burster3_Effect.bmp", 348 * SCALE_FACTOR, 156 * SCALE_FACTOR, 6, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("SFX_DeathBubble", "Resources/Image/SFX/SFX_DeathBubble.bmp", 96 * SCALE_FACTOR, 42 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("SFX_DeathRing", "Resources/Image/SFX/SFX_DeathRing.bmp", 160 * SCALE_FACTOR, 62 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+
 	//////////////////////////////////
 	// Á¦·Î
 	//////////////////////////////////

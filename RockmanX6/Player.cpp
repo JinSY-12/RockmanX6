@@ -4,6 +4,7 @@
 
 void Player::render(HDC memDC)
 {
+	if(pStatus.player->getFileName() == "Resources/Image/Player/X/X_LargeDamaged.bmp") cout << "애니메이션 출력" << endl;
 	pStatus.player->frameAlphaRender(memDC, hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
 		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
 		pStatus.player->getFrameX(), status.lookRight, charAlpha);
@@ -387,114 +388,120 @@ void Player::specialAttack(void)
 
 void Player::applyForce(void)
 {
+	if (!status.dead)
+	{
 #pragma region 특수 상황
-
-	// 벽차기 타이머
-	if (pStatus.isWallKick)
-	{	
-		wallkickTimer += 0.1f;
-		
-		if (wallkickTimer >= wallkickMaxTime)
+		// 벽차기 타이머
+		if (pStatus.isWallKick)
 		{
-			pStatus.isWallKick = false;
-			wallkickTimer = 0.0f;
-			pStatus.velocityX = 0.0f;
+			wallkickTimer += 0.1f;
+
+			if (wallkickTimer >= wallkickMaxTime)
+			{
+				pStatus.isWallKick = false;
+				wallkickTimer = 0.0f;
+				pStatus.velocityX = 0.0f;
+			}
 		}
-	}
-	
 #pragma endregion
 
 #pragma region X축, Y축 이동
-
-	// X축 이동 - 기본 베이스
-	if (CAMERAMANAGER->getLockX() == true)
-	{
-		// 카메라 왼쪽으로 이동 막기
-		if (pos.x - 12 * SCALE_FACTOR + pStatus.velocityX <= CAMERAMANAGER->getCameraRange().left)
+		// X축 이동 - 기본 베이스
+		if (CAMERAMANAGER->getLockX() == true)
 		{
-			pos.x = CAMERAMANAGER->getCameraRange().left + 12 * SCALE_FACTOR;
-			if(pStatus.isOnGround) currentState = CharacterState::Idle;
-			pStatus.isDash = false;
-			pStatus.isJumpDash = false;
-		}
-
-		// 카메라 오른쪽으로 이동 막기
-		else if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().right && !CAMERAMANAGER->getIsCamaraMove())
-		{
-			pos.x = CAMERAMANAGER->getCameraRange().right - 12 * SCALE_FACTOR;
-			if (pStatus.isOnGround) currentState = CharacterState::Idle;
-			pStatus.isDash = false;
-			pStatus.isJumpDash = false;
-		}
-
-		else
-		{
-			pStatus.hitBox.left += pStatus.velocityX;
-			pStatus.hitBox.right += pStatus.velocityX;
-			pos.x += pStatus.velocityX;
-		}
-	}
-
-	else pos.x += pStatus.velocityX;
-		
-	// 워프 - 존나 빠르게
-	if (!pStatus.isOnGround && currentState == CharacterState::Warp)
-	{
-		if (!UIMANAGER->getIsUiPrint())
-		{
-			if (!warpSoundOnce)
+			// 카메라 왼쪽으로 이동 막기
+			if (pos.x - 12 * SCALE_FACTOR + pStatus.velocityX <= CAMERAMANAGER->getCameraRange().left)
 			{
-				soundResult = "SFX_" + pStatus.charName + "WarpIn";
-				SOUNDMANAGER->play(soundResult, 0.5f);
-				hpBar.setVisible(true);
-				warpSoundOnce = true;
+				pos.x = CAMERAMANAGER->getCameraRange().left + 12 * SCALE_FACTOR;
+				if (pStatus.isOnGround) currentState = CharacterState::Idle;
+				pStatus.isDash = false;
+				pStatus.isJumpDash = false;
 			}
 
+			// 카메라 오른쪽으로 이동 막기
+			else if (pos.x + 12 * SCALE_FACTOR + pStatus.velocityX >= CAMERAMANAGER->getCameraRange().right && !CAMERAMANAGER->getIsCamaraMove())
+			{
+				pos.x = CAMERAMANAGER->getCameraRange().right - 12 * SCALE_FACTOR;
+				if (pStatus.isOnGround) currentState = CharacterState::Idle;
+				pStatus.isDash = false;
+				pStatus.isJumpDash = false;
+			}
+
+			else
+			{
+				pStatus.hitBox.left += pStatus.velocityX;
+				pStatus.hitBox.right += pStatus.velocityX;
+				pos.x += pStatus.velocityX;
+			}
+		}
+
+		else pos.x += pStatus.velocityX;
+
+		// 워프 - 존나 빠르게
+		if (!pStatus.isOnGround && currentState == CharacterState::Warp)
+		{
+			if (!UIMANAGER->getIsUiPrint())
+			{
+				if (!warpSoundOnce)
+				{
+					soundResult = "SFX_" + pStatus.charName + "WarpIn";
+					SOUNDMANAGER->play(soundResult, 0.5f);
+					hpBar.setVisible(true);
+					warpSoundOnce = true;
+				}
+
+				if (CAMERAMANAGER->getLockY() == true)
+				{
+					pos.y += 16;
+					pStatus.hitBox.top += 16;
+					pStatus.hitBox.bottom += 16;
+				}
+
+				else pos.y += 16;
+			}
+		}
+
+		// Y축 이동 - 기본 베이스
+		else if (!pStatus.isOnGround && !CAMERAMANAGER->getIsCamaraMove())
+		{
+			pStatus.isDash = false;
+
+			if (!pStatus.isOnLadder)
+			{
+				// 중력 가속도 추가
+				if (!pStatus.isWallKick) pStatus.velocityY += progress.gravityAccel;
+
+				// 최대 낙하 속도 제한
+				if (pStatus.velocityY > pStatus.maxFallSpeed)
+					pStatus.velocityY = pStatus.maxFallSpeed;
+			}
+
+			// 기본 중력
 			if (CAMERAMANAGER->getLockY() == true)
 			{
-				pos.y += 16;
-				pStatus.hitBox.top += 16;
-				pStatus.hitBox.bottom += 16;
+				pos.y += pStatus.velocityY;
+				pStatus.hitBox.top += pStatus.velocityY;
+				pStatus.hitBox.bottom += pStatus.velocityY;
 			}
 
-			else pos.y += 16;
+			else pos.y += pStatus.velocityY;
+
+			// 공중에서 상태 변경
+			if (!pStatus.isOnLadder)
+			{
+				if (currentState == CharacterState::JumpUp)	if (pStatus.velocityY > -7.0f) pStatus.isJumpUp = false;
+				if (pStatus.velocityY > 0.0f && !pStatus.isWallSlide && currentState != CharacterState::OverPower) currentState = CharacterState::FallingDown;
+			}
 		}
-	}
-
-	// Y축 이동 - 기본 베이스
-	else if (!pStatus.isOnGround && !CAMERAMANAGER->getIsCamaraMove() )
-	{
-		pStatus.isDash = false;
-
-		if (!pStatus.isOnLadder)
-		{
-			// 중력 가속도 추가
-			if (!pStatus.isWallKick) pStatus.velocityY += progress.gravityAccel;
-
-			// 최대 낙하 속도 제한
-			if (pStatus.velocityY > pStatus.maxFallSpeed)
-				pStatus.velocityY = pStatus.maxFallSpeed;
-		}
-
-		// 기본 중력
-		if (CAMERAMANAGER->getLockY() == true)
-		{
-			pos.y += pStatus.velocityY;
-			pStatus.hitBox.top += pStatus.velocityY;
-			pStatus.hitBox.bottom += pStatus.velocityY;
-		}
-
-		else pos.y += pStatus.velocityY;
-		
-		// 공중에서 상태 변경
-		if (!pStatus.isOnLadder)
-		{
-			if (currentState == CharacterState::JumpUp)	if (pStatus.velocityY > -7.0f) pStatus.isJumpUp = false;
-			if (pStatus.velocityY > 0.0f && !pStatus.isWallSlide && currentState != CharacterState::OverPower) currentState = CharacterState::FallingDown;
-		}
-	}
 
 #pragma endregion
+
+	}
+	
+	
+
+
+
 	
 }
 
@@ -1259,8 +1266,6 @@ void Player::reduceHp(int damage)
 	actionLock = true;
 	dashTimer = 0.0f;
 
-	
-
 	if (status.hp > 0)
 	{
 		int random = RND->getInt(2);
@@ -1288,10 +1293,166 @@ void Player::reduceHp(int damage)
 	{
 		currentState = CharacterState::Dead;
 		SOUNDMANAGER->play("Voice_" + pStatus.charName + "Dead");
+		changeAnimation(pStatus.charName + "LargeDamaged", 0);
 
 		status.dead = true;
 		pStatus.invincible = true;
 		pStatus.movable = false;
+	}
+}
+
+void Player::deathAnim()
+{
+	if (status.dead && !status.deadDone)
+	{
+		if (deadTimer.update(1.0f))
+		{
+			switch (ringTimer.count)
+			{
+			case 0:
+			{
+				charAlpha = 0;
+
+				ShootEvent ringEvent;
+				ringEvent.bType = BulletType::DeathRing;
+				ringEvent.x = pos.x;
+				ringEvent.y = pos.y - status.height / 2;
+				ringEvent.direct = status.lookRight;
+
+				for (int i = 0; i < 8; i++)
+				{
+					float angleDeg = 90.0f - i * 45.0f;
+					float angleRad = angleDeg * (PI / 180.0f);
+
+					ringEvent.velocityX = cos(angleRad);
+					ringEvent.velocityY = -sin(angleRad);
+
+					EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &ringEvent });
+				}
+				ringTimer.timerReset();
+				ringTimer.count++;
+
+
+				SOUNDMANAGER->play("Voice_X_Dead", 0.3f);
+			}
+			break;
+			case 1:
+				if (ringTimer.update(2.0f))
+				{
+					ShootEvent ringEvent;
+					ringEvent.bType = BulletType::DeathRing;
+					ringEvent.x = pos.x;
+					ringEvent.y = pos.y - status.height / 2;
+					ringEvent.direct = status.lookRight;
+
+					for (int i = 0; i < 8; i++)
+					{
+						float angleDeg = 67.5f - i * 45.0f;
+						float angleRad = angleDeg * (PI / 180.0f);
+
+						ringEvent.velocityX = cos(angleRad) * 1.2f;
+						ringEvent.velocityY = -sin(angleRad) * 1.2f;
+
+						EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &ringEvent });
+					}
+					ringTimer.timerReset();
+					ringTimer.count++;
+				}
+				break;
+			case 2:
+				if (ringTimer.update(2.0f))
+				{
+					ShootEvent ringEvent;
+					ringEvent.bType = BulletType::DeathRing;
+					ringEvent.x = pos.x;
+					ringEvent.y = pos.y - status.height / 2;
+					ringEvent.direct = status.lookRight;
+
+					for (int i = 0; i < 16; i++)
+					{
+						float angleDeg = 78.75f - i * 22.5f;
+						float angleRad = angleDeg * (PI / 180.0f);
+
+						ringEvent.velocityX = cos(angleRad) * 1.4f;
+						ringEvent.velocityY = -sin(angleRad) * 1.4f;
+
+						EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &ringEvent });
+					}
+					ringTimer.timerReset();
+					ringTimer.count++;
+				}
+				break;
+			case 3:
+				status.deadDone = true;
+				ringTimer.count = 0;
+				deadTimer.timerReset();
+				ringTimer.timerReset();
+				break;
+			}
+
+			switch (bubbleTimer.count)
+			{
+			case 0:
+			{
+				ShootEvent bubbleEvent;
+				bubbleEvent.bType = BulletType::DeathBubble;
+				bubbleEvent.x = pos.x;
+				bubbleEvent.y = pos.y - status.height / 2;
+				bubbleEvent.direct = status.lookRight;
+
+				for (int i = 0; i < 4; i++)
+				{
+					int angleDeg = rand() % 360;
+					float angleRad = angleDeg * (PI / 180.0f);
+
+					// 방향 벡터 계산
+					bubbleEvent.velocityX = cos(angleRad);
+					bubbleEvent.velocityY = sin(angleRad);
+
+					EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &bubbleEvent });
+				}
+				bubbleTimer.count++;
+			}
+			break;
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+				if (bubbleTimer.update(1.0f))
+				{
+					ShootEvent bubbleEvent;
+					bubbleEvent.bType = BulletType::DeathBubble;
+					bubbleEvent.x = pos.x;
+					bubbleEvent.y = pos.y - status.height / 2;
+					bubbleEvent.direct = status.lookRight;
+
+					for (int i = 0; i < 4; i++)
+					{
+						int angleDeg = rand() % 360;
+						float angleRad = angleDeg * (PI / 180.0f);
+
+						// 방향 벡터 계산
+						bubbleEvent.velocityX = cos(angleRad);
+						bubbleEvent.velocityY = sin(angleRad);
+
+						EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &bubbleEvent });
+					}
+					bubbleTimer.timerReset();
+					bubbleTimer.count++;
+				}
+				break;
+			case 10:
+				bubbleTimer.count = 0;
+				bubbleTimer.timerReset();
+				break;
+			}
+		}
+		
 	}
 }
 
@@ -1307,7 +1468,7 @@ void Player::colorChange(void)
 
 void Player::changeAnimation(const string& animName, int frame)
 {
-	if (previousAnim != animName)
+	if (previousAnim != animName && !status.dead)
 	{
 		currentAnim = animName;
 		pStatus.player = IMAGEMANAGER->findImage(currentAnim);
@@ -1372,6 +1533,7 @@ void Player::ladderUpper()
 	currentState = CharacterState::LadderStart;
 	ladderEnd = true;
 }
+
 
 ShootEvent Player::makeShootEvent(BulletType bType)
 {

@@ -31,6 +31,7 @@ protected:
 		float physicalDamage;
 
 		bool dead;
+		bool deadDone;
 		bool overpower;
 		bool lookRight;
 
@@ -41,6 +42,28 @@ protected:
 		int hitBoxHeight;
 	};
 
+	struct Timer
+	{
+		float current = 0.0f;
+		int count = 0;
+
+		bool update(float time)
+		{
+			current += 0.1f;
+
+			if (current >= time )
+			{
+				return true;
+			}
+			else return false;
+		}
+
+		void timerReset()
+		{
+			current = 0.0f;
+		}
+	};
+
 protected:
 	Attributes status;
 
@@ -48,7 +71,6 @@ protected:
 	Position hitBoxCenter;
 
 	BulletManager* bManager;
-
 
 public:
 	virtual HRESULT init(void);
@@ -77,6 +99,7 @@ public:
 	}
 
 	bool getIsDead() { return status.dead; }
+	bool getDeadDone() { return status.deadDone; }
 
 	float getPhyscialDamage() { return status.physicalDamage; }
 	CombatEntityType getEntityType() const { return status.type; }

@@ -69,7 +69,7 @@ void Junkroid::update(void)
     pattern();
     setEnemyHitbox();
     animChange();
-    checkPlayerCollision();
+    checkAttCollision();
     enemyInvincibleTimerUpdate();
     isDead();
 }
@@ -98,7 +98,7 @@ void Junkroid::attack(void)
     makeShootEvent(BulletType::JunkBullet);
 }
 
-void Junkroid::checkPlayerCollision()
+void Junkroid::checkAttCollision()
 {
     RECT temp;
     if (IntersectRect(&temp, &eStatus.attSight, &player->getPlayerHitBox()))

@@ -162,7 +162,7 @@ void CollisionManager::checkBulletCollision(void)
 		// 적이 플레이어 공격
 		if (bullet->getBulletFaction() == BulletFaction::Enemy)
 		{
-			if (IntersectRect(&temp, &bullet->getBulletRect(), &player->getPlayerHitBox()) && !player->getOverPower() && !player->getIsDead())
+			if (IntersectRect(&temp, &bullet->getBulletRect(), &player->getPlayerHitBox()) && !player->getOverPower() && !player->getIsDead() && !bullet->getIsEffect())
 			{
 				damageEvent.target = player;
 				damageEvent.bType = bullet->getBulletType();
@@ -178,8 +178,9 @@ void CollisionManager::checkBulletCollision(void)
 		{
 			for (auto& enemy : enemies->getEnemy())
 			{
-				if (IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && !enemy->getIsDead()
+				if ((IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemyHitBox()) && !enemy->getOverPower() && !enemy->getIsDead()
 					|| IntersectRect(&temp, &bullet->getBulletRect(), &enemy->getEnemysubHitBox()) && !enemy->getOverPower() && !enemy->getIsDead())
+					&& !bullet->getIsEffect())
 				{
 					switch (enemy->getEnemyType())
 					{
@@ -201,7 +202,7 @@ void CollisionManager::checkBulletCollision(void)
 
 			for (auto& boss : enemies->getBoss())
 			{
-				if (IntersectRect(&temp, &bullet->getBulletRect(), &boss->getBossHitBox()) && !boss->getIsDead())
+				if (IntersectRect(&temp, &bullet->getBulletRect(), &boss->getBossHitBox()) && !boss->getIsDead() && !bullet->getIsEffect())
 				{
 					switch (boss->getBossType())
 					{
@@ -234,7 +235,7 @@ void CollisionManager::checkBulletCollision(void)
 
 			for (auto& bullet : bullets->getBullet())
 			{
-				if (IntersectRect(&temp, &bullet->getBulletRect(), &object->getObjectHitbox()) && !object->getIsDead())
+				if (IntersectRect(&temp, &bullet->getBulletRect(), &object->getObjectHitbox()) && !object->getIsDead() && !bullet->getIsEffect())
 				{
 					damageEvent.attacker = player;
 					damageEvent.target = object;

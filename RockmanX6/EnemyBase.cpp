@@ -39,10 +39,10 @@ void EnemyBase::attack(void)
 void EnemyBase::setEnemyHitbox(void)
 {
 	eStatus.eHitBox.left = pos.x - CAMERAMANAGER->getCameraPos().x;
-	eStatus.eHitBox.right = eStatus.eHitBox.left + status.width - CAMERAMANAGER->getCameraPos().x;
+	eStatus.eHitBox.right = eStatus.eHitBox.left + status.width;
 
 	eStatus.eHitBox.bottom = pos.y - CAMERAMANAGER->getCameraPos().y;
-	eStatus.eHitBox.top = eStatus.eHitBox.bottom - status.height - CAMERAMANAGER->getCameraPos().y;
+	eStatus.eHitBox.top = eStatus.eHitBox.bottom - status.height;
 
 	/*
 	eStatus.eHitBox.left = eStatus.worldRect.left - CAMERAMANAGER->getCameraPos().x;
@@ -115,7 +115,7 @@ void EnemyBase::changeDirection(void)
 	}
 }
 
-void EnemyBase::checkPlayerCollision(void)
+void EnemyBase::checkAttCollision(void)
 {
 	// Do nothing!
 }

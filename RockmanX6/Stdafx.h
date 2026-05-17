@@ -51,6 +51,7 @@
 #include<bitset>
 
 #include <cmath>
+
 #include <fstream>
 #include <string>
 #include <algorithm>
@@ -136,7 +137,7 @@ using namespace MY_UTIL;
 #define WINSIZE_X			960
 #define WINSIZE_Y			720
 #define WINSTYLE			WS_CAPTION | WS_SYSMENU
-#define PI					3.1415926
+#define PI					3.141592653589793
 #define MAGENTA				RGB(255, 0, 255)
 
 #define	BLUE				RGB(25, 95, 255)

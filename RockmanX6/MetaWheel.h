@@ -13,6 +13,6 @@ public:
 
 	void attack(void) override;
 
-	void checkPlayerCollision(void)	override;
+	void checkAttCollision(void)	override;
 };
 

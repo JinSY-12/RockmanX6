@@ -15,16 +15,9 @@ private:
 	typedef vector<Bullet*> vBullet;
 	typedef vector<Bullet*>::iterator viBullet;
 	
-	typedef vector<Bullet*> vEnemyBullet;
-	typedef vector<Bullet*>::iterator viEnemyBullet;
-	
-
 private:
 	vBullet _vBullet;
 	viBullet _viBullet;
-	
-	vEnemyBullet _vEnemyBullet;
-	viEnemyBullet _viEnemyBullet;
 	
 	Player* _player;
 
@@ -38,9 +31,7 @@ public:
 	void fire(BulletType type, int x, int y, bool direct, float velocityX, float velocityY);
 
 	vector<Bullet*>& getBullet() { return _vBullet; }
-	vector<Bullet*>& getEnemyBullet() { return _vEnemyBullet; }
-
-	void checkPlayerCollision(void);
+	void clearBullet() { _vBullet.clear(); }
 
 	inline int getMaxBullets() { return _vBullet.size(); }
 	inline void settingPlayer(Player* player) { _player = player; }

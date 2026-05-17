@@ -58,8 +58,6 @@ void StageScene::release(void)
 
 void StageScene::update(void)
 {	
-	
-
 	switch (stateNow)
 	{
 	case StageState::Playing:
@@ -78,7 +76,7 @@ void StageScene::update(void)
 
 			EFFECTMANAGER->update();
 
-			if(player->getIsDead()) gameover();
+			if(player->getDeadDone()) gameover();
 		}
 		break;
 	case StageState::GameOver:
@@ -756,7 +754,7 @@ void StageScene::stageCollision(void)
 		{
 			RECT temp;
 			if (IntersectRect(&temp, &(*it)->getBulletRect(), &(*floor))
-				&& (*it)->getBulletType() != BulletType::FalconBurst2)
+				&& (*it)->getBulletType() != BulletType::FalconBurst2 && !(*it)->getIsEffect())
 			{
 				EffectType etype;
 				string soundName;
@@ -784,7 +782,7 @@ void StageScene::stageCollision(void)
 					soundName = "None";
 					bulletHit = true;
 					break;
-				case BulletType::DeathBall1:
+				case BulletType::DeathBall:
 					etype = EffectType::None;
 					soundName = "None";
 					bulletHit = false;
@@ -835,6 +833,8 @@ void StageScene::stageReset(void)
 		CAMERAMANAGER->fixPos(CAMERAMANAGER->getCheckPoint().x - WINSIZE_X / 2, CAMERAMANAGER->getCheckPoint().y);
 		eManager.enemyReset();
 		enemySettting();
+		bManager.clearBullet();
+
 		CAMERAMANAGER->padeIn(2.0f);
 		stateNow = StageState::Playing;
 	}

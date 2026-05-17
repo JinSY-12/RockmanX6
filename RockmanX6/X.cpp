@@ -44,12 +44,6 @@ void X::update(void)
 	// 첫 등장 연출 파트
 	/////////////////////////////////
 		
-	if (KEYMANAGER->isOnceKeyDown('P'))
-	{
-		cout << "??" << endl;
-		status.dead = true;
-	}
-
 	// 게임 시작시 스테이지에 소환 되는 상황
 	if (currentState == CharacterState::Warp)
 	{
@@ -488,7 +482,7 @@ void X::update(void)
 				}
 			}
 
-			pStatus.player->play(animSpeed);
+			if(!status.dead) pStatus.player->play(animSpeed);
 		}
 
 		attackHandEffect->play(effectAnimSpeed);
@@ -500,6 +494,7 @@ void X::update(void)
 	setHitBox();
 	invincibleTimerUpdate();
 	isDead();
+	deathAnim();
 
 	hpBar.updatePlayerInfop(status.hp, status.maxHp, status.mp, progress.life);
 	hpBar.update();
@@ -984,6 +979,7 @@ void X::spawn(int x, int y)
 	pStatus.isOnLadder = false;
 	colorType = 0;
 	status.dead = false;
+	status.deadDone = false;
 	pStatus.movable = true;
 	pStatus.isOnTop = false;
 	ladderAble = false;
@@ -1064,6 +1060,7 @@ void X::spawn(int x, int y)
 	attChange = false;
 	burstloop = false;
 	aniDash = false;
+	timer = 0.0f;
 
 	CAMERAMANAGER->setPlayerPos(pos.x, pos.y - status.hitBoxHeight / 2);
 }

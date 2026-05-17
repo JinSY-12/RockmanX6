@@ -16,7 +16,9 @@ enum class BulletType
 	FalconBurst2,
 	JunkBullet,
 	SiegeShoot,
-	DeathBall1
+	DeathBall,
+	DeathBubble,
+	DeathRing
 };
 
 // 경직 관련

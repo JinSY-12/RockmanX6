@@ -416,7 +416,7 @@ void HighMax::deathBall(void)
 			bStatus.effectImage->setFrameX(0);
 			bStatus.bImage->setChangeReady(false);
 			bStatus.bImage->setFrameX(0);
-			makeShootEvent(BulletType::DeathBall1);
+			makeShootEvent(BulletType::DeathBall);
 
 			bState = BossState::DeathBallShootIdle;
 			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_DeathBallShootIdle")->cloneImage();

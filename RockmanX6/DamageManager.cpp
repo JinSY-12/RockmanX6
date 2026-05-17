@@ -169,7 +169,7 @@ void DamageManager::onEvent(const Event& event)
 
 				case ObjectType::BossGate:
 					offset = bullet->getBulletDir() ? damage->target->getWidth() / 2 : -(damage->target->getWidth() / 2);
-					if (bullet->getBulletType() != BulletType::DeathBall1) {
+					if (bullet->getBulletType() != BulletType::DeathBall) {
 
 						EFFECTMANAGER->spawnEffect(EffectType::BursterHit_1, damage->target->getPos().x - offset, bullet->getBulletPosY(), damage->target->getWidth(), bullet->getBulletHeight(), bullet->getBulletDir());
 						SOUNDMANAGER->play("SFX_X_Burster1Hit", 0.3f);

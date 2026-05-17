@@ -61,7 +61,7 @@ void MetaWheel::release(void)
 void MetaWheel::update(void)
 {
     setEnemyHitbox();
-    checkPlayerCollision();
+    checkAttCollision();
     enemyInvincibleTimerUpdate();
     isDead();
 
@@ -106,7 +106,7 @@ void MetaWheel::attack(void)
     eStatus.patternTimer = 0.0f;
 }
 
-void MetaWheel::checkPlayerCollision(void)
+void MetaWheel::checkAttCollision(void)
 {
     RECT temp;
     if (IntersectRect(&temp, &eStatus.attSight, &player->getPlayerHitBox()))

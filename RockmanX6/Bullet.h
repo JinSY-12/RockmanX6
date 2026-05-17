@@ -14,6 +14,7 @@ public:
 		BulletSize type;
 		RECT hitBox;
 		BulletType bType;
+		bool bulletEffect;
 
 		string soundName;
 
@@ -65,6 +66,7 @@ public:
 	int getBulletHeight(void) { return bStatus.height; }
 	
 	BulletFaction getBulletFaction(void) { return bStatus.faction; }
+	bool getIsEffect(void) { return bStatus.bulletEffect; }
 
 	bool getBulletDir(void) { return bStatus.rightDirect; }
 	void setBulletFire(bool fire) { bStatus.isFire = fire; }
@@ -89,6 +91,7 @@ public:
 		bStatus.isFire = false;
 		bStatus.animSpeed = 0.05f;
 		bStatus.bulletSpeed = 25.0f;
+		bStatus.bulletEffect = false;
 	}
 	~Burster() { }
 };
@@ -107,6 +110,7 @@ public:
 		bStatus.isFire = false;
 		bStatus.animSpeed = 0.05f;
 		bStatus.bulletSpeed = 5.0f;
+		bStatus.bulletEffect = false;
 	}
 	~JunkBullet() { }
 };
@@ -127,11 +131,12 @@ public:
 		bStatus.isFire = false;
 		bStatus.animSpeed = 0.1f;
 		bStatus.bulletSpeed = 20.0f;
+		bStatus.bulletEffect = false;
 	}
 	~SiegeShoot() {}
 };
 
-class DeathBall1 : public Bullet
+class DeathBall : public Bullet
 {
 
 private:
@@ -142,11 +147,44 @@ public:
 	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
 	void update(void) override;
 
-	DeathBall1()
+	DeathBall()
 	{
 		bStatus.isFire = false;
 		bStatus.animSpeed = 0.04f;
 		bStatus.bulletSpeed = 10.0f;
+		bStatus.bulletEffect = false;
 	}
-	~DeathBall1() {}
+	~DeathBall() {}
+};
+
+class DeathBubble : public Bullet
+{
+public:
+	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
+	void update(void) override;
+
+	DeathBubble()
+	{
+		bStatus.isFire = false;
+		bStatus.animSpeed = 0.1f;
+		bStatus.bulletSpeed = 8.0f;
+		bStatus.bulletEffect = true;
+	}
+	~DeathBubble() {}
+};
+
+class DeathRing : public Bullet
+{
+public:
+	HRESULT init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY) override;
+	void update(void) override;
+
+	DeathRing()
+	{
+		bStatus.isFire = false;
+		bStatus.animSpeed = 0.1f;
+		bStatus.bulletSpeed = 4.0f;
+		bStatus.bulletEffect = true;
+	}
+	~DeathRing() {}
 };

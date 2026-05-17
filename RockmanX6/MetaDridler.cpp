@@ -83,7 +83,7 @@ void MetaDridler::update(void)
     switch (dState)
     {
         case DridlerState::Idle:
-            checkPlayerCollision();
+            checkAttCollision();
 			break;
 
         case DridlerState::Down:
@@ -199,7 +199,7 @@ void MetaDridler::attack(void)
     dState = DridlerState::Down;
 }
 
-void MetaDridler::checkPlayerCollision(void)
+void MetaDridler::checkAttCollision(void)
 {
     RECT temp;
     if (IntersectRect(&temp, &eStatus.attSight, &player->getPlayerHitBox()))

@@ -246,6 +246,9 @@ protected:
 	int colorType;
 	int colorTimer;
 
+	int ringSpawnCount;
+	int bubbleSpawnCount;
+
 	BulletType bulletType;
 
 	// 차지샷 관련
@@ -263,6 +266,9 @@ protected:
 
 	int test;
 
+	float timer;
+	
+
 	// 세이버 관련
 	bool canHit;
 	bool animDelay;
@@ -279,6 +285,13 @@ protected:
 	int saberOffsetY;
 
 	ShootEvent shootEvent;
+
+	// 타이머 제작
+	Timer bubbleTimer;
+	Timer ringTimer;
+	Timer deadTimer;
+
+	bool firstBubbleSpawn;
 
 public:
 	void render(HDC memDC) override;
@@ -464,9 +477,12 @@ public:
 			status.hp = 0;
 			status.overpower = true;
 			pStatus.invincible = true;
-			status.dead = false;
+			
+			status.dead = true;
 		}
 	}
+
+	void deathAnim();
 
 	virtual void colorSetting(void);
 	virtual void colorChange(void);
@@ -478,6 +494,5 @@ public:
 	virtual void multiHitControl(void);
 
 	void ladderUpper();
-
 };
 

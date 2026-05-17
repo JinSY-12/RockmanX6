@@ -112,7 +112,7 @@ public:
 	// 공격, 피격 관련
 	inline void settingPlayer(Player* p) { player = p; }
 
-	virtual void checkPlayerCollision(void);
+	virtual void checkAttCollision(void);
 	virtual void checkBulletCollision(void);
 
 	void enemyInvincibleTimerUpdate(void);
