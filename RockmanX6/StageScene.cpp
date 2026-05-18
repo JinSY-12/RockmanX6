@@ -138,8 +138,8 @@ void StageScene::stageSettting(void)
 			// checkpoint.y = 672 * SCALE_FACTOR;
 			
 			// 시작점
-			checkpoint.x = 160 * SCALE_FACTOR;
-			checkpoint.y = 672 * SCALE_FACTOR;
+			// checkpoint.x = 160 * SCALE_FACTOR;
+			// checkpoint.y = 672 * SCALE_FACTOR;
 			
 			// 사다리 테스트
 			// checkpoint.x = 1760 * SCALE_FACTOR;
@@ -150,8 +150,8 @@ void StageScene::stageSettting(void)
 			// checkpoint.y = 672 * SCALE_FACTOR;
 			
 			// 보스 테스트
-			// checkpoint.x = 5904 * SCALE_FACTOR;
-			// checkpoint.y = 0 * SCALE_FACTOR;
+			checkpoint.x = 5904 * SCALE_FACTOR;
+			checkpoint.y = 0 * SCALE_FACTOR;
 
 			CAMERAMANAGER->setCheckPoint(checkpoint.x, checkpoint.y, 0);
 			
@@ -193,7 +193,7 @@ void StageScene::enemySettting(void)
 
 		// 적 테스트 용도
 		int up;
-		up = 50;
+		up = 0;
 
 		// 보스 애니메이션 확인용 
 		// eManager.spawnBoss(BossType::Intro, WINSIZE_X / 3 * 2, 830 * SCALE_FACTOR);
@@ -201,31 +201,31 @@ void StageScene::enemySettting(void)
 		switch (CAMERAMANAGER->getZoneResetNumber())
 		{
 		case 0:
-			eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, (875 - up) * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, (845 - up) * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 370 * SCALE_FACTOR, 875 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 565 * SCALE_FACTOR, 875 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 845 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 845 * SCALE_FACTOR);
 			
-			eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, (775 - up) * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 775 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 775 * SCALE_FACTOR);
 		case 1:
-			eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, (895 - up) * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 910 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 910 * SCALE_FACTOR);
 			
-			eManager.spawnEnemy(EnemyType::MetaDridler, 4352 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 670 * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::MetaDridler, 4640 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::MetaDridler, 4864 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::MetaDridler, 4930 * SCALE_FACTOR, (480 - up) * SCALE_FACTOR, 640 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, 4352 * SCALE_FACTOR, 480 * SCALE_FACTOR, 670 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, 4640 * SCALE_FACTOR, 480 * SCALE_FACTOR, 640 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, 4864 * SCALE_FACTOR, 480 * SCALE_FACTOR, 640 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, 4930 * SCALE_FACTOR, 480 * SCALE_FACTOR, 640 * SCALE_FACTOR);
 		case 4:
-			eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, (620 - up) * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, 620 * SCALE_FACTOR);
 			
-			eManager.spawnEnemy(EnemyType::MetaDridler, (5312 + 4) * SCALE_FACTOR, (320 - up) * SCALE_FACTOR, 480 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5312 + 4) * SCALE_FACTOR, 300 * SCALE_FACTOR, 510 * SCALE_FACTOR);
 														
-			eManager.spawnEnemy(EnemyType::MetaDridler, (5056 + 4) * SCALE_FACTOR, (110 - up) * SCALE_FACTOR, 270 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5056 + 4) * SCALE_FACTOR, 110 * SCALE_FACTOR, 270 * SCALE_FACTOR);
 														
-			eManager.spawnEnemy(EnemyType::MetaDridler, (5168 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 250 * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::MetaDridler, (5280 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 220 * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, (48 - up) * SCALE_FACTOR, 210 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5168 + 4) * SCALE_FACTOR, 48 * SCALE_FACTOR, 250 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5280 + 4) * SCALE_FACTOR, 48 * SCALE_FACTOR, 220 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, 48 * SCALE_FACTOR, 210 * SCALE_FACTOR);
 		default:
 			break;
 		}

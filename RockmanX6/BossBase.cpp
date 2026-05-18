@@ -34,21 +34,12 @@ void BossBase::render(HDC hdc)
 			, bStatus.bImage->getFrameX(), status.lookRight);
 	}
 
+	hpBar.render(hdc);
+
 	if (UIMANAGER->getIsDebugMode())
 	{
 		DrawRectMakeColor(hdc, bStatus.bHitBox, RGB(0, 255, 255), 2);
 		DrawRectMakeColor(hdc, bStatus.effectRect, RGB(0, 255, 0), 2);
-
-		string temp;
-		if (bState == BossState::Idle) temp = "Idle";
-		else if (bState == BossState::AttReady) temp = "AttReady";
-		else if (bState == BossState::RightReady) temp = "RightReady";
-		else if (bState == BossState::RightAtt) temp = "RightAtt";
-		else if (bState == BossState::LeftReady) temp = "LeftReady";
-		else if (bState == BossState::LeftAtt) temp = "LeftAtt";
-		
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y, "현재 상태", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
 		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 50, "보스 X", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50, 0.85 * WINSIZE_Y + 70, to_string(pos.x / SCALE_FACTOR), "DNF_M_18", RGB(0, 255, 255));
@@ -112,17 +103,61 @@ void BossBase::readyPattern(void)
 	// Do Nothing!
 }
 
-bool BossBase::timerClock(float time)
+void BossBase::deadAnim(void)
 {
-	timer += 0.01f;
-
-	if (timer > time)
+	if (!status.deadDone)
 	{
-		timer = 0.0f;
-		return true;
+		UIMANAGER->setIsUiPrint(true);
+				
+		if (effectTimer.count <= 5)
+			effectTimer.effectSpeed -= 0.02;
+		else if (effectTimer.count > 5 && effectTimer.count <= 10)
+			effectTimer.effectSpeed -= 0.02;
+		else if (effectTimer.count > 10 && effectTimer.count <= 15)
+			effectTimer.effectSpeed -= 0.01;
+		else if (effectTimer.count > 25)
+		{
+			CAMERAMANAGER->whiteOut(1.0f);
+			SOUNDMANAGER->play("SFX_BossExplode", 0.3f);
+
+			status.deadDone = true;
+		}
+		
+		if (effectTimer.update(effectTimer.effectSpeed) && effectTimer.count <= 25)
+		{
+			int rndX = RND->getFromIntTo(-status.width, status.width);
+			int rndY = RND->getFromIntTo(-status.height, status.height);
+
+			EFFECTMANAGER->spawnEffect(EffectType::SmallEnemyBomb,
+				pos.x + status.width / 2 + rndX, pos.y - status.height / 2 + rndY, 0, 0, 0);
+				
+			effectTimer.count++;
+		}
 	}
 
-	return false;
+	else
+	{
+		if(bossAlpha != 0)
+		{
+			if (CAMERAMANAGER->isPadeOutComplete())
+			{
+				if (effectTimer.update(5.0f))
+				{
+					bossAlpha = 0;
+					CAMERAMANAGER->whiteIn(1.5f);
+				}
+			}
+		}
+		
+		else
+		{
+			cout << "완전 종료" << endl;
+			// 완전 종료
+		}
+	}
+	
+
+	
 }
 
 void BossBase::bossInvincibleTimerUpdate(void)
@@ -133,7 +168,7 @@ void BossBase::bossInvincibleTimerUpdate(void)
 
 		if (static_cast<int>(bStatus.invincibleTimer * 10) % 5 == 0)
 		{
-			bossAlpha = (bossAlpha >= 200) ? 50 : 200;
+			if(!status.dead) bossAlpha = (bossAlpha >= 200) ? 50 : 200;
 		}
 
 		if (bStatus.invincibleTimer >= bStatus.invincibleMaxTime)
@@ -143,6 +178,25 @@ void BossBase::bossInvincibleTimerUpdate(void)
 			status.overpower = false;
 		}
 	}
+}
+
+void BossBase::battleStart(void)
+{
+	if (status.hp <= status.maxHp)
+	{
+		UIMANAGER->setIsUiPrint(true);
+		status.hp += 1;
+		SOUNDMANAGER->play("Menu_Dialogue", 0.3f);
+	}
+
+	else
+	{
+		status.hp = status.maxHp;
+		gameStart = true;
+		UIMANAGER->setIsUiPrint(false);
+		SOUNDMANAGER->play(BossBGM, 0.3f);
+	}
+
 }
 
 Vector2 BossBase::getDiffPlayer(int firePointX, int firePointY)

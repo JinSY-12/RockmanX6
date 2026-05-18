@@ -433,10 +433,6 @@ public:
 	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
 	inline void setLadderAble(bool able) { ladderAble = able; }
 	inline void setLadderEnd(bool able) { ladderEnd = able; }
-	inline void resetPlayer(int x, int y)
-	{
-		spawn(x, y);
-	}
 
 	// ½ºÅÈ °ü·Ã
 	void reduceHp(int damage);
@@ -467,18 +463,6 @@ public:
 					pStatus.invincibleTimer = 0.0f;
 				}
 			}
-		}
-	}
-
-	inline void isDead(void)
-	{
-		if (status.hp <= 0)
-		{
-			status.hp = 0;
-			status.overpower = true;
-			pStatus.invincible = true;
-			
-			status.dead = true;
 		}
 	}
 

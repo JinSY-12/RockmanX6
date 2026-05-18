@@ -4,7 +4,6 @@
 
 void Player::render(HDC memDC)
 {
-	if(pStatus.player->getFileName() == "Resources/Image/Player/X/X_LargeDamaged.bmp") cout << "애니메이션 출력" << endl;
 	pStatus.player->frameAlphaRender(memDC, hitBoxCenter.x - pStatus.player->getFrameWidth() / 2 + animOffset.x,
 		pStatus.hitBox.bottom - pStatus.player->getFrameHeight() + animOffset.y,
 		pStatus.player->getFrameX(), status.lookRight, charAlpha);
@@ -446,7 +445,7 @@ void Player::applyForce(void)
 				{
 					soundResult = "SFX_" + pStatus.charName + "WarpIn";
 					SOUNDMANAGER->play(soundResult, 0.5f);
-					hpBar.setVisible(true);
+					hpBar.setPlayerVisible(true);
 					warpSoundOnce = true;
 				}
 
@@ -1292,7 +1291,13 @@ void Player::reduceHp(int damage)
 	else
 	{
 		currentState = CharacterState::Dead;
+		status.hp = 0;
+
 		SOUNDMANAGER->play("Voice_" + pStatus.charName + "Dead");
+
+		animOffset.x = 0;
+		animOffset.y = 0;
+
 		changeAnimation(pStatus.charName + "LargeDamaged", 0);
 
 		status.dead = true;

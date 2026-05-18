@@ -322,11 +322,13 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("HighMax_DeathBallShoot", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxDeathBallShoot.bmp", 618 * SCALE_FACTOR, 220 * SCALE_FACTOR, 6, 2, true, MAGENTA, true);
 	IMAGEMANAGER->addFrameImage("HighMax_DeathBallShootIdle", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxDeathBallShootIdle.bmp", 824 * SCALE_FACTOR, 236 * SCALE_FACTOR, 8, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("HighMax_Damaged", "Resources/Image/Enemy/Boss/HighMax/Boss_HighMaxDamaged.bmp", 186 * SCALE_FACTOR, 212 * SCALE_FACTOR, 2, 2, true, MAGENTA, true);
+
+
 	IMAGEMANAGER->addFrameImage("SFX_DeathBallCharge", "Resources/Image/SFX/SFX_DeathBallCharge.bmp", 2310 * SCALE_FACTOR, 52 * SCALE_FACTOR, 21, 2, true, MAGENTA, true);
 
 	IMAGEMANAGER->addFrameImage("SFX_RushCharge", "Resources/Image/Enemy/Bullet/Boss/SFX_RushCharge.bmp", 1176 * SCALE_FACTOR, 112* SCALE_FACTOR, 21, 2, true, MAGENTA, true);
 	IMAGEMANAGER->addFrameImage("SFX_RushBall", "Resources/Image/Enemy/Bullet/Boss/SFX_RushBall.bmp", 784 * SCALE_FACTOR, 192 * SCALE_FACTOR, 8, 2, true, MAGENTA);
-
 
 	//////////////////////////////////
 	// ¹Ì´Ï¾ð
@@ -377,6 +379,8 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addImage("HUD_ProgressBar_X", "Resources/Image/HUD/HUD_ProgressBar_X.bmp", 30 * SCALE_FACTOR, 31 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("HUD_ProgressBar_Xweapon", "Resources/Image/HUD/HUD_ProgressBar_Xweapon.bmp", 30 * SCALE_FACTOR, 31 * SCALE_FACTOR, true, MAGENTA);
 
+	IMAGEMANAGER->addImage("HUD_ProgressBar_HighMax", "Resources/Image/HUD/HUD_ProgressBar_HighMax.bmp", 30 * SCALE_FACTOR, 29 * SCALE_FACTOR, true, MAGENTA);
+
 	IMAGEMANAGER->addImage("HUD_HpBar", "Resources/Image/HUD/HUD_HpBar.bmp", 9 * SCALE_FACTOR, 144 * SCALE_FACTOR, true, MAGENTA);
 	IMAGEMANAGER->addImage("HUD_HpBarHead", "Resources/Image/HUD/HUD_HpBarHead.bmp", 9 * SCALE_FACTOR, 4 * SCALE_FACTOR, true, MAGENTA);
 
@@ -385,6 +389,9 @@ void TitleScene::addImage(void)
 
 	IMAGEMANAGER->addImage("HUD_Number", "Resources/Image/HUD/HUD_Number.bmp", 30 * SCALE_FACTOR, 5 * SCALE_FACTOR, true, MAGENTA);
 }
+
+
+
 
 void TitleScene::addSound(void)
 {
@@ -420,6 +427,8 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("Menu_ButtonMove", "Resources/Sound/Menu/Menu_ButtonMove.wav", false, false);
 	SOUNDMANAGER->addSound("Menu_ButtonSelect", "Resources/Sound/Menu/Menu_ButtonSelect.wav", false, false);
 	SOUNDMANAGER->addSound("Menu_Error", "Resources/Sound/Menu/Menu_Error.wav", false, false);
+	SOUNDMANAGER->addSound("Menu_Dialogue", "Resources/Sound/Menu/Menu_Dialogue.wav", false, false);
+
 	
 	// °ÔÀÓ ÄÆ¾À 1 - ÀÎÆ®·Î
 	SOUNDMANAGER->addSound("SFX_Siren", "Resources/Sound/SFX/SFX_Siren.wav", true, false);
@@ -435,6 +444,9 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_SmallExplosion", "Resources/Sound/SFX/Effect/SFX_SmallExplosion.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_CrushWall", "Resources/Sound/SFX/Effect/SFX_CrushWall.wav", false, false);
 
+	SOUNDMANAGER->addSound("SFX_BossExplode", "Resources/Sound/SFX/Enemy/SFX_BossExplode.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_BossDrop", "Resources/Sound/SFX/Enemy/SFX_BossDrop.wav", false, false);
+	
 	//////////////////////////////////
 	// ÄÆ¾À º¸ÀÌ½º
 	//////////////////////////////////

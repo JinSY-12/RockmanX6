@@ -2,10 +2,6 @@
 #include "X.h"
 #include "BulletManager.h"
 
-HRESULT X::init(void)
-{
-	return S_OK;
-}
 
 HRESULT X::init(int x, int y)
 {
@@ -39,7 +35,6 @@ void X::update(void)
 	inputEnabled = allowInput;
 	
 #pragma region WarpIn
-
 	/////////////////////////////////
 	// 첫 등장 연출 파트
 	/////////////////////////////////
@@ -47,7 +42,6 @@ void X::update(void)
 	// 게임 시작시 스테이지에 소환 되는 상황
 	if (currentState == CharacterState::Warp)
 	{
-		
 		// 하늘에서 내려오고 있을 때 - 스프라이트 보면 애니메이션이 동작 안함
 		// if (pStatus.hitBox.bottom <= WINSIZE_Y)
 		if (pStatus.isOnGround == false)
@@ -493,7 +487,7 @@ void X::update(void)
 	multiHitControl();
 	setHitBox();
 	invincibleTimerUpdate();
-	isDead();
+	// isDead();
 	deathAnim();
 
 	hpBar.updatePlayerInfop(status.hp, status.maxHp, status.mp, progress.life);

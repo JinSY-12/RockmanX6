@@ -31,11 +31,10 @@ HRESULT MetaWheel::init(int x, int y)
     status.dead = false;
 
     eStatus.eHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width, status.height);
-    eStatus.worldRect = eStatus.eHitBox;
     eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2, y + eStatus.sightHeight, eStatus.sightWidth, eStatus.sightHeight);
 
     pos.x = x;
-    pos.y = eStatus.worldRect.bottom;
+    pos.y = y;
 
     status.lookRight = false;
 

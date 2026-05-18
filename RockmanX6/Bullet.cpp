@@ -3,6 +3,8 @@
 
 HRESULT Bullet::init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY)
 {
+	// Do Nothing!
+
 	return S_OK;
 }
 
@@ -92,7 +94,7 @@ HRESULT JunkBullet::init(BulletType type, int x, int y, bool isRight, float velo
 {
 	bStatus.shape = new GImage;
 	bStatus.shape = IMAGEMANAGER->findImage("SFX_JunkBullet")->cloneImage();
-	bStatus.demage = 30;
+	bStatus.demage = 2;
 
 	bStatus.type = BulletSize::Small;
 	bStatus.bType = type;
@@ -143,9 +145,6 @@ HRESULT SiegeShoot::init(BulletType type, int x, int y, bool isRight, float velo
 	
 	if (isRight) bStatus.hitBox = RectMakeCenter(x, y - bStatus.height / 2, bStatus.width, bStatus.height);
 	else bStatus.hitBox = RectMakeCenter(x - bStatus.width + 4 * SCALE_FACTOR, y - bStatus.height / 2, bStatus.width, bStatus.height);
-
-	// if (isRight) bStatus.hitBox = RectMakeCenter(x, y - bStatus.shape->getFrameHeight() / 2, bStatus.shape->getFrameWidth(), bStatus.shape->getFrameHeight());
-	// else bStatus.hitBox = RectMakeCenter(x - bStatus.width + 4 * SCALE_FACTOR, y - bStatus.shape->getFrameHeight() / 2, bStatus.shape->getFrameWidth(), bStatus.shape->getFrameHeight());
 
 	bStatus.isFire = true;
 	fireStart = true;

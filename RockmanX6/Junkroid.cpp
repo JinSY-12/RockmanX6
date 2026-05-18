@@ -36,11 +36,10 @@ HRESULT Junkroid::init(int x, int y)
     eStatus.animOffsetY = 5 * SCALE_FACTOR;
 
     eStatus.eHitBox = RectMakeCenter(x + status.width / 2 + eStatus.animOffsetX, y + status.height / 2 + eStatus.animOffsetY, status.width, status.height);
-    eStatus.worldRect = eStatus.eHitBox;
     eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2 + eStatus.animOffsetX, y + eStatus.sightHeight + eStatus.animOffsetY, eStatus.sightWidth, eStatus.sightHeight);
 
     pos.x = x;
-    pos.y = eStatus.worldRect.bottom;
+    pos.y = y;
 
     status.lookRight = false;
 

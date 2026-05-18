@@ -29,7 +29,6 @@ HRESULT MetaDridler::init(int x, int y, int locationX, int locationY)
     status.dead = false;
 
     eStatus.eHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width, status.height);
-    eStatus.worldRect = eStatus.eHitBox;
     eStatus.subHitBox = RectMakeCenter(x + status.width / 2, y + status.height / 2, status.width - 10 * SCALE_FACTOR, status.height - 10 * SCALE_FACTOR);
     eStatus.attSight = RectMakeCenter(x + eStatus.sightWidth / 2, y + eStatus.sightHeight, eStatus.sightWidth, eStatus.sightHeight);
 
@@ -40,7 +39,7 @@ HRESULT MetaDridler::init(int x, int y, int locationX, int locationY)
     eStatus.subOffsetY = 0 * SCALE_FACTOR;
 
     pos.x = x; // x = left
-    pos.y = prevLoacationY = y; // y = top
+    pos.y = prevLoacationY = y + 50 * SCALE_FACTOR; // y = top
 
     status.lookRight = false;
     eStatus.attackAble = true;
@@ -57,7 +56,7 @@ HRESULT MetaDridler::init(int x, int y, int locationX, int locationY)
     eStatus.moveSpeed = 3.0f;
     eStatus.updownSpeed = 3.0f;
 
-    destinationY = locationY;
+    destinationY = locationY + 50 * SCALE_FACTOR;
 
     raadyTime = 10.0f;
 
@@ -179,7 +178,6 @@ void MetaDridler::downAtt(void)
 
 void MetaDridler::upReady(void)
 {
-    
     if (pos.y > prevLoacationY)
     {
         pos.y -= upSpeed;
@@ -212,10 +210,10 @@ void MetaDridler::setEnemyHitbox(void)
 {
 	// 월드 좌표 설정
     eStatus.eHitBox.left = pos.x - CAMERAMANAGER->getCameraPos().x;
-    eStatus.eHitBox.right = eStatus.eHitBox.left + status.width - CAMERAMANAGER->getCameraPos().x;
+    eStatus.eHitBox.right = eStatus.eHitBox.left + status.width;
 
     eStatus.eHitBox.bottom = pos.y - CAMERAMANAGER->getCameraPos().y;
-    eStatus.eHitBox.top = eStatus.eHitBox.bottom - status.height - CAMERAMANAGER->getCameraPos().y;
+    eStatus.eHitBox.top = eStatus.eHitBox.bottom - status.height;
 
 	// 서브 히트박스 설정
 	eStatus.subHitBox.left = eStatus.eHitBox.left + 17 * SCALE_FACTOR;

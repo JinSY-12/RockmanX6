@@ -13,7 +13,8 @@ void CollisionManager::release(void)
 
 void CollisionManager::update(void)
 {
-	checkCollisions();
+	// 이거 끄면 모든 공격 안통함ㅋㅋ
+	if(!UIMANAGER->getIsUiPrint()) checkCollisions();
 }
 
 void CollisionManager::checkCollisions(void)
@@ -47,7 +48,8 @@ void CollisionManager::checkContact(void)
 		RECT temp;
 
 		if ((IntersectRect(&temp, &player->getPlayerHitBox(), &boss->getBossHitBox()) && !player->getOverPower())
-			|| (IntersectRect(&temp, &player->getPlayerHitBox(), &boss->getBossSubHitBox()) && !player->getOverPower() && boss->getSubRectAttOn()))
+			|| (IntersectRect(&temp, &player->getPlayerHitBox(), &boss->getBossSubHitBox()) && !player->getOverPower() && boss->getSubRectAttOn())
+			&& boss->getIsDead())
 		{
 			damageEvent.attacker = boss;
 			damageEvent.target = player;
@@ -202,7 +204,8 @@ void CollisionManager::checkBulletCollision(void)
 
 			for (auto& boss : enemies->getBoss())
 			{
-				if (IntersectRect(&temp, &bullet->getBulletRect(), &boss->getBossHitBox()) && !boss->getIsDead() && !bullet->getIsEffect())
+				if (IntersectRect(&temp, &bullet->getBulletRect(), &boss->getBossHitBox())
+					&& !boss->getIsDead() && !bullet->getIsEffect())
 				{
 					switch (boss->getBossType())
 					{

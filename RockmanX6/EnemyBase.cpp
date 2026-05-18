@@ -186,8 +186,8 @@ void EnemyBase::makeShootEvent(BulletType bType)
 	switch (bType)
 	{
 	case BulletType::JunkBullet:
-		shootEvent.x = (eStatus.worldRect.left + eStatus.worldRect.right) / 2;
-		shootEvent.y = eStatus.worldRect.top + fPos.y;
+		shootEvent.x = pos.x + status.width / 2;
+		shootEvent.y = pos.y - status.height + fPos.y;
 		break;
 	}
 	

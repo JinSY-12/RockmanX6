@@ -17,7 +17,6 @@ private:
 	bool cameraMoveDone;
 
 public:
-	HRESULT init(void) override;
 	HRESULT init(int x, int y) override;
 	void release(void);
 	void update(void);

@@ -5,57 +5,74 @@
 class ProgressBar
 {
 private:
-	GImage* playerLogo;
-	GImage* enemyLogo;
 
-	GImage* progressBar;
-	GImage* progressHead;
-	GImage* mainGaugeBar;
-	GImage* subGaugeBar;
+	struct hpBar
+	{
+		// ¿ÃπÃ¡ˆ
+		GImage* playerLogo;
+		GImage* enemyLogo;
 
-	GImage* weaponNumber;
+		GImage* progressBar;
+		GImage* progressHead;
+		GImage* mainGaugeBar;
+		GImage* subGaugeBar;
 
+		GImage* weaponNumber;
+
+		float currentHp;
+		float currentWeaponGauge;
+		float prevHp;
+		float currentMaxHp;
+		int currentLife;
+		int bossLevel;
+		bool gameStart;
+	};
+	
 	int charType;
 	int bossType;
 
-	float currentHp;
-	float currentWeaponGauge;
-	float prevHp;
-	float currentMaxHp;
-
-	bool gameStart;
-
-	int currentLife;
+	hpBar playerHp;
+	hpBar bossHp;
 	
 
 public:
 	HRESULT init(PlayerType pType);
-	HRESULT init(BossType bType);
+	HRESULT init(BossType bType, int maxHp);
 	void release(void);
 	void update(void);
 	void render(HDC hdc);
 
 	void setCharacter(int character, int boss);
-	void setVisible(bool isStart) { gameStart = isStart; }
-	bool getVisible(void) { return gameStart; }
+	void setPlayerVisible(bool isStart) { playerHp.gameStart = isStart; }
+	bool getPlayerVisible(void) { return playerHp.gameStart; }
 
-	void setFirstMaxHP(int maxHp)
+	void setBossVisible(bool isStart) { bossHp.gameStart = isStart; }
+	bool getBossVisible(void) { return bossHp.gameStart; }
+
+	void setPlayerFirstMaxHP(int maxHp)
 	{
-		currentMaxHp = maxHp;
-		currentHp = currentMaxHp;
-		prevHp = currentMaxHp;
+		playerHp.currentMaxHp = maxHp;
+		playerHp.currentHp = playerHp.currentMaxHp;
+		playerHp.prevHp = playerHp.currentMaxHp;
 	}
 
-	void setMaxHP(int maxHp) { currentMaxHp = maxHp; }
-	void setCurrentWeaponGauge(int weapon) { currentWeaponGauge = weapon; }
-	void setCurrentHp(int hp) { currentHp = hp; }
-	void setCurrentLife(int life) { currentLife = life; }
+	void setPlayerMaxHP(int maxHp) { playerHp.currentMaxHp = maxHp; }
+	void setPlayerCurrentWeaponGauge(int weapon) { playerHp.currentWeaponGauge = weapon; }
+	void setPlayerCurrentHp(int hp) { playerHp.currentHp = hp; }
+	void setPlayerCurrentLife(int life) { playerHp.currentLife = life; }
 	
 	void setPlayerInfo(int hp, int maxHp, int weapon, int life);
 	void updatePlayerInfop(int hp, int maxHp, int weapon, int life);
 
-	void reduecHp(int damage) { currentHp -= damage; }
+	void setBossInfo(int hp, int maxHp, int weapon, int life);
+	void updateBossInfop(int hp, int maxHp, int weapon, int life);
 
-	ProgressBar() { gameStart = false; }
+	void reduecHp(int damage) { playerHp.currentHp -= damage; }
+
+	ProgressBar()
+	{
+		playerHp.gameStart = false;
+		bossHp.gameStart = false;
+	}
 	~ProgressBar() {}
 };

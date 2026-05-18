@@ -1,6 +1,7 @@
 #pragma once
 #include "BulletType.h"
 #include "CombatEntity.h"
+#include "ProgressBar.h"
 
 #define BOSS_PATTERN_MAXLIST 5
 
@@ -17,13 +18,18 @@ protected:
 		Move,
 		Return,
 		Dodge,
+		Attack,
+		Dead,
+		Damaged,
+		/*
 		AttReady,
 		RightReady,
 		RightAtt,
 		LeftReady,
 		LeftAtt,
 		DeathBallShoot,
-		DeathBallShootIdle
+		DeathBallShootIdle		
+		*/
 	};
 
 	enum class AnimDirection
@@ -68,6 +74,52 @@ protected:
 		bool invincible = false;
 	};
 
+	struct BossTimer
+	{
+		float timer = 0.0f;
+
+		bool update(float time)
+		{
+			timer += 0.1f;
+
+			if (timer >= time)
+			{
+				timer = 0.0f;
+				return true;
+			}
+			else
+				return false;
+		}
+
+		void reset(void)
+		{
+			timer = 0.0f;
+		}
+
+		// 이펙트 전용
+		int count = 0;
+		float effectSpeed = 5.0;
+	};
+
+	struct SoundPlayOnce
+	{
+		bool playDone;
+
+		void play(string name, float volume)
+		{
+			if (!playDone)
+			{
+				SOUNDMANAGER->play(name, volume);
+				playDone = true;
+			}
+		}
+
+		void playReset(void)
+		{
+			playDone = false;
+		}
+	};
+
 protected:
 	Player* player;
 	ShootEvent shootEvent;
@@ -77,10 +129,17 @@ protected:
 	BossType btype;
 	AnimDirection animDir;
 
+	ProgressBar hpBar;
 	Vector2 diff;
+
+	BossTimer patternTimer;
+	BossTimer effectTimer;
+
+	SoundPlayOnce soundSupport;
 
 	string BossBGM;
 	bool musciStart;
+	bool gameStart;
 
 	float animSpeed;
 
@@ -88,15 +147,19 @@ protected:
 	bool appearanceDone;
 	int parrternList[BOSS_PATTERN_MAXLIST];
 
-	float patternTimer;
+	float patternTime;
 	float pattenrCoolDown;
 	bool phase2; // 2페이즈로 패턴 타이머와 애니메이션 속도 빠르게
 	float timer;
 
+	// 데미지 누적 변수
+	int stockDamage;
+	int knockOutCount;
+
 	int bossAlpha;
 
 	// test
-	bool attCycle;
+	bool attCycle;	
 
 public:
 	virtual void render(HDC hdc);
@@ -121,20 +184,32 @@ public:
 	virtual void changeAnim(BossState bossState);
 	virtual void readyPattern(void);
 
-	// 유틸 관련
-	bool timerClock(float time);
-
 	// 상태 관련
 	inline void reduceHp(int damage)
 	{
 		status.hp -= damage;
+		stockDamage += damage;
 
-		if (damage < 4) bStatus.invincibleMaxTime = 8.0f;
-		else bStatus.invincibleMaxTime = 14.0f;
+		if (status.hp > 0)
+		{
+			if (damage < 4) bStatus.invincibleMaxTime = 8.0f;
+			else bStatus.invincibleMaxTime = 15.0f;
+		}
+		
+		else
+		{
+			status.hp = 0;
+			bossAlpha = 255;
+			bState = BossState::Dead;
+		}
 		
 		status.overpower = true;
 	}
 
+	void deadAnim(void);
+
 	void bossInvincibleTimerUpdate(void);
+
+	void battleStart(void);
 };
 

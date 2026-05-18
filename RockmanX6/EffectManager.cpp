@@ -76,6 +76,7 @@ void EffectManager::spawnEffect(EffectType eType, int x, int y, int width, int h
 	{
 	case EffectType::SmallEnemyBomb:
 		effect.image = IMAGEMANAGER->findImage("SFX_Explosion")->cloneImage();
+		SOUNDMANAGER->play("SFX_SmallExplosion", 0.3f);
 		effect.x = x + (width - effect.image->getFrameWidth()) / 2;
 		effect.y = y - (height + effect.image->getFrameHeight()) / 2;
 		effect.offsetX = direct ? 0 * SCALE_FACTOR : 0 * SCALE_FACTOR;
