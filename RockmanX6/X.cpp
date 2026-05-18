@@ -437,7 +437,7 @@ void X::update(void)
 	if (!animDelay)
 	{
 		applyForce();
-		currentAnimChange();
+		
 
 		if (CAMERAMANAGER->getIsCamaraMove())
 		{
@@ -472,14 +472,16 @@ void X::update(void)
 				if (UIMANAGER->getIsUiPrint())
 				{
 					pStatus.velocityX = 0.0f;
-					if(currentState != CharacterState::Warp) currentState = CharacterState::Idle;
+					if (currentState != CharacterState::Warp
+						&& currentState != CharacterState::Victory && currentState != CharacterState::WarpOut)
+						currentState = CharacterState::Idle;
 				}
 			}
 
 			if(!status.dead) pStatus.player->play(animSpeed);
 		}
-
 		attackHandEffect->play(effectAnimSpeed);
+		currentAnimChange();
 		bursterEffectAlphaDown();
 		frameCheck();
 	}
@@ -487,7 +489,6 @@ void X::update(void)
 	multiHitControl();
 	setHitBox();
 	invincibleTimerUpdate();
-	// isDead();
 	deathAnim();
 
 	hpBar.updatePlayerInfop(status.hp, status.maxHp, status.mp, progress.life);
@@ -589,7 +590,6 @@ void X::chargeBurst(void)
 			EVENTMANAGER->dispatchEvents({ EventType::ShootBulltet, &shootEvent });
 		}
 	}
-
 	else;
 }
 

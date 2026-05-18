@@ -37,6 +37,7 @@ HRESULT StageScene::init(PlayerType pType, BossType bType)
 
 	// 스테이지 시작 준비
 	SOUNDMANAGER->play(stagBGM, 0.5f);
+	SOUNDMANAGER->setCurrentBGM(stagBGM);
 
 	readyTimer = TIMEMANAGER->getWorldTime();
 	noticeTest = 0;
@@ -76,14 +77,40 @@ void StageScene::update(void)
 
 			EFFECTMANAGER->update();
 
-			if(player->getDeadDone()) gameover();
+			if (player->getDeadDone()) gameover();
+
+			if (eManager.checkComplete())
+			{
+				if (!playOnce)
+				{
+					SOUNDMANAGER->stopBGM();
+					SOUNDMANAGER->play("BGM_X_StageClear", 0.5f);
+					SOUNDMANAGER->setCurrentBGM("BGM_X_StageClear");
+					playOnce = true;
+				}
+
+				if (clockTimer(4.0f))
+				{
+					player->chageVictory();
+					stateNow = StageState::Clear;
+				}
+			}
 		}
 		break;
 	case StageState::GameOver:
 		stageReset();
 		break;
 	case StageState::Clear:
+		player->update();
 
+		if (player->getWarpOutDone() == true)
+		{
+			stateNow = StageState::None;
+			CAMERAMANAGER->padeOut(2.0f);
+		}
+		break;
+	case StageState::None:
+		// 여기서 헌터 베이스 만들면 됨
 		break;
 	}
 }
@@ -124,6 +151,7 @@ void StageScene::render(void)
 
 void StageScene::stageSettting(void)
 {
+
 	switch(stageType)
 	{
 		// 인트로
@@ -696,7 +724,7 @@ void StageScene::stageCollision(void)
 						// eManager.spawnBoss(BossType::Intro, 6110 * SCALE_FACTOR, -20 * SCALE_FACTOR);
 						// 오른쪽
 						eManager.spawnBoss(BossType::Intro, 6340 * SCALE_FACTOR, -20 * SCALE_FACTOR);
-						SOUNDMANAGER->stop(stagBGM);
+						SOUNDMANAGER->stopBGM();
 					}
 					obj->animOncePlay(true);
 				}
@@ -822,7 +850,7 @@ void StageScene::stageReset(void)
 {
 	// 게임오버 실행하는 변수값도 리셋
 	test = false;
-	SOUNDMANAGER->stop(stagBGM);
+	SOUNDMANAGER->stopBGM();
 
 	if (clockTimer(1.0f))
 	{

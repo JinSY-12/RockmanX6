@@ -8,6 +8,7 @@ HRESULT HighMax::init(int x, int y)
 	status.type = CombatEntityType::Boss;
 	btype = BossType::Intro;
 	bState = BossState::Apperance;
+	status.lastBoss = true;
 
 	status.maxHp = 80;
 	status.hp = 0;

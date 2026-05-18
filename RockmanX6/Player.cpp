@@ -494,7 +494,26 @@ void Player::applyForce(void)
 		}
 
 #pragma endregion
+		if (currentState == CharacterState::WarpOut)
+		{
+			if (pStatus.player->getChangeReady())
+			{
+				if (CAMERAMANAGER->getLockY() == true)
+				{
+					pos.y -= 16;
+					pStatus.hitBox.top -= 16;
+					pStatus.hitBox.bottom -= 16;
+				}
 
+				else pos.y -= 16;
+
+				if (pStatus.hitBox.bottom < 0 * SCALE_FACTOR)
+				{
+					pStatus.warpOut = true;
+					pStatus.player->setChangeReady(false);
+				}
+			}
+		}
 	}
 	
 	
@@ -1159,6 +1178,55 @@ void Player::currentAnimChange(void)
 		}
 	}
 
+	else if (currentState == CharacterState::Victory)
+	{
+		if (pStatus.charName == "X_")
+		{
+			animSpeed = 0.07f;
+			animOffset.x = 0 * SCALE_FACTOR;
+			animOffset.y = 0 * SCALE_FACTOR; // 16픽셀 아래로 = 워프 이펙트와 발 위치가 다름
+
+			changeAnimation(pStatus.charName + "Victory", 0);
+
+			if (prevFrame != pStatus.player->getFrameX())
+			{
+				if (prevFrame == 4)
+				{
+					SOUNDMANAGER->play("SFX_Complete", 0.5f);
+				}
+			}
+		}
+
+		if (pStatus.player->getChangeReady())
+		{
+			currentState = CharacterState::WarpOut;
+			pStatus.player->setChangeReady(false);
+		}
+
+		prevFrame = pStatus.player->getFrameX();
+	}
+
+	else if (currentState == CharacterState::WarpOut)
+	{
+		if (pStatus.charName == "X_")
+		{
+			animSpeed = 0.07f;
+			animOffset.x = 0 * SCALE_FACTOR;
+			animOffset.y = 0 * SCALE_FACTOR; // 16픽셀 아래로 = 워프 이펙트와 발 위치가 다름
+
+			changeAnimation(pStatus.charName + "WarpOut", 0);
+
+			if (prevFrame != pStatus.player->getFrameX())
+			{
+				if (prevFrame == 2)
+				{
+					SOUNDMANAGER->play("SFX_X_WarpOut", 0.5f);
+				}
+			}
+		}
+
+		prevFrame = pStatus.player->getFrameX();
+	}
 
 	////////////////////////
 	// 데미지 애니메이션 종료
@@ -1537,6 +1605,11 @@ void Player::ladderUpper()
 {
 	currentState = CharacterState::LadderStart;
 	ladderEnd = true;
+}
+
+bool Player::completePoseDome(void)
+{
+	return false;
 }
 
 

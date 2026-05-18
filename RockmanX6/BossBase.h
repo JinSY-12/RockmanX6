@@ -20,16 +20,7 @@ protected:
 		Dodge,
 		Attack,
 		Dead,
-		Damaged,
-		/*
-		AttReady,
-		RightReady,
-		RightAtt,
-		LeftReady,
-		LeftAtt,
-		DeathBallShoot,
-		DeathBallShootIdle		
-		*/
+		Damaged
 	};
 
 	enum class AnimDirection
@@ -157,7 +148,7 @@ protected:
 	int knockOutCount;
 
 	int bossAlpha;
-
+	bool bossClear;
 	// test
 	bool attCycle;	
 

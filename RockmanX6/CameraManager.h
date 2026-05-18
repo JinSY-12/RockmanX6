@@ -72,7 +72,8 @@ private:
 	bool _isWhitePadeIn;				// 카메라 페이드인
 	bool _isWhitePadeOut;				// 카메라 페이드아웃
 
-	bool _isPadeResult;					// 카메라 페이드 결과
+	bool _isPadeInResult;				// 카메라 페이드 인 결과
+	bool _isPadeOutResult;				// 카메라 페이드 아웃 결과
 
 	// 맵 클피핑 관련 변수
 	bool cameraLockX;
@@ -122,7 +123,8 @@ public:
 	
 	void fixPos(int x, int y) { camera.x = x, camera.y = y; }
 
-	bool isPadeOutComplete() { return _isPadeResult; }
+	bool isPadeInComplete() { return _isPadeInResult; }
+	bool isPadeOutComplete() { return _isPadeOutResult; }
 
 	// 플레이어 위치 체크
 	PlayerPos getPlayerPos(void) { return playerPos; }

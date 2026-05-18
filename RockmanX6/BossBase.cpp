@@ -105,7 +105,7 @@ void BossBase::readyPattern(void)
 
 void BossBase::deadAnim(void)
 {
-	if (!status.deadDone)
+	if (!bossClear)
 	{
 		UIMANAGER->setIsUiPrint(true);
 				
@@ -120,7 +120,7 @@ void BossBase::deadAnim(void)
 			CAMERAMANAGER->whiteOut(1.0f);
 			SOUNDMANAGER->play("SFX_BossExplode", 0.3f);
 
-			status.deadDone = true;
+			bossClear = true;
 		}
 		
 		if (effectTimer.update(effectTimer.effectSpeed) && effectTimer.count <= 25)
@@ -151,8 +151,15 @@ void BossBase::deadAnim(void)
 		
 		else
 		{
-			cout << "완전 종료" << endl;
-			// 완전 종료
+			if (CAMERAMANAGER->isPadeInComplete())
+			{
+				cout << "클리어 준비 중" << endl;
+				if (effectTimer.update(5.0f))
+				{
+					cout << "클리어 끝나는 중" << endl;
+					status.deadDone = true;
+				}
+			};
 		}
 	}
 	
@@ -195,6 +202,7 @@ void BossBase::battleStart(void)
 		gameStart = true;
 		UIMANAGER->setIsUiPrint(false);
 		SOUNDMANAGER->play(BossBGM, 0.3f);
+		SOUNDMANAGER->setCurrentBGM(BossBGM);
 	}
 
 }

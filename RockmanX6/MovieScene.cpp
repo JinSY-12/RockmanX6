@@ -125,6 +125,7 @@ void MovieScene::render(void)
 		if (testNum == 1)
 		{
 			SOUNDMANAGER->play("BGM_Desert", 0.5f);
+			SOUNDMANAGER->setCurrentBGM("BGM_Desert");
 		}
 		else if (testNum == 3)
 		{

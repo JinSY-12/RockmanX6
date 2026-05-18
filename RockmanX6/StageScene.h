@@ -16,7 +16,8 @@ private:
 	{
 		Playing,
 		GameOver,
-		Clear
+		Clear,
+		None
 	};
 
 	struct CheckPoint
@@ -69,7 +70,11 @@ private:
 
 	bool test;
 
+	bool bossClear;
+
 	float timer;
+
+	bool playOnce = false;
 
 public:
 	HRESULT init(PlayerType pType, BossType bType);

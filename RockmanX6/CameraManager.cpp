@@ -14,7 +14,8 @@ HRESULT CameraManager::init(void)
     _isBlackPadeOut = false;
     _isWhitePadeIn = false;
     _isWhitePadeOut = false;
-    _isPadeResult = false;
+    _isPadeInResult = false;
+    _isPadeOutResult = false;
 
     mBtype = BossType::None;
 
@@ -64,6 +65,7 @@ void CameraManager::update(void)
         if (_blackAlpha <= 0)
         {
             _isBlackPadeIn = false;
+            _isPadeInResult = true;
             _blackAlpha = 0;
         }
     }
@@ -77,7 +79,7 @@ void CameraManager::update(void)
         if (_blackAlpha >= 255)
         {
             _isBlackPadeOut = false;
-            _isPadeResult = true;
+            _isPadeOutResult = true;
             _blackAlpha = 255;
         }
     }
@@ -90,6 +92,7 @@ void CameraManager::update(void)
         if (_whiteAlpha <= 0)
         {
             _isWhitePadeIn = false;
+            _isPadeInResult = true;
             _whiteAlpha = 0;
         }
     }
@@ -102,7 +105,7 @@ void CameraManager::update(void)
         if (_whiteAlpha >= 255)
         {
             _isWhitePadeOut = false;
-            _isPadeResult = true;
+            _isPadeOutResult = true;
             _whiteAlpha = 255;
         }
     }
@@ -175,25 +178,6 @@ void CameraManager::update(void)
     
     setMaxCameraRange();
     cameraOffset();
-
-    //////////////////////////
-    // 카메라 테스트
-    //////////////////////////
-
-    /*
-    if (UIMANAGER->getIsDebugMode() == true)
-    {
-        cout << "캐릭터 X : " << playerPos.x << endl;
-        cout << "캐릭터 Y : " << playerPos.y << endl;
-        cout << "카메라 X : " << camera.x << endl;
-        cout << "카메라 Y : " << camera.y << endl;
-        cout << "카메라 Top : " << cameraRange.top << endl;
-        cout << "카메라 Bottom : " << cameraRange.bottom << endl;
-        cout << "카메라 Left : " << cameraRange.left << endl;
-        cout << "카메라 Right : " << cameraRange.right << endl;
-        cout << endl;
-    }
-    */
 }
 
 void CameraManager::render(HDC hdc)
@@ -207,7 +191,7 @@ void CameraManager::padeIn(float padeTime)
 {
     _blackAlpha = 255.0f;
     _padeTime = padeTime;
-    _isPadeResult = false;
+    _isPadeInResult = false;
     _isBlackPadeIn = true;
 }
 
@@ -215,7 +199,7 @@ void CameraManager::padeOut(float padeTime)
 {
     _blackAlpha = 0.0f;
     _padeTime = padeTime;
-    _isPadeResult = false;
+    _isPadeOutResult = false;
     _isBlackPadeOut = true;
 }
 
@@ -223,7 +207,7 @@ void CameraManager::whiteIn(float padeTime)
 {
     _whiteAlpha = 255.0f;
     _padeTime = padeTime;
-    _isPadeResult = false;
+    _isPadeInResult = false;
     _isWhitePadeIn = true;
 }
 
@@ -231,7 +215,7 @@ void CameraManager::whiteOut(float padeTime)
 {
     _whiteAlpha = 0.0f;
     _padeTime = padeTime;
-    _isPadeResult = false;
+    _isPadeOutResult = false;
     _isWhitePadeOut = true;
 }
 #pragma endregion

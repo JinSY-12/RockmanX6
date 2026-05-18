@@ -263,6 +263,9 @@ void TitleScene::addImage(void)
 	IMAGEMANAGER->addFrameImage("X_LadderEnd", "Resources/Image/Player/X/X_LadderEnd.bmp", 102 * SCALE_FACTOR, 134 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_LadderBurst", "Resources/Image/Player/X/X_LadderBurst.bmp", 120 * SCALE_FACTOR, 138 * SCALE_FACTOR, 3, 2, true, MAGENTA);
 
+	IMAGEMANAGER->addFrameImage("X_Victory", "Resources/Image/Player/X/X_Victory.bmp", 304 * SCALE_FACTOR, 108 * SCALE_FACTOR, 8, 2, true, MAGENTA, true);
+	IMAGEMANAGER->addFrameImage("X_WarpOut", "Resources/Image/Player/X/X_WarpOut.bmp", 360 * SCALE_FACTOR, 160 * SCALE_FACTOR, 6, 2, true, MAGENTA, true);
+
 	// 엑스 웨폰
 	IMAGEMANAGER->addFrameImage("X_Burster1", "Resources/Image/Player/Bullet/X/SFX_Burster1_Bullet.bmp", 75 * SCALE_FACTOR, 16 * SCALE_FACTOR, 5, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("X_Burster2", "Resources/Image/Player/Bullet/X/SFX_Burster2_Bullet.bmp", 108 * SCALE_FACTOR, 36 * SCALE_FACTOR, 4, 2, true, MAGENTA);
@@ -412,6 +415,7 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("BGM_Stage_Intro", "Resources/Sound/BGM/BGM_Stage_Intro.wav", true, true);
 	SOUNDMANAGER->addSound("BGM_VS_Intro", "Resources/Sound/BGM/BGM_VS_Intro.wav", true, true);
 	SOUNDMANAGER->addSound("BGM_VS_HighMax", "Resources/Sound/BGM/BGM_VS_HighMax.wav", true, true);
+	SOUNDMANAGER->addSound("BGM_X_StageClear", "Resources/Sound/BGM/BGM_X_StageClear.wav", true, false);
 
 	// 커맨드 얀마크
 	SOUNDMANAGER->addSound("BGM_Stage_CommandYanmark", "Resources/Sound/BGM/BGM_Stage_CommandYanmark.wav", true, true);
@@ -439,6 +443,7 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_DoorOpen", "Resources/Sound/SFX/SFX_DoorOpen.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_DoorClose", "Resources/Sound/SFX/SFX_DoorClose.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_Warning", "Resources/Sound/SFX/SFX_Warning.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_Complete", "Resources/Sound/SFX/SFX_Complete.wav", false, false);
 
 	// 전투 효과음
 	SOUNDMANAGER->addSound("SFX_SmallExplosion", "Resources/Sound/SFX/Effect/SFX_SmallExplosion.wav", false, false);

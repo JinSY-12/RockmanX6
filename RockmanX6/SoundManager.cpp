@@ -145,6 +145,8 @@ void SoundManager::play(string strKey, float volume)
 	channelInfo.chaneel = channel;
 	channelInfo.soundName = strKey;
 	_mActiveChannels.push_back(channelInfo);
+
+	
 }
 
 void SoundManager::stop(string strKey)
@@ -170,4 +172,16 @@ void SoundManager::pause(string strKey)
 			break;
 		}
 	}
+}
+
+bool SoundManager::isPlaying(string strKey)
+{
+	for (int i = 0; i < _mActiveChannels.size(); ++i)
+	{
+		if (_mActiveChannels[i].soundName == strKey)
+		{
+			return true;
+		}
+	}
+	return false;
 }

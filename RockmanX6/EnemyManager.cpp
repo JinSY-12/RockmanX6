@@ -59,6 +59,17 @@ void EnemyManager::checkDead(void)
 
 		else ++enemy;
 	}
+
+	for (auto boss = _vBoss.begin(); boss != _vBoss.end(); )
+	{
+		if ((*boss)->getDeadDone())
+		{
+			if((*boss)->isLastBoss()) bossComplete = true;
+			boss = _vBoss.erase(boss);
+		}
+
+		else ++boss;
+	}
 }
 
 void EnemyManager::spawnEnemy(EnemyType eType, int x, int y, int sub)

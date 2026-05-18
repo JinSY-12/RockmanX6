@@ -40,6 +40,8 @@ protected:
 
 		int hitBoxWidth;
 		int hitBoxHeight;
+
+		bool lastBoss = false;
 	};
 
 	struct Timer
@@ -100,6 +102,7 @@ public:
 
 	bool getIsDead() { return status.dead; }
 	bool getDeadDone() { return status.deadDone; }
+	bool isLastBoss() { return status.lastBoss; }
 
 	float getPhyscialDamage() { return status.physicalDamage; }
 	CombatEntityType getEntityType() const { return status.type; }

@@ -112,11 +112,13 @@ private:
 
 	// 현재 활성화된 채널
 	vector<ChannelInfo> _mActiveChannels;
-
-
+	
+	float effectSound;
 	float menuSound;
 	float voiceSound;
 	float bgmSound;
+
+	string BGMNow = "";
 
 public:
 	HRESULT init();
@@ -127,7 +129,12 @@ public:
 
 	void play(string strKey, float volume = 1.0f);
 	void stop(string strKey);
+	inline void stopBGM() { stop(BGMNow); }
 	void pause(string strKey);
+	bool isPlaying(string strKey);
+
+	void setCurrentBGM(string bgm) { BGMNow = bgm; }
+	string gerCurrentBGM() { return BGMNow; }
 
 	SoundManager();
 	~SoundManager() {}

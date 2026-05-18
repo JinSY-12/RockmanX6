@@ -38,6 +38,8 @@ private:
 
 	string Map;
 
+	bool bossComplete = false;
+
 	bool worldStop;
 	bool soundOnce;
 
@@ -48,6 +50,7 @@ public:
 	void render(void);
 	
 	void checkDead(void);
+	bool checkComplete(void) { return bossComplete; }
 
 	void spawnEnemy(EnemyType eType, int x, int y, int sub = 0);
 	void spawnBoss(BossType bType, int x, int y);

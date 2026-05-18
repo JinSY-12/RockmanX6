@@ -78,7 +78,9 @@ protected:
 		OverPower,
 		LadderStart,
 		LadderLoop,
-		LadderEnd
+		LadderEnd,
+		Victory,
+		WarpOut
 	};
 
 	struct PlayerPalette
@@ -126,6 +128,8 @@ protected:
 
 		bool touchLeft;
 		bool touchRight;
+
+		bool warpOut = false;
 
 		// 점프 관련
 		float velocityY;
@@ -267,7 +271,6 @@ protected:
 	int test;
 
 	float timer;
-	
 
 	// 세이버 관련
 	bool canHit;
@@ -345,6 +348,7 @@ public:
 	inline float getVelocityX() { return pStatus.velocityX; }
 	inline float getVelocityY() { return pStatus.velocityY; }
 	inline bool getIsWarp() { return pStatus.isWarp; }
+	inline bool getWarpOutDone() { return pStatus.warpOut; }
 
 	void setOverPower(bool op, BulletSize bullet);
 	void setAnimDelay(bool delay) { animDelay = delay; }
@@ -433,7 +437,7 @@ public:
 	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
 	inline void setLadderAble(bool able) { ladderAble = able; }
 	inline void setLadderEnd(bool able) { ladderEnd = able; }
-
+	
 	// 스탯 관련
 	void reduceHp(int damage);
 
@@ -467,6 +471,7 @@ public:
 	}
 
 	void deathAnim();
+	void chageVictory() { currentState = CharacterState::Victory; }
 
 	virtual void colorSetting(void);
 	virtual void colorChange(void);
@@ -478,5 +483,8 @@ public:
 	virtual void multiHitControl(void);
 
 	void ladderUpper();
+
+	
+	bool completePoseDome(void);
 };
 
