@@ -26,6 +26,13 @@ private:
 		int y;
 	};
 
+	struct BackGround
+	{
+		GImage* image;
+		int x;
+		int y;
+	};
+
 private:
 	StageState stateNow;
 
@@ -45,9 +52,12 @@ private:
 
 	typedef vector<RECT> vCheckFloor;
 
+	typedef vector<BackGround> vBackGround;
+
 	vFloor _vFloor;
 	viFloor _viFloor;
 	vCheckFloor _vCheckFloor;
+	vBackGround _vBackGround;
 
 	BulletManager bManager;
 	EnemyManager eManager;
@@ -56,6 +66,7 @@ private:
 	DamageManager dManager;
 
 	BossType stageType;
+	BackGround bg;
 	float gravity;
 
 	bool noticeStart;

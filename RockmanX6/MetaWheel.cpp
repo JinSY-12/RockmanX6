@@ -3,11 +3,6 @@
 #include "Player.h"
 #include "MetaWheel.h"
 
-HRESULT MetaWheel::init(void)
-{
-    return S_OK;
-}
-
 HRESULT MetaWheel::init(int x, int y)
 {
     status.type = CombatEntityType::Enemy;
@@ -23,7 +18,7 @@ HRESULT MetaWheel::init(int x, int y)
     status.width = eStatus.eImage->getFrameWidth() - 5 * SCALE_FACTOR;
     status.height = eStatus.eImage->getFrameHeight() - 5 * SCALE_FACTOR;
 
-    eStatus.sightWidth = status.width * 2;
+    eStatus.sightWidth = status.width * 2.5;
     eStatus.sightHeight = status.height - 16 * SCALE_FACTOR;
 
     eState = EnemyState::Idle;

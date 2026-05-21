@@ -30,7 +30,7 @@ void X::update(void)
 	CAMERAMANAGER->setPlayerPos(pos.x, pos.y - status.hitBoxHeight / 2);
 
 	bool allowInput = !(CAMERAMANAGER->getIsCamaraMove() || !CAMERAMANAGER->getCameraMoveEnd()
-		|| UIMANAGER->getIsUiPrint() || UIMANAGER->getFreeze()
+		|| UIMANAGER->getIsUiPrint() || UIMANAGER->getFreeze() || !ladderDone
 		|| currentState == CharacterState::Warp);
 	inputEnabled = allowInput;
 	
@@ -113,7 +113,7 @@ void X::update(void)
 					if (pStatus.touchLeft)
 					{
 						if (pStatus.isOnGround)	currentState = CharacterState::Idle;
-						else if (!pStatus.isOnGround && !status.lookRight && !pStatus.isJumpUp) wallSlide();// 벽타기
+						else if (!pStatus.isOnGround && !status.lookRight && !pStatus.isJumpUp) wallSlide(); // 벽타기
 						else if (!pStatus.isOnGround && !status.lookRight && pStatus.isJumpUp);
 					}
 
@@ -168,7 +168,7 @@ void X::update(void)
 			}
 
 			// 대기 상태 변환 + 대기 상태 변환 애니메이션
-			else if (!(KEYMANAGER->isStayKeyDown(VK_RIGHT) && !KEYMANAGER->isStayKeyDown(VK_LEFT)))
+			else if (!(KEYMANAGER->isStayKeyDown(VK_RIGHT) && !KEYMANAGER->isStayKeyDown(VK_LEFT)) && 1)
 			{
 				if (!pStatus.isWallKick || !pStatus.movable)
 				{
@@ -194,28 +194,31 @@ void X::update(void)
 			}
 
 #pragma region Ladder
-
 			if (KEYMANAGER->isStayKeyDown(VK_DOWN) && !pStatus.isWallSlide && inputEnabled && ladderAble && !pStatus.isDash && !pStatus.isJumpDash)
 			{
 				pStatus.velocityX = 0.0f;
+				pos.x = ladderPosX;
+
+				pStatus.isDash = false;
+				pStatus.isJumpDash = false;
 
 				if (pStatus.isOnLadder)
 				{
-					pStatus.velocityY = 4.0f;
+					if(!pStatus.isBurst) pStatus.velocityY = 4.0f;
+					else pStatus.velocityY = 0.0f;
 					pStatus.player->resume();
 					pStatus.player->play(animSpeed);
+					
+					currentState = CharacterState::LadderLoop;
 				}
 
 				else
 				{
 					if (ladderEnd)
 					{
-						inputEnabled = false;
-						pos.y += 100.0f;
-						pStatus.hitBox.top += 100.0f;
-						pStatus.hitBox.bottom += 100.0f;
-						pStatus.isOnLadder = true;
 						currentState = CharacterState::LadderStart;
+						pos.y += 100.0;
+						pStatus.isOnLadder = true;
 					}
 				}
 			}
@@ -223,21 +226,26 @@ void X::update(void)
 			if (KEYMANAGER->isStayKeyDown(VK_UP) && !pStatus.isWallSlide && inputEnabled && ladderAble)
 			{
 				pStatus.velocityX = 0.0f;
+				pos.x = ladderPosX;
+				pStatus.isDash = false;
+				pStatus.isJumpDash = false;
 
 				// 매달려 있을 때
 				if (pStatus.isOnLadder)
 				{
 					if (ladderEnd)
 					{
-						inputEnabled = false;
-						pStatus.velocityY = 0.0f;
 						currentState = CharacterState::LadderEnd;
+						pos.y -= 80.0f;
+						pStatus.velocityY = 0.0f;
+						pStatus.isOnLadder = false;
 					}
 
 					else
 					{
-						pStatus.velocityY = -4.0f;
-
+						currentState = CharacterState::LadderLoop;
+						if (!pStatus.isBurst) pStatus.velocityY = -4.0f;
+						else pStatus.velocityY = 0.0f;
 						pStatus.player->resume();
 						pStatus.player->play(animSpeed);
 					}
@@ -264,12 +272,6 @@ void X::update(void)
 						}
 					}
 				}
-			}
-
-			if ((KEYMANAGER->isOnceKeyUp(VK_DOWN) || KEYMANAGER->isOnceKeyUp(VK_UP)) && pStatus.isOnLadder)
-			{
-				pStatus.velocityY = 0.0f;
-				pStatus.player->pause();
 			}
 		}
 
@@ -432,12 +434,23 @@ void X::update(void)
 #pragma endregion
 #pragma endregion
 
+	if (KEYMANAGER->isOnceKeyUp(VK_DOWN) && pStatus.isOnLadder && ladderDone)
+	{
+		currentState = CharacterState::LadderClimb;
+		pStatus.velocityY = 0.0f;
+	}
+
+	if (KEYMANAGER->isOnceKeyUp(VK_UP) && pStatus.isOnLadder)
+	{
+		currentState = CharacterState::LadderClimb;
+		pStatus.velocityY = 0.0f;
+	}
+
 #pragma region Animation Change + SFX Sound Play
 	
 	if (!animDelay)
 	{
 		applyForce();
-		
 
 		if (CAMERAMANAGER->getIsCamaraMove())
 		{
@@ -478,7 +491,10 @@ void X::update(void)
 				}
 			}
 
-			if(!status.dead) pStatus.player->play(animSpeed);
+			if (!status.dead)
+			{
+				pStatus.player->play(animSpeed);
+			}
 		}
 		attackHandEffect->play(effectAnimSpeed);
 		currentAnimChange();
@@ -520,6 +536,8 @@ void X::attack(void)
 {
 	if (pStatus.movable && !pStatus.isAttack)
 	{
+		if (pStatus.isOnLadder)	pStatus.velocityY = 0.0f;
+
 		attState = SholderState::Burst;
 		busterPos.x = 0 * SCALE_FACTOR;
 		shootEvent = makeShootEvent(BulletType::Burster);
@@ -530,10 +548,10 @@ void X::attack(void)
 		attackHandEffect->setFrameX(0);
 		effectAnimSpeed = 0.05f;
 		
-
 		burstloop = true;
 		lastShootTime = now;
 		isCharging = false;
+		pStatus.isBurst = true;
 
 		EVENTMANAGER->dispatchEvents({EventType::ShootBulltet, &shootEvent});
 	}
@@ -944,6 +962,7 @@ void X::spawn(int x, int y)
 	// 캐릭터 세팅
 	status.hp = status.maxHp;
 	status.mp = status.maxMp;
+	status.defense = 0.0f;
 	pStatus.moveSpeed = 4.5f;
 	pStatus.dashSpeed = 12.0f;
 	
@@ -956,6 +975,7 @@ void X::spawn(int x, int y)
 	hpBar.setPlayerInfo(static_cast<int>(status.hp), static_cast<int>(status.maxHp), static_cast<int>(status.mp), 2);
 	status.physicalDamage = 1;
 	pStatus.isWarp = true;
+	pStatus.isBurst = false;
 
 	////////////////////
 	// 상태 초기화
@@ -1217,14 +1237,11 @@ void X::returnToIdle(void)
 		break;
 
 	case CharacterState::OverPower:
-		
 		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
 		{
 			currentState = CharacterState::Idle;
 		}
-
 		break;
-	
 	default:
 		currentState = CharacterState::Idle;
 		isMoving = false;

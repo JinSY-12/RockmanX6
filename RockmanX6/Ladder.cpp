@@ -12,10 +12,10 @@ HRESULT Ladder::init(int x, int y)
     oStatus.oImage = new GImage;
     oStatus.oImage = IMAGEMANAGER->findImage("Object_Ladder")->cloneImage();
 
-    status.width = 5 * SCALE_FACTOR;
+    status.width = oStatus.oImage->getWidth();
     status.height = oStatus.oImage->getHeight();
 
-    oStatus.oHitBox = RectMakeCenter(x + oStatus.oImage->getWidth() / 2, y + status.height / 2, status.width, status.height);
+    oStatus.oHitBox = RectMakeCenter(x + oStatus.oImage->getWidth() / 2, y + status.height / 2, 5 * SCALE_FACTOR, status.height);
     oStatus.oHitBox.top -= 10 * SCALE_FACTOR; // 사다리의 윗부분이 플레이어의 발에 닿도록 hitbox를 살짝 늘려준다.
     
     oStatus.subRect.left = oStatus.oHitBox.left;

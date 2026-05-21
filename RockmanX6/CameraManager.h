@@ -91,7 +91,7 @@ private:
 
 	string zoneName;
 	int zoneNumber;
-	int prevZoneNumber;
+	int prevZoneNumber = -1;
 
 	bool cameraMove;
 	bool lerpCompleteX;
@@ -100,13 +100,16 @@ private:
 	bool cameraMoveEnd;
 	float timer;
 
-	bool test;
+	bool cameraMoving;
 
 	int locationTestX;
 	int locationTestRight;
 
 	int locationTestY;
 	int locationTestBottom;
+
+	bool test;
+
 
 public:
 	HRESULT init(void);
@@ -147,7 +150,6 @@ public:
 	void setCameraPos(int x, int y) { camera.x += x, camera.y += y; }
 	CameraRange getCameraRange() { return cameraRange; }
 
-
 	MapSize getMapSize(void) { return mapSize; }
 	void settingMapMaxSize(int x, int y) { mapSize.x = x, mapSize.y = y; }
 
@@ -184,7 +186,7 @@ public:
 		locationTestY = top;
 		locationTestBottom = bottom;
 
-		test = true;
+		cameraMoving = true;
 		cameraMove = true;
 	}
 

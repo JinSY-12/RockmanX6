@@ -10,7 +10,7 @@ HRESULT MetaDridler::init(int x, int y, int locationX, int locationY)
 
     status.maxHp = 10;
     status.hp = status.maxHp;
-    status.physicalDamage = 4;
+    status.physicalDamage = 6;
 
     eStatus.eImage = new GImage;
     eStatus.eImage = IMAGEMANAGER->findImage("Enemy_DridlerIdle")->cloneImage();

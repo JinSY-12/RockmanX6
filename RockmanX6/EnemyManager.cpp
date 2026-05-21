@@ -51,7 +51,7 @@ void EnemyManager::checkDead(void)
 	{
 		if ((*enemy)->getIsDead())
 		{
-			playExplodeEffect((*enemy)->getEnemyType(), (*enemy)->getEnemyPos().x, (*enemy)->getEnemyPos().y, (*enemy)->getWidth(), (*enemy)->getHeight(), (*enemy)->getLookRight());
+			playExplodeEffect((*enemy)->getEnemyType(), (*enemy)->getPos().x, (*enemy)->getPos().y, (*enemy)->getWidth(), (*enemy)->getHeight(), (*enemy)->getLookRight());
 			playExplodeSound((*enemy)->getEnemyType());
 
 			enemy = _vEnemy.erase(enemy);

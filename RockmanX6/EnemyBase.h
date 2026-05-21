@@ -103,7 +103,6 @@ public:
 
 	bool getAttAble(void) { return eStatus.attackAble; }
 	
-	Position getEnemyPos() { return pos; }
 	EnemyType getEnemyType() { return eType; }
 
 	void setEnemyLeftTouch(bool touch) { eStatus.touchLeftWall = touch; }
@@ -118,5 +117,4 @@ public:
 	void enemyInvincibleTimerUpdate(void);
 
 	void makeShootEvent(BulletType bType);
-
 };

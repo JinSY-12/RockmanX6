@@ -39,7 +39,6 @@ void AlertUI::release()
 
 }
 
-
 void AlertUI::update()
 {
 	switch (uType)
@@ -65,7 +64,7 @@ void AlertUI::Ready(void)
 	// Á¤Áö
 	if (TIMEMANAGER->getWorldTime() - readyTimer >= 1.5f)
 	{
-		alertImage->play(0.025f);
+		alertImage->play(0.02f);
 		noticeStart = true;
 	}
 
@@ -99,6 +98,7 @@ void AlertUI::Warning()
 
 		else
 		{
+			cout << "??" << endl;
 			uiDead = true;
 			nextSprite = 0;
 		}

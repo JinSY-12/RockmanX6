@@ -25,9 +25,9 @@ HRESULT CameraManager::init(void)
 	lerpSpeed = 0.05f;
 
     cameraMove = false;
+    cameraMoving = false;
     lerpCompleteX = false;
     lerpCompleteY = false;
-    test = false;
     locationTestX = 0;
     locationTestRight = 0;
     cameraMoveEnd = true;
@@ -44,6 +44,8 @@ HRESULT CameraManager::init(void)
 
     zoneNumber = 0;
     prevZoneNumber = -1;
+
+    test = false;
 
     return S_OK;
 }
@@ -139,29 +141,13 @@ void CameraManager::update(void)
 
     // 보스전 카메라 무빙 테스트
 
-    if (KEYMANAGER->isOnceKeyDown('1'))
-    {
-        locationTestX = 5743 * SCALE_FACTOR;
-        locationTestRight = locationTestX + (320 * SCALE_FACTOR);
-        locationTestY = 0;
-        locationTestBottom = 240 * SCALE_FACTOR;
-        test = true;
-    }
+    
 
-    if (KEYMANAGER->isOnceKeyDown('2'))
-    {
-        locationTestX = 6063 * SCALE_FACTOR;
-        locationTestRight = locationTestX + (400 * SCALE_FACTOR);
-        locationTestY = 0;
-        locationTestBottom = 240 * SCALE_FACTOR;
-        test = true;
-    }
-
-    if (test)
+    if (cameraMoving)
     {
         if (forceCameraMove(locationTestX, locationTestBottom, locationTestRight, locationTestY))
         {
-            test = false;
+            cameraMoving = false;
             timer = TIMEMANAGER->getWorldTime();
             cameraMove = false;
             cameraMoveEnd = false;
@@ -176,7 +162,17 @@ void CameraManager::update(void)
         }
     }
     
-    setMaxCameraRange();
+    if(!test) setMaxCameraRange();
+
+    if (KEYMANAGER->isOnceKeyDown('1'))
+    {
+        test = !test;
+        cameraRange.top = 0 * SCALE_FACTOR;
+        cameraRange.bottom = mapSize.y;
+        cameraRange.left = 0 * SCALE_FACTOR;
+        cameraRange.right = mapSize.x;
+    }
+
     cameraOffset();
 }
 
@@ -278,7 +274,7 @@ void CameraManager::setMaxCameraRange()
         case BossType::Intro:            
             if (camera.x >= 0 * SCALE_FACTOR && camera.x < 1600 * SCALE_FACTOR)
             {
-                cameraRange.top = 672 * SCALE_FACTOR;
+                cameraRange.top = 682 * SCALE_FACTOR;
                 cameraRange.bottom = mapSize.y;
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
@@ -286,12 +282,12 @@ void CameraManager::setMaxCameraRange()
                 zoneNumber = 0;
                 zoneName = "Zone 1-1";
 
-                setCheckPoint(160 * SCALE_FACTOR, 672 * SCALE_FACTOR, zoneNumber);
+                setCheckPoint(160 * SCALE_FACTOR, 682 * SCALE_FACTOR, zoneNumber);
             }
 
             if (camera.x >= 1965 * SCALE_FACTOR && camera.x < 3370 * SCALE_FACTOR)
             {
-                cameraRange.top = 672 * SCALE_FACTOR;
+                cameraRange.top = 682 * SCALE_FACTOR;
                 cameraRange.bottom = mapSize.y;
                 cameraRange.left = 1965 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
@@ -299,12 +295,12 @@ void CameraManager::setMaxCameraRange()
                 zoneNumber = 1;
                 zoneName = "Zone 1-2";
 
-                setCheckPoint(2090 * SCALE_FACTOR, 672 * SCALE_FACTOR, zoneNumber);
+                setCheckPoint(2090 * SCALE_FACTOR, 682 * SCALE_FACTOR, zoneNumber);
             }
             
             else if (camera.x >= 3370 * SCALE_FACTOR && camera.x < 3860 * SCALE_FACTOR)
             {
-                cameraRange.top = 480 * SCALE_FACTOR;
+                cameraRange.top = 490 * SCALE_FACTOR;
                 cameraRange.bottom = mapSize.y;
             
                 cameraRange.left = 0 * SCALE_FACTOR;
@@ -314,10 +310,10 @@ void CameraManager::setMaxCameraRange()
                 zoneName = "Zone 2";
             }
 
-            else if (camera.x >= 3860 * SCALE_FACTOR && camera.x < 5008 * SCALE_FACTOR && camera.y >= 480 * SCALE_FACTOR)
+            else if (camera.x >= 3860 * SCALE_FACTOR && camera.x < 5008 * SCALE_FACTOR && camera.y >= 490 * SCALE_FACTOR)
             {
-                cameraRange.top = 480 * SCALE_FACTOR;
-                cameraRange.bottom = 720 * SCALE_FACTOR;
+                cameraRange.top = 490 * SCALE_FACTOR;
+                cameraRange.bottom = 730 * SCALE_FACTOR;
                 cameraRange.left = 0 * SCALE_FACTOR;
                 cameraRange.right = 5400 * SCALE_FACTOR;
 
@@ -330,7 +326,7 @@ void CameraManager::setMaxCameraRange()
                 cameraRange.top = 0;
 
                 // 카메라 좌우 범위
-                if (camera.y <= (280 - 120) * SCALE_FACTOR)
+                if (camera.y <= (290 - 120) * SCALE_FACTOR)
                 {
                     cameraRange.left = 5008 * SCALE_FACTOR;
                     cameraRange.right = mapSize.x;
@@ -341,7 +337,7 @@ void CameraManager::setMaxCameraRange()
                     zoneName = "Zone 6";
                 }
                 
-                else if (camera.y <= (480 - 120) * SCALE_FACTOR)
+                else if (camera.y <= (490 - 120) * SCALE_FACTOR)
                 {
                     cameraRange.left = 5008 * SCALE_FACTOR;
                     cameraRange.right = 5440 * SCALE_FACTOR;
@@ -355,7 +351,7 @@ void CameraManager::setMaxCameraRange()
                 {
                     cameraRange.left = 0 * SCALE_FACTOR;
                     cameraRange.right = 5440 * SCALE_FACTOR;
-                    cameraRange.bottom = 720 * SCALE_FACTOR;
+                    cameraRange.bottom = 730 * SCALE_FACTOR;
 
                     zoneNumber = 4;
                     zoneName = "Zone 4";
@@ -368,10 +364,10 @@ void CameraManager::setMaxCameraRange()
             {
                 if (!cameraMove)
                 {
-                    cameraRange.top = 0 * SCALE_FACTOR;
+                    cameraRange.top = 10 * SCALE_FACTOR;
                     cameraRange.left = 0 * SCALE_FACTOR;
                     cameraRange.right = 5743 * SCALE_FACTOR;
-                    cameraRange.bottom = 270 * SCALE_FACTOR;
+                    cameraRange.bottom = 280 * SCALE_FACTOR;
                 }
                 
                 zoneNumber = 98;
@@ -381,10 +377,10 @@ void CameraManager::setMaxCameraRange()
 
             else if (camera.x >= 5743 * SCALE_FACTOR && camera.x < 6063 * SCALE_FACTOR)
             {
-                cameraRange.top = 0 * SCALE_FACTOR;
+                cameraRange.top = 10 * SCALE_FACTOR;
                 cameraRange.left = 5743 * SCALE_FACTOR;
                 cameraRange.right = 6063 * SCALE_FACTOR;
-                cameraRange.bottom = 240 * SCALE_FACTOR;
+                cameraRange.bottom = 250 * SCALE_FACTOR;
 
                 zoneNumber = 99;
                 zoneName = "Zone Boss Room";
@@ -394,10 +390,10 @@ void CameraManager::setMaxCameraRange()
 
             else if (camera.x >= 6063 * SCALE_FACTOR && camera.x < mapSize.x)
             {
-                cameraRange.top = 0 * SCALE_FACTOR;
+                cameraRange.top = 10 * SCALE_FACTOR;
                 cameraRange.left = 6063 * SCALE_FACTOR;
                 cameraRange.right = mapSize.x;
-                cameraRange.bottom = 240 * SCALE_FACTOR;
+                cameraRange.bottom = 250 * SCALE_FACTOR;
 
                 zoneNumber = 100;
                 zoneName = "Zone Battle Boss";

@@ -23,8 +23,6 @@ private:
 	float raadyTime;
 
 public:
-	// HRESULT init(void) override;
-	// HRESULT init(int x, int y) override;
 	HRESULT init(int x, int y, int locationX, int locationY) override;
 	void release(void) override;
 	void update(void) override;

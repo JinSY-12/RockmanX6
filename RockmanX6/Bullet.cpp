@@ -49,7 +49,7 @@ HRESULT Burster::init(BulletType type, int x, int y, bool isRight, float velocit
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster1")->cloneImage();
 		bStatus.faction = BulletFaction::Player;
-		bStatus.demage = 100;
+		bStatus.demage = 50;
 		bStatus.bType = type;
 		break;
 

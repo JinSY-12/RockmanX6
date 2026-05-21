@@ -29,6 +29,7 @@ protected:
 		float mp;
 		float maxMp;
 		float physicalDamage;
+		float defense;
 
 		bool dead;
 		bool deadDone;

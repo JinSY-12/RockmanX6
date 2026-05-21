@@ -119,6 +119,15 @@ void Player::render(HDC memDC)
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100, "움직임", "DNF_M_18", RGB(0, 255, 255));
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
+		
+		// if (ladderDone) temp = "Done";
+		// else temp = "False";
+
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100 + 45, "애니 프레임", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100 + 65, to_string(pStatus.player->getFrameX()), "DNF_M_18", RGB(0, 255, 255));
+
+
+		
 		// 히트박스 출력
 		DrawRectMakeColor(memDC, pStatus.hitBox, RGB(255, 0, 0), 2);
 		DrawRectMakeColor(memDC, pStatus.floorCheck, RGB(0, 0, 255), 2);
@@ -489,7 +498,7 @@ void Player::applyForce(void)
 			if (!pStatus.isOnLadder)
 			{
 				if (currentState == CharacterState::JumpUp)	if (pStatus.velocityY > -7.0f) pStatus.isJumpUp = false;
-				if (pStatus.velocityY > 0.0f && !pStatus.isWallSlide && currentState != CharacterState::OverPower) currentState = CharacterState::FallingDown;
+				if (pStatus.velocityY > 0.0f && !pStatus.isWallSlide && currentState != CharacterState::OverPower && currentState != CharacterState::LadderEnd) currentState = CharacterState::FallingDown;
 			}
 		}
 
@@ -711,6 +720,8 @@ void Player::currentAnimChange(void)
 		pStatus.firePointX = 1 * SCALE_FACTOR;
 		pStatus.firePointY = 5 * SCALE_FACTOR;
 
+		ladderDone = true;
+
 		switch (attState)
 		{
 		case SholderState::Burst:
@@ -768,6 +779,8 @@ void Player::currentAnimChange(void)
 	{
 		pStatus.firePointX = 1 * SCALE_FACTOR;
 		pStatus.firePointY = 5 * SCALE_FACTOR;
+
+		ladderDone = true;
 
 		switch (attState)
 		{
@@ -1097,23 +1110,83 @@ void Player::currentAnimChange(void)
 
 	else if (currentState == CharacterState::LadderStart)
 	{
-		animSpeed = 0.1f;
+		animSpeed = 0.12f;
 		animOffset.x = 0 * SCALE_FACTOR;
 		animOffset.y = 0 * SCALE_FACTOR;
 		
+		ladderDone = false;
+
 		changeAnimation(pStatus.charName + "LadderStart", 0);
 
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+		if (pStatus.player->getChangeReady())
 		{
-			currentState = CharacterState::LadderLoop;
+			currentState = CharacterState::LadderClimb;
+			pStatus.player->setChangeReady(false);
+			ladderDone = true;
+		}
+	}
+
+	else if (currentState == CharacterState::LadderEnd)
+	{
+		animSpeed = 0.12f;
+		animOffset.x = 0 * SCALE_FACTOR;
+		animOffset.y = 30 * SCALE_FACTOR;
+
+		ladderDone = false;
+
+		changeAnimation(pStatus.charName + "LadderEnd", 0);
+
+		if (pStatus.player->getChangeReady())
+		{
+			currentState = CharacterState::Idle;
+			pStatus.player->setChangeReady(false);
+			ladderDone = true;
+		}
+	}
+
+	else if (currentState == CharacterState::LadderClimb)
+	{
+		ladderDone = true;
+		animOffset.y = 12 * SCALE_FACTOR;
+
+		switch (attState)
+		{
+		case SholderState::Burst:
+		case SholderState::LargeBurst:
+			animSpeed = 0.06f;
+
+			pStatus.firePointY = 13 * SCALE_FACTOR;
+
+			if (status.lookRight) animOffset.x = 5 * SCALE_FACTOR;
+			else animOffset.x = -5 * SCALE_FACTOR;
+
+			if (previousAnim == pStatus.charName + "LadderLoop") changeAnimation(pStatus.charName + "LadderBurst", 0);
+			else changeAnimation(pStatus.charName + "LadderBurst", 0);
+
+			if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
+			{
+				pStatus.player->setFrameX(pStatus.player->getMaxFrameX());
+			}
+
+			pStatus.player->resume();
+			break;
+
+		case SholderState::Hold:
+		case SholderState::None:
+			animSpeed = 0.15f;
+			animOffset.x = 0 * SCALE_FACTOR;
+
+			if (previousAnim == pStatus.charName + "LadderBurst") changeAnimation(pStatus.charName + "LadderLoop", 0);
+			else changeAnimation(pStatus.charName + "LadderLoop", 0);
+
+			pStatus.player->pause();
+			break;
 		}
 	}
 
 	else if (currentState == CharacterState::LadderLoop)
 	{
-		inputEnabled = true;
-		animSpeed = 0.1f;
-		
+		ladderDone = true;
 		animOffset.y = 12 * SCALE_FACTOR;
 
 		switch (attState)
@@ -1138,43 +1211,14 @@ void Player::currentAnimChange(void)
 
 		case SholderState::Hold:
 		case SholderState::None:
-
-			animSpeed = 0.06f;
+			animSpeed = 0.15f;
 			animOffset.x = 0 * SCALE_FACTOR;
 			
 			if (previousAnim == pStatus.charName + "LadderBurst") changeAnimation(pStatus.charName + "LadderLoop", 0);
 			else changeAnimation(pStatus.charName + "LadderLoop", 0);
 
-			pStatus.player->pause();
-
+			pStatus.player->resume();
 			break;
-		}
-	}
-
-	else if (currentState == CharacterState::LadderEnd)
-	{
-		animSpeed = 0.1f;
-		animOffset.x = 0 * SCALE_FACTOR;
-		animOffset.y = 0 * SCALE_FACTOR;
-		
-		changeAnimation(pStatus.charName + "LadderEnd", 0);
-
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
-		{
-			currentState = CharacterState::Idle;
-			inputEnabled = true;
-			ladderEnd = false;
-			pStatus.isOnLadder = false;
-
-			// 사다리 상단에 도착하면 바닥에 닿게 보정 해줘야하는데
-			// 애니메이션이 바뀌기 전에 RECT부터 움직여서 꼼수로
-			// 애니메이션이 바뀌기 전에 이미지를 내려버림
-			// ㄴ> 어처피 상단 도착 애니메이션이 다시 나오면 보정 또 들어가서 상관없음
-			animOffset.y = 30 * SCALE_FACTOR;
-
-			pos.y -= 90.0f;
-			pStatus.hitBox.top -= 90.0f;
-			pStatus.hitBox.bottom -= 90.0f;
 		}
 	}
 
@@ -1285,11 +1329,16 @@ void Player::currentAnimChange(void)
 			else if (currentState == CharacterState::Dash) attState = SholderState::None;
 			else if (currentState == CharacterState::DashEnd) attState = SholderState::None;
 			else if (currentState == CharacterState::LadderLoop) attState = SholderState::None;
+			else if (currentState == CharacterState::LadderClimb) attState = SholderState::None;
 			else if (currentState == CharacterState::Idle) attState = SholderState::Hold;
 		}
 	}
 
-	else if(attState == SholderState::None) pStatus.isAttack = false;
+	else if (attState == SholderState::None)
+	{
+		pStatus.isAttack = false;
+		pStatus.isBurst = false;
+	}
 
 	hitBoxCenter.x = (pStatus.hitBox.left + pStatus.hitBox.right) / 2;
 	hitBoxCenter.y = pStatus.hitBox.bottom;
@@ -1323,9 +1372,14 @@ void Player::reduceHp(int damage)
 {
 	currentState = CharacterState::OverPower;
 	
-	status.hp -= damage;
+	int resultDamage = damage - status.defense;
+
+	if (resultDamage <= 0) resultDamage = 1;
+
+	status.hp -= resultDamage;
 	
 	pStatus.isAttack = false;
+	pStatus.isBurst = false;
 	pStatus.isDash = false;
 	pStatus.isJumpDash = false;
 	status.overpower = true;
@@ -1341,14 +1395,14 @@ void Player::reduceHp(int damage)
 				
 		animSpeed = 0.06f;
 
-		if (damage > 5)
+		if (resultDamage > 5)
 		{
 			changeAnimation(pStatus.charName + "LargeDamaged", 0);
 			pStatus.velocityX = status.lookRight ? -2.0f : 2.0f;
 			pStatus.velocityY = 0.0f;
 		}
 
-		else if (damage > 0 && damage <= 5)
+		else if (resultDamage > 0 && resultDamage <= 5)
 		{
 			changeAnimation(pStatus.charName + "SmallDamaged", 0);
 			pStatus.velocityX = status.lookRight ? -3.0f : 3.0f;
@@ -1544,6 +1598,10 @@ void Player::changeAnimation(const string& animName, int frame)
 	if (previousAnim != animName && !status.dead)
 	{
 		currentAnim = animName;
+		if (currentAnim == "X_LadderEnd")
+		{
+			cout << "True" << endl;
+		}
 		pStatus.player = IMAGEMANAGER->findImage(currentAnim);
 		pStatus.player->setFrameX(frame);
 
@@ -1574,6 +1632,7 @@ string Player::printBodyState(void)
 	else if (currentState == CharacterState::Dead) result = "사망";
 	else if (currentState == CharacterState::LadderStart) result = "사다리 타기";
 	else if (currentState == CharacterState::LadderLoop) result = "사다리 타는중";
+	else if (currentState == CharacterState::LadderEnd) result = "사다리 오르기";
 	else if (currentState == CharacterState::OverPower) result = "무적 상태";
 		
 	return result;
@@ -1601,10 +1660,13 @@ void Player::multiHitControl(void)
 	// Do Nothing!
 }
 
-void Player::ladderUpper()
+void Player::ladderDown()
 {
-	currentState = CharacterState::LadderStart;
-	ladderEnd = true;
+	if (currentState == CharacterState::LadderStart)
+	{
+		inputEnabled = true;
+
+	}
 }
 
 bool Player::completePoseDome(void)

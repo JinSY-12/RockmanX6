@@ -77,6 +77,7 @@ protected:
 		Dead,
 		OverPower,
 		LadderStart,
+		LadderClimb,
 		LadderLoop,
 		LadderEnd,
 		Victory,
@@ -153,6 +154,7 @@ protected:
 		float attackDelayTimer;
 		float attackDelayMaxTime;
 		bool isAttack;
+		bool isBurst;
 	};
 
 	struct Progress
@@ -168,7 +170,7 @@ protected:
 	};
 
 #pragma endregion
-
+#pragma region 변수들
 	// 캐릭터 행동 및 스탯
 	PlayerStatus pStatus;
 	CharacterState previousState;
@@ -295,6 +297,13 @@ protected:
 	Timer deadTimer;
 
 	bool firstBubbleSpawn;
+	int ladderPosX = 0;
+	bool ladderDone = true;
+
+	bool downKeyPressed = false;
+	bool upKeyPressed = false;
+
+#pragma endregion
 
 public:
 	void render(HDC memDC) override;
@@ -413,7 +422,10 @@ public:
 
 			hideAfterimage = false;
 
-			pStatus.isOnLadder = false;
+			if (ladderDone)
+			{
+				pStatus.isOnLadder = false;
+			}
 		}
 	}
 	inline void setTopCollision(bool top, int bottomline)
@@ -435,8 +447,16 @@ public:
 		}
 	}
 	inline void setHideAfterimage(bool hide) { hideAfterimage = hide; }
-	inline void setLadderAble(bool able) { ladderAble = able; }
-	inline void setLadderEnd(bool able) { ladderEnd = able; }
+	inline void setLadderAble(bool able, int x)
+	{
+		ladderAble = able;
+		ladderPosX = x;
+	}
+
+	inline void setLadderEnd(bool able)
+	{
+		ladderEnd = able;
+	}
 	
 	// 스탯 관련
 	void reduceHp(int damage);
@@ -482,7 +502,7 @@ public:
 	virtual void coolDownControl(void);
 	virtual void multiHitControl(void);
 
-	void ladderUpper();
+	void ladderDown();
 
 	
 	bool completePoseDome(void);
