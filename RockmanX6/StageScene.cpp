@@ -237,8 +237,8 @@ void StageScene::enemySettting(void)
 			eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 775 * SCALE_FACTOR);
 			eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 775 * SCALE_FACTOR);
 		case 1:
-			eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 910 * SCALE_FACTOR);
-			eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 910 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 920 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 920 * SCALE_FACTOR);
 			
 			eManager.spawnEnemy(EnemyType::MetaDridler, 4352 * SCALE_FACTOR, 480 * SCALE_FACTOR, 670 * SCALE_FACTOR);
 			eManager.spawnEnemy(EnemyType::MetaDridler, 4640 * SCALE_FACTOR, 480 * SCALE_FACTOR, 640 * SCALE_FACTOR);
