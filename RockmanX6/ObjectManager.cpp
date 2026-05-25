@@ -55,6 +55,11 @@ void ObjectManager::spawnObject(ObjectType oType, int x, int y, int width, int t
 	}
 }
 
+void ObjectManager::objectReset(void)
+{
+	_vObject.clear();
+}
+
 void ObjectManager::checkObjectDead(void)
 {
 	for (auto object = _vObject.begin(); object != _vObject.end();)

@@ -1,8 +1,6 @@
 #include "Stdafx.h"
 #include "MovieScene.h"
 
-
-
 HRESULT MovieScene::init(void)
 {
 	return S_OK;
@@ -10,18 +8,17 @@ HRESULT MovieScene::init(void)
 
 HRESULT MovieScene::init(int movieNum)
 {
-	SceneNum = movieNum + 1;
-
+	SceneNum = movieNum;	
 	mMainMovieChange = -1;
 	mSubMovieChange = -1;
 	subSceneOnOff = false;
 	mSubMovieMove = 0;
 	testNum = 0;
-
+	addUiComplete = false;
 	movieReady();
 
-	UIMANAGER->printEvent(0);
-
+	// UIMANAGER->printEvent(SceneNum);
+	
 	return S_OK;
 }
 
@@ -31,7 +28,15 @@ void MovieScene::release(void)
 
 void MovieScene::update(void)
 {
-	if (SceneNum == 1)
+	if (CAMERAMANAGER->isPadeInComplete() && !addUiComplete)
+	{
+		UIMANAGER->addUi(UiType::MoiveDialogue, 0);
+		addUiComplete = true;
+	}
+
+	// 영상용 이미지 애니메이션 세팅
+#pragma region 인트로 애니메이션 세팅
+	if (SceneNum == 0)
 	{
 		if (UIMANAGER->isCurrentLine() == 5 || UIMANAGER->isCurrentLine() == 9
 			|| UIMANAGER->isCurrentLine() == 10 || UIMANAGER->isCurrentLine() == 18
@@ -98,25 +103,30 @@ void MovieScene::update(void)
 			else mSubMovieMove = 288 * 2;
 		}
 	}		
+#pragma endregion
+	
+	// UI의 출력이 끝나면
+	if (addUiComplete && UIMANAGER->getUiNull())
+	{
+		switch (SceneNum)
+		{
+		case 0:
+			// UIMANAGER->addUi(UiType::MoiveDialogue, 1);
+			SCENEMANAGER->changeScene("스테이지", PlayerType::X, BossType::Intro);
+			CAMERAMANAGER->setStage(BossType::Intro);
+			break;
+		}
+	}
+	
 }
 
 void MovieScene::render(void)
 {
-	_mainMovie->render(getMemDC(), 0, 0, 0, 0, WINSIZE_X, WINSIZE_Y * 0.6);// _mainMovie->getWidth(), _mainMovie->getHeight());
+	_mainMovie->render(getMemDC(), 0, 0, 0, 0, WINSIZE_X, WINSIZE_Y * 0.6); // _mainMovie->getWidth(), _mainMovie->getHeight());
 
 	if (subSceneOnOff == true)
 	{
-		_subMovie->render(getMemDC(), 512 * 2 - mSubMovieMove, 0, 0, 0, _subMovie->getWidth(), _subMovie->getHeight());
-	}
-
-	else
-	{
-	}
-
-	// 키 입력
-	if (KEYMANAGER->isOnceKeyDown('X'))
-	{
-		// 다음 다이얼로그 + 다이얼로그 번호에 맞게 사운드 시작
+		_subMovie->render(getMemDC(), 512 * 2 - mSubMovieMove, 0, 0, 0, _subMovie->getWidth(), WINSIZE_Y * 0.6);
 	}
 
 	if (KEYMANAGER->isOnceKeyDown(VK_RETURN))
@@ -127,6 +137,7 @@ void MovieScene::render(void)
 			SOUNDMANAGER->play("BGM_Desert", 0.5f);
 			SOUNDMANAGER->setCurrentBGM("BGM_Desert");
 		}
+
 		else if (testNum == 3)
 		{
 			SOUNDMANAGER->play("Siren", 0.5f);
@@ -138,7 +149,7 @@ void MovieScene::render(void)
 
 void MovieScene::movieReady(void)
 {
-	if (SceneNum == 1)
+	if (SceneNum == 0)
 	{
 		_mainMovie = IMAGEMANAGER->findImage("Movie1_1");
 		_subMovie = IMAGEMANAGER->findImage("Movie1_3");

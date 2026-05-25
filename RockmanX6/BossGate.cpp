@@ -77,6 +77,7 @@ void BossGate::update(void)
         oStatus.oImage->reversePlay(0.05f);
         if(oStatus.oImage->getChangeReady())
         {
+			// if (BossType::Intro == SCENEMANAGER->getStageBossType()) ENEMYMANAGER->spawnBoss(BossType::Intro, 6110 * SCALE_FACTOR, -20 * SCALE_FACTOR);
             if (bossRoom) UIMANAGER->addUi(UiType::Warning);
             oStatus.oImage->setChangeReady(false);
             state = DoorState::Closed;

@@ -53,6 +53,8 @@ private:
 	float gravityAccel = 3.0f;
 	float maxGravity = 15.0f;
 
+	int random;
+
 private:
 	AttPattern attPattern;
 	EffectState effPattern;
@@ -76,7 +78,6 @@ public:
 	void readyPattern(void) override;
 	
 	// 연출 기능
-	void movetoPoint();
 	void changeAnim(BossState bossState) override;
 
 	// 상태 기능
@@ -84,5 +85,9 @@ public:
 	void stateReset(void);
 
 	void damagestock();
+
+	void spawn(int x, int y) override;
+
+	void appearnaceEvent(void) override;
 };
 

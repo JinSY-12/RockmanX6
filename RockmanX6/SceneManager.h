@@ -24,6 +24,9 @@ private:
 	string _nextSceneName;
 	int _nextSceneType;
 
+	PlayerType stagePlayerType;
+	BossType stageBossType;
+
 public:
 	HRESULT init(void);
 	void release(void);
@@ -41,6 +44,9 @@ public:
 	HRESULT changeLoadingScene(string nextSceneName, string loadSceneName = "TitleScene");
 
 	bool findScene(string sceneName);
+
+	PlayerType getStagePlayerType() { return stagePlayerType; }
+	BossType getStageBossType() { return stageBossType; }
 
 	// LPVOID : void ∆˜¿Œ≈Õ
 	friend DWORD CALLBACK loadingThread(LPVOID prc);

@@ -33,7 +33,8 @@ public:
 	void render(void);
 
 	void spawnObject(ObjectType oType, int x, int y, int width, int top, int height, bool boss = false);
-	
+	void objectReset(void);
+
 	void checkObjectDead(void);
 
 	void setttingPlayer(Player* player) { _player = player; }

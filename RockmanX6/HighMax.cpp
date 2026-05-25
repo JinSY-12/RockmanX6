@@ -5,84 +5,29 @@
 
 HRESULT HighMax::init(int x, int y)
 {
-	status.type = CombatEntityType::Boss;
-	btype = BossType::Intro;
-	bState = BossState::Apperance;
-	status.lastBoss = true;
-
 	status.maxHp = 80;
 	status.hp = 0;
 	status.physicalDamage = 4;
 
 	bStatus.bImage = new GImage;
-	bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move")->cloneImage();
-	bStatus.effectImage = IMAGEMANAGER->findImage("SFX_DeathBallCharge")->cloneImage();
-
 	status.width = 35 * SCALE_FACTOR;
 	status.height = 70 * SCALE_FACTOR;
 
-	hpBar.init(BossType::Intro, status.maxHp);
-	hpBar.setPlayerInfo(static_cast<int>(status.hp), static_cast<int>(status.maxHp), static_cast<int>(status.mp), 30);
+	appearEvent = false;
 
-	status.overpower = false;
-	status.lookRight = false;
-	bStatus.effectCollisionOn = false;
+	spawn(x, y);
 
-	bStatus.bHitBox = RectMakeCenter(x + status.width /2, y - status.height / 2, status.width, status.height);
-	
-	// X는 RECT 왼쪽, Y는 RECT 바닥
-	pos.x = x;
-	pos.y = y;
-
-	if(!status.lookRight) bStatus.originX = 30 * SCALE_FACTOR;
-	else bStatus.originX = 22 * SCALE_FACTOR;
-	
-	bStatus.originY = 20 * SCALE_FACTOR;
-
-	bStatus.offsetX = bStatus.originX + 0 * SCALE_FACTOR;
-	bStatus.offsetY = bStatus.originY + 0 * SCALE_FACTOR;
-
-	animSpeed = 0.1f;
-	attTimes = 0;
-
-	animDir = AnimDirection::Forward;
-	attPattern = AttPattern::Idle;
-	effPattern = EffectState::BallCharge;
-
-	bStatus.effectOn = false;
-	bStatus.effectOnTop = true;
-
-	bStatus.invincibleMaxTime = 2.0f;
-
-	SiegeSecondAtt = false;
-	prevFrame = -1;
-	timer = 0.0f;
-	phase2 = false;
-	BossBGM = "BGM_VS_HighMax";
-	appearanceDone = false;
-	musciStart = false;
-	attCycle = false;
-	rushStart = false;
-	gameStart = false;
-
-	bossAlpha = 255;
-	pattenrCoolDown = 2.0f;
-	stockDamage = 0;
-	knockOutCount = 0;
-
-	// 등장 모션을 위한 캐릭터 움직임 잠금
 	UIMANAGER->setFreeze(true);
 
-	// 사망 테스트
-	deadTest = false;
-
+	// X는 RECT 왼쪽, Y는 RECT 바닥
+	
 	return S_OK;
 }
 
 void HighMax::update(void)
 {
 	bool allowInput = !(CAMERAMANAGER->getIsCamaraMove() || !CAMERAMANAGER->getCameraMoveEnd()
-		|| UIMANAGER->getIsUiPrint() || deadTest);
+		|| UIMANAGER->getIsUiPrint() || deadTest);// || CAMERAMANAGER->getZoneNumber() < 100);
 	bStatus.movable = allowInput;
 	
 	if (!status.dead)
@@ -90,7 +35,7 @@ void HighMax::update(void)
 		if (bStatus.movable)
 		{
 			// 전투 시작!
-			if (appearanceDone)
+			if (appearanceDone && gameStart)
 			{
 				switch (bState)
 				{
@@ -134,6 +79,8 @@ void HighMax::update(void)
 							bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move");
 							bState = BossState::Dodge;
 							attAction = Action::Dodge;
+
+							SOUNDMANAGER->play("SFX_HighMaxRun", 0.3f);
 						}
 					}
 					
@@ -153,9 +100,6 @@ void HighMax::update(void)
 					case AttPattern::DeathRush:
 						deathRush();
 						break;
-					case AttPattern::Dodge:
-						dodge();
-						break;
 					}
 					break;
 				case BossState::Dodge:
@@ -167,47 +111,21 @@ void HighMax::update(void)
 					status.dead = true;
 					break;
 				}
+			}
 
-				/*
-
-				if (!isPattern)
-				{
-					bStatus.bImage->play(animSpeed);
-					readyPattern();
-				}
-
-				else
-				{
-					if (bStatus.effectOn) bStatus.effectImage->play(0.03f);
-
-					switch (attPattern)
-					{
-					case AttPattern::Idle:
-						bStatus.bImage->play(0.08f);
-						break;
-					case AttPattern::SiegeShoot:
-						siegeShoot();
-						break;
-					case AttPattern::DeathBallShoot:
-						bStatus.bImage->play(animSpeed);
-						deathBall();
-						break;
-					case AttPattern::DeathRush:
-						deathRush();
-						break;
-					case AttPattern::Dodge:
-						dodge();
-						break;
-					}
-				}*/
+			else if (appearanceDone && !gameStart)
+			{
+				hpBar.setBossVisible(true);
+				battleStart();
 			}
 
 			else
 			{
 				bossAppearance();
 			}
+		
 		}
-
+		/*
 		else
 		{
 			if (appearanceDone && !gameStart)
@@ -216,6 +134,7 @@ void HighMax::update(void)
 				battleStart();
 			}
 		}
+		*/
 	}
 	
 	// 죽었다고 판단되면
@@ -259,11 +178,15 @@ void HighMax::update(void)
 
 void HighMax::bossAppearance(void)
 {
+
 	// 주석
 	// if (pos.y < 830 * SCALE_FACTOR)
 	if (pos.y < 110 * SCALE_FACTOR)
 	{
-		if (!musciStart) pos.y += 1 * SCALE_FACTOR;
+		if (!musciStart)
+		{
+			pos.y += 1 * SCALE_FACTOR;
+		}
 
 		else
 		{
@@ -279,7 +202,8 @@ void HighMax::bossAppearance(void)
 		bState = BossState::Attack;
 		appearanceDone = true;
 
-		
+		appearnaceEvent();
+
 		// 첫패턴 무조건 시즈볼
 		// 시즈볼
 		bState = BossState::Attack;
@@ -305,23 +229,21 @@ void HighMax::bossAppearance(void)
 
 		if (!musciStart)
 		{
-			UIMANAGER->setIsUiPrint(true);
+			// UIMANAGER->setIsUiPrint(true);
 			musciStart = true;
-			UIMANAGER->setFreeze(false);
-			
+			// UIMANAGER->setFreeze(false);
 		}
 	}
 }
 
 void HighMax::dodge()
 {	
-	
-
 	if (pos.y > -20)
 	{
 		if (attAction == Action::Dodge) status.overpower = true;
 		pos.y -= 3 * SCALE_FACTOR;
 	}
+
 	else
 	{
 		attAction = Action::None;
@@ -362,6 +284,8 @@ void HighMax::siegeShoot(void)
 					bStatus.bImage->setChangeReady(false);
 					bStatus.bImage = IMAGEMANAGER->findImage("HighMax_RightReady");
 					attAction = Action::RightReady;
+
+					SOUNDMANAGER->play("Voice_SiegeBall", 0.5f);
 				}
 			}
 
@@ -530,7 +454,7 @@ void HighMax::deathBall(void)
 
 		if (bStatus.effectImage->getChangeReady() && effPattern == EffectState::BallCharge)
 		{
-			SOUNDMANAGER->play("SFX_RingSound", 0.3f);
+			SOUNDMANAGER->play("SFX_RingSound", 0.5f);
 			bStatus.effectOn = false;
 			bStatus.effectImage->setChangeReady(false);
 			bStatus.effectImage->setFrameX(0);
@@ -563,6 +487,7 @@ void HighMax::deathBall(void)
 				bStatus.bImage->setFrameX(0);
 				attAction = Action::Idle;
 				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle")->cloneImage();
+				random = rand() % 3;
 			}
 		}		
 		break;
@@ -570,16 +495,16 @@ void HighMax::deathBall(void)
 	case Action::Idle:
 		animSpeed = 0.08f;
 		
-		int rnd = rand() % 3;
-
 		// 패턴 이후 재정비
-		if (rnd > 0)
+		if (random > 0)
 		{
 			if (patternTimer.update(2.0f))
 			{
 				bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move")->cloneImage();
 				bState = BossState::Dodge;
 				attAction = Action::None;
+
+				SOUNDMANAGER->play("SFX_HighMaxRun", 0.5f);
 			}
 		}
 		
@@ -635,6 +560,7 @@ void HighMax::deathRush(void)
 			effPattern = EffectState::RushBall;
 			bStatus.effectImage->setChangeReady(false);
 			bStatus.effectImage = IMAGEMANAGER->findImage("SFX_RushBall")->cloneImage();
+			SOUNDMANAGER->play("Voice_Mudada", 0.3f);
 		}
 
 		if (effPattern == EffectState::RushBall)
@@ -743,6 +669,7 @@ void HighMax::deathRush(void)
 			bState = BossState::Dodge;
 			attAction = Action::None;
 			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move")->cloneImage();
+			SOUNDMANAGER->play("SFX_HighMaxRun", 0.3f);
 		}
 		break;
 	}
@@ -779,10 +706,6 @@ void HighMax::readyPattern(void)
 	}
 }
 
-void HighMax::movetoPoint()
-{
-
-}
 
 void HighMax::changeAnim(BossState bossState)
 {
@@ -945,8 +868,89 @@ void HighMax::damagestock()
 			stateReset();
 			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Damaged");
 			bState = BossState::Damaged;
+			SOUNDMANAGER->play("Voice_HighMaxDamaged", 0.3f);
 		}
 	}
 
 	if (knockOutCount >= 2) phase2 = true;
+}
+
+void HighMax::spawn(int x, int y)
+{
+	status.type = CombatEntityType::Boss;
+	btype = BossType::Intro;
+	bState = BossState::Apperance;
+	status.lastBoss = true;
+
+	pos.x = x;
+	pos.y = y;
+
+	bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move")->cloneImage();
+	bStatus.effectImage = IMAGEMANAGER->findImage("SFX_DeathBallCharge")->cloneImage();
+
+	hpBar.init(BossType::Intro, status.maxHp);
+	hpBar.setPlayerInfo(static_cast<int>(status.hp), static_cast<int>(status.maxHp), static_cast<int>(status.mp), 30);
+
+	status.overpower = false;
+	status.lookRight = false;
+	bStatus.effectCollisionOn = false;
+
+	bStatus.bHitBox = RectMakeCenter(x + status.width / 2, y - status.height / 2, status.width, status.height);
+
+	if (!status.lookRight) bStatus.originX = 30 * SCALE_FACTOR;
+	else bStatus.originX = 22 * SCALE_FACTOR;
+
+	bStatus.originY = 20 * SCALE_FACTOR;
+
+	bStatus.offsetX = bStatus.originX + 0 * SCALE_FACTOR;
+	bStatus.offsetY = bStatus.originY + 0 * SCALE_FACTOR;
+
+	animSpeed = 0.1f;
+	attTimes = 0;
+
+	animDir = AnimDirection::Forward;
+	attPattern = AttPattern::Idle;
+	effPattern = EffectState::BallCharge;
+
+	bStatus.effectOn = false;
+	bStatus.effectOnTop = true;
+
+	bStatus.invincibleMaxTime = 2.0f;
+
+	SiegeSecondAtt = false;
+	prevFrame = -1;
+	timer = 0.0f;
+	phase2 = false;
+	BossBGM = "BGM_VS_HighMax";
+	appearanceDone = false;
+	musciStart = false;
+	attCycle = false;
+	rushStart = false;
+	gameStart = false;
+
+	bossAlpha = 255;
+	pattenrCoolDown = 2.0f;
+	stockDamage = 0;
+	knockOutCount = 0;
+
+	
+	// 사망 테스트
+	deadTest = false;
+}
+
+void HighMax::appearnaceEvent(void)
+{
+	//if (!appearEvent)
+	{
+		switch (SCENEMANAGER->getStageBossType())
+		{
+		case BossType::Intro:
+			UIMANAGER->addUi(UiType::EventDialogue, 1);
+			break;
+		default:
+			break;
+		}
+
+		//appearEvent = true;
+	}
 }

@@ -170,12 +170,12 @@ void StageScene::stageSettting(void)
 			// checkpoint.y = 672 * SCALE_FACTOR;
 			
 			// 시작점
-			// checkpoint.x = 160 * SCALE_FACTOR;
-			// checkpoint.y = 682 * SCALE_FACTOR;
+			checkpoint.x = 160 * SCALE_FACTOR;
+			checkpoint.y = 682 * SCALE_FACTOR;
 						 
 			// 사다리 테스트
-			checkpoint.x = 2090 * SCALE_FACTOR;
-			checkpoint.y = 682 * SCALE_FACTOR;
+			// checkpoint.x = 2090 * SCALE_FACTOR;
+			// checkpoint.y = 682 * SCALE_FACTOR;
 
 			// 보스 게이트 테스트
 			// checkpoint.x = 5080 * SCALE_FACTOR;
@@ -221,7 +221,7 @@ void StageScene::enemySettting(void)
 	{
 		// 인트로
 	case BossType::Intro:
-
+		
 		switch (CAMERAMANAGER->getZoneResetNumber())
 		{
 		case 0:
@@ -230,8 +230,8 @@ void StageScene::enemySettting(void)
 			eManager.spawnEnemy(EnemyType::Junkroid, 765 * SCALE_FACTOR, 858 * SCALE_FACTOR);
 			eManager.spawnEnemy(EnemyType::Junkroid, 990 * SCALE_FACTOR, 858 * SCALE_FACTOR);
 			
-			// eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 790 * SCALE_FACTOR);
-			// eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 790 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 1671 * SCALE_FACTOR, 790 * SCALE_FACTOR);
+			eManager.spawnEnemy(EnemyType::Junkroid, 1836 * SCALE_FACTOR, 790 * SCALE_FACTOR);
 		case 1:
 			eManager.spawnEnemy(EnemyType::MetaWheel, 2400 * SCALE_FACTOR, 918 * SCALE_FACTOR);
 			eManager.spawnEnemy(EnemyType::MetaWheel, 3650 * SCALE_FACTOR, 918 * SCALE_FACTOR);
@@ -240,7 +240,6 @@ void StageScene::enemySettting(void)
 			eManager.spawnEnemy(EnemyType::MetaDridler, 4644 * SCALE_FACTOR, 480 * SCALE_FACTOR, 640 * SCALE_FACTOR);
 			eManager.spawnEnemy(EnemyType::MetaDridler, 4864 * SCALE_FACTOR, 480 * SCALE_FACTOR, 640 * SCALE_FACTOR);
 			eManager.spawnEnemy(EnemyType::MetaDridler, 4928 * SCALE_FACTOR, 480 * SCALE_FACTOR, 640 * SCALE_FACTOR);
-		case 4:
 			eManager.spawnEnemy(EnemyType::Junkroid, 5320 * SCALE_FACTOR, 630 * SCALE_FACTOR);
 			
 			eManager.spawnEnemy(EnemyType::MetaDridler, (5312 + 4) * SCALE_FACTOR, 300 * SCALE_FACTOR, 510 * SCALE_FACTOR);
@@ -250,12 +249,13 @@ void StageScene::enemySettting(void)
 			eManager.spawnEnemy(EnemyType::MetaDridler, (5168 + 4) * SCALE_FACTOR, 48 * SCALE_FACTOR, 250 * SCALE_FACTOR);
 			eManager.spawnEnemy(EnemyType::MetaDridler, (5280 + 4) * SCALE_FACTOR, 48 * SCALE_FACTOR, 220 * SCALE_FACTOR);
 			eManager.spawnEnemy(EnemyType::MetaDridler, (5392 + 4) * SCALE_FACTOR, 48 * SCALE_FACTOR, 210 * SCALE_FACTOR);
+		case 99:
+			break;
 		default:
 			break;
 		}
-		
 		break;
-
+		
 		// 커맨드 얀마크
 	case BossType::CommanYanmark:
 	
@@ -271,6 +271,7 @@ void StageScene::objectSetting(void)
 	switch (stageType)
 	{
 		// 인트로
+		
 	case BossType::Intro:
 
 		// 오브젝트 테스트 용도
@@ -278,28 +279,33 @@ void StageScene::objectSetting(void)
 		// oManager.spawnObject(ObjectType::BossGate, 200 * SCALE_FACTOR, 825 * SCALE_FACTOR, 0, 0, 0);
 		
 		// 세팅 시작
-		// oManager.spawnObject(ObjectType::Block , 1984 * SCALE_FACTOR, 728 * SCALE_FACTOR, 0, 0, 0);
-		oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 825 * SCALE_FACTOR, 0, 0, 0);
-		oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 538 * SCALE_FACTOR, 0, 0, 0);
-		oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 168 * SCALE_FACTOR, 0, 0, 0);
-		
-		// 보스 게이트
-		oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 138 * SCALE_FACTOR, 320 * SCALE_FACTOR, 10 * SCALE_FACTOR, 240 * SCALE_FACTOR);
-		oManager.spawnObject(ObjectType::BossGate, 6063 * SCALE_FACTOR, 138 * SCALE_FACTOR, 400 * SCALE_FACTOR, 10 * SCALE_FACTOR, 240 * SCALE_FACTOR, true);
-		
-		// 사다리
-		oManager.spawnObject(ObjectType::Ladder, 1989 * SCALE_FACTOR, 796 * SCALE_FACTOR, 0, 0, 0);
+		switch (CAMERAMANAGER->getZoneResetNumber())
+		{
+		case 0:
+			_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object1"), 0 * SCALE_FACTOR, 865 * SCALE_FACTOR });
+			oManager.spawnObject(ObjectType::Block, 1984 * SCALE_FACTOR, 728 * SCALE_FACTOR, 0, 0, 0);
 
-		bg.image = IMAGEMANAGER->findImage("Stage");
+		case 1:
+			oManager.spawnObject(ObjectType::Block, 2816 * SCALE_FACTOR, 825 * SCALE_FACTOR, 0, 0, 0);
+			oManager.spawnObject(ObjectType::Block, 3972 * SCALE_FACTOR, 538 * SCALE_FACTOR, 0, 0, 0);
+			oManager.spawnObject(ObjectType::Ladder, 1989 * SCALE_FACTOR, 796 * SCALE_FACTOR, 0, 0, 0);
 
-		_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object1"), 0 * SCALE_FACTOR, 865 * SCALE_FACTOR });
-		_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5312 * SCALE_FACTOR, 282 * SCALE_FACTOR });
-		_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5056 * SCALE_FACTOR, 74 * SCALE_FACTOR });
-		_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5168 * SCALE_FACTOR, 0 * SCALE_FACTOR });
-		_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5280 * SCALE_FACTOR, 0 * SCALE_FACTOR });
-		_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5392 * SCALE_FACTOR, 0 * SCALE_FACTOR });
+		case 4:
+			oManager.spawnObject(ObjectType::Block, 5456 * SCALE_FACTOR, 168 * SCALE_FACTOR, 0, 0, 0);
+
+			_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5312 * SCALE_FACTOR, 282 * SCALE_FACTOR });
+			_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5056 * SCALE_FACTOR, 74 * SCALE_FACTOR });
+			_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5168 * SCALE_FACTOR, 0 * SCALE_FACTOR });
+			_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5280 * SCALE_FACTOR, 0 * SCALE_FACTOR });
+			_vBackGround.push_back({ IMAGEMANAGER->findImage("Stage_Object2"), 5392 * SCALE_FACTOR, 0 * SCALE_FACTOR });
+
+		case 99:
+			oManager.spawnObject(ObjectType::BossGate, 5743 * SCALE_FACTOR, 138 * SCALE_FACTOR, 320 * SCALE_FACTOR, 10 * SCALE_FACTOR, 240 * SCALE_FACTOR);
+			oManager.spawnObject(ObjectType::BossGate, 6063 * SCALE_FACTOR, 138 * SCALE_FACTOR, 400 * SCALE_FACTOR, 10 * SCALE_FACTOR, 240 * SCALE_FACTOR, true);
+			break;
+		}
 		break;
-
+		
 		// 커맨드 얀마크
 	case BossType::CommanYanmark:
 
@@ -740,7 +746,10 @@ void StageScene::stageCollision(void)
 						// 왼쪽
 						// eManager.spawnBoss(BossType::Intro, 6110 * SCALE_FACTOR, -20 * SCALE_FACTOR);
 						// 오른쪽
+						//if (eManager.getBoss().size() == 0) 
 						eManager.spawnBoss(BossType::Intro, 6340 * SCALE_FACTOR, -20 * SCALE_FACTOR);
+						//else eManager.getBoss()[0]->spawn(6340 * SCALE_FACTOR, -20 * SCALE_FACTOR);
+						
 						SOUNDMANAGER->stopBGM();
 					}
 					obj->animOncePlay(true);
@@ -873,10 +882,14 @@ void StageScene::stageReset(void)
 	{
 		UIMANAGER->addUi(UiType::Ready);
 		SOUNDMANAGER->play(stagBGM, 0.5f);
+		SOUNDMANAGER->setCurrentBGM(stagBGM);
 
 		player->spawn(CAMERAMANAGER->getCheckPoint().x, CAMERAMANAGER->getCheckPoint().y);
+		CAMERAMANAGER->fixPos(CAMERAMANAGER->getCheckPoint().x, CAMERAMANAGER->getCheckPoint().y);
 		eManager.enemyReset();
+		oManager.objectReset();
 		enemySettting();
+		objectSetting();
 		bManager.clearBullet();
 
 		CAMERAMANAGER->padeIn(2.0f);
@@ -895,4 +908,14 @@ bool StageScene::clockTimer(float time)
 	}
 
 	return false;
+}
+
+void StageScene::bossSetting(void)
+{
+	switch (stageType)
+	{
+		case BossType::Intro:
+			eManager.spawnBoss(BossType::Intro, 6110 * SCALE_FACTOR, -20 * SCALE_FACTOR);
+			break;
+	}
 }

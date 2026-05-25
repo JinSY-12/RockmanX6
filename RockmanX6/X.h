@@ -54,5 +54,7 @@ public:
 
 	// 기능용 함수
 	void returnToIdle(void);
+
+	void appearnaceEvent(void) override;
 };
 

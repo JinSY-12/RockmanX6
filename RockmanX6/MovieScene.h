@@ -23,6 +23,7 @@ private:
 	int mSubMovieMove;
 
 	bool mChangeable;
+	bool addUiComplete;
 
 	int subLocation;
 

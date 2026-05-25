@@ -325,9 +325,6 @@ public:
 	void sfxPlay(void);
 	void soundPlay(string soundName);
 
-	// 캐릭터 스폰
-	virtual void spawn(int x, int y);
-
 	// 상태값
 	string printBodyState(void);
 	string printAttState(void);

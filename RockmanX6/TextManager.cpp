@@ -13,19 +13,24 @@ HRESULT TextManager::init(void)
 
 	prevLine = -1;
 	charIndex = 0;
-	showLine = false;
-	writeFinish = false;
+
+	movieShowLine = false;
+	eventShowLine = false;
+
+	movieWriteFinish = false;
+	eventWriteFinish = false;
 
 	mCurrentLine = 0;
 	dialogueIndex = 0;
+	eventIndex = 0;
+
+	textReset();
+
 	mMovieNameArea = { 0 , WINSIZE_Y / 3 * 2, 60 , 60};
 	mMovieTextArea = { 0 , WINSIZE_Y / 3 * 2 + 40, 500, 400};
 
 	mGameNameArea;
 	mGameTextArea;
-
-	ReadEvent();
-	ReadDialogue();
 
 	elapsedTime = 0.0f;   // 누적 시간
 	typeSpeed = 0.1f;     // 1글자 출력 딜레이, 초 단위
@@ -50,6 +55,30 @@ void TextManager::release(void)
 	RemoveFontResource("Resources/Font/DNF_M.ttf");
 
 	_mFontList.clear();
+}
+
+void TextManager::textReset(void)
+{
+	prevLine = -1;
+	charIndex = 0;
+	
+	movieShowLine = false;
+	eventShowLine = false;
+
+	movieWriteFinish = false;
+	eventWriteFinish = false;
+
+	mCurrentLine = 0;
+	dialogueIndex = 0;
+	eventIndex = 0;
+	
+	mCharterName = L"";
+	mDialogue = L"";
+	mVoice = L"";
+	mBGM = L"";
+	mSFX = L"";
+	
+	isTalk = false;
 }
 
 void TextManager::addFontSetting(string settingName, FontSetting setting)
@@ -151,37 +180,35 @@ void TextManager::drawTextColor(HDC hdc, int destX, int destY, string printStrin
 	setDefaultFont(hdc);
 }
 
-void TextManager::drawName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
+void TextManager::drawMovieName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
 {
-	if (currentLine >= _mEventDialogue[eventNum].size())
+	if (!movieWriteFinish)
 	{
-		// 나중에 로딩창으로 바꾸시오
-		SOUNDMANAGER->stop(currentVoice);
-		SOUNDMANAGER->stop(currentBGM);
-		SOUNDMANAGER->stop(currentSFX);
+		if (currentLine >= _mMovieDialogue[eventNum].size())
+		{
+			// 나중에 로딩창으로 바꾸시오
+			SOUNDMANAGER->stop(currentVoice);
+			SOUNDMANAGER->stop(currentBGM);
+			SOUNDMANAGER->stop(currentSFX);
 
-		CAMERAMANAGER->padeOut(3.0f);
-		UIMANAGER->changeUiMode();
-	}
+			CAMERAMANAGER->padeOut(3.0f);
+		}
 
-	HFONT font = findFont(fontName);
+		HFONT font = findFont(fontName);
 
-	// 폰트 셋팅
-	SelectObject(hdc, font);
-	SetBkMode(hdc, TRANSPARENT);
-	SetTextAlign(hdc, _textAlign);
+		// 폰트 셋팅
+		SelectObject(hdc, font);
+		SetBkMode(hdc, TRANSPARENT);
+		SetTextAlign(hdc, _textAlign);
 
-	_textColor = changeFontColor(mCharterName.c_str());
-	SetTextColor(hdc, _textColor);
+		_textColor = changeFontColor(mCharterName.c_str());
+		SetTextColor(hdc, _textColor);
 
-	if (UIMANAGER->getIsUiMode() == true)
-	{
 		TextOutW(hdc, destX, destY, mCharterName.c_str(), mCharterName.length());
 
 		if (currentLine != prevLine)
 		{
 			// 텍스트 출력
-
 			charIndex = 0;
 
 			// Voice 재생, 정지
@@ -226,25 +253,143 @@ void TextManager::drawName(HDC hdc, int destX, int destY, int eventNum, int curr
 			prevLine = currentLine;
 		}
 	}
+	// 기본 폰트로 리셋
+	setDefaultFont(hdc);
+}
+
+void TextManager::drawEventName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
+{
+	
+	if (currentLine >= _mEventDialogue[eventNum].size())
+	{
+		// 나중에 로딩창으로 바꾸시오
+		SOUNDMANAGER->stop(currentVoice);
+		SOUNDMANAGER->stop(currentBGM);
+		SOUNDMANAGER->stop(currentSFX);
+	}
+
+	HFONT font = findFont(fontName);
+
+	// 폰트 셋팅
+	SelectObject(hdc, font);
+	SetBkMode(hdc, TRANSPARENT);
+	SetTextAlign(hdc, _textAlign);
+
+	_textColor = changeFontColor(mCharterName.c_str());
+	SetTextColor(hdc, _textColor);
+
+	TextOutW(hdc, destX, destY, mCharterName.c_str(), mCharterName.length());
+
+	if (currentLine != prevLine)
+	{
+		// 텍스트 출력
+
+		charIndex = 0;
+
+		// Voice 재생, 정지
+		if (mVoice.compare(L"STOP") == 0)
+		{
+			SOUNDMANAGER->stop(currentVoice);
+		}
+
+		else if (mVoice.compare(L""))
+		{
+			SOUNDMANAGER->stop(currentVoice);
+			SOUNDMANAGER->play(WStringToString(mVoice), 0.5f);
+			currentVoice = WStringToString(mVoice);
+		}
+
+		// 글자수 차이 -> 정확히 일치 0, 한글자 차이 1 = SFX는 마지막 글자라서 엔터까지 포함
+		// BGM 재생, 정지
+		if (mBGM.compare(L"STOP") == 0)
+		{
+			SOUNDMANAGER->stop(currentBGM);
+		}
+
+		else if (mBGM.compare(L""))
+		{
+			SOUNDMANAGER->stop(currentBGM);
+			SOUNDMANAGER->play(WStringToString(mBGM), 0.5f);
+			currentBGM = WStringToString(mBGM);
+		}
+
+		// SFX 재생, 정지
+		if (mSFX.compare(L"STOP") == 0)
+		{
+			SOUNDMANAGER->stop(currentSFX);
+		}
+
+		else if (mSFX.compare(L""))
+		{
+			SOUNDMANAGER->stop(currentSFX);
+			SOUNDMANAGER->play(WStringToString(mSFX), 0.5f);
+			currentSFX = WStringToString(mSFX);
+		}
+		prevLine = currentLine;
+	}
 
 	// 기본 폰트로 리셋
 	setDefaultFont(hdc);
 }
 
-void TextManager::drawDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
+void TextManager::drawMovieDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
 {
+	if(!movieWriteFinish)
+	{
+
+		HFONT font = findFont(fontName);
+
+		mMovieNum = eventNum;
+
+		wstring toDisplay = mDialogue.substr(0, movieShowLine ? mDialogue.size() : charIndex);
+
+		// 폰트 셋팅
+		SelectObject(hdc, font);
+		SetBkMode(hdc, TRANSPARENT);
+		SetTextAlign(hdc, _textAlign);
+		SetTextColor(hdc, _textColor);
+
+		// 텍스트 출력
+		TextOutW(hdc, destX, destY, toDisplay.c_str(), toDisplay.length());
+
+		elapsedTime += 0.03f;
+
+		if (mDialogue.size() != charIndex)
+		{
+			if (elapsedTime >= typeSpeed)
+			{
+				charIndex++;
+				elapsedTime = 0.0f;
+			}
+		}
+
+		else if (mDialogue.size() == charIndex) movieShowLine = true;
+	}
+
+	else
+	{
+		cout << "????????????????" << endl;
+	}
+
+	// 기본 폰트로 리셋
+	setDefaultFont(hdc);
+}
+
+void TextManager::drawEventDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
+{
+
 	HFONT font = findFont(fontName);
 
 	mEventNum = eventNum;
-	
-	wstring toDisplay = mDialogue.substr(0, showLine ? mDialogue.size() : charIndex);
+
+	wstring toDisplay = mDialogue.substr(0, eventShowLine ? mDialogue.size() : charIndex);
 
 	// 폰트 셋팅
 	SelectObject(hdc, font);
 	SetBkMode(hdc, TRANSPARENT);
 	SetTextAlign(hdc, _textAlign);
 	SetTextColor(hdc, _textColor);
-	
+
 	// 텍스트 출력
 	TextOutW(hdc, destX, destY, toDisplay.c_str(), toDisplay.length());
 
@@ -256,14 +401,20 @@ void TextManager::drawDialogue(HDC hdc, int destX, int destY, int eventNum, int 
 		{
 			charIndex++;
 			elapsedTime = 0.0f;
+
+			isTalk = true;
+			SOUNDMANAGER->play("Menu_Dialogue", 0.4f);
 		}
 	}
 
-	else if (mDialogue.size() == charIndex) showLine = true;
+	else if (mDialogue.size() == charIndex)
+	{
+		eventShowLine = true;
+		isTalk = false;
+	}
 
 	// 기본 폰트로 리셋
 	setDefaultFont(hdc);
-
 }
 
 void TextManager::drawTextInRect(HDC hdc, RECT rect, string printString, string settingName, bool isCenter)
@@ -301,7 +452,39 @@ void TextManager::setDefaultFont(HDC hdc)
 	}
 }
 
-void TextManager::ReadEvent(void)
+void TextManager::ReadMovie(int num)
+{
+	ifstream file("Resources/Text/Movie.txt");
+
+	string line;
+	int currentEvent = 0;
+
+	while (getline(file, line))
+	{
+		if (line.rfind("[Event", 0) == 0)
+		{
+			size_t pos = line.find(']');
+
+			if (pos != string::npos)
+			{
+				currentEvent = stoi(line.substr(6, pos - 6));
+				_mMovieDialogue[currentEvent - 1].clear();
+			}
+		}
+
+		else if (!line.empty() && currentEvent > 0)
+		{
+			wstring wline = Utf8ToWstring(line);
+			_mMovieDialogue[currentEvent - 1].push_back(wline);
+		}
+	}
+
+	movieWriteFinish = false;
+	mMovieNum = num;
+	_vDialogue = _mMovieDialogue[mMovieNum];
+}
+
+void TextManager::ReadEvent(int num)
 {
 	ifstream file("Resources/Text/Dialogue.txt");
 
@@ -327,15 +510,75 @@ void TextManager::ReadEvent(void)
 			_mEventDialogue[currentEvent - 1].push_back(wline);
 		}
 	}
-	_vDialogue = _mEventDialogue[mEventNum];
+
+	eventWriteFinish = false;
+	mEventNum = num;
+	_vEvent = _mEventDialogue[mEventNum];
 }
 
-void TextManager::ReadDialogue(void)
+void TextManager::ReadMovieDialogue(void)
 {
-	if (dialogueIndex < _vDialogue.size())
+	if (!movieWriteFinish)
 	{
-		writeFinish = false;
-		wstring line = _vDialogue[dialogueIndex++];
+		if (dialogueIndex < _vDialogue.size())
+		{
+			movieShowLine = false;
+			wstring line = _vDialogue[dialogueIndex++];
+			wstring temp;
+
+			size_t pos = line.find(':');
+			if (pos != wstring::npos)
+			{
+				mCharterName = line.substr(0, pos);
+				temp = line.substr(pos + 1);
+
+				pos = temp.find('/');
+				if (pos != wstring::npos)
+				{
+					mDialogue = temp.substr(0, pos);
+					line = temp.substr(pos + 1);
+
+					pos = line.find('/');
+					if (pos != wstring::npos)
+					{
+						mVoice = line.substr(0, pos);
+						temp = line.substr(pos + 1);
+
+						pos = temp.find('/');
+						if (pos != wstring::npos)
+						{
+							mBGM = temp.substr(0, pos);
+							mSFX = temp.substr(pos + 1);
+						}
+						else mSFX = L"";
+					}
+					else mBGM = L"";
+				}
+				else mVoice = L"";
+			}
+			else
+			{
+				mCharterName = L"";
+				mDialogue = line;
+			}
+
+			charIndex = 0;
+			movieShowLine = false;
+		}
+
+		if (dialogueIndex >= _vDialogue.size())
+		{
+			movieWriteFinish = true;
+		}
+	}
+}
+
+void TextManager::ReadEventDialogue(void)
+{
+	if (eventIndex < _vEvent.size())
+	{
+		eventShowLine = false;
+		wstring line = _vEvent[eventIndex++];
 		wstring temp;
 
 		size_t pos = line.find(':');
@@ -374,22 +617,67 @@ void TextManager::ReadDialogue(void)
 			mDialogue = line;
 		}
 		charIndex = 0;
-		showLine = false;
+		eventShowLine = false;
 	}
 
-	if (dialogueIndex >= _vDialogue.size()) writeFinish = true;
+	if (eventIndex >= _vEvent.size()) eventWriteFinish = true;
 }
 
 COLORREF TextManager::changeFontColor(wstring name)
 {
 	if (name.compare(L"게이트") == 0) return RGB(80, 60, 185);
 	else if (name.compare(L"???") == 0) return RGB(255, 0, 0);
-	else if (name.compare(L"에어리아") == 0) return RGB(255, 255, 0);
-	else if (name.compare(L"X") == 0) return RGB(0, 0, 255);
+	else if (name.compare(L"??") == 0 || name.compare(L"하이맥스") == 0) return RGB(5, 6, 30);
+	else if (name.compare(L"에이리아") == 0) return RGB(255, 255, 0);
+	else if (name.compare(L"엑스") == 0) return RGB(0, 100, 255);
 	else if (name.compare(L"시그너스") == 0) return RGB(5, 6, 30);
 	else if (name.compare(L"더글라스") == 0) return RGB(100, 255, 0);
 
 	return RGB(255, 255, 255);
+}
+
+bool TextManager::EventComplete(void)
+{
+	if (eventWriteFinish)
+	{
+		SOUNDMANAGER->stop(currentVoice);
+		SOUNDMANAGER->stop(currentBGM);
+		SOUNDMANAGER->stop(currentSFX);
+	}
+
+	return eventWriteFinish;
+}
+
+bool TextManager::MovieComplete(void)
+{
+	if (movieWriteFinish)
+	{
+		SOUNDMANAGER->stop(currentVoice);
+		SOUNDMANAGER->stop(currentBGM);
+		SOUNDMANAGER->stop(currentSFX);
+	}
+
+	return movieWriteFinish;
+}
+
+void TextManager::setMovieComplete(bool finish)
+{
+	movieWriteFinish = finish;
+
+	mCharterName = L"";
+	mDialogue = L"";
+}
+
+void TextManager::setEventComplete(bool finish)
+{
+	eventIndex = _vEvent.size();
+
+	eventWriteFinish = finish;
+
+	mCharterName = L"";
+	mDialogue = L"";
+
+	SOUNDMANAGER->stop("Menu_Dialogue");
 }
 
 wstring TextManager::Utf8ToWstring(const std::string& str)

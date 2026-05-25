@@ -90,7 +90,6 @@ void EnemyManager::spawnEnemy(EnemyType eType, int x, int y, int sub)
 		_enemy->settingPlayer(_player);
 		_vEnemy.push_back(_enemy);
 		break;
-
 	case EnemyType::MetaDridler:
 		_enemy = new MetaDridler;
 		_enemy->init(x, y, 0, sub);
@@ -106,11 +105,20 @@ void EnemyManager::spawnBoss(BossType bType, int x, int y)
 	switch (bType)
 	{
 	case BossType::Intro:
-		_boss = new HighMax;
-		_boss->init(x, y);
-		_boss->settingBulletManager(_bManager);
-		_boss->settingPlayer(_player);
-		_vBoss.push_back(_boss);
+		if (_vBoss.empty())
+		{
+			_boss = new HighMax;
+			_boss->init(x, y);
+			_boss->settingBulletManager(_bManager);
+			_boss->settingPlayer(_player);
+			_vBoss.push_back(_boss);
+		}
+
+		else
+		{
+			cout << "¸®¼Â" << endl;
+			_vBoss[0]->spawn(x, y);
+		}
 		break;
 	}
 

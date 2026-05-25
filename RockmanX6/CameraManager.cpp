@@ -180,6 +180,15 @@ void CameraManager::render(HDC hdc)
 {
     _blackImage->alphaRender(hdc, _blackAlpha);
     _whiteImage->alphaRender(hdc, _whiteAlpha);
+
+    if (UIMANAGER->getIsDebugMode() == true)
+    {
+        TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 * 40, 0.85 * WINSIZE_Y + 50, "카매라 X", "DNF_M_18", RGB(0, 255, 255));
+        TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 * 40, 0.85 * WINSIZE_Y + 70, to_string(camera.x / SCALE_FACTOR), "DNF_M_18", RGB(0, 255, 255));
+        
+        TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 * 40 + 80, 0.85 * WINSIZE_Y + 50, "카매라 Y", "DNF_M_18", RGB(0, 255, 255));
+        TEXTMANAGER->drawTextColor(hdc, WINSIZE_X / 50 * 40 + 80, 0.85 * WINSIZE_Y + 70, to_string(camera.y / SCALE_FACTOR), "DNF_M_18", RGB(0, 255, 255));
+    }
 }
 
 #pragma region 카메라 효과
@@ -356,7 +365,7 @@ void CameraManager::setMaxCameraRange()
                     zoneNumber = 4;
                     zoneName = "Zone 4";
 
-                    setCheckPoint(5080 * SCALE_FACTOR, 480 * SCALE_FACTOR, zoneNumber);
+                    // setCheckPoint(5080 * SCALE_FACTOR, 480 * SCALE_FACTOR, zoneNumber);
                 }
             }
 

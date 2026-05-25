@@ -107,6 +107,8 @@ public:
 
 	bool clockTimer(float time);
 
+	void bossSetting(void);
+
 	StageScene() {}
 	~StageScene() {}
 };

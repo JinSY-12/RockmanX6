@@ -13,7 +13,8 @@ HRESULT X::init(int x, int y)
 	status.maxMp = 10.0;
 	
 	maxDashTime = 3.5f;
-	
+	appearEvent = false;
+
 	// 캐릭터 소환 - 게임 시작
 	spawn(x, y);
 
@@ -65,7 +66,8 @@ void X::update(void)
 				{
 					pStatus.player->resume();
 					currentState = CharacterState::Idle;
-					inputEnabled = true;
+					appearnaceEvent();
+					// inputEnabled = true;
 				}
 			}
 			else delayTimer = TIMEMANAGER->getWorldTime();
@@ -933,8 +935,6 @@ void X::colorChange(void)
 	}
 }
 
-
-
 void X::spawn(int x, int y)
 {
 	////////////////////
@@ -1246,6 +1246,23 @@ void X::returnToIdle(void)
 		currentState = CharacterState::Idle;
 		isMoving = false;
 		break;
+	}
+}
+
+void X::appearnaceEvent(void)
+{
+	//if (!appearEvent)
+	{
+		switch (SCENEMANAGER->getStageBossType())
+		{
+		case BossType::Intro:
+			UIMANAGER->addUi(UiType::EventDialogue, 0);
+			break;
+		default:
+			break;
+		}
+
+		//appearEvent = true;
 	}
 }
 

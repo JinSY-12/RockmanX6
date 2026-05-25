@@ -40,3 +40,13 @@ void CombatEntity::render(HDC hdc)
 {
     // Do Nothing!!
 }
+
+void CombatEntity::appearnaceEvent(void)
+{
+	// Do Nothing!!
+}
+
+void CombatEntity::spawn(int x, int y)
+{
+    // Do Nothing!!
+}

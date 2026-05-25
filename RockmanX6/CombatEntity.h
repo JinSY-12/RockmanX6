@@ -75,6 +75,8 @@ protected:
 
 	BulletManager* bManager;
 
+	bool appearEvent;
+
 public:
 	virtual HRESULT init(void);
 	virtual HRESULT init(int x, int y);
@@ -114,5 +116,8 @@ public:
 	{
 		return start + (end - start) * time;
 	}
+	virtual void spawn(int x, int y);
+
+	virtual void appearnaceEvent(void);
 };
 

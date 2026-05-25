@@ -6,6 +6,11 @@ HRESULT UiBase::init(UiType uType)
 	return S_OK;
 }
 
+HRESULT UiBase::init(UiType uType, int sceneNum)
+{
+	return S_OK;
+}
+
 HRESULT UiBase::init(int x, int y)
 {
 	return S_OK;
@@ -30,7 +35,6 @@ void UiBase::release()
 {
 
 }
-
 
 void UiBase::update()
 {

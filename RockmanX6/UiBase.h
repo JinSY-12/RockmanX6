@@ -19,10 +19,12 @@ protected:
 
 public:
 	virtual HRESULT init(UiType uType);
+	virtual HRESULT init(UiType uType, int sceneNum);
 	virtual HRESULT init(int x, int y);
 	virtual HRESULT init(PlayerType pType);
 	virtual HRESULT init(BossType bType);
 	virtual HRESULT init(PlayerType pType, BossType bType);
+
 	virtual void release();
 	virtual void update();
 	virtual void render(HDC hdc);

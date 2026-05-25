@@ -167,7 +167,10 @@ HRESULT SceneManager::changeScene(string sceneName, PlayerType pType, BossType b
 	// 카메라 페이드인
 	CAMERAMANAGER->padeIn(0.8f);
 
-	if (SUCCEEDED(find->second->init(pType, bType)))
+	stagePlayerType = pType;
+	stageBossType = bType;
+
+	if (SUCCEEDED(find->second->init(stagePlayerType, stageBossType)))
 	{
 		//바꾸려는 씬을 현재씬으로 변경
 		_currentScene = find->second;

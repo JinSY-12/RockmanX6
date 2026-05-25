@@ -63,10 +63,10 @@ void TitleScene::update(void)
 			{
 				SOUNDMANAGER->play("Menu_ButtonSelect", 0.5f);
 
-				SCENEMANAGER->changeScene("스테이지", PlayerType::X, BossType::Intro);
-				CAMERAMANAGER->setStage(BossType::Intro);
+				SCENEMANAGER->changeScene("컷씬", 0);
+				// SCENEMANAGER->changeScene("스테이지", PlayerType::X, BossType::Intro);
+				// CAMERAMANAGER->setStage(BossType::Intro);
 
-				// SCENEMANAGER->changeScene("컷씬", 0);
 			}
 
 			else if (buttonSelect == 1)
@@ -183,6 +183,8 @@ void TitleScene::addImage(void)
 	// 하프 스크린
 	IMAGEMANAGER->addImage("Movie1_3", "Resources/Image/CutScene/Movie_1_3.bmp", 288 * 2, 240 * 2, true, MAGENTA);
 	IMAGEMANAGER->addImage("Movie1_5", "Resources/Image/CutScene/Movie_1_5.bmp", 288 * 2, 240 * 2, true, MAGENTA);
+
+	IMAGEMANAGER->addFrameImage("Dialogue_BG", "Resources/Image/CutScene/Dialogue_Background.bmp", 16200, 225, 18, 1, true, MAGENTA, true);
 
 	//////////////////////////////////
 	// 스테이지 이미지
@@ -549,7 +551,11 @@ void TitleScene::addSound(void)
 	//////////////////////////////////
 
 	SOUNDMANAGER->addSound("Voice_DeathBall", "Resources/Sound/Voice/Enemy/Voice_DeathBall.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_HighMaxDamaged", "Resources/Sound/Voice/Enemy/Voice_HighMaxDamaged.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_Mudada", "Resources/Sound/Voice/Enemy/Voice_Mudada.wav", false, false);
+	SOUNDMANAGER->addSound("Voice_SiegeBall", "Resources/Sound/Voice/Enemy/Voice_Mudada.wav", false, false);
 
+	
 	//////////////////////////////////
 	// 효과음
 	//////////////////////////////////
@@ -557,7 +563,7 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_DeathBallCharge", "Resources/Sound/SFX/Enemy/SFX_DeathBallCharge.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_SiegeShootFire", "Resources/Sound/SFX/Enemy/SFX_SiegeShootFire.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_RingSound", "Resources/Sound/SFX/Enemy/SFX_RingSound.wav", false, false);
-
+	SOUNDMANAGER->addSound("SFX_HighMaxRun", "Resources/Sound/SFX/Enemy/SFX_HighMaxRun.wav", false, false);
 	
 }
 

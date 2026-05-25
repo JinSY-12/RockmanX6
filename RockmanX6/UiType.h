@@ -4,5 +4,6 @@ enum class UiType
 {
 	Ready,
 	Warning,
-	Dialogue
+	MoiveDialogue,
+	EventDialogue
 };

@@ -6,7 +6,7 @@ HRESULT UiManager::init(void)
 	mEventNum = 0;
 	mCurrentLine = 0;
 	isUiMode = false;
-	mTextDelay = 0.f;
+	mTextDelay = 0.0f;
 	nextAlbe = false;
 	_textIcon = IMAGEMANAGER->findImage("Next");
 	charType = -1;
@@ -31,8 +31,7 @@ void UiManager::update(void)
 
 		else ++UIs;
 	}
-
-
+	
 	// UI가 isDead이면 삭제하면서 UI 업데이트 돌리기
 	
 
@@ -112,7 +111,7 @@ void UiManager::render(HDC hdc)
 	}
 }
 
-void UiManager::addUi(UiType uType)
+void UiManager::addUi(UiType uType, int dialogueNum)
 {
 	isUiPrint = true;
 
@@ -123,18 +122,56 @@ void UiManager::addUi(UiType uType)
 		Ui->init(uType);
 		_vUi.push_back(Ui);
 		break;
-
 	case UiType::Warning:
 		Ui = new AlertUI;
 		Ui->init(uType);
 		_vUi.push_back(Ui);
+		break;
+	case UiType::MoiveDialogue:
+		Ui = new Dialogue;
+		Ui->init(uType, dialogueNum);
+		_vUi.push_back(Ui);
+		break;
+	case UiType::EventDialogue:
+		bool save = false;
+		if (_vEventNum.empty())
+		{
+			cout << "저장완료1" << endl;
+			Ui = new Dialogue;
+			Ui->init(uType, dialogueNum);
+			_vEventNum.push_back(dialogueNum);
+			_vUi.push_back(Ui);
+		}
+		else
+		{
+			for (auto num = _vEventNum.begin(); num != _vEventNum.end(); ++num)
+			{
+				if (*num != dialogueNum);
+				else save = true;
+			}
+
+			if (!save)
+			{
+				cout << "저장완료2" << endl;
+				Ui = new Dialogue;
+				Ui->init(uType, dialogueNum);
+				_vEventNum.push_back(dialogueNum);
+				_vUi.push_back(Ui);
+			}
+
+			else
+			{
+				cout << "이미 출력됨" << endl;
+				isUiPrint = false;
+			}
+		}
 		break;
 	}
 }
 
 void UiManager::printEvent(int eventNum)
 {
-	chageIsUiMode();
+	// chageIsUiMode();
 
 	mEventNum = eventNum;
 	mCurrentLine = 0;

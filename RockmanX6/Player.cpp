@@ -120,11 +120,11 @@ void Player::render(HDC memDC)
 		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100 + 20, temp, "DNF_M_18", RGB(0, 255, 255));
 
 		
-		// if (ladderDone) temp = "Done";
-		// else temp = "False";
+		if (UIMANAGER->getUiNull()) temp = "비어있음";
+		else temp = "있음";
 
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100 + 45, "애니 프레임", "DNF_M_18", RGB(0, 255, 255));
-		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100 + 65, to_string(pStatus.player->getFrameX()), "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100 + 45, "UI 비어있음", "DNF_M_18", RGB(0, 255, 255));
+		TEXTMANAGER->drawTextColor(memDC, WINSIZE_X / 50 + 660, WINSIZE_Y / 100 + 65, temp, "DNF_M_18", RGB(0, 255, 255));
 
 
 		
@@ -524,17 +524,6 @@ void Player::applyForce(void)
 			}
 		}
 	}
-	
-	
-
-
-
-	
-}
-
-void Player::spawn(int x, int y)
-{
-	// Do Nothing!!
 }
 
 void Player::currentAnimChange(void)

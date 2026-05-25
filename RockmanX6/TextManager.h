@@ -35,9 +35,15 @@ public:
 	int charIndex;
 
 	int dialogueIndex;
+	int eventIndex;
 
-	bool showLine;
-	bool writeFinish;
+	bool movieShowLine;
+	bool eventShowLine;
+
+	bool movieWriteFinish;
+	bool eventWriteFinish;
+
+	int mMovieNum;
 	int mEventNum;
 
 	int mCurrentLine;
@@ -61,10 +67,17 @@ public:
 	wstring mBGM;
 	wstring mSFX;
 
-private:
+	bool isTalk;
 
+private:
 	typedef vector<wstring> vDialogue;
 	typedef vector<wstring>::iterator viDialogue;
+
+	typedef map<int, vector<wstring>> mMoiveDialogue;
+	typedef map<int, vector<wstring>>::iterator miMovietDialogue;
+
+	typedef vector<wstring> vEvent;
+	typedef vector<wstring>::iterator viEvent;
 
 	typedef map<int, vector<wstring>> mEventDialogue;
 	typedef map<int, vector<wstring>>::iterator miEventDialogue;
@@ -77,9 +90,14 @@ private:
 	COLORREF _textColor;
 
 private:
-
 	vDialogue _vDialogue;
 	viDialogue _viDialogue;
+
+	mMoiveDialogue _mMovieDialogue;
+	miMovietDialogue _miMovieDialogue;
+
+	vEvent _vEvent;
+	viEvent _viEvent;
 
 	mEventDialogue _mEventDialogue;
 	miEventDialogue _miEventDialogue;
@@ -87,6 +105,8 @@ private:
 public:
 	HRESULT init(void);
 	void release(void);
+
+	void textReset(void);
 
 	void addFontSetting(string settingName, FontSetting setting);
 	void addFontSetting(string settingName, FontSetting setting, bool italic);
@@ -96,25 +116,46 @@ public:
 	void drawText(HDC hdc, int destX, int destY, string printString, string fontName);
 	void drawTextColor(HDC hdc, int destX, int destY, string printString, string fontName, COLORREF color);
 
-	void drawName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
-	void drawDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
-	
+	void drawMovieName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
+	void drawEventName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
 
+	void drawMovieDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
+	void drawEventDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
+	
 	void drawTextInRect(HDC hdc, RECT rect, string printString, string settingName, bool isCenter = true);
 
 	void setDefaultFont(HDC hdc);
 	void setTextColor(COLORREF color) { _textColor = color; }
 	void setTextAlign(UINT textAlign) { _textAlign = textAlign; }
 
-	void ReadEvent(void);
-	void ReadDialogue(void);
+	void ReadMovie(int num);
+	void ReadEvent(int num);
+
+	void ReadMovieDialogue(void);
+	void ReadEventDialogue(void);
 
 	COLORREF changeFontColor(wstring name);
 
-	inline void ReadEnd(void) { this->showLine = true; }
-	inline bool ReadComplete(void) { return this->showLine; }
+	inline void ReadMovieEnd(void)
+	{
+		charIndex = mDialogue.size();
+		movieShowLine = true;
+	}
 
-	inline bool EventComplete(void) { return writeFinish; }
+	inline void ReadEventEnd(void)
+	{
+		charIndex = mDialogue.size();
+		eventShowLine = true;
+	}
+
+	inline bool ReadMovieComplete(void) { return this->movieShowLine; }
+	inline bool ReadEventComplete(void) { return this->eventShowLine; }
+
+	bool EventComplete(void);
+	bool MovieComplete(void);
+	
+	void setMovieComplete(bool finish);
+	void setEventComplete(bool finish);
 
 	wstring Utf8ToWstring(const std::string& str);
 	string WStringToString(const std::wstring& wstr);

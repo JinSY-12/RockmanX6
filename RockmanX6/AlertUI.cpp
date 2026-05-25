@@ -98,7 +98,6 @@ void AlertUI::Warning()
 
 		else
 		{
-			cout << "??" << endl;
 			uiDead = true;
 			nextSprite = 0;
 		}

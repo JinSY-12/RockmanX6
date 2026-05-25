@@ -153,10 +153,8 @@ void BossBase::deadAnim(void)
 		{
 			if (CAMERAMANAGER->isPadeInComplete())
 			{
-				cout << "클리어 준비 중" << endl;
 				if (effectTimer.update(5.0f))
 				{
-					cout << "클리어 끝나는 중" << endl;
 					status.deadDone = true;
 				}
 			};
@@ -191,16 +189,17 @@ void BossBase::battleStart(void)
 {
 	if (status.hp <= status.maxHp)
 	{
-		UIMANAGER->setIsUiPrint(true);
+		// UIMANAGER->setIsUiPrint(true);
 		status.hp += 1;
 		SOUNDMANAGER->play("Menu_Dialogue", 0.3f);
 	}
 
 	else
 	{
-		status.hp = status.maxHp;
+		cout << "Battle Start!" << endl;
 		gameStart = true;
 		UIMANAGER->setIsUiPrint(false);
+		UIMANAGER->setFreeze(false);
 		SOUNDMANAGER->play(BossBGM, 0.3f);
 		SOUNDMANAGER->setCurrentBGM(BossBGM);
 	}

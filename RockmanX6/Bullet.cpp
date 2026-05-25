@@ -49,7 +49,7 @@ HRESULT Burster::init(BulletType type, int x, int y, bool isRight, float velocit
 		bStatus.shape = new GImage;
 		bStatus.shape = IMAGEMANAGER->findImage("X_Burster1")->cloneImage();
 		bStatus.faction = BulletFaction::Player;
-		bStatus.demage = 50;
+		bStatus.demage = 1;
 		bStatus.bType = type;
 		break;
 
@@ -123,7 +123,7 @@ HRESULT SiegeShoot::init(BulletType type, int x, int y, bool isRight, float velo
 {
 	bStatus.shape = new GImage;
 	bStatus.shape = IMAGEMANAGER->findImage("SFX_SiegeShootFire")->cloneImage();
-	bStatus.demage = 2;
+	bStatus.demage = 100;
 
 	bStatus.type = BulletSize::Large;
 	bStatus.bType = type;
