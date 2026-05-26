@@ -111,7 +111,6 @@ void MovieScene::update(void)
 		switch (SceneNum)
 		{
 		case 0:
-			// UIMANAGER->addUi(UiType::MoiveDialogue, 1);
 			SCENEMANAGER->changeScene("스테이지", PlayerType::X, BossType::Intro);
 			CAMERAMANAGER->setStage(BossType::Intro);
 			break;

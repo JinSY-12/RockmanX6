@@ -61,6 +61,7 @@ public:
 	RECT mGameNameArea;
 	RECT mGameTextArea;
 
+	wstring mDirect;
 	wstring mCharterName;
 	wstring mDialogue;
 	wstring mVoice;
@@ -159,6 +160,10 @@ public:
 
 	wstring Utf8ToWstring(const std::string& str);
 	string WStringToString(const std::wstring& wstr);
+
+	wstring getDirection(void) { return mDirect; }
+	bool getIsTalk(void) { return isTalk; }
+	wstring getCharterName(void) { return mCharterName; }
 
 	TextManager() {}
 	~TextManager() {}

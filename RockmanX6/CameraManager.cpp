@@ -365,7 +365,6 @@ void CameraManager::setMaxCameraRange()
                     zoneNumber = 4;
                     zoneName = "Zone 4";
 
-                    // setCheckPoint(5080 * SCALE_FACTOR, 480 * SCALE_FACTOR, zoneNumber);
                 }
             }
 

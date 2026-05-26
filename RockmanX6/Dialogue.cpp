@@ -28,7 +28,11 @@ HRESULT Dialogue::init(UiType uType, int sceneNum)
 		TEXTMANAGER->textReset();
 		textIcon = IMAGEMANAGER->findImage("Next");
 		uiDead = false;
-		
+		eventSetting();
+
+		left = IMAGEMANAGER->findImage(leftCharName+ "Dialogue_Idle");
+		right = IMAGEMANAGER->findImage(rightCharName + "Dialogue_Idle");
+
 		textBGOpen = false;
 		faceOnOff = false;
 		break;
@@ -106,11 +110,54 @@ void Dialogue::update(void)
 			}
 
 			if (KEYMANAGER->isOnceKeyDown(VK_RETURN)) TEXTMANAGER->setEventComplete(true);
-			if (TEXTMANAGER->EventComplete() == true) bg->reversePlay(0.02f);
+			if (TEXTMANAGER->EventComplete() == true)
+			{
+				bg->reversePlay(0.02f);
+				faceOnOff = false;
+			}
 			if (bg->getChangeReady())
 			{
 				uiDead = true;
 				bg->setChangeReady(false);
+			}
+
+			if (faceOnOff)
+			{
+				left->play(leftAnimSpeed);
+				right->play(rightAnimSpeed);
+
+				if (prevTalk != TEXTMANAGER->getIsTalk())
+				{
+					if(TEXTMANAGER->getIsTalk())
+					{
+						if (TEXTMANAGER->getDirection() == L"Left")
+						{
+							left = IMAGEMANAGER->findImage(leftCharName + "Dialogue_Talk");
+							leftAnimSpeed = 0.06f;
+						}
+						else
+						{
+							right = IMAGEMANAGER->findImage(rightCharName + "Dialogue_Talk");
+							rightAnimSpeed = 0.06f;
+						}
+					}
+
+					else
+					{
+						if (TEXTMANAGER->getDirection() == L"Left")
+						{
+							left = IMAGEMANAGER->findImage(leftCharName + "Dialogue_Idle");
+							leftAnimSpeed = 0.16f;
+						}
+						else
+						{
+							right = IMAGEMANAGER->findImage(rightCharName + "Dialogue_Idle");
+							rightAnimSpeed = 0.16f;
+						}
+					}
+
+					prevTalk = TEXTMANAGER->getIsTalk();
+				}
 			}
 		}
 	}
@@ -139,7 +186,12 @@ void Dialogue::render(HDC hdc)
 	else if (type == UiType::EventDialogue)
 	{
 		bg->frameAlphaRender(hdc, (WINSIZE_X - bg->getFrameWidth()) / 2, WINSIZE_Y * 0.6, bg->getFrameX(), 0, 140);
-		
+		if (faceOnOff)
+		{
+			left->frameRender(hdc, WINSIZE_X * 0.15, WINSIZE_Y * 0.2, left->getFrameX(), 1);
+			right->frameRender(hdc, WINSIZE_X * 0.85 - right->getFrameWidth(), WINSIZE_Y * 0.2, right->getFrameX(), 0);
+		}
+
 		// 텍스트 랜더 파트
 		//TIMEMANAGER->getWorldTime() - mTextDelay 조절 하는 걸로 대화 연타 속도 조절 가능
 		if (TIMEMANAGER->getWorldTime() - mTextDelay > 1.1f)
@@ -160,5 +212,26 @@ void Dialogue::render(HDC hdc)
 void Dialogue::movieReady(void)
 {
 
+}
+
+void Dialogue::eventSetting(void)
+{
+	prevDirection = L"";
+	prevTalk = false;
+
+	leftAnimSpeed = 0.16f;
+	rightAnimSpeed = 0.16f;
+
+	switch(dialogue.sceneNum)
+	{
+	case 0:
+		leftCharName = "Alia_";
+		rightCharName = "X_";
+		break;
+	case 1:
+		leftCharName = "X_";
+		rightCharName = "HighMax_";
+		break;
+	}
 }
 

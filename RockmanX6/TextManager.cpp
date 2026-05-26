@@ -366,11 +366,6 @@ void TextManager::drawMovieDialogue(HDC hdc, int destX, int destY, int eventNum,
 		else if (mDialogue.size() == charIndex) movieShowLine = true;
 	}
 
-	else
-	{
-		cout << "????????????????" << endl;
-	}
-
 	// 기본 폰트로 리셋
 	setDefaultFont(hdc);
 }
@@ -581,35 +576,42 @@ void TextManager::ReadEventDialogue(void)
 		wstring line = _vEvent[eventIndex++];
 		wstring temp;
 
-		size_t pos = line.find(':');
+		size_t pos = line.find('#');
 		if (pos != wstring::npos)
 		{
-			mCharterName = line.substr(0, pos);
+			mDirect = line.substr(0, pos);
 			temp = line.substr(pos + 1);
 
-			pos = temp.find('/');
+			pos = temp.find(':');
 			if (pos != wstring::npos)
 			{
-				mDialogue = temp.substr(0, pos);
+				mCharterName = temp.substr(0, pos);
 				line = temp.substr(pos + 1);
 
 				pos = line.find('/');
 				if (pos != wstring::npos)
 				{
-					mVoice = line.substr(0, pos);
+					mDialogue = line.substr(0, pos);
 					temp = line.substr(pos + 1);
 
 					pos = temp.find('/');
 					if (pos != wstring::npos)
 					{
-						mBGM = temp.substr(0, pos);
-						mSFX = temp.substr(pos + 1);
+						mVoice = temp.substr(0, pos);
+						line = temp.substr(pos + 1);
+
+						pos = line.find('/');
+						if (pos != wstring::npos)
+						{
+							mBGM = line.substr(0, pos);
+							mSFX = line.substr(pos + 1);
+						}
+						else mSFX = L"";
 					}
-					else mSFX = L"";
+					else mBGM = L"";
 				}
-				else mBGM = L"";
+				else mVoice = L"";
 			}
-			else mVoice = L"";
 		}
 		else
 		{

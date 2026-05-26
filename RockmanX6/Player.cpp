@@ -1414,6 +1414,8 @@ void Player::reduceHp(int damage)
 		status.dead = true;
 		pStatus.invincible = true;
 		pStatus.movable = false;
+		isCharging = false;
+		chargeCount = 0.0f;
 	}
 }
 

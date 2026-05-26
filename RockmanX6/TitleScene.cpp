@@ -222,6 +222,19 @@ void TitleScene::addImage(void)
 	//////////////////////////////////
 
 	//////////////////////////////////
+	// ¸Ó±×¼¦
+	//////////////////////////////////
+
+	IMAGEMANAGER->addFrameImage("X_Dialogue_Idle", "Resources/Image/HUD/X_Dialogue_Idle.bmp", 390 * SCALE_FACTOR, 128 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("X_Dialogue_Talk", "Resources/Image/HUD/X_Dialogue_Talk.bmp", 312 * SCALE_FACTOR, 128 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	
+	IMAGEMANAGER->addFrameImage("Alia_Dialogue_Idle", "Resources/Image/HUD/Alia_Dialogue_Idle.bmp", 390 * SCALE_FACTOR, 128 * SCALE_FACTOR, 5, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("Alia_Dialogue_Talk", "Resources/Image/HUD/Alia_Dialogue_Talk.bmp", 312 * SCALE_FACTOR, 128 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+	
+	IMAGEMANAGER->addFrameImage("HighMax_Dialogue_Idle", "Resources/Image/HUD/HighMax_Dialogue_Idle.bmp", 78 * SCALE_FACTOR, 128 * SCALE_FACTOR, 1, 2, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("HighMax_Dialogue_Talk", "Resources/Image/HUD/HighMax_Dialogue_Talk.bmp", 312 * SCALE_FACTOR, 128 * SCALE_FACTOR, 4, 2, true, MAGENTA);
+
+	//////////////////////////////////
 	// ¿¢½º
 	//////////////////////////////////
 	// ¿¢½º ÀÌ¹ÌÁö
@@ -563,7 +576,7 @@ void TitleScene::addSound(void)
 	SOUNDMANAGER->addSound("SFX_DeathBallCharge", "Resources/Sound/SFX/Enemy/SFX_DeathBallCharge.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_SiegeShootFire", "Resources/Sound/SFX/Enemy/SFX_SiegeShootFire.wav", false, false);
 	SOUNDMANAGER->addSound("SFX_RingSound", "Resources/Sound/SFX/Enemy/SFX_RingSound.wav", false, false);
-	SOUNDMANAGER->addSound("SFX_HighMaxRun", "Resources/Sound/SFX/Enemy/SFX_HighMaxRun.wav", false, false);
+	SOUNDMANAGER->addSound("SFX_HighMaxRun", "Resources/Sound/SFX/Enemy/SFX_HighMaxAppear.wav", false, false);
 	
 }
 

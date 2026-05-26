@@ -16,6 +16,5 @@ public:
 	void attack(void) override;
 
 	void checkAttCollision(void) override;
-
 };
 

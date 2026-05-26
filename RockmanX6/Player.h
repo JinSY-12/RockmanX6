@@ -208,6 +208,9 @@ protected:
 	const float attackDuration = 0.4f;
 	bool attCheckOnce;
 
+	float chargeCount;
+	float chargeSpeed;
+
 	float now;
 	float lastShootTime;
 	float shotCoolDown;

@@ -125,16 +125,6 @@ void HighMax::update(void)
 			}
 		
 		}
-		/*
-		else
-		{
-			if (appearanceDone && !gameStart)
-			{
-				hpBar.setBossVisible(true);
-				battleStart();
-			}
-		}
-		*/
 	}
 	
 	// 죽었다고 판단되면
@@ -232,6 +222,7 @@ void HighMax::bossAppearance(void)
 			// UIMANAGER->setIsUiPrint(true);
 			musciStart = true;
 			// UIMANAGER->setFreeze(false);
+			SOUNDMANAGER->play("SFX_HighMaxRun", 0.4f);
 		}
 	}
 }

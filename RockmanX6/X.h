@@ -4,8 +4,7 @@
 class X : public Player
 {
 private:
-	float chargeCount;
-	float chargeSpeed;
+	
 
 	string burstSound;
 	

@@ -123,7 +123,7 @@ HRESULT SiegeShoot::init(BulletType type, int x, int y, bool isRight, float velo
 {
 	bStatus.shape = new GImage;
 	bStatus.shape = IMAGEMANAGER->findImage("SFX_SiegeShootFire")->cloneImage();
-	bStatus.demage = 100;
+	bStatus.demage = 4;
 
 	bStatus.type = BulletSize::Large;
 	bStatus.bType = type;
@@ -188,7 +188,7 @@ HRESULT DeathBall::init(BulletType type, int x, int y, bool isRight, float veloc
 {
 	bStatus.shape = new GImage;
 	bStatus.shape = IMAGEMANAGER->findImage("SFX_DeathBall")->cloneImage();
-	bStatus.demage = 4;
+	bStatus.demage = 6;
 
 	bStatus.type = BulletSize::Large;
 	bStatus.bType = type;

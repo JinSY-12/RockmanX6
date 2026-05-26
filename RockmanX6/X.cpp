@@ -406,7 +406,10 @@ void X::update(void)
 				if (!isCharging && chargeCount >= 0.3f)
 				{
 					isCharging = true;
-					SOUNDMANAGER->play("SFX_X_BurstCharge", 0.5f);
+					if (isCharging)
+					{
+						SOUNDMANAGER->play("SFX_X_BurstCharge", 0.5f);
+					}
 				}
 			}
 

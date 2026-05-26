@@ -746,10 +746,7 @@ void StageScene::stageCollision(void)
 						// ¿ÞÂÊ
 						// eManager.spawnBoss(BossType::Intro, 6110 * SCALE_FACTOR, -20 * SCALE_FACTOR);
 						// ¿À¸¥ÂÊ
-						//if (eManager.getBoss().size() == 0) 
 						eManager.spawnBoss(BossType::Intro, 6340 * SCALE_FACTOR, -20 * SCALE_FACTOR);
-						//else eManager.getBoss()[0]->spawn(6340 * SCALE_FACTOR, -20 * SCALE_FACTOR);
-						
 						SOUNDMANAGER->stopBGM();
 					}
 					obj->animOncePlay(true);
@@ -851,7 +848,6 @@ void StageScene::stageCollision(void)
 				SOUNDMANAGER->play(soundName, 0.2f);
 				EFFECTMANAGER->spawnEffect(etype, (*it)->getBulletPosX(), (*it)->getBulletPosY(),
 					(*it)->getBulletWidth(), (*it)->getBulletHeight(), (*it)->getBulletDir());
-				
 				break;
 			}
 		}

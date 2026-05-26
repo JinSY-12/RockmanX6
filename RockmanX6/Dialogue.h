@@ -34,6 +34,9 @@ private:
 
 	GImage* textIcon;
 
+	string leftCharName;
+	string rightCharName;
+
 	bool nextAlbe;
 	float mTextDelay;
 
@@ -41,6 +44,12 @@ private:
 
 	bool textBGOpen;
 	bool faceOnOff;
+
+	wstring prevDirection;
+	bool prevTalk;
+
+	float leftAnimSpeed;
+	float rightAnimSpeed;
 
 public:
 	HRESULT init(UiType uType, int sceneNum) override;
@@ -50,5 +59,6 @@ public:
 	void render(HDC hdc) override;
 
 	void movieReady(void);
+	void eventSetting(void);
 };
 
