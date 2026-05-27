@@ -230,6 +230,7 @@ protected:
 	bool lastKeyIsRight;
 	bool inputEnabled;
 	bool actionLock;
+	bool isCutScene;
 
 	// 점프 관련
 	float wallkickTimer;

@@ -17,8 +17,6 @@ HRESULT MovieScene::init(int movieNum)
 	addUiComplete = false;
 	movieReady();
 
-	// UIMANAGER->printEvent(SceneNum);
-	
 	return S_OK;
 }
 
@@ -111,6 +109,7 @@ void MovieScene::update(void)
 		switch (SceneNum)
 		{
 		case 0:
+			SOUNDMANAGER->stopBGM();
 			SCENEMANAGER->changeScene("스테이지", PlayerType::X, BossType::Intro);
 			CAMERAMANAGER->setStage(BossType::Intro);
 			break;
@@ -140,6 +139,7 @@ void MovieScene::render(void)
 		else if (testNum == 3)
 		{
 			SOUNDMANAGER->play("Siren", 0.5f);
+			SOUNDMANAGER->setCurrentBGM("Siren");
 		}
 
 		testNum++;

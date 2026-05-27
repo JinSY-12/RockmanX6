@@ -4,8 +4,6 @@
 class X : public Player
 {
 private:
-	
-
 	string burstSound;
 	
 	// 버스터 연사 속도 조절
@@ -14,6 +12,9 @@ private:
 
 	// 컷씬 확인용 변수
 	bool cameraMoveDone;
+
+	bool energyOnOff;
+	bool auraOnOff;
 
 public:
 	HRESULT init(int x, int y) override;
@@ -35,7 +36,8 @@ public:
 	// 애니메이션 관련
 	void frameCheck(void);
 	void setHitBox(void) override;
-	
+	void chargeAuraCheck(void);
+
 	// 이미지 컬러 변경
 	void colorSetting(void) override;
 	void colorChange(void) override;

@@ -147,21 +147,6 @@ void Player::move(bool direction)
 		{
 			if (status.lookRight && !pStatus.touchRight) pStatus.velocityX = dashSpeed;
 			else if (!status.lookRight && !pStatus.touchLeft) pStatus.velocityX = -dashSpeed;
-			// 이동 막기 - 테스트용
-			// pStatus.velocityX = 0;
-		}
-
-		else if (pStatus.isDash)
-		{
-			if (status.lookRight && !pStatus.touchRight) pStatus.velocityX = lerp(pStatus.velocityX, dashSpeed, 1.0f);
-			else if (!status.lookRight && !pStatus.touchLeft) pStatus.velocityX = -lerp(pStatus.velocityX, dashSpeed, 1.0f);
-			else
-			{
-				currentState = CharacterState::Idle;
-				pStatus.velocityX = 0.0f;
-			}
-			// 이동 막기 - 테스트용
-			// pStatus.velocityX = 0;
 		}
 
 		else if (!pStatus.isDash)
@@ -170,9 +155,18 @@ void Player::move(bool direction)
 
 			float moveSpeed;
 			moveSpeed = direction ? pStatus.moveSpeed : -pStatus.moveSpeed;
-			// 이동 막기 - 테스트용
-			// moveSpeed = 0;
 			pStatus.velocityX = moveSpeed;
+		}
+
+		else if (pStatus.isDash && pStatus.isOnGround && currentState == CharacterState::Dash)
+		{
+			if (status.lookRight && !pStatus.touchRight) pStatus.velocityX = lerp(pStatus.velocityX, dashSpeed, 1.0f);
+			else if (!status.lookRight && !pStatus.touchLeft) pStatus.velocityX = -lerp(pStatus.velocityX, dashSpeed, 1.0f);
+			else
+			{
+				currentState = CharacterState::DashEnd;
+				pStatus.isDash = false;
+			}
 		}
 
 		pStatus.isWallSlide = false;
@@ -192,9 +186,8 @@ void Player::jump(void)
 		pStatus.hitBox.bottom -= 8;
 		pStatus.hitBox.top -= 8;
 		pos.y -= 8;
-		// charPos.y -= 8;
 
-		if (pStatus.isDash) pStatus.isJumpDash = true;
+		if (pressDash) pStatus.isJumpDash = true;
 	}
 
 	// 벽차기
@@ -359,7 +352,6 @@ void Player::wallKick(void)
 	int kickOffset;
 	kickOffset = status.lookRight ? 0 : pStatus.player->getFrameWidth() / 2;
 	EFFECTMANAGER->spawnEffect(EffectType::WallKick, pos.x - kickOffset, pos.y, pStatus.player->getFrameWidth(), pStatus.player->getFrameHeight(), status.lookRight);
-	// EFFECTMANAGER->spawnEffect(EffectType::WallKick, charPos.x - kickOffset, charPos.y, pStatus.player->getFrameWidth(), pStatus.player->getFrameHeight(), pStatus.lookRight);
 
 	pStatus.wallKickRight = status.lookRight;
 
@@ -976,6 +968,13 @@ void Player::currentAnimChange(void)
 			break;
 		}
 
+		if (pStatus.player->getChangeReady())
+		{
+			currentState = CharacterState::Idle;
+			pStatus.player->setChangeReady(false);
+			isMoving = false;
+		}
+
 		// 프레임 별 버스터 발사 위치 설정
 		switch (pStatus.player->getFrameX())
 		{
@@ -1310,7 +1309,11 @@ void Player::currentAnimChange(void)
 	{
 		if (TIMEMANAGER->getWorldTime() - attackTimer >= attackDuration)
 		{
-			if (currentState == CharacterState::Walk) attState = SholderState::None;
+			if (currentState == CharacterState::Walk)
+			{
+				cout << "!!" << endl;
+				attState = SholderState::None;
+			}
 			else if (currentState == CharacterState::JumpUp) attState = SholderState::None;
 			else if (currentState == CharacterState::FallingDown) attState = SholderState::None;
 			else if (currentState == CharacterState::WallSlide) attState = SholderState::None;
@@ -1323,8 +1326,10 @@ void Player::currentAnimChange(void)
 		}
 	}
 
-	else if (attState == SholderState::None)
+	if (attState == SholderState::None)
 	{
+		cout << "??" << endl;
+
 		pStatus.isAttack = false;
 		pStatus.isBurst = false;
 	}
@@ -1405,6 +1410,7 @@ void Player::reduceHp(int damage)
 		status.hp = 0;
 
 		SOUNDMANAGER->play("Voice_" + pStatus.charName + "Dead");
+		SOUNDMANAGER->stop("SFX_X_BurstCharge");
 
 		animOffset.x = 0;
 		animOffset.y = 0;
@@ -1414,8 +1420,11 @@ void Player::reduceHp(int damage)
 		status.dead = true;
 		pStatus.invincible = true;
 		pStatus.movable = false;
+		inputEnabled = false;
 		isCharging = false;
 		chargeCount = 0.0f;
+		chargeEffectAlpha = 0;
+		chargeAuraAlpha = 0;
 	}
 }
 
@@ -1687,9 +1696,6 @@ void Player::afterImageControl(void)
 			{
 				int x = pos.x;
 				int y = pos.y;
-
-				// int x = charPos.x;
-				// int y = charPos.y;
 				int frameX = pStatus.player->getFrameX();
 				int frameY = pStatus.player->getFrameY();
 				string key = currentAnim;

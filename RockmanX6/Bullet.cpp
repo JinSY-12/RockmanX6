@@ -295,8 +295,6 @@ void DeathBubble::update(void)
 {
 	bStatus.shape->play(bStatus.animSpeed);
 
-	
-
 	bStatus.pos.x += bStatus.velocityX;
 	bStatus.pos.y += bStatus.velocityY;
 	bStatus.animSpeed = 0.06f;
@@ -338,9 +336,6 @@ HRESULT DeathRing::init(BulletType type, int x, int y, bool isRight, float veloc
 	if (isRight) bStatus.hitBox = RectMakeCenter(x, y - bStatus.height / 2, bStatus.width, bStatus.height);
 	else bStatus.hitBox = RectMakeCenter(x - bStatus.width + 4 * SCALE_FACTOR, y - bStatus.height / 2, bStatus.width, bStatus.height);
 
-	// if (isRight) bStatus.hitBox = RectMakeCenter(x, y - bStatus.shape->getFrameHeight() / 2, bStatus.shape->getFrameWidth(), bStatus.shape->getFrameHeight());
-	// else bStatus.hitBox = RectMakeCenter(x - bStatus.width + 4 * SCALE_FACTOR, y - bStatus.shape->getFrameHeight() / 2, bStatus.shape->getFrameWidth(), bStatus.shape->getFrameHeight());
-
 	bStatus.isFire = true;
 
 	return S_OK;
@@ -365,59 +360,3 @@ void DeathRing::update(void)
 	else if (bStatus.hitBox.top > WINSIZE_Y + 30 * SCALE_FACTOR) bStatus.isFire = false;
 	else if (bStatus.hitBox.bottom < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
 }
-
-/*
-HRESULT DeathRing::init(BulletType type, int x, int y, bool isRight, float velocityX, float velocityY)
-{
-	bStatus.shape = new GImage;
-	bStatus.shape = IMAGEMANAGER->findImage("SFX_DeathRing")->cloneImage();
-	bStatus.demage = 2;
-
-	bStatus.type = BulletSize::Large;
-	bStatus.bType = type;
-	bStatus.faction = BulletFaction::Player;
-
-	bStatus.width = bStatus.shape->getFrameWidth();
-	bStatus.height = bStatus.shape->getFrameHeight();
-
-	bStatus.rightDirect = isRight;
-
-	bStatus.pos.x = x;
-	bStatus.pos.y = y;
-
-	bStatus.velocityX = velocityX * bStatus.bulletSpeed;
-	bStatus.velocityY = velocityY * bStatus.bulletSpeed;
-
-	bStatus.hitBox = RectMakeCenter(x, y - bStatus.height / 2, bStatus.width, bStatus.height);
-	
-	bStatus.isFire = true;
-
-	return S_OK;
-}
-
-void DeathRing::update(void)
-{
-	bStatus.shape->play(bStatus.animSpeed);
-
-	bStatus.pos.x += bStatus.velocityX;
-	bStatus.pos.y += bStatus.velocityY;
-
-	cout << "X :" << bStatus.pos.x / 3 << endl;
-	cout << "Y :" << bStatus.pos.y / 3 << endl;
-
-	cout << "LEFT :" << bStatus.hitBox.left << endl;
-	cout << "TOP :" << bStatus.hitBox.top << endl;
-
-	bStatus.hitBox.left = bStatus.pos.x - bStatus.width / 2 - CAMERAMANAGER->getCameraPos().x;
-	bStatus.hitBox.right = bStatus.pos.x + bStatus.width / 2 - CAMERAMANAGER->getCameraPos().x;
-
-	bStatus.hitBox.top = bStatus.pos.y - bStatus.height / 2 - CAMERAMANAGER->getCameraPos().y;
-	bStatus.hitBox.bottom = bStatus.pos.y + bStatus.height / 2 - CAMERAMANAGER->getCameraPos().y;
-
-	if (bStatus.hitBox.left > WINSIZE_X + 30 * SCALE_FACTOR) bStatus.isFire = false;
-	else if (bStatus.hitBox.right < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
-	else if (bStatus.hitBox.top > WINSIZE_Y + 30 * SCALE_FACTOR) bStatus.isFire = false;
-	else if (bStatus.hitBox.bottom < 0 - 30 * SCALE_FACTOR) bStatus.isFire = false;
-
-}
-*/

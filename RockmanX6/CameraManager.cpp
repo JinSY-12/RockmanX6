@@ -134,15 +134,8 @@ void CameraManager::update(void)
         return;
     }
 
-    if (KEYMANAGER->isOnceKeyDown('Y'))
-    {
-        cameraMove = (cameraMove == true) ? false : true; 
-    }
 
-    // 보스전 카메라 무빙 테스트
-
-    
-
+    // 보스전 카메라 무빙
     if (cameraMoving)
     {
         if (forceCameraMove(locationTestX, locationTestBottom, locationTestRight, locationTestY))
@@ -164,14 +157,6 @@ void CameraManager::update(void)
     
     if(!test) setMaxCameraRange();
 
-    if (KEYMANAGER->isOnceKeyDown('1'))
-    {
-        test = !test;
-        cameraRange.top = 0 * SCALE_FACTOR;
-        cameraRange.bottom = mapSize.y;
-        cameraRange.left = 0 * SCALE_FACTOR;
-        cameraRange.right = mapSize.x;
-    }
 
     cameraOffset();
 }

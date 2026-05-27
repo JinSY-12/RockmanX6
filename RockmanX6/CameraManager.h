@@ -190,7 +190,6 @@ public:
 		cameraMove = true;
 	}
 
-
 	CameraManager() {}
 	~CameraManager() {}
 };

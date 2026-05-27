@@ -66,8 +66,8 @@ void X::update(void)
 				{
 					pStatus.player->resume();
 					currentState = CharacterState::Idle;
+					isCutScene = false;
 					appearnaceEvent();
-					// inputEnabled = true;
 				}
 			}
 			else delayTimer = TIMEMANAGER->getWorldTime();
@@ -303,7 +303,7 @@ void X::update(void)
 
 				else
 				{
-					if (!pStatus.isJumpDash && pStatus.isDash)
+					if (!pStatus.isJumpDash && pStatus.isDash && currentState == CharacterState::Dash)
 					{
 						pStatus.isDash = false;
 						aniDash = false;
@@ -370,65 +370,6 @@ void X::update(void)
 
 			if (TIMEMANAGER->getWorldTime() - chargeBurstCount >= 0.3f) chargeBurstDelay = false;
 
-			if (KEYMANAGER->isOnceKeyDown('C'))		// 'ㅊ' 검색을 위한 주석ㅋㅋㅋ
-			{
-				attackTimer = TIMEMANAGER->getWorldTime();
-				attCheckOnce = true;
-
-				if (normalBurstAble == true && chargeBurstDelay == false && bManager->getMaxBullets() < 3) attack();
-			}
-
-			if (KEYMANAGER->isStayKeyDown('C') && attCheckOnce == true)
-			{
-				// 시작하기전에 미리 누르고 있으면 차지 안되게
-				if (attCheckOnce)
-				{
-					// 차지
-					chargeCount += chargeSpeed;
-
-					if (chargeCount >= 0.3f && chargeCount < 1.0f)
-					{
-						chargeEffectAlpha = 255;
-						chargeEffect->play(0.02f);
-					}
-
-					else if (chargeCount >= 1.0f)
-					{
-						chargeEffectAlpha = 255;
-						chargeEffect->play(0.02f);
-
-						chargeAuraAlpha = 255;
-						chargeAura->play(0.03f);
-					}
-
-				}
-
-				if (!isCharging && chargeCount >= 0.3f)
-				{
-					isCharging = true;
-					if (isCharging)
-					{
-						SOUNDMANAGER->play("SFX_X_BurstCharge", 0.5f);
-					}
-				}
-			}
-
-			if (KEYMANAGER->isOnceKeyUp('C') && attCheckOnce == true)
-			{
-				// 차지 시간에 따른 버스터 발사
-				chargeBurst();
-				chargeEffectAlpha = 0;
-				chargeAuraAlpha = 0;
-
-				chargeEffect->setFrameX(0);
-				chargeAura->setFrameX(0);
-				SOUNDMANAGER->stop("SFX_X_BurstCharge");
-				chargeCount = 0.0f;
-				isCharging = false;
-				attCheckOnce = false;
-				attCheckOnce = true;
-			}
-
 			if (KEYMANAGER->isOnceKeyDown('V'))					// 'ㅍ' 문자 찾기 용
 			{
 				specialAttack();
@@ -439,17 +380,71 @@ void X::update(void)
 #pragma endregion
 #pragma endregion
 
-	if (KEYMANAGER->isOnceKeyUp(VK_DOWN) && pStatus.isOnLadder && ladderDone)
+	if (!status.dead && !isCutScene)
 	{
-		currentState = CharacterState::LadderClimb;
-		pStatus.velocityY = 0.0f;
-	}
+		if (KEYMANAGER->isOnceKeyUp(VK_DOWN) && pStatus.isOnLadder && ladderDone)
+		{
+			currentState = CharacterState::LadderClimb;
+			pStatus.velocityY = 0.0f;
+		}
 
-	if (KEYMANAGER->isOnceKeyUp(VK_UP) && pStatus.isOnLadder)
-	{
-		currentState = CharacterState::LadderClimb;
-		pStatus.velocityY = 0.0f;
+		if (KEYMANAGER->isOnceKeyUp(VK_UP) && pStatus.isOnLadder)
+		{
+			currentState = CharacterState::LadderClimb;
+			pStatus.velocityY = 0.0f;
+		}
+
+		// 버스터 -> 인풋 정지 밖으로 내놓은 이유가 발사만 안되게 하면 되기 때문 + UI출력 중에도 차지가 되게
+		if (KEYMANAGER->isOnceKeyDown('C'))		// 'ㅊ' 검색을 위한 주석ㅋㅋㅋ
+		{
+			if (normalBurstAble == true && chargeBurstDelay == false && bManager->getMaxBullets() < 3) attack();
+		}
+
+		if (KEYMANAGER->isStayKeyDown('C'))
+		{
+			// 차지
+			chargeCount += chargeSpeed;
+
+			if (chargeCount >= 0.3f && chargeCount < 1.0f)
+			{
+				chargeEffectAlpha = 255;
+				energyOnOff = true;
+			}
+
+			else if (chargeCount >= 1.0f)
+			{
+				chargeAuraAlpha = 255;
+				auraOnOff = true;
+			}
+
+			if (!isCharging && chargeCount >= 0.3f)
+			{
+				isCharging = true;
+				if (isCharging)
+				{
+					SOUNDMANAGER->play("SFX_X_BurstCharge", 0.5f);
+				}
+			}
+		}
+
+		if (KEYMANAGER->isOnceKeyUp('C'))
+		{
+			// 차지 시간에 따른 버스터 발사
+			if (inputEnabled) chargeBurst();
+			chargeEffectAlpha = 0;
+			chargeAuraAlpha = 0;
+
+			chargeEffect->setFrameX(0);
+			chargeAura->setFrameX(0);
+			SOUNDMANAGER->stop("SFX_X_BurstCharge");
+			chargeCount = 0.0f;
+			energyOnOff = false;
+			auraOnOff = false;
+			isCharging = false;
+
+		}
 	}
+	
 
 #pragma region Animation Change + SFX Sound Play
 	
@@ -507,6 +502,7 @@ void X::update(void)
 		frameCheck();
 	}
 
+	chargeAuraCheck();
 	multiHitControl();
 	setHitBox();
 	invincibleTimerUpdate();
@@ -539,7 +535,7 @@ void X::dash(bool direction)
 
 void X::attack(void)
 {
-	if (pStatus.movable && !pStatus.isAttack)
+	if (pStatus.movable && !pStatus.isAttack && inputEnabled)
 	{
 		if (pStatus.isOnLadder)	pStatus.velocityY = 0.0f;
 
@@ -557,6 +553,8 @@ void X::attack(void)
 		lastShootTime = now;
 		isCharging = false;
 		pStatus.isBurst = true;
+
+		attackTimer = TIMEMANAGER->getWorldTime();
 
 		EVENTMANAGER->dispatchEvents({EventType::ShootBulltet, &shootEvent});
 	}
@@ -719,6 +717,12 @@ void X::setHitBox(void)
 		if (currentState == CharacterState::WallSlide) pStatus.saberHitBox = RectMake(pStatus.hitBox.right + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
 		else pStatus.saberHitBox = RectMake(pStatus.hitBox.left - saberWidth + saberOffsetX, pStatus.hitBox.bottom - saberHeight + saberOffsetY, saberWidth, saberHeight);
 	}
+}
+
+void X::chargeAuraCheck(void)
+{
+	if(energyOnOff) chargeEffect->play(0.02f);
+	if(auraOnOff) chargeAura->play(0.03f);
 }
 
 void X::colorSetting(void)
@@ -979,6 +983,8 @@ void X::spawn(int x, int y)
 	status.physicalDamage = 1;
 	pStatus.isWarp = true;
 	pStatus.isBurst = false;
+	energyOnOff = false;
+	auraOnOff = false;
 
 	////////////////////
 	// 상태 초기화
@@ -1003,6 +1009,7 @@ void X::spawn(int x, int y)
 	ladderEnd = false;
 	cameraMoveDone = false;
 	warpSoundOnce = false;
+	isCutScene = true;
 
 	// 입력 초기화
 	inputEnabled = false;
@@ -1087,7 +1094,6 @@ void X::specialAttack(void)
 	if (!pStatus.isAttack) // && pStatus.movable)
 	{
 		attState = SholderState::Special;
-		// pStatus.movable = false;
 
 		if (pStatus.isOnGround)
 		{
@@ -1235,8 +1241,7 @@ void X::returnToIdle(void)
 		break;
 
 	case CharacterState::DashEnd:
-		if (pStatus.player->getFrameX() >= pStatus.player->getMaxFrameX())
-			currentState = CharacterState::Idle;
+		// if (pStatus.player->getChangeReady()) currentState = CharacterState::Idle;
 		break;
 
 	case CharacterState::OverPower:
@@ -1254,18 +1259,13 @@ void X::returnToIdle(void)
 
 void X::appearnaceEvent(void)
 {
-	//if (!appearEvent)
+	switch (SCENEMANAGER->getStageBossType())
 	{
-		switch (SCENEMANAGER->getStageBossType())
-		{
-		case BossType::Intro:
-			UIMANAGER->addUi(UiType::EventDialogue, 0);
-			break;
-		default:
-			break;
-		}
-
-		//appearEvent = true;
+	case BossType::Intro:
+		UIMANAGER->addUi(UiType::EventDialogue, 0);
+		break;
+	default:
+		break;
 	}
 }
 
