@@ -13,6 +13,7 @@ HRESULT TextManager::init(void)
 
 	prevLine = -1;
 	charIndex = 0;
+	currentEventLine = 0;
 
 	movieShowLine = false;
 	eventShowLine = false;
@@ -180,11 +181,11 @@ void TextManager::drawTextColor(HDC hdc, int destX, int destY, string printStrin
 	setDefaultFont(hdc);
 }
 
-void TextManager::drawMovieName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
+void TextManager::drawMovieName(HDC hdc, int destX, int destY, string fontName)
 {
 	if (!movieWriteFinish)
 	{
-		if (currentLine >= _mMovieDialogue[eventNum].size())
+		if (dialogueIndex >= _mMovieDialogue[mMovieNum].size())
 		{
 			// 나중에 로딩창으로 바꾸시오
 			SOUNDMANAGER->stop(currentVoice);
@@ -206,7 +207,7 @@ void TextManager::drawMovieName(HDC hdc, int destX, int destY, int eventNum, int
 
 		TextOutW(hdc, destX, destY, mCharterName.c_str(), mCharterName.length());
 
-		if (currentLine != prevLine)
+		if (dialogueIndex != prevLine)
 		{
 			// 텍스트 출력
 			charIndex = 0;
@@ -250,17 +251,19 @@ void TextManager::drawMovieName(HDC hdc, int destX, int destY, int eventNum, int
 				SOUNDMANAGER->play(WStringToString(mSFX), 0.5f);
 				currentSFX = WStringToString(mSFX);
 			}
-			prevLine = currentLine;
+			prevLine = dialogueIndex;
 		}
 	}
 	// 기본 폰트로 리셋
 	setDefaultFont(hdc);
 }
 
-void TextManager::drawEventName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
+void TextManager::drawEventName(HDC hdc, int destX, int destY, string fontName)
 {
-	
-	if (currentLine >= _mEventDialogue[eventNum].size())
+	cout << "이벤트 넘버 : " << mEventNum << endl;
+	cout << "현재 라인 : " << currentEventLine << endl;
+
+	if (currentEventLine >= _mEventDialogue[mEventNum].size())
 	{
 		// 나중에 로딩창으로 바꾸시오
 		SOUNDMANAGER->stop(currentVoice);
@@ -280,7 +283,7 @@ void TextManager::drawEventName(HDC hdc, int destX, int destY, int eventNum, int
 
 	TextOutW(hdc, destX, destY, mCharterName.c_str(), mCharterName.length());
 
-	if (currentLine != prevLine)
+	if (currentEventLine != prevLine)
 	{
 		// 텍스트 출력
 
@@ -325,21 +328,18 @@ void TextManager::drawEventName(HDC hdc, int destX, int destY, int eventNum, int
 			SOUNDMANAGER->play(WStringToString(mSFX), 0.5f);
 			currentSFX = WStringToString(mSFX);
 		}
-		prevLine = currentLine;
+		prevLine = currentEventLine;
 	}
 
 	// 기본 폰트로 리셋
 	setDefaultFont(hdc);
 }
 
-void TextManager::drawMovieDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
+void TextManager::drawMovieDialogue(HDC hdc, int destX, int destY, string fontName)
 {
 	if(!movieWriteFinish)
 	{
-
 		HFONT font = findFont(fontName);
-
-		mMovieNum = eventNum;
 
 		wstring toDisplay = mDialogue.substr(0, movieShowLine ? mDialogue.size() : charIndex);
 
@@ -370,12 +370,9 @@ void TextManager::drawMovieDialogue(HDC hdc, int destX, int destY, int eventNum,
 	setDefaultFont(hdc);
 }
 
-void TextManager::drawEventDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName)
+void TextManager::drawEventDialogue(HDC hdc, int destX, int destY, string fontName)
 {
-
 	HFONT font = findFont(fontName);
-
-	mEventNum = eventNum;
 
 	wstring toDisplay = mDialogue.substr(0, eventShowLine ? mDialogue.size() : charIndex);
 
@@ -447,7 +444,7 @@ void TextManager::setDefaultFont(HDC hdc)
 	}
 }
 
-void TextManager::ReadMovie(int num)
+void TextManager::ReadMovie()
 {
 	ifstream file("Resources/Text/Movie.txt");
 
@@ -474,12 +471,10 @@ void TextManager::ReadMovie(int num)
 		}
 	}
 
-	movieWriteFinish = false;
-	mMovieNum = num;
-	_vDialogue = _mMovieDialogue[mMovieNum];
+	movieWriteFinish = false;	
 }
 
-void TextManager::ReadEvent(int num)
+void TextManager::ReadEvent()
 {
 	ifstream file("Resources/Text/Dialogue.txt");
 
@@ -507,12 +502,15 @@ void TextManager::ReadEvent(int num)
 	}
 
 	eventWriteFinish = false;
-	mEventNum = num;
-	_vEvent = _mEventDialogue[mEventNum];
 }
 
-void TextManager::ReadMovieDialogue(void)
+void TextManager::ReadMovieDialogue(int eventNum, int currentLine)
 {
+	mMovieNum = eventNum;
+	dialogueIndex = currentLine;
+
+	_vDialogue = _mMovieDialogue[mMovieNum];
+
 	if (!movieWriteFinish)
 	{
 		if (dialogueIndex < _vDialogue.size())
@@ -568,12 +566,17 @@ void TextManager::ReadMovieDialogue(void)
 	}
 }
 
-void TextManager::ReadEventDialogue(void)
+void TextManager::ReadEventDialogue(int eventNum, int currentLine)
 {
-	if (eventIndex < _vEvent.size())
+	mEventNum = eventNum;
+	currentEventLine = currentLine;
+
+	_vEvent = _mEventDialogue[mEventNum];
+
+	if (currentEventLine < _vEvent.size())
 	{
 		eventShowLine = false;
-		wstring line = _vEvent[eventIndex++];
+		wstring line = _vEvent[currentEventLine++];
 		wstring temp;
 
 		size_t pos = line.find('#');
@@ -622,7 +625,7 @@ void TextManager::ReadEventDialogue(void)
 		eventShowLine = false;
 	}
 
-	if (eventIndex >= _vEvent.size()) eventWriteFinish = true;
+	if (currentEventLine >= _vEvent.size()) eventWriteFinish = true;
 }
 
 COLORREF TextManager::changeFontColor(wstring name)

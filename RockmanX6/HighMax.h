@@ -74,17 +74,16 @@ public:
 	void siegeShoot(void);
 	void deathBall(void);
 	void deathRush(void);
+	void groggy(void);
 
 	void readyPattern(void) override;
 	
-	// 연출 기능
-	void changeAnim(BossState bossState) override;
-
 	// 상태 기능
 	void offsetFix(void) override;
 	void stateReset(void);
 
 	void damagestock();
+	
 
 	void spawn(int x, int y) override;
 

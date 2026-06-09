@@ -406,6 +406,7 @@ void Player::applyForce(void)
 #pragma endregion
 
 #pragma region X축, Y축 이동
+
 		// X축 이동 - 기본 베이스
 		if (CAMERAMANAGER->getLockX() == true)
 		{
@@ -530,7 +531,7 @@ void Player::currentAnimChange(void)
 		{
 			animSpeed = 0.07f;
 			animOffset.x = 0 * SCALE_FACTOR;
-			animOffset.y = 16 * SCALE_FACTOR; // 16픽셀 아래로 = 워프 이펙트와 발 위치가 다름
+			animOffset.y = 16 * SCALE_FACTOR;
 		}
 
 		changeAnimation(pStatus.charName + "Spawn", 0);
@@ -1328,8 +1329,6 @@ void Player::currentAnimChange(void)
 
 	if (attState == SholderState::None)
 	{
-		cout << "??" << endl;
-
 		pStatus.isAttack = false;
 		pStatus.isBurst = false;
 	}

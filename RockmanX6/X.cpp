@@ -520,7 +520,7 @@ void X::jump(void)
 	{
 		if (pStatus.isOnGround || pStatus.touchLeft || pStatus.touchRight) Player::jump();
 		else if (!pStatus.isOnGround && pStatus.isOnLadder) pStatus.isOnLadder = false;
-		else;// 호버링
+		else; // 호버링
 	}
 }
 
@@ -1115,6 +1115,7 @@ void X::specialAttack(void)
 
 void X::coolDownControl(void)
 {
+	// Saber 3 4 5 = 43 * 43 / 54 * 70 / 55 * 55
 }
 
 void X::multiHitControl(void)
@@ -1131,16 +1132,19 @@ void X::multiHitControl(void)
 			case CharacterState::Walk:
 			case CharacterState::Dash:
 			case CharacterState::DashEnd:
-				canHit = prevFrame != frame && (frame == 3 || frame == 4 || frame == 5);
-				// Saber 3 4 5 = 43 * 43 / 54 * 70 / 55 * 55
+				canHit = prevFrame != frame
+					&& (frame == 3 || frame == 4 || frame == 5);
+				
 				switch(frame)
 				{
 					case 3:
+						status.physicalDamage = 1;
+
 						saberWidth = 60 * SCALE_FACTOR;
 						saberHeight = 43 * SCALE_FACTOR;
 						saberOffsetX = 0 * SCALE_FACTOR;
 						saberOffsetY = -8 * SCALE_FACTOR;
-						status.physicalDamage = 1;
+						
 						break;
 					case 4:
 						saberWidth = 65 * SCALE_FACTOR;
@@ -1275,7 +1279,8 @@ ShootEvent X::makeShootEvent(BulletType bType)
 
 	shootEvent.bType = bType;
 	shootEvent.x = status.lookRight != (currentState == CharacterState::WallSlide)
-		? pos.x + status.hitBoxWidth / 2 + (busterPos.x + pStatus.firePointX) : pos.x - status.hitBoxWidth / 2 - (busterPos.x + pStatus.firePointX);
+		? pos.x + status.hitBoxWidth / 2 + (busterPos.x + pStatus.firePointX)
+		: pos.x - status.hitBoxWidth / 2 - (busterPos.x + pStatus.firePointX);
 	shootEvent.y = pos.y - status.hitBoxHeight + pStatus.firePointY;
 	shootEvent.direct = status.lookRight != (currentState == CharacterState::WallSlide);
 	

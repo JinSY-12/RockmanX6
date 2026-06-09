@@ -27,7 +27,7 @@ HRESULT HighMax::init(int x, int y)
 void HighMax::update(void)
 {
 	bool allowInput = !(CAMERAMANAGER->getIsCamaraMove() || !CAMERAMANAGER->getCameraMoveEnd()
-		|| UIMANAGER->getIsUiPrint() || deadTest);// || CAMERAMANAGER->getZoneNumber() < 100);
+		|| UIMANAGER->getIsUiPrint() || deadTest);
 	bStatus.movable = allowInput;
 	
 	if (!status.dead)
@@ -45,45 +45,8 @@ void HighMax::update(void)
 					break;
 				case BossState::Damaged:
 					status.overpower = true;
-
 					bStatus.bImage->play(0.08f);
-
-					// 일정 pos.y까지 떨어뜨리기
-					if (pos.y < 190 * SCALE_FACTOR)
-					{
-						if (!status.lookRight)
-						{
-							if (pos.x < 6365 * SCALE_FACTOR) pos.x += 1 * SCALE_FACTOR;
-							else pos.x = 6365 * SCALE_FACTOR;
-						}
-						else
-						{
-							if (pos.x > 6080 * SCALE_FACTOR) pos.x -= 1 * SCALE_FACTOR;
-							else pos.x = 6080 * SCALE_FACTOR;
-						}
-
-						pos.y += gravity;
-						if (gravity <= maxGravity) gravity += gravityAccel;
-						else gravity = maxGravity;
-					}
-					
-					else
-					{
-						soundSupport.play("SFX_BossDrop", 0.3f);
-						pos.y = 190 * SCALE_FACTOR;
-						gravity = 0.0f;
-
-						if (patternTimer.update(15.0f))
-						{
-							soundSupport.playReset();
-							bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move");
-							bState = BossState::Dodge;
-							attAction = Action::Dodge;
-
-							SOUNDMANAGER->play("SFX_HighMaxRun", 0.3f);
-						}
-					}
-					
+					groggy();					
 					break;
 				case BossState::Attack:
 					if (bStatus.effectOn) bStatus.effectImage->play(0.03f);
@@ -168,9 +131,6 @@ void HighMax::update(void)
 
 void HighMax::bossAppearance(void)
 {
-
-	// 주석
-	// if (pos.y < 830 * SCALE_FACTOR)
 	if (pos.y < 110 * SCALE_FACTOR)
 	{
 		if (!musciStart)
@@ -187,7 +147,6 @@ void HighMax::bossAppearance(void)
 
 	else
 	{
-		// pos.y = 830 * SCALE_FACTOR;
 		pos.y = 110 * SCALE_FACTOR;
 		bState = BossState::Attack;
 		appearanceDone = true;
@@ -200,28 +159,10 @@ void HighMax::bossAppearance(void)
 		attAction = Action::AttReady;
 		attPattern = AttPattern::SiegeShoot;
 		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
-		
-
-		/*
-		// 데스볼 테스트
-		bState = BossState::DeathBallShoot;
-		attPattern = AttPattern::DeathBallShoot;
-		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_DeathBallShoot")->cloneImage();
-		SOUNDMANAGER->play("Voice_DeathBall", 0.3f);
-		*/
-
-		/*
-		// 데스 러시 테스트
-		bState = BossState::AttReady;
-		attPattern = AttPattern::DeathRush;
-		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
-		*/
 
 		if (!musciStart)
 		{
-			// UIMANAGER->setIsUiPrint(true);
 			musciStart = true;
-			// UIMANAGER->setFreeze(false);
 			SOUNDMANAGER->play("SFX_HighMaxRun", 0.4f);
 		}
 	}
@@ -666,6 +607,44 @@ void HighMax::deathRush(void)
 	}
 }
 
+void HighMax::groggy(void)
+{
+	// 일정 pos.y까지 떨어뜨리기
+	if (pos.y < 190 * SCALE_FACTOR)
+	{
+		if (!status.lookRight)
+		{
+			if (pos.x < 6365 * SCALE_FACTOR) pos.x += 1 * SCALE_FACTOR;
+			else pos.x = 6365 * SCALE_FACTOR;
+		}
+		else
+		{
+			if (pos.x > 6080 * SCALE_FACTOR) pos.x -= 1 * SCALE_FACTOR;
+			else pos.x = 6080 * SCALE_FACTOR;
+		}
+
+		pos.y += gravity;
+		if (gravity <= maxGravity) gravity += gravityAccel;
+		else gravity = maxGravity;
+	}
+
+	else
+	{
+		soundSupport.play("SFX_BossDrop", 0.3f);
+		pos.y = 190 * SCALE_FACTOR;
+		gravity = 0.0f;
+
+		if (patternTimer.update(15.0f))
+		{
+			soundSupport.playReset();
+			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move");
+			bState = BossState::Dodge;
+			attAction = Action::Dodge;
+
+			SOUNDMANAGER->play("SFX_HighMaxRun", 0.3f);
+		}
+	}
+}
 
 void HighMax::readyPattern(void)
 {
@@ -694,29 +673,6 @@ void HighMax::readyPattern(void)
 			attAction = Action::AttReady;
 			bStatus.bImage = IMAGEMANAGER->findImage("HighMax_AttReady")->cloneImage();
 		}
-	}
-}
-
-
-void HighMax::changeAnim(BossState bossState)
-{
-	switch (bossState)
-	{
-	case BossState::Apperance:
-		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Move");
-		bStatus.offsetX = bStatus.originX + 0 * SCALE_FACTOR;
-		bStatus.offsetY = bStatus.originY + 0 * SCALE_FACTOR;
-		animSpeed = 0.06f;
-		animDir = AnimDirection::Forward;
-		break;
-	case BossState::Idle:
-		bStatus.bImage = IMAGEMANAGER->findImage("HighMax_Idle");
-		bStatus.offsetX = bStatus.originX + 0 * SCALE_FACTOR;
-		bStatus.offsetY = bStatus.originY + 0 * SCALE_FACTOR;
-		if (!phase2) animSpeed = 0.06f;
-		else animSpeed = 0.04f;
-		animDir = AnimDirection::Forward;
-		break;
 	}
 }
 
@@ -931,17 +887,12 @@ void HighMax::spawn(int x, int y)
 
 void HighMax::appearnaceEvent(void)
 {
-	//if (!appearEvent)
+	switch (SCENEMANAGER->getStageBossType())
 	{
-		switch (SCENEMANAGER->getStageBossType())
-		{
-		case BossType::Intro:
-			UIMANAGER->addUi(UiType::EventDialogue, 1);
-			break;
-		default:
-			break;
-		}
-
-		//appearEvent = true;
+	case BossType::Intro:
+		UIMANAGER->addUi(UiType::EventDialogue, 1);
+		break;
+	default:
+		break;
 	}
 }

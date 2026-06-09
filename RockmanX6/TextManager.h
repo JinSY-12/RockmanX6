@@ -37,6 +37,8 @@ public:
 	int dialogueIndex;
 	int eventIndex;
 
+	int currentEventLine;
+
 	bool movieShowLine;
 	bool eventShowLine;
 
@@ -117,11 +119,11 @@ public:
 	void drawText(HDC hdc, int destX, int destY, string printString, string fontName);
 	void drawTextColor(HDC hdc, int destX, int destY, string printString, string fontName, COLORREF color);
 
-	void drawMovieName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
-	void drawEventName(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
+	void drawMovieName(HDC hdc, int destX, int destY, string fontName);
+	void drawEventName(HDC hdc, int destX, int destY, string fontName);
 
-	void drawMovieDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
-	void drawEventDialogue(HDC hdc, int destX, int destY, int eventNum, int currentLine, string fontName);
+	void drawMovieDialogue(HDC hdc, int destX, int destY, string fontName);
+	void drawEventDialogue(HDC hdc, int destX, int destY, string fontName);
 	
 	void drawTextInRect(HDC hdc, RECT rect, string printString, string settingName, bool isCenter = true);
 
@@ -129,11 +131,12 @@ public:
 	void setTextColor(COLORREF color) { _textColor = color; }
 	void setTextAlign(UINT textAlign) { _textAlign = textAlign; }
 
-	void ReadMovie(int num);
-	void ReadEvent(int num);
+	void ReadMovie();
+	void ReadEvent();
 
-	void ReadMovieDialogue(void);
-	void ReadEventDialogue(void);
+	void ReadMovieDialogue(int eventNum, int currentLine);
+	void ReadEventDialogue(int eventNum, int currentLine);
+	// void ReadEventDialogue(void);
 
 	COLORREF changeFontColor(wstring name);
 

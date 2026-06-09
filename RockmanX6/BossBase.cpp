@@ -187,16 +187,14 @@ void BossBase::bossInvincibleTimerUpdate(void)
 
 void BossBase::battleStart(void)
 {
-	if (status.hp <= status.maxHp)
+	if (status.hp < status.maxHp)
 	{
-		// UIMANAGER->setIsUiPrint(true);
 		status.hp += 1;
 		SOUNDMANAGER->play("Menu_Dialogue", 0.3f);
 	}
 
 	else
 	{
-		cout << "Battle Start!" << endl;
 		gameStart = true;
 		UIMANAGER->setIsUiPrint(false);
 		UIMANAGER->setFreeze(false);

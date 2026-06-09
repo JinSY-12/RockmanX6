@@ -14,8 +14,7 @@ HRESULT Dialogue::init(UiType uType, int sceneNum)
 		textIcon = IMAGEMANAGER->findImage("Next");
 		uiDead = false;
 		TEXTMANAGER->textReset();
-		TEXTMANAGER->ReadMovie(movie.sceneNum);
-		TEXTMANAGER->ReadMovieDialogue();
+		TEXTMANAGER->ReadMovieDialogue(movie.sceneNum, mCurrentLine);
 		break;
 
 	case UiType::EventDialogue:
@@ -28,6 +27,7 @@ HRESULT Dialogue::init(UiType uType, int sceneNum)
 		TEXTMANAGER->textReset();
 		textIcon = IMAGEMANAGER->findImage("Next");
 		uiDead = false;
+		TEXTMANAGER->ReadEventDialogue(dialogue.sceneNum, mCurrentLine);
 		eventSetting();
 
 		left = IMAGEMANAGER->findImage(leftCharName+ "Dialogue_Idle");
@@ -58,7 +58,7 @@ void Dialogue::update(void)
 				mTextDelay = TIMEMANAGER->getWorldTime();
 				mCurrentLine++;
 				UIMANAGER->setCurrentLine(mCurrentLine);
-				TEXTMANAGER->ReadMovieDialogue();
+				TEXTMANAGER->ReadMovieDialogue(movie.sceneNum, mCurrentLine);
 			}
 
 			// 출력 다 안되었지만 다음 출력 대기시간이 다되면 끝으로 슈웅!!
@@ -87,8 +87,7 @@ void Dialogue::update(void)
 				faceOnOff = true;
 				bg->setChangeReady(false);
 
-				TEXTMANAGER->ReadEvent(dialogue.sceneNum);
-				TEXTMANAGER->ReadEventDialogue();
+				// TEXTMANAGER->ReadEventDialogue(dialogue.sceneNum, mCurrentLine);
 			}
 		}
 
@@ -102,7 +101,7 @@ void Dialogue::update(void)
 					mTextDelay = TIMEMANAGER->getWorldTime();
 					mCurrentLine++;
 					UIMANAGER->setCurrentLine(mCurrentLine);
-					TEXTMANAGER->ReadEventDialogue();
+					TEXTMANAGER->ReadEventDialogue(dialogue.sceneNum, mCurrentLine);
 				}
 
 				// 출력 다 안되었지만 다음 출력 대기시간이 다되면 끝으로 슈웅!!
@@ -171,8 +170,8 @@ void Dialogue::render(HDC hdc)
 		//TIMEMANAGER->getWorldTime() - mTextDelay 조절 하는 걸로 대화 연타 속도 조절 가능
 		if (TIMEMANAGER->getWorldTime() - mTextDelay > 1.1f)
 		{
-			TEXTMANAGER->drawMovieName(hdc, WINSIZE_X / 24, WINSIZE_Y * 0.63, movie.sceneNum, mCurrentLine, "DNF_M_45");
-			TEXTMANAGER->drawMovieDialogue(hdc, WINSIZE_X / 16, WINSIZE_Y * 0.70, movie.sceneNum, mCurrentLine, "DNF_M_34");
+			TEXTMANAGER->drawMovieName(hdc, WINSIZE_X / 24, WINSIZE_Y * 0.63, "DNF_M_45");
+			TEXTMANAGER->drawMovieDialogue(hdc, WINSIZE_X / 16, WINSIZE_Y * 0.70, "DNF_M_34");
 			nextAlbe = true;
 		}
 		else nextAlbe = false;
@@ -196,8 +195,8 @@ void Dialogue::render(HDC hdc)
 		//TIMEMANAGER->getWorldTime() - mTextDelay 조절 하는 걸로 대화 연타 속도 조절 가능
 		if (TIMEMANAGER->getWorldTime() - mTextDelay > 1.1f)
 		{
-			TEXTMANAGER->drawEventName(hdc, WINSIZE_X / 14, WINSIZE_Y * 0.63, dialogue.sceneNum, mCurrentLine, "DNF_M_45");
-			TEXTMANAGER->drawEventDialogue(hdc, WINSIZE_X / 10, WINSIZE_Y * 0.70, dialogue.sceneNum, mCurrentLine, "DNF_M_34");
+			TEXTMANAGER->drawEventName(hdc, WINSIZE_X / 14, WINSIZE_Y * 0.63, "DNF_M_45");
+			TEXTMANAGER->drawEventDialogue(hdc, WINSIZE_X / 10, WINSIZE_Y * 0.70, "DNF_M_34");
 			nextAlbe = true;
 		}
 		else nextAlbe = false;

@@ -12,6 +12,9 @@ HRESULT TitleScene::init(void)
 	
 	CAMERAMANAGER->init();
 
+	TEXTMANAGER->ReadMovie();
+	TEXTMANAGER->ReadEvent();
+
 	// 타이머 체크
 	mSelectTimer = 0.f;
 	mMoveTimer = 0.f;
